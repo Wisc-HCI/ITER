@@ -1,0 +1,18 @@
+{
+  "name": "rad_ui",
+  "version": "1.0.0",
+  "description": "Display RAD signal generated from issuer",
+  "main": "",
+  "scripts": {
+    "start": "http-server ."
+  },
+  "author": "UW Madison HCI Lab, Curt Henrichs - cdhenrichs@wisc.edu",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.1.3",
+    "http-server": "^0.11.1",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.6",
+    "roslib": "^0.20.0"
+  }
+}
