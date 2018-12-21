@@ -23,6 +23,11 @@ if __name__ == '__main__':
 
         while not rospy.is_shutdown():
 
+            # grab therblig
+
+            # robot action + button input
+
+            # compute signals
             if neglect_time.current > 0:
                 neglect_time.current -= 1
             else:
