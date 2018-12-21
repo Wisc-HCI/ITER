@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(experiment_therblig_task_runner)
+project(iter)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -154,7 +154,7 @@ include_directories(
 ## Install ##
 #############
 
-# all install targets should use catkin DESTINATION variables
+# all install targets should use catkin Dexperiment_therblig_task_runnerESTINATION variables
 # See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
 
 ## Mark executable scripts (Python etc.) for installation

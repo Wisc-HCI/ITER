@@ -1,0 +1,73 @@
+<!-- Initial structure taken from NRI Project -->
+
+<launch>
+
+    <arg name="robot"/>
+    <arg name="simulated" default='true'/>
+
+    <!-- Include Rosbridge launches -->
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+
+    <!-- Upload robot_descriptions and MoveIt Configs -->
+
+    <!-- UR3 -->
+    <group if="$(eval arg('robot') == 'ur3')">
+      <include file="$(find ur3_moveit_config)/launch/planning_context.launch">
+        <arg name="load_robot_description" value="true"/>
+      </include>
+      <include file="$(find ur3_moveit_config)/launch/move_group.launch">
+        <arg name="allow_trajectory_execution" value="true"/>
+        <arg name="fake_execution" value="true"/>
+        <arg name="info" value="true"/>
+      </include>
+      <!-- include RVIZ until simulation is working -->
+      <include if="$(arg simulated)" file="$(find ur3_moveit_config)/launch/moveit_rviz.launch">
+        <arg name="config" value="true"/>
+      </include>
+    </group>
+
+    <!-- UR5 -->
+    <group if="$(eval arg('robot') == 'ur5')">
+      <include file="$(find ur5_moveit_config)/launch/planning_context.launch">
+        <arg name="load_robot_description" value="true"/>
+      </include>
+      <include file="$(find ur5_moveit_config)/launch/move_group.launch">
+        <arg name="allow_trajectory_execution" value="true"/>
+        <arg name="fake_execution" value="true"/>
+        <arg name="info" value="true"/>
+      </include>
+      <!-- include RVIZ until simulation is working -->
+      <include if="$(arg simulated)" file="$(find ur5_moveit_config)/launch/moveit_rviz.launch">
+        <arg name="config" value="true"/>
+      </include>
+    </group>
+
+    <!-- UR10 -->
+    <group if="$(eval arg('robot') == 'ur10')">
+      <include file="$(find ur10_moveit_config)/launch/planning_context.launch">
+        <arg name="load_robot_description" value="true"/>
+      </include>
+      <include file="$(find ur10_moveit_config)/launch/move_group.launch">
+        <arg name="allow_trajectory_execution" value="true"/>
+        <arg name="fake_execution" value="true"/>
+        <arg name="info" value="true"/>
+      </include>
+      <!-- include RVIZ until simulation is working -->
+      <include if="$(arg simulated)" file="$(find ur10_moveit_config)/launch/moveit_rviz.launch">
+        <arg name="config" value="true"/>
+      </include>
+    </group>
+
+    <!-- If simulated, we do not have a robot connected, so publish fake joint states -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+      <param name="/use_gui" value="false"/>
+      <rosparam param="/source_list">['/move_group/fake_controller_joint_states']</rosparam>
+    </node>
+
+    <!-- Given the published joint states, publish tf for the robot links -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen"/>
+
+    <!-- Start backend -->
+    <node pkg="iter" type="runner.py" name="runner" output="screen"/>
+
+</launch>
