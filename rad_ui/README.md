@@ -10,8 +10,9 @@ UI connects with ROS backend on topics `/rad/signal` and `/rad/neglect_time`.
 ## Contact
 Curt Henrichs (cdhenrichs@wisc.edu)
 
-## Setup
-Install packages using npm. Run `npm install` inside the UI project directory. This will install the necessary frontend libraries and a static file server.
+## Requirements
+Install packages using npm. Run `npm install` inside the UI project directory.
+This will install the necessary frontend libraries and a static file server.
 
 ## Run
 
