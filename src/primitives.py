@@ -10,20 +10,20 @@
 }
 """
 
+##TODO figure out gripper for grasp primitives
+
 import tf
 import sys
-import rospy
 import time
+import rospy
+import moveit_commander
 
 from abc import ABCMeta
 from enum import Enum
-
-import moveit_commander
 from geometry_msgs.msg import Pose
 
 moveit_commander.roscpp_initialize(sys.argv)
 
-##TODO figure out gripper for grasp primitives
 
 class PrimitiveEnum(Enum):
     GRASP = 'grasp',
@@ -132,23 +132,17 @@ class Wait(Primitive):
 
         return ret_val
 
-class PrimitiveEnum(Enum):
-    GRASP = 'grasp',
-    RELEASE = 'release',
-    MOVE = 'move',
-    WAIT = 'wait'
-
 
 def instantiate_from_dict(obj):
 
     name = obj['name']
     if name == PrimitiveEnum.GRASP:
-        pass
+        return Grasp(obj['effort'])
     elif name == PrimitiveEnum.RELEASE:
-        pass
+        return Release()
     elif name == PrimitiveEnum.MOVE:
-        pass
+        return Move(obj['position'],obj['orientation'])
     elif name == PrimitiveEnum.WAIT:
-        pass
+        return Wait(obj['condition'],**obj)
     else:
         raise Exception('Invalid behavior primitive supplied')

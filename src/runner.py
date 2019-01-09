@@ -2,6 +2,7 @@
 
 import json
 import rospy
+import primitives as bp
 from iter.msg import Task, TaskResponse
 from std_msgs.msg import Float32, String
 from experiment_therblig_task_runner.msg import NeglectTime
@@ -28,9 +29,10 @@ countUp = False
 def run_task(data):
     d = json.loads(data.task)
 
-    for obj in d['task']:
-        primitive = instantiate_from_dict(obj)
-        primitive.operate()
+    primitives = [bp.instantiate_from_dict(obj) for obj in d['task']]
+
+    for p in primitives:
+        p.operate()
 
     return TaskResponse(True)
 
