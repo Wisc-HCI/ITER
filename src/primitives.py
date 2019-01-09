@@ -1,4 +1,15 @@
 
+"""
+{
+    'task': [
+        {
+            'name': <string ['wait, move, grasp, release']>
+            ... <params>
+        }
+    ]
+}
+"""
+
 import tf
 import sys
 import rospy
@@ -13,6 +24,12 @@ from geometry_msgs.msg import Pose
 moveit_commander.roscpp_initialize(sys.argv)
 
 ##TODO figure out gripper for grasp primitives
+
+class PrimitiveEnum(Enum):
+    GRASP = 'grasp',
+    RELEASE = 'release',
+    MOVE = 'move',
+    WAIT = 'wait'
 
 
 class ConditionEnum(Enum):
@@ -114,3 +131,24 @@ class Wait(Primitive):
             time.sleep(0.01)
 
         return ret_val
+
+class PrimitiveEnum(Enum):
+    GRASP = 'grasp',
+    RELEASE = 'release',
+    MOVE = 'move',
+    WAIT = 'wait'
+
+
+def instantiate_from_dict(obj):
+
+    name = obj['name']
+    if name == PrimitiveEnum.GRASP:
+        pass
+    elif name == PrimitiveEnum.RELEASE:
+        pass
+    elif name == PrimitiveEnum.MOVE:
+        pass
+    elif name == PrimitiveEnum.WAIT:
+        pass
+    else:
+        raise Exception('Invalid behavior primitive supplied')
