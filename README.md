@@ -22,7 +22,6 @@ Curt Henrichs (cdhenrichs@wisc.edu)
 ### Requirements:
 - Must be installed as a ROS package in a ROS Workspace
 - Other required packages:
-  - [Wisc-HCI/robot_behavior](https://github.com/Wisc-HCI/robot_behavior)
   - [RobotWebTools/rosbridge_suite](https://github.com/RobotWebTools/rosbridge_suite)
     - [GT-RAIL/rosauth](https://github.com/GT-RAIL/rosauth)
   - [ros-industrial/universal_robot](https://github.com/ros-industrial/universal_robot)

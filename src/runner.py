@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import rospy
-from std_msgs.msg import Float32
+from std_msgs.msg import Float32, String
 from experiment_therblig_task_runner.msg import NeglectTime
 
 # RAD = IT / (IT + NT)
@@ -9,7 +9,8 @@ from experiment_therblig_task_runner.msg import NeglectTime
 if __name__ == '__main__':
     try:
         pub_signal = rospy.Publisher('/rad/signal', Float32, queue_size=10)
-        pub_time = rospy.Publisher('/rad/neglect_time', NeglectTime, queue_size=10)
+        pub_neglect_time = rospy.Publisher('/rad/neglect_time', NeglectTime, queue_size=10)
+
         rospy.init_node('runner', anonymous=True)
 
         rate = rospy.Rate(1)
@@ -33,12 +34,12 @@ if __name__ == '__main__':
             else:
                 neglect_time.current = neglect_time.initial
 
-            signal = interaction_time * 1.0 / (interaction_time + neglect_time.current)
+            rad_signal = interaction_time * 1.0 / (interaction_time + neglect_time.current)
 
-            print signal
+            print rad_signal
             #rospy.loginfo(('RAD: %s' % signal) + (' Time: %s') % neglect_time)
-            pub_signal.publish(signal)
-            pub_time.publish(neglect_time)
+            pub_signal.publish(rad_signal)
+            pub_neglect_time.publish(neglect_time)
             rate.sleep()
 
     except rospy.ROSInterruptException:
