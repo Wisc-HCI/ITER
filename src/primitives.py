@@ -10,7 +10,8 @@
 }
 """
 
-##TODO figure out gripper for grasp primitives
+#TODO figure out gripper for grasp primitives
+#TODO define button node code interface, refactor wait_button
 
 import tf
 import sys
@@ -18,7 +19,7 @@ import time
 import rospy
 import moveit_commander
 
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 from enum import Enum
 from geometry_msgs.msg import Pose
 
@@ -26,9 +27,9 @@ moveit_commander.roscpp_initialize(sys.argv)
 
 
 class PrimitiveEnum(Enum):
-    GRASP = 'grasp',
-    RELEASE = 'release',
-    MOVE = 'move',
+    GRASP = 'grasp'
+    RELEASE = 'release'
+    MOVE = 'move'
     WAIT = 'wait'
 
 
@@ -97,25 +98,26 @@ class Wait(Primitive):
         else:
             self._timeout = None
 
-        if condition == ConditionEnum.TIME:
+        if condition == ConditionEnum.TIME.value:
             if not 'value' in kwargs.keys():
                 raise TypeError('Must supply value arguement for time condition')
 
             self._cb = self._time_callback
             self._value = kwargs['value']
 
-        elif condition == ConditionEnum.BUTTON:
+        elif condition == ConditionEnum.BUTTON.value:
             if not 'button_cb' in kwargs.keys() or kwargs['button_cb'] is None:
                 raise ValueError('Button requires callback to be supplied')
 
-            self._cb = button_cb
+            self._cb = kwargs['button_cb']
             self._value = True
 
         else:
             raise ValueError('Condition provided is unsupported')
 
     def _time_callback(self):
-        return time.time() >= self._value
+        diff = time.time() - self.initial
+        return diff >= self._value
 
     def operate(self):
 
@@ -123,8 +125,10 @@ class Wait(Primitive):
         if self._timeout != None:
             timeout = time.time() + self._timeout
 
+        self.initial = time.time()
+
         ret_val = True
-        while self._cb() != self._value:
+        while self._cb() != True:
             if timeout != None and time.time() >= timeout:
                 ret_val = False
                 break
@@ -133,16 +137,20 @@ class Wait(Primitive):
         return ret_val
 
 
+def button_callback():
+    return True #TODO write this
+
+
 def instantiate_from_dict(obj):
 
     name = obj['name']
-    if name == PrimitiveEnum.GRASP:
+    if name == PrimitiveEnum.GRASP.value:
         return Grasp(obj['effort'])
-    elif name == PrimitiveEnum.RELEASE:
+    elif name == PrimitiveEnum.RELEASE.value:
         return Release()
-    elif name == PrimitiveEnum.MOVE:
+    elif name == PrimitiveEnum.MOVE.value:
         return Move(obj['position'],obj['orientation'])
-    elif name == PrimitiveEnum.WAIT:
-        return Wait(obj['condition'],**obj)
+    elif name == PrimitiveEnum.WAIT.value:
+        return Wait(button_cb=button_callback, **obj)
     else:
         raise Exception('Invalid behavior primitive supplied')
