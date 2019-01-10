@@ -5,88 +5,126 @@ import json
 import rospy
 import threading
 import primitives as bp
-from iter.srv import Task, TaskResponse, Mode, ModeResponse
-from std_msgs.msg import Float32, String
-from experiment_therblig_task_runner.msg import NeglectTime
 
 from enum import Enum
+from iter.msg import NeglectTime
+from std_msgs.msg import Float32, String
+from iter.srv import Task, TaskResponse, Mode, ModeResponse
+
 
 class TimeModeEnum(Enum):
     REPLAY = 'replay'
     CAPTURE = 'capture'
 
-rad_thread_alive = True
+    @classmethod
+    def from_str(cls, mode):
+        if mode == cls.REPLAY.value:
+            return cls.REPLAY
+        elif mode == cls.CAPTURE.value:
+            return cls.CAPTURE
+        else:
+            return None
 
-time_mode = TimeModeEnum.REPLAY.value
+
+class Runner:
+
+    def __init__(self):
+        self.time_mode = TimeModeEnum.REPLAY
+
+        self.task_input_srv = rospy.Service('/runner/task_input', Task, self.run_task)
+        self.mode_srv = rospy.Service('/runner/mode', Mode, self.mode_update)
+
+    def run_task(self, json_string):
+
+        data = json.loads(json_string.task_json)
+        primitives = [bp.instantiate_from_dict(obj) for obj in data['task']]
+
+        operate_status = True
+
+        for i in range(0,len(primitives)):
+            print type(primitives[i]).__name__
+
+            if self.time_mode == TimeModeEnum.CAPTURE:
+                if type(primitives[i]) is bp.Wait and primitives[i].condition == bp.ConditionEnum.BUTTON.value:
+                    data['task'][i]['rad'] = {'is_interaction': True}
+                    operate_status = primitives[i].operate()
+                else:
+                    start = time.time()
+                    operate_status = primitives[i].operate()
+                    stop = time.time()
+
+                    data['task'][i]['rad'] = {
+                        'negelect_time': stop - start,
+                        'is_interaction': False
+                    }
+            else:
+                operate_status = primitives[i].operate()
+
+            if not operate_status:
+                break
+
+        if self.time_mode == TimeModeEnum.CAPTURE:
+            return TaskResponse(operate_status,json.dumps(data))
+        else:
+            return TaskResponse(operate_status,'')
+
+    def mode_update(self, data):
+        mode = TimeModeEnum.from_str(data.mode)
+        if mode == None:
+            raise Exception('Invalid mode supplied')
+
+        self.time_mode = mode
+        return ModeResponse()
 
 
-# RAD = IT / (IT + NT)
-rad_signal = 1
-neglect_time = NeglectTime()
-neglect_time.current = 65
-neglect_time.initial = 65
-interaction_time = 60
-countUp = False
+class RadSignal:
 
-"""
-{
-    'task': [
-        {
-            'name': <string ['wait, move, grasp, release']>
-            ... <params>
-        }
-    ]
-}
-"""
+    def __init__(self):
 
-def rad_thread():
-    while rad_thread_alive:
-        compute_rad()
-        publish_rad()
-        time.sleep(1)
+        self.rad_signal = 1
+        self.neglect_time = NeglectTime()
+        self.neglect_time.current = 65
+        self.neglect_time.initial = 65
+        self.interaction_time = 60
 
-def run_task(json_string):
+        self.pub_signal = rospy.Publisher('/rad/signal', Float32, queue_size=10)
+        self.pub_neglect_time = rospy.Publisher('/rad/neglect_time', NeglectTime, queue_size=10)
+        self.pub_interaction_time = rospy.Publisher('rad/interaction_time', Float32, queue_size=10)
 
-    data = json.loads(json_string.task_json)
-    primitives = [bp.instantiate_from_dict(obj) for obj in data['task']]
+    def start(self):
+        self._thread = threading.Thread(target=self._thread_fnt)
+        self._thread_alive = True
+        self._thread.start()
 
-    for i in range(0,len(primitives)):
-        print type(primitives[i]).__name__
-        print data['task'][i]
-        primitives[i].operate()
+    def stop(self):
+        self._thread_alive = False
+        self._thread.join(1)
 
-    return TaskResponse(True)
+    def _compute(self):
+        # RAD = IT / (IT + NT)
+        self.rad_signal = self.interaction_time * 1.0 / (self.interaction_time + self.neglect_time.current)
 
-def compute_rad():
-    rad_signal = interaction_time * 1.0 / (interaction_time + neglect_time.current)
+    def _publish(self):
+        self.pub_signal.publish(self.rad_signal)
+        self.pub_neglect_time.publish(self.neglect_time)
+        self.pub_interaction_time.publish(self.interaction_time)
 
-def publish_rad():
-    pub_signal.publish(rad_signal)
-    pub_neglect_time.publish(neglect_time)
-    pub_interaction_time.publish(interaction_time)
-
-def mode_update():
-    pass
+    def _thread_fnt(self):
+        while self._thread_alive:
+            self._compute()
+            self._publish()
+            time.sleep(1)
 
 
 if __name__ == '__main__':
 
-    # Define Published Topics
-    pub_signal = rospy.Publisher('/rad/signal', Float32, queue_size=10)
-    pub_neglect_time = rospy.Publisher('/rad/neglect_time', NeglectTime, queue_size=10)
-    pub_interaction_time = rospy.Publisher('rad/interaction_time', Float32, queue_size=10)
+    runner = Runner()
+    rad = RadSignal()
 
-    # Define Services
-    task_input_srv = rospy.Service('/iter/task_input', Task, run_task)
-    mode_srv = rospy.Service('/iter/mode', Mode, mode_update)
-
-    # Create RAD Thread
-    rad_thread = threading.Thread(target=rad_thread)
-
-    # Run Node
     rospy.init_node('runner', anonymous=True)
-    rad_thread.start()
+    rad.start()
+
     while not rospy.is_shutdown():
         rospy.spin()
 
-    rad_thread_alive = False
+    rad.stop()

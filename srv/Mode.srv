@@ -1,2 +1,5 @@
+# Mode is either capture or playback for time based information.
+# 'capture': Captures the neglect time for each action (if applicable)
+# 'replay': Uses captured neglect time to generate RAD signal
 string mode
 ---

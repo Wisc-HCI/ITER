@@ -54,7 +54,7 @@ class Grasp(Primitive):
 
 
     def operate(self):
-        pass
+        return True
 
 
 class Release(Primitive):
@@ -64,7 +64,7 @@ class Release(Primitive):
         self.scene_interface = moveit_commander.PlanningSceneInterface()
 
     def operate(self):
-        pass
+        return True
 
 
 class Move(Primitive):
@@ -74,16 +74,24 @@ class Move(Primitive):
 
         # Convert to Pose
         self._pose = Pose()
-        self._pose.position = position
-        self._pose.orientation = tf.transformations.quaternion_from_euler(
+        self._pose.position.x = position['x']
+        self._pose.position.y = position['y']
+        self._pose.position.z = position['z']
+        (x,y,z,w)= tf.transformations.quaternion_from_euler(
             orientation['x'],
             orientation['y'],
             orientation['z'])
+        self._pose.orientation.x = x
+        self._pose.orientation.y = y
+        self._pose.orientation.z = z
+        self._pose.orientation.w = w
+
+        print self._pose.orientation
 
     def operate(self):
         self.move_group_commander.clear_pose_targets()
         self.move_group_commander.set_pose_target(self._pose)
-        self.move_group_commander.go(wait=True)
+        return self.move_group_commander.go(wait=True)
 
 
 class Wait(Primitive):
@@ -114,6 +122,8 @@ class Wait(Primitive):
 
         else:
             raise ValueError('Condition provided is unsupported')
+
+        self.condition = condition
 
     def _time_callback(self):
         diff = time.time() - self.initial
