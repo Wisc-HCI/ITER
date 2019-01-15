@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import time
 import json
 import rospy
 
@@ -20,8 +21,8 @@ def set_mode(mode):
     mode_set_srv(mode)
 
 def get_mode():
-    msg = mode_get_srv(ModeGet())
-    return msg.mode
+    rxMsg = mode_get_srv()
+    return rxMsg.mode
 
 def load_task(task_file_name):
     early_stop = False
@@ -29,11 +30,7 @@ def load_task(task_file_name):
     # Load JSON file
     try:
         f = open(task_file_name,'r')
-        try:
-            txStr = json.dump(f)
-        except:
-            print '[-] Error parsing JSON'
-            early_stop = True
+        txStr = f.read()
         f.close()
     except:
         print '[-] Error handling file : Read'
@@ -60,6 +57,8 @@ def load_task(task_file_name):
     return response.end_status
 
 if __name__ == "__main__":
+    time.sleep(2) # wait for other things to launch / setup
+
     # Print initial prompt
     print('Interdependence Task Experiment Runner')
 
@@ -76,7 +75,7 @@ if __name__ == "__main__":
                 print '[-] Error must supply filepath arguement'
             else:
                 try:
-                    load_task(args[1])
+                    print 'End status: ', load_task(args[1])
                 except Exception, e:
                     print '[-] Error:', e
         elif args[0].lower() == 'get_mode':
@@ -89,5 +88,11 @@ if __name__ == "__main__":
             else:
                 print 'Set mode to: ', args[1]
                 set_mode(args[1])
+        elif args[0].lower() == 'help':
+            print 'The following commands may be used'
+            print '* help'
+            print '* task <your_task_file_path>'
+            print '* get_mode'
+            print '* set_mode <new_mode>'
         else:
             print '[-] Error invalid command supplied'

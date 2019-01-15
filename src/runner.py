@@ -64,7 +64,7 @@ class Runner:
         return ModeSetResponse()
 
     def mode_get(self, data):
-        return ModeGetResponse(self.time_mode)
+        return ModeGetResponse(self.time_mode.value)
 
 
 class RadSignal:

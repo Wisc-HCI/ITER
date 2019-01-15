@@ -4,8 +4,8 @@
 
     <arg name="robot"/>
     <arg name="simulated" default='true'/>
-    <arg name="use_cli" default='true'/>
-    <arg name="rad_ui" default='true'/>
+    <arg name="use_cli" default='false'/>
+    <arg name="rad_ui" default='false'/>
 
     <!-- Include Rosbridge launches -->
     <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>

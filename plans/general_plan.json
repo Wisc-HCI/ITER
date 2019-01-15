@@ -1,0 +1,21 @@
+{
+    "task": [
+      {
+        "name": "move",
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "orientation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "rad": {
+          "neglect_time": 0,
+          "is_interaction": false
+        }
+      }
+    ]
+}
