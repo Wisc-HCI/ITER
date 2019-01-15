@@ -6,24 +6,10 @@ import rospy
 import threading
 import primitives as bp
 
-from enum import Enum
 from iter.msg import NeglectTime
 from std_msgs.msg import Float32, String
-from iter.srv import Task, TaskResponse, Mode, ModeResponse
-
-
-class TimeModeEnum(Enum):
-    REPLAY = 'replay'
-    CAPTURE = 'capture'
-
-    @classmethod
-    def from_str(cls, mode):
-        if mode == cls.REPLAY.value:
-            return cls.REPLAY
-        elif mode == cls.CAPTURE.value:
-            return cls.CAPTURE
-        else:
-            return None
+from iter.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
+from time_mode_enum import TimeModeEnum
 
 
 class Runner:
@@ -32,7 +18,8 @@ class Runner:
         self.time_mode = TimeModeEnum.REPLAY
 
         self.task_input_srv = rospy.Service('/runner/task_input', Task, self.run_task)
-        self.mode_srv = rospy.Service('/runner/mode', Mode, self.mode_update)
+        self.mode_set_srv = rospy.Service('/runner/set/mode', ModeSet, self.mode_update)
+        self.mode_get_srv = rospy.Service('/runner/get/mode', ModeGet, self.mode_get)
 
     def run_task(self, json_string):
 
@@ -74,7 +61,10 @@ class Runner:
             raise Exception('Invalid mode supplied')
 
         self.time_mode = mode
-        return ModeResponse()
+        return ModeSetResponse()
+
+    def mode_get(self, data):
+        return ModeGetResponse(self.time_mode)
 
 
 class RadSignal:
@@ -85,7 +75,7 @@ class RadSignal:
         self.neglect_time = NeglectTime()
         self.neglect_time.current = 65
         self.neglect_time.initial = 65
-        self.interaction_time = 60
+        self.interaction_time = 0
 
         self.pub_signal = rospy.Publisher('/rad/signal', Float32, queue_size=10)
         self.pub_neglect_time = rospy.Publisher('/rad/neglect_time', NeglectTime, queue_size=10)

@@ -72,7 +72,7 @@ class Move(Primitive):
     def __init__(self, position, orientation):
         self.move_group_commander = moveit_commander.MoveGroupCommander('manipulator')
 
-        # Convert to Pose
+        # Convert from dictionary to Pose
         self._pose = Pose()
         self._pose.position.x = position['x']
         self._pose.position.y = position['y']
@@ -85,8 +85,6 @@ class Move(Primitive):
         self._pose.orientation.y = y
         self._pose.orientation.z = z
         self._pose.orientation.w = w
-
-        print self._pose.orientation
 
     def operate(self):
         self.move_group_commander.clear_pose_targets()

@@ -71,7 +71,7 @@ ros.on('close', function() {
 var listenerNegelectTime = new ROSLIB.Topic({
   ros: ros,
   name: '/rad/neglect_time',
-  messageType: 'experiment_therblig_task_runner/NeglectTime'
+  messageType: 'iter/NeglectTime'
 });
 
 listenerNegelectTime.subscribe(function(message) {

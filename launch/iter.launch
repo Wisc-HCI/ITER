@@ -4,6 +4,8 @@
 
     <arg name="robot"/>
     <arg name="simulated" default='true'/>
+    <arg name="use_cli" default='true'/>
+    <arg name="rad_ui" default='true'/>
 
     <!-- Include Rosbridge launches -->
     <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
@@ -69,5 +71,15 @@
 
     <!-- Start backend -->
     <node pkg="iter" type="runner.py" name="runner" output="screen"/>
+
+    <!-- Start RAD UI -->
+    <group if="$(arg rad_ui)">
+      <node name="web_server" pkg="iter" type="frontend_node_start.sh" args='$(find iter)/rad_ui' output='screen'/>
+    </group>
+
+    <!-- Start cli -->
+    <group if="$(arg use_cli)">
+      <node pkg="iter" type="cli.py" name="cli" output="screen"/>
+    </group>
 
 </launch>

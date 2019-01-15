@@ -57,7 +57,8 @@ add_message_files(
 add_service_files(
    FILES
    Task.srv
-   Mode.srv
+   ModeGet.srv
+   ModeSet.srv
 )
 
 ## Generate actions in the 'action' folder

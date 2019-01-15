@@ -3,71 +3,91 @@
 import json
 import rospy
 
-from iter.srv import Task, TaskResponse
+from time_mode_enum import TimeModeEnum
+from iter.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
 
 
-"""
-{
-    'task': [
-        {
-            'name': <string ['wait, move, grasp, release']>
-            ... <params>
-            'rad': {
-                'negelect_time': <number>
-                'is_interaction': <boolean>
-            }
-        }
-    ]
-}
-"""
+rospy.wait_for_service('/runner/task_input')
 
-msg = {
-    'task': [
-        {
-            'name': 'release'
-        },
-        {
-            'name': 'grasp',
-            'effort': 2
-        },
-        {
-            'name': 'wait',
-            'condition': 'button'
-        },
-        {
-            'name': 'wait',
-            'condition': 'time',
-            'value': 5
-        },
-        {
-            'name': 'move',
-            'position': {
-                'x': 0.25,
-                'y': 0.1,
-                'z': 0.25
-            },
-            'orientation': {
-                'x': 0,
-                'y': 0,
-                'z': 0
-            }
-        }
-    ]
-}
+task_srv = rospy.ServiceProxy('/runner/task_input', Task)
+mode_set_srv = rospy.ServiceProxy('/runner/set/mode',ModeSet)
+mode_get_srv = rospy.ServiceProxy('/runner/get/mode',ModeGet)
 
-if __name__ == "__main__":
-    print 'wait for service'
-    rospy.wait_for_service('/runner/task_input')
 
-    print 'create proxy'
-    task_srv = rospy.ServiceProxy('/runner/task_input', Task)
+def set_mode(mode):
+    msg = ModeSet()
+    msg.mode = mode
+    mode_set_srv(mode)
 
-    print 'generate message'
-    txStr = json.dumps(msg)
-    print txStr
+def get_mode():
+    msg = mode_get_srv(ModeGet())
+    return msg.mode
 
-    print 'send message'
+def load_task(task_file_name):
+    early_stop = False
+
+    # Load JSON file
+    try:
+        f = open(task_file_name,'r')
+        try:
+            txStr = json.dump(f)
+        except:
+            print '[-] Error parsing JSON'
+            early_stop = True
+        f.close()
+    except:
+        print '[-] Error handling file : Read'
+        early_stop = True
+
+    if early_stop:
+        return
+
+    # Request
     response = task_srv(txStr)
 
-    print 'response'
-    print response.end_status
+    if response.recorded_task:
+        try:
+            f = open(task_file_name,'w')
+            try:
+                rxMsg = json.loads(response.recorded_task)
+                json.dump(rxMsg,f,indent=4)
+            except:
+                print '[-] Error formatting new JSON'
+            f.close()
+        except:
+            print '[-] Error handling file : Write'
+
+    return response.end_status
+
+if __name__ == "__main__":
+    # Print initial prompt
+    print('Interdependence Task Experiment Runner')
+
+    while True:
+
+        # Get user command and parse
+        inStr = raw_input('ITER: ')
+        args = inStr.split()
+
+        if len(args) < 1:
+            print '[-] Error must supply command'
+        elif args[0].lower() == 'task':
+            if len(args) < 2:
+                print '[-] Error must supply filepath arguement'
+            else:
+                try:
+                    load_task(args[1])
+                except Exception, e:
+                    print '[-] Error:', e
+        elif args[0].lower() == 'get_mode':
+            print 'Current mode: ', get_mode()
+        elif args[0].lower() == 'set_mode':
+            if len(args) < 2:
+                print '[-] Error must supply mode to set'
+            elif TimeModeEnum.from_str(args[1]) == None:
+                print '[-] Error invalid mode suplied'
+            else:
+                print 'Set mode to: ', args[1]
+                set_mode(args[1])
+        else:
+            print '[-] Error invalid command supplied'
