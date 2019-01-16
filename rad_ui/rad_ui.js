@@ -7,9 +7,23 @@ function pad(num, size) {
     return s;
 }
 
-function updateProgressBar(radValue) {
+function formatTime(secondsRaw) {
+  var hours = Math.floor(secondsRaw / 3600);
+  secondsRaw -= hours * 3600;
 
-  $('#rad-1-progressbar').css('width',(radValue * 100) + '%');
+  var minutes = Math.floor(secondsRaw / 60);
+  secondsRaw -= minutes * 60;
+
+  var seconds = Math.floor(secondsRaw);
+
+  var timeStr = pad(hours,2) + ':'
+              + pad(minutes,2) + ':'
+              + pad(seconds,2);
+  return timeStr;
+}
+
+function updateProgressBar(value) {
+  $('#rad-1-progressbar').css('width',(value * 100) + '%');
 }
 
 function updateColor(seconds) {
@@ -35,18 +49,11 @@ function updateColor(seconds) {
 }
 
 function updateNeglectTime(seconds) {
+  $('#time-1-text').html(formatTime(seconds));
+}
 
-  var hours = Math.floor(seconds / 3600);
-  seconds -= hours * 3600;
-
-  var minutes = Math.floor(seconds / 60);
-  seconds -= minutes * 60;
-
-  var timeStr = pad(hours,2) + ':'
-              + pad(minutes,2) + ':'
-              + pad(seconds,2);
-
-  $('#time-1-text').html(timeStr);
+function updateUpperBound(seconds) {
+  $('#upper-bound').html(formatTime(seconds));
 }
 
 // Setup ROS Subscribers
@@ -75,11 +82,17 @@ var listenerNegelectTime = new ROSLIB.Topic({
 });
 
 listenerNegelectTime.subscribe(function(message) {
-  console.log('Received neglect time update: ' + message.current + ' ' + message.initial);
-
   if(message != undefined) {
     updateNeglectTime(message.current);
     updateColor(message.current);
+    updateUpperBound(message.initial);
     updateProgressBar(message.current/message.initial);
   }
 });
+/*
+// Clean up Progress bar animation
+$('#test').css('transition-duration', '0.1s').removeClass('progress-bar');
+setTimeout(function() {
+    $('#test').addClass('progress-bar');
+}, 1);
+*/
