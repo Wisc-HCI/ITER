@@ -89,10 +89,3 @@ listenerNegelectTime.subscribe(function(message) {
     updateProgressBar(message.current/message.initial);
   }
 });
-/*
-// Clean up Progress bar animation
-$('#test').css('transition-duration', '0.1s').removeClass('progress-bar');
-setTimeout(function() {
-    $('#test').addClass('progress-bar');
-}, 1);
-*/
