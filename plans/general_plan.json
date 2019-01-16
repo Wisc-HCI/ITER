@@ -1,21 +1,72 @@
 {
     "task": [
-      {
-        "name": "move",
-        "position": {
-          "x": 0,
-          "y": 0,
-          "z": 0
+        {
+            "rad": {
+                "neglect_time": 30.003782987594604,
+                "is_interaction": false
+            },
+            "condition": "time",
+            "name": "wait",
+            "value": 30
         },
-        "orientation": {
-          "x": 0,
-          "y": 0,
-          "z": 0
+        {
+            "rad": {
+                "is_interaction": true
+            },
+            "condition": "button",
+            "name": "wait"
         },
-        "rad": {
-          "neglect_time": 0,
-          "is_interaction": false
+        {
+            "rad": {
+                "neglect_time": 30.003782987594604,
+                "is_interaction": false
+            },
+            "condition": "time",
+            "name": "wait",
+            "value": 30
+        },
+        {
+            "position": {
+                "y": 0,
+                "x": 0,
+                "z": 0
+            },
+            "rad": {
+                "neglect_time": 5.157803058624268,
+                "is_interaction": false
+            },
+            "name": "move",
+            "orientation": {
+                "y": 0,
+                "x": 0,
+                "z": 0
+            }
+        },
+        {
+            "rad": {
+                "neglect_time": 5,
+                "is_interaction": false
+            },
+            "condition": "time",
+            "name": "wait",
+            "value": 5
+        },
+        {
+            "position": {
+                "y": 0,
+                "x": 0,
+                "z": 0
+            },
+            "rad": {
+                "neglect_time": 5,
+                "is_interaction": false
+            },
+            "name": "move",
+            "orientation": {
+                "y": 0,
+                "x": 0,
+                "z": 0
+            }
         }
-      }
     ]
 }

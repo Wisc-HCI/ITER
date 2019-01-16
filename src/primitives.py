@@ -11,7 +11,6 @@
 """
 
 #TODO figure out gripper for grasp primitives
-#TODO define button node code interface, refactor wait_button
 
 import tf
 import sys
@@ -145,11 +144,7 @@ class Wait(Primitive):
         return ret_val
 
 
-def button_callback():
-    return True #TODO write this
-
-
-def instantiate_from_dict(obj):
+def instantiate_from_dict(obj, button_callback):
 
     name = obj['name']
     if name == PrimitiveEnum.GRASP.value:
