@@ -14,6 +14,11 @@
 
     <!-- UR3 -->
     <group if="$(eval arg('robot') == 'ur3')">
+
+      <rosparam param="robot">'ur3'</rosparam>
+      <rosparam param="arm_move_group">'manipulator'</rosparam>
+      <rosparam param="gripper_move_group">'gripper'</rosparam>
+
       <include file="$(find ur3_moveit_config)/launch/planning_context.launch">
         <arg name="load_robot_description" value="true"/>
       </include>
@@ -30,6 +35,11 @@
 
     <!-- UR5 -->
     <group if="$(eval arg('robot') == 'ur5')">
+
+      <rosparam param="robot">'ur5'</rosparam>
+      <rosparam param="arm_move_group">'manipulator'</rosparam>
+      <rosparam param="gripper_move_group">'gripper'</rosparam>
+
       <include file="$(find ur5_moveit_config)/launch/planning_context.launch">
         <arg name="load_robot_description" value="true"/>
       </include>
@@ -44,26 +54,14 @@
       </include>
     </group>
 
-    <!-- UR10 -->
-    <group if="$(eval arg('robot') == 'ur10')">
-      <include file="$(find ur10_moveit_config)/launch/planning_context.launch">
-        <arg name="load_robot_description" value="true"/>
-      </include>
-      <include file="$(find ur10_moveit_config)/launch/move_group.launch">
-        <arg name="allow_trajectory_execution" value="true"/>
-        <arg name="fake_execution" value="true"/>
-        <arg name="info" value="true"/>
-      </include>
-      <!-- include RVIZ until simulation is working -->
-      <include if="$(arg simulated)" file="$(find ur10_moveit_config)/launch/moveit_rviz.launch">
-        <arg name="config" value="true"/>
-      </include>
-    </group>
-
     <!-- Kinova Mico -->
     <group if="$(eval arg('robot') == 'mico')">
       <!-- https://github.com/Kinovarobotics/kinova-ros/wiki/MoveIt -->
-      
+
+      <rosparam param="robot">'mico'</rosparam>
+      <rosparam param="arm_move_group">'arm'</rosparam>
+      <rosparam param="gripper_move_group">'gripper'</rosparam>
+
       <include file="$(find m1n6s300_moveit_config)/launch/planning_context.launch">
         <arg name="load_robot_description" value="true"/>
       </include>
@@ -76,6 +74,8 @@
       <include if="$(arg simulated)" file="$(find m1n6s300_moveit_config)/launch/moveit_rviz.launch">
         <arg name="config" value="true"/>
       </include>
+
+      <!-- roslaunch kinova_bringup kinova_robot.launch kinova_robotType:=*robot_type* -->
     </group>
 
     <!-- If simulated, we do not have a robot connected, so publish fake joint states -->

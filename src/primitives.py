@@ -24,6 +24,9 @@ from geometry_msgs.msg import Pose
 
 moveit_commander.roscpp_initialize(sys.argv)
 
+ARM_MOVE_GROUP = rospy.get_param("arm_move_group")
+GRIPPER_MOVE_GROUP = rospy.get_param("gripper_move_group")
+
 
 class PrimitiveEnum(Enum):
     GRASP = 'grasp'
@@ -48,9 +51,8 @@ class Primitive:
 class Grasp(Primitive):
 
     def __init__(self, effort=1):
-        self.robot_commander = moveit_commander.RobotCommander()
-        self.scene_interface = moveit_commander.PlanningSceneInterface()
-
+        global GRIPPER_MOVE_GROUP
+        self.move_group_commander = moveit_commander.MoveGroupCommander(GRIPPER_MOVE_GROUP)
 
     def operate(self):
         return True
@@ -59,8 +61,8 @@ class Grasp(Primitive):
 class Release(Primitive):
 
     def __init__(self):
-        self.robot_commander = moveit_commander.RobotCommander()
-        self.scene_interface = moveit_commander.PlanningSceneInterface()
+        global GRIPPER_MOVE_GROUP
+        self.move_group_commander = moveit_commander.MoveGroupCommander(GRIPPER_MOVE_GROUP)
 
     def operate(self):
         return True
@@ -69,7 +71,9 @@ class Release(Primitive):
 class Move(Primitive):
 
     def __init__(self, position, orientation):
-        self.move_group_commander = moveit_commander.MoveGroupCommander('manipulator')
+        global ARM_MOVE_GROUP
+
+        self.move_group_commander = moveit_commander.MoveGroupCommander(ARM_MOVE_GROUP)
 
         # Convert from dictionary to Pose
         self._pose = Pose()

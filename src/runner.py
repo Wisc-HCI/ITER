@@ -137,11 +137,7 @@ class RadSignal:
             neglect_time = NeglectTime()
             interaction_time = 0
 
-            print 'start timing thread'
-            print len(self._neglect_time_list), ': ', self._neglect_time_list
-
             for t in self._neglect_time_list:
-                print t
 
                 if 'interaction' in t.keys() and t['interaction']:
                     # Wait for interaction event
