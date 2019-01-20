@@ -4,12 +4,15 @@ import time
 import json
 import rospy
 import threading
+
+rospy.init_node('runner', anonymous=True)
 import primitives as bp
 
 from iter.msg import NeglectTime
 from std_msgs.msg import Float32, String
 from iter.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
 from time_mode_enum import TimeModeEnum
+
 
 button_state = False
 def button_callback():
@@ -177,12 +180,11 @@ class RadSignal:
         except Exception, e:
             print e
 
+
 if __name__ == '__main__':
 
     rad = RadSignal()
     runner = Runner(rad.start_timing,rad.stop_timing)
-
-    rospy.init_node('runner', anonymous=True)
 
     while not rospy.is_shutdown():
         rospy.spin()

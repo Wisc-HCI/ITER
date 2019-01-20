@@ -58,6 +58,8 @@
     <group if="$(eval arg('robot') == 'mico')">
       <!-- https://github.com/Kinovarobotics/kinova-ros/wiki/MoveIt -->
 
+      <!-- m1n6s300 -->
+
       <rosparam param="robot">'mico'</rosparam>
       <rosparam param="arm_move_group">'arm'</rosparam>
       <rosparam param="gripper_move_group">'gripper'</rosparam>
@@ -88,8 +90,10 @@
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen"/>
 
     <!-- Start backend -->
+    <!--
     <node pkg="iter" type="runner.py" name="runner" output="screen"/>
-
+    -->
+    
     <!-- Start RAD UI -->
     <group if="$(arg rad_ui)">
       <node name="web_server" pkg="iter" type="frontend_node_start.sh" args='$(find iter)/rad_ui' output='screen'/>

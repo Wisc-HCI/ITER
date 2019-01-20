@@ -18,14 +18,34 @@ import time
 import rospy
 import moveit_commander
 
-from abc import ABCMeta, abstractmethod
 from enum import Enum
-from geometry_msgs.msg import Pose
+from std_msgs.msg import Header
+from abc import ABCMeta, abstractmethod
+from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion
 
-moveit_commander.roscpp_initialize(sys.argv)
 
 ARM_MOVE_GROUP = rospy.get_param("arm_move_group")
 GRIPPER_MOVE_GROUP = rospy.get_param("gripper_move_group")
+
+moveit_commander.roscpp_initialize(sys.argv)
+move_group_commander = moveit_commander.MoveGroupCommander(ARM_MOVE_GROUP)
+robot = moveit_commander.RobotCommander()
+scene = moveit_commander.PlanningSceneInterface()
+
+
+# Generate scene geometry
+time.sleep(10)
+
+scene.remove_world_object("table")
+scene.add_box(
+    name="table",
+    pose=PoseStamped(
+        header=Header(frame_id=robot.get_planning_frame()),
+        pose=Pose(position=Point(x=0, y=0.44 ,z=-0.025), orientation=Quaternion(x=0, y=0, z=0, w=1))),
+    size=(2, 1, 0.01))
+
+rospy.sleep(1)
+rospy.loginfo(scene.get_known_object_names())
 
 
 class PrimitiveEnum(Enum):
@@ -52,7 +72,8 @@ class Grasp(Primitive):
 
     def __init__(self, effort=1):
         global GRIPPER_MOVE_GROUP
-        self.move_group_commander = moveit_commander.MoveGroupCommander(GRIPPER_MOVE_GROUP)
+        #self.move_group_commander = moveit_commander.MoveGroupCommander(GRIPPER_MOVE_GROUP)
+        pass
 
     def operate(self):
         return True
@@ -62,7 +83,8 @@ class Release(Primitive):
 
     def __init__(self):
         global GRIPPER_MOVE_GROUP
-        self.move_group_commander = moveit_commander.MoveGroupCommander(GRIPPER_MOVE_GROUP)
+        #self.move_group_commander = moveit_commander.MoveGroupCommander(GRIPPER_MOVE_GROUP)
+        pass
 
     def operate(self):
         return True
@@ -71,28 +93,37 @@ class Release(Primitive):
 class Move(Primitive):
 
     def __init__(self, position, orientation):
-        global ARM_MOVE_GROUP
-
-        self.move_group_commander = moveit_commander.MoveGroupCommander(ARM_MOVE_GROUP)
-
         # Convert from dictionary to Pose
         self._pose = Pose()
         self._pose.position.x = position['x']
         self._pose.position.y = position['y']
         self._pose.position.z = position['z']
-        (x,y,z,w)= tf.transformations.quaternion_from_euler(
-            orientation['x'],
-            orientation['y'],
-            orientation['z'])
-        self._pose.orientation.x = x
-        self._pose.orientation.y = y
-        self._pose.orientation.z = z
-        self._pose.orientation.w = w
+
+        if 'w' not in orientation:
+            (x,y,z,w)= tf.transformations.quaternion_from_euler(
+                orientation['x'],
+                orientation['y'],
+                orientation['z'])
+            self._pose.orientation.x = x
+            self._pose.orientation.y = y
+            self._pose.orientation.z = z
+            self._pose.orientation.w = w
+        else:
+            self._pose.orientation.x = orientation['x']
+            self._pose.orientation.y = orientation['y']
+            self._pose.orientation.z = orientation['z']
+            self._pose.orientation.w = orientation['w']
+
+        print 'Orientation: ', self._pose.orientation
 
     def operate(self):
-        self.move_group_commander.clear_pose_targets()
-        self.move_group_commander.set_pose_target(self._pose)
-        return self.move_group_commander.go(wait=True)
+        global move_group_commander
+
+        move_group_commander.clear_pose_targets()
+        move_group_commander.set_pose_target(self._pose)
+        retVal = move_group_commander.go(wait=True)
+        move_group_commander.stop()
+        return retVal
 
 
 class Wait(Primitive):
