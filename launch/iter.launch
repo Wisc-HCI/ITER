@@ -90,10 +90,8 @@
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen"/>
 
     <!-- Start backend -->
-    <!--
     <node pkg="iter" type="runner.py" name="runner" output="screen"/>
-    -->
-    
+
     <!-- Start RAD UI -->
     <group if="$(arg rad_ui)">
       <node name="web_server" pkg="iter" type="frontend_node_start.sh" args='$(find iter)/rad_ui' output='screen'/>

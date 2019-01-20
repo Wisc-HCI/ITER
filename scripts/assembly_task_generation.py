@@ -115,9 +115,9 @@ if __name__ == "__main__":
 
     # origin_position, orientation, num_items, item_dimensions, spacing
     queue_b4x1 = Queue({'x':0.3,'y':0.2,'z':0},'HORIZONTAL_RIGHT',4,BLOCK_1x4,SPACING)
-    queue_b3x1 = Queue({'x':0.3,'y':0.3,'z':0},'HORIZONTAL_RIGHT',4,BLOCK_1x3,SPACING)
+    queue_b3x1 = Queue({'x':0.2,'y':0.3,'z':0},'HORIZONTAL_RIGHT',4,BLOCK_1x3,SPACING)
     queue_b1x1_1 = Queue({'x':-0.3,'y':0.2,'z':0},'HORIZONTAL_LEFT',4,BLOCK_1x1,SPACING)
-    queue_b1x1_2 = Queue({'x':-0.3,'y':0.3,'z':0},'HORIZONTAL_LEFT',4,BLOCK_1x1,SPACING)
+    queue_b1x1_2 = Queue({'x':-0.2,'y':0.3,'z':0},'HORIZONTAL_LEFT',4,BLOCK_1x1,SPACING)
 
     task_list = []
 
@@ -129,7 +129,15 @@ if __name__ == "__main__":
     })
 
     for i in range(0,NUM_ITERATIONS):
+        task_list.append({
+            'name': 'logger',
+            'msg': 'Task Iteration = ' + str(i)
+        })
         # build base
+        task_list.append({
+            'name': 'logger',
+            'msg': 'Task Progress: Building Base'
+        })
         task_list = task_list + queue_b3x1.get_next()
         task_list.append({
             'name': 'move',
@@ -184,6 +192,10 @@ if __name__ == "__main__":
         })
 
         # build pillars
+        task_list.append({
+            'name': 'logger',
+            'msg': '\nTask Progress: Building Pillars Layer 1\n'
+        })
         task_list = task_list + queue_b1x1_1.get_next()
         task_list.append({
             'name': 'move',
@@ -237,6 +249,10 @@ if __name__ == "__main__":
             'name': 'release'
         })
 
+        task_list.append({
+            'name': 'logger',
+            'msg': '\nTask Progress: Building Pillars Layer 2\n'
+        })
         task_list = task_list + queue_b1x1_2.get_next()
         task_list.append({
             'name': 'move',
@@ -291,6 +307,10 @@ if __name__ == "__main__":
         })
 
         # build top
+        task_list.append({
+            'name': 'logger',
+            'msg': 'Task Progress: Building Top'
+        })
         task_list = task_list + queue_b4x1.get_next()
         task_list.append({
             'name': 'move',

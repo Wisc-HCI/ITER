@@ -36,12 +36,15 @@ scene = moveit_commander.PlanningSceneInterface()
 # Generate scene geometry
 time.sleep(10)
 
+
+DEPTH = -0.01#<UR3> -0.025  #<UR5>  # Robot Dependent
+
 scene.remove_world_object("table")
 scene.add_box(
     name="table",
     pose=PoseStamped(
         header=Header(frame_id=robot.get_planning_frame()),
-        pose=Pose(position=Point(x=0, y=0.44 ,z=-0.025), orientation=Quaternion(x=0, y=0, z=0, w=1))),
+        pose=Pose(position=Point(x=0, y=0.44 ,z=DEPTH), orientation=Quaternion(x=0, y=0, z=0, w=1))),
     size=(2, 1, 0.01))
 
 rospy.sleep(1)
@@ -53,6 +56,7 @@ class PrimitiveEnum(Enum):
     RELEASE = 'release'
     MOVE = 'move'
     WAIT = 'wait'
+    LOGGER = 'logger'
 
 
 class ConditionEnum(Enum):
@@ -67,13 +71,20 @@ class Primitive:
     def operate(self):
         raise NotImplementedError('Primitive is Abstract')
 
+class DebugLogger(Primitive):
+
+    def __init__(self, msg):
+        self._msg = msg
+
+    def operate(self):
+        print 'Logger Message: ', self._msg
+        return True
+
 
 class Grasp(Primitive):
 
     def __init__(self, effort=1):
-        global GRIPPER_MOVE_GROUP
-        #self.move_group_commander = moveit_commander.MoveGroupCommander(GRIPPER_MOVE_GROUP)
-        pass
+        self._effort = effort
 
     def operate(self):
         return True
@@ -82,8 +93,6 @@ class Grasp(Primitive):
 class Release(Primitive):
 
     def __init__(self):
-        global GRIPPER_MOVE_GROUP
-        #self.move_group_commander = moveit_commander.MoveGroupCommander(GRIPPER_MOVE_GROUP)
         pass
 
     def operate(self):
@@ -113,8 +122,6 @@ class Move(Primitive):
             self._pose.orientation.y = orientation['y']
             self._pose.orientation.z = orientation['z']
             self._pose.orientation.w = orientation['w']
-
-        print 'Orientation: ', self._pose.orientation
 
     def operate(self):
         global move_group_commander
@@ -190,5 +197,7 @@ def instantiate_from_dict(obj, button_callback):
         return Move(obj['position'],obj['orientation'])
     elif name == PrimitiveEnum.WAIT.value:
         return Wait(button_cb=button_callback, **obj)
+    elif name == PrimitiveEnum.LOGGER.value:
+        return DebugLogger(obj['msg'])
     else:
         raise Exception('Invalid behavior primitive supplied')
