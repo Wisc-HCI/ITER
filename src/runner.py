@@ -1,12 +1,16 @@
 #!/usr/bin/env python
 
+import sys
 import time
 import json
 import rospy
 import threading
+import moveit_commander
+moveit_commander.roscpp_initialize(sys.argv)
 
 rospy.init_node('runner', anonymous=True)
 import primitives as bp
+import environment as env
 
 from iter.msg import NeglectTime
 from std_msgs.msg import Float32, String
@@ -54,6 +58,10 @@ class Runner:
     def run_task(self, json_string):
 
         data = json.loads(json_string.task_json)
+
+        if 'environment' in data.keys():
+            env.generate_dynamic_environment(data['environment'])
+
         primitives = [bp.instantiate_from_dict(obj,button_callback) for obj in data['task']]
         neglect_time_list = generate_neglect_time_list(data)
 
@@ -86,6 +94,9 @@ class Runner:
 
         if self.time_mode == TimeModeEnum.REPLAY:
             self.stop_timing_callback()
+
+        if 'environment' in data.keys():
+            env.clear_dynamic_environment()
 
         if self.time_mode == TimeModeEnum.CAPTURE:
             return TaskResponse(operate_status,json.dumps(data))
@@ -182,6 +193,9 @@ class RadSignal:
 
 
 if __name__ == '__main__':
+    time.sleep(10) # wait for everything to setup first
+
+    env.generate_static_environment()
 
     rad = RadSignal()
     runner = Runner(rad.start_timing,rad.stop_timing)

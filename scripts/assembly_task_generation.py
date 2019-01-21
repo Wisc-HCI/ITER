@@ -13,6 +13,8 @@ WORKSPACE_POSITION = {
 }
 
 SAFE_HEIGHT = 0.25
+GRASP_OFFSET = 0.05
+
 DOWN_GY_ORIENTATION = {
     'x': -0.265591116078,
     'y': 0.654797148311,
@@ -41,12 +43,15 @@ BLOCK_1x1 = (1,1,1)
 
 class Queue:
 
-    def __init__(self, origin_position, orientation, num_items, item_dimensions, spacing):
+    def __init__(self, origin_position, orientation, num_items, item_dimensions, spacing, name_unique=''):
         self.origin_position = origin_position
         self.number_of_items = num_items
         self.idims = item_dimensions
         self.spacing = spacing
         self._index = 0
+        self.name = 'queue' + str(item_dimensions[0])\
+                    + 'x' + str(item_dimensions[1])\
+                    + 'x' + str(item_dimensions[2]) + name_unique
 
         if orientation == 'HORIZONTAL_LEFT' or orientation == 'HORIZONTAL_RIGHT':
             self.orientation = orientation
@@ -86,7 +91,7 @@ class Queue:
                 "position": {
                     'x': target_position['x'],
                     'y': target_position['y'],
-                    'z': target_position['z']
+                    'z': target_position['z'] + GRASP_OFFSET
                 },
                 "orientation": target_orientation
             },
@@ -110,15 +115,34 @@ class Queue:
         self._index += 1
         return task_list
 
+    def env_dict(self):
 
-if __name__ == "__main__":
+        size = {
+            'x': (self.idims[0] * UNIT_BLOCK[0] + self.spacing) * self.number_of_items,
+            'y': (self.idims[1] * UNIT_BLOCK[1]),
+            'z': (self.idims[2] * UNIT_BLOCK[2])
+        }
+        position = {
+            'x': self.origin_position['x'] + 0.5 * size['x'] * (-1 if self.orientation == "HORIZONTAL_LEFT" else 1),
+            'y': self.origin_position['y'] + 0.5 * size['y'],
+            'z': self.origin_position['z'] + 0.5 * size['z']
+        }
 
-    # origin_position, orientation, num_items, item_dimensions, spacing
-    queue_b4x1 = Queue({'x':0.3,'y':0.2,'z':0},'HORIZONTAL_RIGHT',4,BLOCK_1x4,SPACING)
-    queue_b3x1 = Queue({'x':0.2,'y':0.3,'z':0},'HORIZONTAL_RIGHT',4,BLOCK_1x3,SPACING)
-    queue_b1x1_1 = Queue({'x':-0.3,'y':0.2,'z':0},'HORIZONTAL_LEFT',4,BLOCK_1x1,SPACING)
-    queue_b1x1_2 = Queue({'x':-0.2,'y':0.3,'z':0},'HORIZONTAL_LEFT',4,BLOCK_1x1,SPACING)
+        return {
+            'name': self.name,
+            'representation': 'box',
+            'position': position,
+            'orientation': {
+                'x': 0,
+                'y': 0,
+                'z': 0,
+                'w': 1
+            },
+            'size': size
+        }
 
+
+def Generate_Task(queue_b4x1,queue_b3x1,queue_b1x1_1,queue_b1x1_2):
     task_list = []
 
     # set home position
@@ -384,6 +408,22 @@ if __name__ == "__main__":
             t['orientation']['y'] = t['orientation']['y'] / 180.0 * math.pi
             t['orientation']['z'] = t['orientation']['z'] / 180.0 * math.pi
 
+    return task_list
+
+
+if __name__ == "__main__":
+
+    # origin_position, orientation, num_items, item_dimensions, spacing
+    queue_b4x1 = Queue({'x':0.18,'y':0.2,'z':0},'HORIZONTAL_RIGHT',4,BLOCK_1x4,SPACING)
+    queue_b3x1 = Queue({'x':0.18,'y':0.32,'z':0},'HORIZONTAL_RIGHT',4,BLOCK_1x3,SPACING)
+    queue_b1x1_1 = Queue({'x':-0.18,'y':0.25,'z':0},'HORIZONTAL_LEFT',4,BLOCK_1x1,SPACING,'_1')
+    queue_b1x1_2 = Queue({'x':-0.18,'y':0.3,'z':0},'HORIZONTAL_LEFT',4,BLOCK_1x1,SPACING,'_2')
+
+    task = {
+        'task': Generate_Task(queue_b4x1,queue_b3x1,queue_b1x1_1,queue_b1x1_2),
+        'environment': [q.env_dict() for q in [queue_b4x1,queue_b3x1,queue_b1x1_1,queue_b1x1_2]]
+    }
+
     # save final file
     f = open('../plans/test.json','w')
-    json.dump({'task':task_list},f,indent=4)
+    json.dump(task,f,indent=4)

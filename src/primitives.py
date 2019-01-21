@@ -13,7 +13,6 @@
 #TODO figure out gripper for grasp primitives
 
 import tf
-import sys
 import time
 import rospy
 import moveit_commander
@@ -27,28 +26,10 @@ from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion
 ARM_MOVE_GROUP = rospy.get_param("arm_move_group")
 GRIPPER_MOVE_GROUP = rospy.get_param("gripper_move_group")
 
-moveit_commander.roscpp_initialize(sys.argv)
+
 move_group_commander = moveit_commander.MoveGroupCommander(ARM_MOVE_GROUP)
 robot = moveit_commander.RobotCommander()
 scene = moveit_commander.PlanningSceneInterface()
-
-
-# Generate scene geometry
-time.sleep(10)
-
-
-DEPTH = -0.01#<UR3> -0.025  #<UR5>  # Robot Dependent
-
-scene.remove_world_object("table")
-scene.add_box(
-    name="table",
-    pose=PoseStamped(
-        header=Header(frame_id=robot.get_planning_frame()),
-        pose=Pose(position=Point(x=0, y=0.44 ,z=DEPTH), orientation=Quaternion(x=0, y=0, z=0, w=1))),
-    size=(2, 1, 0.01))
-
-rospy.sleep(1)
-rospy.loginfo(scene.get_known_object_names())
 
 
 class PrimitiveEnum(Enum):
