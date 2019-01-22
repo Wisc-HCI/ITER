@@ -5,6 +5,7 @@ import moveit_commander
 from std_msgs.msg import Header
 from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion
 
+GRIPPER_MOVE_GROUP = rospy.get_param("gripper_move_group")
 
 robot = moveit_commander.RobotCommander()
 scene = moveit_commander.PlanningSceneInterface()
@@ -12,7 +13,8 @@ dynamic_environment_ids = []
 
 
 def generate_static_environment():
-    DEPTH = -0.01#<UR3> -0.025  #<UR5>  # Robot Dependent
+    DEPTH = -0.01
+    #DEPTH = -0.05 $ debugging
 
     scene.remove_world_object("table")
     scene.add_box(
@@ -30,6 +32,7 @@ def generate_static_environment():
 
 def generate_dynamic_environment(env_data):
     for obj in env_data:
+
         if obj['representation'] != 'box':
             raise('Invalide object representation')
 
@@ -62,6 +65,7 @@ def clear_dynamic_environment(ids=None):
 
     remove_list = []
     for id in id_list:
+
         scene.remove_world_object(id)
         remove_list.append(id)
 

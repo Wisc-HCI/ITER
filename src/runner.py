@@ -59,8 +59,9 @@ class Runner:
 
         data = json.loads(json_string.task_json)
 
-        if 'environment' in data.keys():
-            env.generate_dynamic_environment(data['environment'])
+        #if 'environment' in data.keys():
+        #    env.generate_dynamic_environment(data['environment'])
+        #    time.sleep(60)
 
         primitives = [bp.instantiate_from_dict(obj,button_callback) for obj in data['task']]
         neglect_time_list = generate_neglect_time_list(data)
@@ -95,8 +96,8 @@ class Runner:
         if self.time_mode == TimeModeEnum.REPLAY:
             self.stop_timing_callback()
 
-        if 'environment' in data.keys():
-            env.clear_dynamic_environment()
+        #if 'environment' in data.keys():
+        #    env.clear_dynamic_environment()
 
         if self.time_mode == TimeModeEnum.CAPTURE:
             return TaskResponse(operate_status,json.dumps(data))
@@ -158,10 +159,7 @@ class RadSignal:
                     interaction_time = 0
                     current = base = time.time()
 
-                    while not button_state:
-
-                        if not self._thread_alive:
-                            raise Exception('Killed Thread')
+                    while not button_state and self._thread_alive:
 
                         interaction_time = current - base
                         self.pub_interaction_time.publish(interaction_time)
@@ -177,16 +175,16 @@ class RadSignal:
 
                     current = base = time.time()
 
-                    while current < base + t["time"]:
-
-                        if not self._thread_alive:
-                            raise Exception('Killed Thread')
+                    while current < base + t["time"] and self._thread_alive:
 
                         neglect_time.current = t["time"] - (current - base)
                         self.pub_neglect_time.publish(neglect_time)
 
                         time.sleep(self.SIGNAL_PUBLISH_TIME_STEP)
                         current = time.time()
+
+                if not self._thread_alive:
+                    break
 
         except Exception, e:
             print e
@@ -200,5 +198,9 @@ if __name__ == '__main__':
     rad = RadSignal()
     runner = Runner(rad.start_timing,rad.stop_timing)
 
-    while not rospy.is_shutdown():
-        rospy.spin()
+    try:
+        while not rospy.is_shutdown():
+            rospy.spin()
+        rad.stop_timing()
+    except:
+        rad.stop_timing()
