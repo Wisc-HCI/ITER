@@ -1,0 +1,1610 @@
+{
+    "environment": [
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.126, 
+                "x": 0.031, 
+                "z": 0.038
+            }, 
+            "name": "queue0.031x0.126x0.038_0", 
+            "position": {
+                "y": 0.263, 
+                "x": 0.1955, 
+                "z": 0.019
+            }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.126, 
+                "x": 0.031, 
+                "z": 0.038
+            }, 
+            "name": "queue0.031x0.126x0.038_1", 
+            "position": {
+                "y": 0.263, 
+                "x": 0.2515, 
+                "z": 0.019
+            }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.126, 
+                "x": 0.031, 
+                "z": 0.038
+            }, 
+            "name": "queue0.031x0.126x0.038_2", 
+            "position": {
+                "y": 0.263, 
+                "x": 0.3075, 
+                "z": 0.019
+            }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.126, 
+                "x": 0.031, 
+                "z": 0.038
+            }, 
+            "name": "queue0.031x0.126x0.038_3", 
+            "position": {
+                "y": 0.263, 
+                "x": 0.3635, 
+                "z": 0.019
+            }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.095, 
+                "x": 0.031, 
+                "z": 0.058
+            }, 
+            "name": "queue0.031x0.095x0.058_0", 
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.1955, 
+                "z": 0.029
+            }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.095, 
+                "x": 0.031, 
+                "z": 0.058
+            }, 
+            "name": "queue0.031x0.095x0.058_1", 
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.2515, 
+                "z": 0.029
+            }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.095, 
+                "x": 0.031, 
+                "z": 0.058
+            }, 
+            "name": "queue0.031x0.095x0.058_2", 
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.3075, 
+                "z": 0.029
+            }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.095, 
+                "x": 0.031, 
+                "z": 0.058
+            }, 
+            "name": "queue0.031x0.095x0.058_3", 
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.3635, 
+                "z": 0.029
+            }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.031, 
+                "x": 0.031, 
+                "z": 0.058
+            }, 
+            "name": "queue0.031x0.031x0.058_1_0", 
+            "position": {
+                "y": 0.2655, 
+                "x": -0.1955, 
+                "z": 0.029
+            }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.031, 
+                "x": 0.031, 
+                "z": 0.058
+            }, 
+            "name": "queue0.031x0.031x0.058_1_1", 
+            "position": {
+                "y": 0.2655, 
+                "x": -0.2515, 
+                "z": 0.029
+            }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.031, 
+                "x": 0.031, 
+                "z": 0.058
+            }, 
+            "name": "queue0.031x0.031x0.058_1_2", 
+            "position": {
+                "y": 0.2655, 
+                "x": -0.3075, 
+                "z": 0.029
+            }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.031, 
+                "x": 0.031, 
+                "z": 0.058
+            }, 
+            "name": "queue0.031x0.031x0.058_1_3", 
+            "position": {
+                "y": 0.2655, 
+                "x": -0.3635, 
+                "z": 0.029
+            }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.031, 
+                "x": 0.031, 
+                "z": 0.058
+            }, 
+            "name": "queue0.031x0.031x0.058_2_0", 
+            "position": {
+                "y": 0.3155, 
+                "x": -0.1955, 
+                "z": 0.029
+            }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.031, 
+                "x": 0.031, 
+                "z": 0.058
+            }, 
+            "name": "queue0.031x0.031x0.058_2_1", 
+            "position": {
+                "y": 0.3155, 
+                "x": -0.2515, 
+                "z": 0.029
+            }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.031, 
+                "x": 0.031, 
+                "z": 0.058
+            }, 
+            "name": "queue0.031x0.031x0.058_2_2", 
+            "position": {
+                "y": 0.3155, 
+                "x": -0.3075, 
+                "z": 0.029
+            }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.031, 
+                "x": 0.031, 
+                "z": 0.058
+            }, 
+            "name": "queue0.031x0.031x0.058_2_3", 
+            "position": {
+                "y": 0.3155, 
+                "x": -0.3635, 
+                "z": 0.029
+            }
+        }
+    ], 
+    "task": [
+        {
+            "position": {
+                "y": 0.4, 
+                "x": 0, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "msg": "Task Iteration = 0", 
+            "name": "logger"
+        }, 
+        {
+            "msg": "Task Progress: Building Base", 
+            "name": "logger"
+        }, 
+        {
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.1955, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.1955, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.1955, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.495, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.495, 
+                "x": 0.031, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.2515, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.2515, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.2515, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.495, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.495, 
+                "x": 0.031, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "position": {
+                "y": 0.263, 
+                "x": 0.1955, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.263, 
+                "x": 0.1955, 
+                "z": 0.188
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.263, 
+                "x": 0.1955, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.526, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": -0.7071067811865475, 
+                "x": -0.7071067811865475, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.526, 
+                "x": 0.031, 
+                "z": 0.16899999999999998
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": -0.7071067811865475, 
+                "x": -0.7071067811865475, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "position": {
+                "y": 0.263, 
+                "x": 0.2515, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.263, 
+                "x": 0.2515, 
+                "z": 0.188
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.263, 
+                "x": 0.2515, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.526, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": -0.7071067811865475, 
+                "x": -0.7071067811865475, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.526, 
+                "x": 0.031, 
+                "z": 0.16899999999999998
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": -0.7071067811865475, 
+                "x": -0.7071067811865475, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "msg": "\nTask Progress: Building Pillars Layer\n", 
+            "name": "logger"
+        }, 
+        {
+            "position": {
+                "y": 0.2655, 
+                "x": -0.1955, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.2655, 
+                "x": -0.1955, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.2655, 
+                "x": -0.1955, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "position": {
+                "y": 0.2655, 
+                "x": -0.2515, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.2655, 
+                "x": -0.2515, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.2655, 
+                "x": -0.2515, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "position": {
+                "y": 0.2655, 
+                "x": -0.3075, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.2655, 
+                "x": -0.3075, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.2655, 
+                "x": -0.3075, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "position": {
+                "y": 0.2655, 
+                "x": -0.3635, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.2655, 
+                "x": -0.3635, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.2655, 
+                "x": -0.3635, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "msg": "\nTask Progress: Building Pillars Layer\n", 
+            "name": "logger"
+        }, 
+        {
+            "position": {
+                "y": 0.3155, 
+                "x": -0.1955, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.3155, 
+                "x": -0.1955, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.3155, 
+                "x": -0.1955, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "position": {
+                "y": 0.3155, 
+                "x": -0.2515, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.3155, 
+                "x": -0.2515, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.3155, 
+                "x": -0.2515, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "position": {
+                "y": 0.3155, 
+                "x": -0.3075, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.3155, 
+                "x": -0.3075, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.3155, 
+                "x": -0.3075, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "position": {
+                "y": 0.3155, 
+                "x": -0.3635, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.3155, 
+                "x": -0.3635, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.3155, 
+                "x": -0.3635, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.43100000000000005, 
+                "x": 0.031, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "msg": "Task Progress: Building Top", 
+            "name": "logger"
+        }, 
+        {
+            "position": {
+                "y": 0.263, 
+                "x": 0.3075, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.263, 
+                "x": 0.3075, 
+                "z": 0.188
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.263, 
+                "x": 0.3075, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.526, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": -0.7071067811865475, 
+                "x": -0.7071067811865475, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.526, 
+                "x": 0.031, 
+                "z": 0.16899999999999998
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": -0.7071067811865475, 
+                "x": -0.7071067811865475, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "position": {
+                "y": 0.263, 
+                "x": 0.3635, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.263, 
+                "x": 0.3635, 
+                "z": 0.188
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.263, 
+                "x": 0.3635, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.526, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": -0.7071067811865475, 
+                "x": -0.7071067811865475, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.526, 
+                "x": 0.031, 
+                "z": 0.16899999999999998
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": -0.7071067811865475, 
+                "x": -0.7071067811865475, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.3075, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.3075, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.3075, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.495, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.495, 
+                "x": 0.031, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.3635, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.3635, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "effort": 1, 
+            "name": "grasp"
+        }, 
+        {
+            "position": {
+                "y": 0.39749999999999996, 
+                "x": 0.3635, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.495, 
+                "x": 0.031, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "position": {
+                "y": 0.495, 
+                "x": 0.031, 
+                "z": 0.179
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "release"
+        }, 
+        {
+            "position": {
+                "y": 0.4, 
+                "x": 0, 
+                "z": 0.5
+            }, 
+            "name": "move", 
+            "orientation": {
+                "y": 1, 
+                "x": 0, 
+                "z": 0, 
+                "w": 0
+            }
+        }, 
+        {
+            "name": "wait", 
+            "condition": "button"
+        }
+    ]
+}
