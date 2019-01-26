@@ -1,0 +1,30 @@
+{
+  "safe_height": 0.2,
+  "grasp_offset": 0.15,
+  "grasp_effort": 0.6,
+  "release_effort": 0.4,
+  "num_iterations": 1,
+  "workspace_position": {
+      "x": 0,
+      "y": 0.4,
+      "z": 0
+  },
+  "home_position": {
+    "x": 0,
+    "y": 0.2,
+    "z": 0.35
+  },
+  "down_gy_orientation": {
+    "x": 0,
+    "y": 1,
+    "z": 0,
+    "w": 0
+  },
+  "down_gx_orientation": {
+    "x": -0.7071067811865475,
+    "y": -0.7071067811865475,
+    "z": 0,
+    "w": 0
+  },
+  "block_spacing": 0.025
+}

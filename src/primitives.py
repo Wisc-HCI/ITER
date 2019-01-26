@@ -23,14 +23,15 @@ from abc import ABCMeta, abstractmethod
 from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion
 
 
+
 ARM_MOVE_GROUP = rospy.get_param("arm_move_group")
 GRIPPER_MOVE_GROUP = rospy.get_param("gripper_move_group")
 
 
-move_group_commander = moveit_commander.MoveGroupCommander(ARM_MOVE_GROUP)
+arm_group_commander = moveit_commander.MoveGroupCommander(ARM_MOVE_GROUP)
+gripper_group_commander = moveit_commander.MoveGroupCommander(GRIPPER_MOVE_GROUP)
 robot = moveit_commander.RobotCommander()
 scene = moveit_commander.PlanningSceneInterface()
-
 
 class PrimitiveEnum(Enum):
     GRASP = 'grasp'
@@ -68,15 +69,23 @@ class Grasp(Primitive):
         self._effort = effort
 
     def operate(self):
+        joint = gripper_group_commander.get_joints()[0]
+        gripper_group_commander.set_joint_value_target({joint:self._effort})
+        gripper_group_commander.go(wait=True)
+        gripper_group_commander.stop()
         return True
 
 
 class Release(Primitive):
 
-    def __init__(self):
-        pass
+    def __init__(self, effort=1):
+        self._effort = effort
 
     def operate(self):
+        joint = gripper_group_commander.get_joints()[0]
+        gripper_group_commander.set_joint_value_target({joint:self._effort})
+        gripper_group_commander.go(wait=True)
+        gripper_group_commander.stop()
         return True
 
 
@@ -105,12 +114,12 @@ class Move(Primitive):
             self._pose.orientation.w = orientation['w']
 
     def operate(self):
-        global move_group_commander
+        global arm_group_commander
 
-        move_group_commander.clear_pose_targets()
-        move_group_commander.set_pose_target(self._pose)
-        retVal = move_group_commander.go(wait=True)
-        move_group_commander.stop()
+        arm_group_commander.clear_pose_targets()
+        arm_group_commander.set_pose_target(self._pose)
+        retVal = arm_group_commander.go(wait=True)
+        arm_group_commander.stop()
         return retVal
 
 
@@ -173,7 +182,7 @@ def instantiate_from_dict(obj, button_callback):
     if name == PrimitiveEnum.GRASP.value:
         return Grasp(obj['effort'])
     elif name == PrimitiveEnum.RELEASE.value:
-        return Release()
+        return Release(obj['effort'])
     elif name == PrimitiveEnum.MOVE.value:
         return Move(obj['position'],obj['orientation'])
     elif name == PrimitiveEnum.WAIT.value:

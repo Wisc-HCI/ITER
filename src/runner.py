@@ -59,9 +59,8 @@ class Runner:
 
         data = json.loads(json_string.task_json)
 
-        #if 'environment' in data.keys():
-        #    env.generate_dynamic_environment(data['environment'])
-        #    time.sleep(60)
+        if 'environment' in data.keys():
+            env.generate_dynamic_environment(data['environment'])
 
         primitives = [bp.instantiate_from_dict(obj,button_callback) for obj in data['task']]
         neglect_time_list = generate_neglect_time_list(data)
@@ -96,8 +95,8 @@ class Runner:
         if self.time_mode == TimeModeEnum.REPLAY:
             self.stop_timing_callback()
 
-        #if 'environment' in data.keys():
-        #    env.clear_dynamic_environment()
+        if 'environment' in data.keys():
+            env.clear_dynamic_environment()
 
         if self.time_mode == TimeModeEnum.CAPTURE:
             return TaskResponse(operate_status,json.dumps(data))
