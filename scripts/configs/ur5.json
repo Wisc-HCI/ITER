@@ -1,11 +1,11 @@
 {
   "safe_height": 0.5,
   "grasp_offset": 0.15,
-  "grasp_effort": 0.6,
-  "release_effort": 0.4,
+  "grasp_effort": 0.58,
+  "release_effort": 0.32,
   "num_iterations": 1,
   "workspace_position": {
-      "x": 0,
+      "x": -0.1,
       "y": 0.4,
       "z": 0
   },
@@ -26,5 +26,39 @@
     "z": 0,
     "w": 0
   },
-  "block_spacing": 0.025
+  "block_spacing": 0.04,
+  "queues": [
+    {
+      "name": "queue_b4x1",
+      "position": {
+        "x":0.18,
+        "y":0.2,
+        "z":0
+      }
+    },
+    {
+      "name": "queue_b3x1",
+      "position": {
+        "x":0.18,
+        "y":0.35,
+        "z":0
+      }
+    },
+    {
+      "name": "queue_b1x1_1",
+      "position": {
+        "x":-0.18,
+        "y":0.25,
+        "z":0
+      }
+    },
+    {
+      "name": "queue_b1x1_2",
+      "position": {
+        "x":-0.18,
+        "y":0.3,
+        "z":0
+      }
+    }
+  ]
 }

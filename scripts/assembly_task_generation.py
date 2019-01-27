@@ -4,7 +4,11 @@ import copy
 import json
 import math
 
-config = json.load(open('./configs/ur3.json','r'))
+BLOCK_1x4 = (0.031,0.126,0.038)
+BLOCK_1x3 = (0.031,0.095,0.058)
+BLOCK_1x1 = (0.031,0.031,0.058)
+
+config = json.load(open('./configs/ur5.json','r'))
 SAFE_HEIGHT = config['safe_height']
 GRASP_OFFSET = config['grasp_offset']
 GRASP_EFFORT = config['grasp_effort']
@@ -16,9 +20,6 @@ DOWN_GY_ORIENTATION = config['down_gy_orientation']
 DOWN_GX_ORIENTATION = config['down_gx_orientation']
 SPACING = config['block_spacing']
 
-BLOCK_1x4 = (0.031,0.126,0.038)
-BLOCK_1x3 = (0.031,0.095,0.058)
-BLOCK_1x1 = (0.031,0.031,0.058)
 
 class Queue:
 
@@ -83,6 +84,11 @@ class Queue:
                     'z': target_position['z'] + GRASP_OFFSET
                 },
                 "orientation": target_orientation
+            },
+            # Attach to moveit model
+            {
+                "name": "connect_object",
+                "object_name": self.name + '_' + str(self._index)
             },
             # grasp item
             {
@@ -158,14 +164,14 @@ class AssemblyTask:
             'msg': 'Task Progress: Building Base'
         })
 
+        # Base 3x1 - 1
         li, id = queue_b3x1.get_next()
         task_list = task_list + li
-
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1],
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
@@ -173,8 +179,8 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1],
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + BLOCK_1x3[2] * 0.5 + GRASP_OFFSET
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
@@ -183,15 +189,28 @@ class AssemblyTask:
             'name': 'release',
             'effort': RELEASE_EFFORT
         })
-
-        li, id = queue_b3x1.get_next()
-        task_list = task_list + li
-
+        task_list.append({
+            "name": "disconnect_object",
+            "object_name": id
+        })
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1],
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1] * 0.5,
+                'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
+            },
+            'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
+        })
+
+        # Base 3x1 - 2
+        li, id = queue_b3x1.get_next()
+        task_list = task_list + li
+        task_list.append({
+            'name': 'move',
+            'position': {
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 3.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
@@ -199,8 +218,8 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1],
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 3.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + BLOCK_1x3[2] * 0.5 + GRASP_OFFSET
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
@@ -209,15 +228,28 @@ class AssemblyTask:
             'name': 'release',
             'effort': RELEASE_EFFORT
         })
-
-        li, id = queue_b4x1.get_next()
-        task_list = task_list + li
-
+        task_list.append({
+            "name": "disconnect_object",
+            "object_name": id
+        })
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x4[1],
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 3.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1] * 0.5,
+                'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
+            },
+            'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
+        })
+
+        # Base 4x1 - 1
+        li, id = queue_b4x1.get_next()
+        task_list = task_list + li
+        task_list.append({
+            'name': 'move',
+            'position': {
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
             'orientation': copy.deepcopy(DOWN_GX_ORIENTATION)
@@ -225,9 +257,9 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x4[1],
-                'z': WORKSPACE_POSITION['z'] + BLOCK_1x4[2] * 0.5 + GRASP_OFFSET
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 0.5,
+                'z': WORKSPACE_POSITION['z'] + BLOCK_1x4[2] * 0.5 + GRASP_OFFSET + BLOCK_1x3[2] + 0.02
             },
             'orientation': copy.deepcopy(DOWN_GX_ORIENTATION)
         })
@@ -235,15 +267,28 @@ class AssemblyTask:
             'name': 'release',
             'effort': RELEASE_EFFORT
         })
-
-        li, id = queue_b4x1.get_next()
-        task_list = task_list + li
-
+        task_list.append({
+            "name": "disconnect_object",
+            "object_name": id
+        })
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x4[1],
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 0.5,
+                'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
+            },
+            'orientation': copy.deepcopy(DOWN_GX_ORIENTATION)
+        })
+
+        # Base 4x1 - 2
+        li, id = queue_b4x1.get_next()
+        task_list = task_list + li
+        task_list.append({
+            'name': 'move',
+            'position': {
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 2.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
             'orientation': copy.deepcopy(DOWN_GX_ORIENTATION)
@@ -251,15 +296,28 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x4[1],
-                'z': WORKSPACE_POSITION['z'] + BLOCK_1x4[2] * 0.5 + GRASP_OFFSET
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 2.5,
+                'z': WORKSPACE_POSITION['z'] + BLOCK_1x4[2] * 0.5 + GRASP_OFFSET + BLOCK_1x3[2] + 0.02
             },
             'orientation': copy.deepcopy(DOWN_GX_ORIENTATION)
         })
         task_list.append({
             'name': 'release',
             'effort': RELEASE_EFFORT
+        })
+        task_list.append({
+            "name": "disconnect_object",
+            "object_name": id
+        })
+        task_list.append({
+            'name': 'move',
+            'position': {
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 2.5,
+                'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
+            },
+            'orientation': copy.deepcopy(DOWN_GX_ORIENTATION)
         })
 
         return task_list
@@ -272,14 +330,14 @@ class AssemblyTask:
             'msg': '\nTask Progress: Building Pillars Layer\n'
         })
 
+        # block 1x1 - 1
         li, id = queue_b1x1.get_next()
         task_list = task_list + li
-
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1],
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
@@ -287,9 +345,9 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1],
-                'z': WORKSPACE_POSITION['z'] + BLOCK_1x1[2] * 0.5 + GRASP_OFFSET
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 0.5,
+                'z': WORKSPACE_POSITION['z'] + BLOCK_1x1[2] * 0.5 + GRASP_OFFSET + BLOCK_1x3[2] + BLOCK_1x4[2] + 0.002
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
         })
@@ -297,15 +355,28 @@ class AssemblyTask:
             'name': 'release',
             'effort': RELEASE_EFFORT
         })
-
-        li, id = queue_b1x1.get_next()
-        task_list = task_list + li
-
+        task_list.append({
+            "name": "disconnect_object",
+            "object_name": id
+        })
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1],
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 0.5,
+                'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
+            },
+            'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
+        })
+
+        # block 1x1 - 2
+        li, id = queue_b1x1.get_next()
+        task_list = task_list + li
+        task_list.append({
+            'name': 'move',
+            'position': {
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 3.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
@@ -313,9 +384,9 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1],
-                'z': WORKSPACE_POSITION['z'] + BLOCK_1x1[2] * 0.5 + GRASP_OFFSET
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 3.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 0.5,
+                'z': WORKSPACE_POSITION['z'] + BLOCK_1x1[2] * 0.5 + GRASP_OFFSET + BLOCK_1x3[2] + BLOCK_1x4[2] + 0.002
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
         })
@@ -323,15 +394,28 @@ class AssemblyTask:
             'name': 'release',
             'effort': RELEASE_EFFORT
         })
-
-        li, id = queue_b1x1.get_next()
-        task_list = task_list + li
-
+        task_list.append({
+            "name": "disconnect_object",
+            "object_name": id
+        })
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1],
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 3.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 0.5,
+                'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
+            },
+            'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
+        })
+
+        # block 1x1 - 3
+        li, id = queue_b1x1.get_next()
+        task_list = task_list + li
+        task_list.append({
+            'name': 'move',
+            'position': {
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 3.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 2.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
@@ -339,9 +423,9 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1],
-                'z': WORKSPACE_POSITION['z'] + BLOCK_1x1[2] * 0.5 + GRASP_OFFSET
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 3.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 2.5,
+                'z': WORKSPACE_POSITION['z'] + BLOCK_1x1[2] * 0.5 + GRASP_OFFSET + BLOCK_1x3[2] + BLOCK_1x4[2] + 0.002
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
         })
@@ -349,15 +433,28 @@ class AssemblyTask:
             'name': 'release',
             'effort': RELEASE_EFFORT
         })
-
-        li, id = queue_b1x1.get_next()
-        task_list = task_list + li
-
+        task_list.append({
+            "name": "disconnect_object",
+            "object_name": id
+        })
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1],
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 3.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 2.5,
+                'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
+            },
+            'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
+        })
+
+        # block 1x1 - 4
+        li, id = queue_b1x1.get_next()
+        task_list = task_list + li
+        task_list.append({
+            'name': 'move',
+            'position': {
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 2.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
@@ -365,15 +462,28 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1],
-                'z': WORKSPACE_POSITION['z'] + BLOCK_1x1[2] * 0.5 + GRASP_OFFSET
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 2.5,
+                'z': WORKSPACE_POSITION['z'] + BLOCK_1x1[2] * 0.5 + GRASP_OFFSET + BLOCK_1x3[2] + BLOCK_1x4[2] + 0.002
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
         })
         task_list.append({
             'name': 'release',
             'effort': RELEASE_EFFORT
+        })
+        task_list.append({
+            "name": "disconnect_object",
+            "object_name": id
+        })
+        task_list.append({
+            'name': 'move',
+            'position': {
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 2.5,
+                'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
+            },
+            'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
         })
 
         return task_list
@@ -386,14 +496,14 @@ class AssemblyTask:
             'msg': 'Task Progress: Building Top'
         })
 
+        # block 4x1 - 1
         li, id = queue_b4x1.get_next()
         task_list = task_list + li
-
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x4[1],
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
             'orientation': copy.deepcopy(DOWN_GX_ORIENTATION)
@@ -401,9 +511,9 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x4[1],
-                'z': WORKSPACE_POSITION['z'] + BLOCK_1x4[2] * 0.5 + GRASP_OFFSET
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 0.5,
+                'z': WORKSPACE_POSITION['z'] + BLOCK_1x4[2] * 0.5 + GRASP_OFFSET + BLOCK_1x1[2] + BLOCK_1x3[2] + BLOCK_1x4[2] + 0.022
             },
             'orientation': copy.deepcopy(DOWN_GX_ORIENTATION)
         })
@@ -411,15 +521,28 @@ class AssemblyTask:
             'name': 'release',
             'effort': RELEASE_EFFORT
         })
+        task_list.append({
+            "name": "disconnect_object",
+            "object_name": id
+        })
+        task_list.append({
+            'name': 'move',
+            'position': {
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 0.5,
+                'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
+            },
+            'orientation': copy.deepcopy(DOWN_GX_ORIENTATION)
+        })
 
+        # block 4x1 - 2
         li, id = queue_b4x1.get_next()
         task_list = task_list + li
-
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x4[1],
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 2.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
             'orientation': copy.deepcopy(DOWN_GX_ORIENTATION)
@@ -427,9 +550,9 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x4[1],
-                'z': WORKSPACE_POSITION['z'] + BLOCK_1x4[2] * 0.5 + GRASP_OFFSET
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 2.5,
+                'z': WORKSPACE_POSITION['z'] + BLOCK_1x4[2] * 0.5 + GRASP_OFFSET + BLOCK_1x1[2] + BLOCK_1x3[2] + BLOCK_1x4[2] + 0.022
             },
             'orientation': copy.deepcopy(DOWN_GX_ORIENTATION)
         })
@@ -437,15 +560,28 @@ class AssemblyTask:
             'name': 'release',
             'effort': RELEASE_EFFORT
         })
-
-        li, id = queue_b3x1.get_next()
-        task_list = task_list + li
-
+        task_list.append({
+            "name": "disconnect_object",
+            "object_name": id
+        })
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1],
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 2.5,
+                'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
+            },
+            'orientation': copy.deepcopy(DOWN_GX_ORIENTATION)
+        })
+
+        # block 3x1 - 1
+        li, id = queue_b3x1.get_next()
+        task_list = task_list + li
+        task_list.append({
+            'name': 'move',
+            'position': {
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
@@ -453,9 +589,9 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1],
-                'z': WORKSPACE_POSITION['z'] + BLOCK_1x3[2] * 0.5 + GRASP_OFFSET
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1] * 0.5,
+                'z': WORKSPACE_POSITION['z'] + BLOCK_1x3[2] * 0.5 + GRASP_OFFSET + BLOCK_1x1[2] + BLOCK_1x3[2] + 2 * BLOCK_1x4[2] + 0.004
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
         })
@@ -463,15 +599,28 @@ class AssemblyTask:
             'name': 'release',
             'effort': RELEASE_EFFORT
         })
-
-        li, id = queue_b3x1.get_next()
-        task_list = task_list + li
-
+        task_list.append({
+            "name": "disconnect_object",
+            "object_name": id
+        })
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1],
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0] * 0.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1] * 0.5,
+                'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
+            },
+            'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
+        })
+
+        # block 3x1 - 2
+        li, id = queue_b3x1.get_next()
+        task_list = task_list + li
+        task_list.append({
+            'name': 'move',
+            'position': {
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 3.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
@@ -479,15 +628,28 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0],
-                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1],
-                'z': WORKSPACE_POSITION['z'] + BLOCK_1x3[2] * 0.5 + GRASP_OFFSET
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 3.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1] * 0.5,
+                'z': WORKSPACE_POSITION['z'] + BLOCK_1x3[2] * 0.5 + GRASP_OFFSET + BLOCK_1x1[2] + BLOCK_1x3[2] + 2 * BLOCK_1x4[2] + 0.004
             },
             'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
         })
         task_list.append({
             'name': 'release',
             'effort': RELEASE_EFFORT
+        })
+        task_list.append({
+            "name": "disconnect_object",
+            "object_name": id
+        })
+        task_list.append({
+            'name': 'move',
+            'position': {
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x1[0] * 3.5,
+                'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1] * 0.5,
+                'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
+            },
+            'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
         })
 
         return task_list
@@ -509,25 +671,34 @@ class AssemblyTask:
             })
 
             task_list += self.build_base(queue_b4x1,queue_b3x1)
-            #task_list += self.build_pillars(queue_b1x1_1)
-            #task_list += self.build_pillars(queue_b1x1_2)
-            #task_list += self.build_top(queue_b4x1,queue_b3x1)
-            #task_list.append(self.home_position())
-            #task_list.append(self.wait_for_human())
+            task_list += self.build_pillars(queue_b1x1_1)
+            task_list += self.build_top(queue_b4x1,queue_b3x1)
+            task_list.append(self.home_position())
+            task_list.append(self.wait_for_human())
 
         return task_list
 
 
 if __name__ == "__main__":
 
-    # origin_position, orientation, num_items, item_dimensions, spacing
-    queue_b4x1 = Queue({'x':0.18,'y':0.2,'z':0},'HORIZONTAL_RIGHT',4,BLOCK_1x4,SPACING,offset_z=False)
-    queue_b3x1 = Queue({'x':0.18,'y':0.35,'z':0},'HORIZONTAL_RIGHT',4,BLOCK_1x3,SPACING)
-    queue_b1x1_1 = Queue({'x':-0.18,'y':0.25,'z':0},'HORIZONTAL_LEFT',4,BLOCK_1x1,SPACING,'_1')
-    queue_b1x1_2 = Queue({'x':-0.18,'y':0.3,'z':0},'HORIZONTAL_LEFT',4,BLOCK_1x1,SPACING,'_2')
+    QUEUES = {}
+    for q in config['queues']:
+        if q['name'] == 'queue_b4x1':
+            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_RIGHT',4,BLOCK_1x4,SPACING,offset_z=False)
+        elif q['name'] == 'queue_b3x1':
+            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_RIGHT',4,BLOCK_1x3,SPACING)
+        elif q['name'] == 'queue_b1x1_1':
+            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',4,BLOCK_1x1,SPACING,'_1')
+        elif q['name'] == 'queue_b1x1_2':
+            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',4,BLOCK_1x1,SPACING,'_2')
+
 
     taskGen = AssemblyTask()
-    task_list = taskGen.generate(queue_b4x1,queue_b3x1,queue_b1x1_1,queue_b1x1_2)
+    task_list = taskGen.generate(
+        QUEUES['queue_b4x1'],
+        QUEUES['queue_b3x1'],
+        QUEUES['queue_b1x1_1'],
+        QUEUES['queue_b1x1_2'])
 
     # convert to radians if Euler angles
     for t in task_list:
@@ -537,10 +708,10 @@ if __name__ == "__main__":
             t['orientation']['z'] = t['orientation']['z'] / 180.0 * math.pi
 
     env_list = []
-    env_list += queue_b4x1.env_list()
-    env_list += queue_b3x1.env_list()
-    env_list += queue_b1x1_1.env_list()
-    env_list += queue_b1x1_2.env_list()
+    env_list += QUEUES['queue_b4x1'].env_list()
+    env_list += QUEUES['queue_b3x1'].env_list()
+    env_list += QUEUES['queue_b1x1_1'].env_list()
+    env_list += QUEUES['queue_b1x1_2'].env_list()
 
     task = {
         'task': task_list,

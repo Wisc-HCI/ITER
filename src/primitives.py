@@ -39,6 +39,8 @@ class PrimitiveEnum(Enum):
     MOVE = 'move'
     WAIT = 'wait'
     LOGGER = 'logger'
+    CONNECT_OBJECT_TO_ROBOT = 'connect_object'
+    DISCONNECT_OBJECT_FROM_ROBOT = 'disconnect_object'
 
 
 class ConditionEnum(Enum):
@@ -53,6 +55,7 @@ class Primitive:
     def operate(self):
         raise NotImplementedError('Primitive is Abstract')
 
+
 class DebugLogger(Primitive):
 
     def __init__(self, msg):
@@ -60,6 +63,34 @@ class DebugLogger(Primitive):
 
     def operate(self):
         print 'Logger Message: ', self._msg
+        return True
+
+
+class ConnectObjectToRobot(Primitive):
+
+    def __init__(self,object_name):
+        self.box_name = object_name
+
+    def operate(self):
+        eef_link = arm_group_commander.get_end_effector_link()
+        touch_links = robot.get_link_names()
+        scene.attach_box(eef_link, self.box_name, touch_links=touch_links)
+        rospy.sleep(1)
+        return True
+
+
+class DisconnectObjectFromRobot(Primitive):
+
+    def __init__(self,object_name):
+        self.box_name = object_name
+
+    def operate(self):
+        eef_link = arm_group_commander.get_end_effector_link()
+
+        print '\n\n\n\n', eef_link, '\n\n\n\n'
+
+        scene.remove_attached_object(eef_link, name=self.box_name)
+        rospy.sleep(1)
         return True
 
 
@@ -189,5 +220,9 @@ def instantiate_from_dict(obj, button_callback):
         return Wait(button_cb=button_callback, **obj)
     elif name == PrimitiveEnum.LOGGER.value:
         return DebugLogger(obj['msg'])
+    elif name == PrimitiveEnum.CONNECT_OBJECT_TO_ROBOT.value:
+        return ConnectObjectToRobot(obj['object_name'])
+    elif name == PrimitiveEnum.DISCONNECT_OBJECT_FROM_ROBOT.value:
+        return DisconnectObjectFromRobot(obj['object_name'])
     else:
         raise Exception('Invalid behavior primitive supplied')
