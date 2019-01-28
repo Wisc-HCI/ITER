@@ -192,8 +192,6 @@ class RadSignal:
 if __name__ == '__main__':
     time.sleep(10) # wait for everything to setup first
 
-    env.generate_static_environment()
-
     rad = RadSignal()
     runner = Runner(rad.start_timing,rad.stop_timing)
 

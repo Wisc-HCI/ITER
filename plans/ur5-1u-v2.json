@@ -319,6 +319,26 @@
                 "x": -0.40850000000000003, 
                 "z": 0.029
             }
+        }, 
+        {
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 1, 
+                "x": 2, 
+                "z": 0.01
+            }, 
+            "name": "tabletop", 
+            "position": {
+                "y": 0.44, 
+                "x": 0, 
+                "z": -0.01
+            }
         }
     ], 
     "task": [
@@ -381,7 +401,7 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 0.6, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
@@ -481,7 +501,7 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 0.6, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
@@ -581,7 +601,7 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 0.6, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
@@ -681,7 +701,7 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 0.6, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
@@ -785,7 +805,7 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 0.6, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
@@ -885,7 +905,7 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 0.6, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
@@ -985,7 +1005,7 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 0.6, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
@@ -1085,7 +1105,7 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 0.6, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
@@ -1189,7 +1209,7 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 0.6, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
@@ -1289,7 +1309,7 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 0.6, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
@@ -1389,7 +1409,7 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 0.6, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
@@ -1489,7 +1509,7 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 0.6, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {

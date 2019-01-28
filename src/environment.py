@@ -11,7 +11,7 @@ robot = moveit_commander.RobotCommander()
 scene = moveit_commander.PlanningSceneInterface()
 dynamic_environment_ids = []
 
-
+'''
 def generate_static_environment():
     DEPTH = -0.01
     #DEPTH = -0.05 $ debugging
@@ -28,7 +28,7 @@ def generate_static_environment():
 
     rospy.sleep(1)
     rospy.loginfo(scene.get_known_object_names())
-
+'''
 
 def generate_dynamic_environment(env_data):
     for obj in env_data:

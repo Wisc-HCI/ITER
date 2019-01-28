@@ -19,6 +19,7 @@ HOME_POSITION = config['home_position']
 DOWN_GY_ORIENTATION = config['down_gy_orientation']
 DOWN_GX_ORIENTATION = config['down_gx_orientation']
 SPACING = config['block_spacing']
+TABLE = config['table']
 
 
 class Queue:
@@ -712,6 +713,18 @@ if __name__ == "__main__":
     env_list += QUEUES['queue_b3x1'].env_list()
     env_list += QUEUES['queue_b1x1_1'].env_list()
     env_list += QUEUES['queue_b1x1_2'].env_list()
+    env_list.append({
+        'name': 'tabletop',
+        'representation': 'box',
+        'position': TABLE['position'],
+        'orientation': {
+            'x': 0,
+            'y': 0,
+            'z': 0,
+            'w': 1
+        },
+        'size': TABLE['size']
+    })
 
     task = {
         'task': task_list,
