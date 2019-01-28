@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import copy
 import json
 import math
@@ -8,7 +9,13 @@ BLOCK_1x4 = (0.031,0.126,0.038)
 BLOCK_1x3 = (0.031,0.095,0.058)
 BLOCK_1x1 = (0.031,0.031,0.058)
 
-config = json.load(open('./configs/ur5.json','r'))
+if len(sys.argv) != 2:
+    print 'must supply the robot config file to use'
+    exit()
+
+configFileName = sys.argv[1]
+
+config = json.load(open('./configs/'+ configFileName +'.json','r'))
 SAFE_HEIGHT = config['safe_height']
 GRASP_OFFSET = config['grasp_offset']
 GRASP_EFFORT = config['grasp_effort']
@@ -19,8 +26,11 @@ HOME_POSITION = config['home_position']
 DOWN_GY_ORIENTATION = config['down_gy_orientation']
 DOWN_GX_ORIENTATION = config['down_gx_orientation']
 SPACING = config['block_spacing']
-TABLE = config['table']
 
+USE_TABLE = False
+if 'table' in config.keys():
+    USE_TABLE = True
+    TABLE = config['table']
 
 class Queue:
 
@@ -713,18 +723,20 @@ if __name__ == "__main__":
     env_list += QUEUES['queue_b3x1'].env_list()
     env_list += QUEUES['queue_b1x1_1'].env_list()
     env_list += QUEUES['queue_b1x1_2'].env_list()
-    env_list.append({
-        'name': 'tabletop',
-        'representation': 'box',
-        'position': TABLE['position'],
-        'orientation': {
-            'x': 0,
-            'y': 0,
-            'z': 0,
-            'w': 1
-        },
-        'size': TABLE['size']
-    })
+
+    if USE_TABLE:
+        env_list.append({
+            'name': 'tabletop',
+            'representation': 'box',
+            'position': TABLE['position'],
+            'orientation': {
+                'x': 0,
+                'y': 0,
+                'z': 0,
+                'w': 1
+            },
+            'size': TABLE['size']
+        })
 
     task = {
         'task': task_list,

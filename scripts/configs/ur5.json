@@ -4,6 +4,7 @@
   "grasp_effort": 0.58,
   "release_effort": 0.32,
   "num_iterations": 1,
+  "block_spacing": 0.04,
   "workspace_position": {
       "x": -0.1,
       "y": 0.4,
@@ -26,7 +27,6 @@
     "z": 0,
     "w": 0
   },
-  "block_spacing": 0.04,
   "queues": [
     {
       "name": "queue_b4x1",

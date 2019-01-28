@@ -18,6 +18,7 @@
       <rosparam param="robot">'ur3'</rosparam>
       <rosparam param="arm_move_group">'manipulator'</rosparam>
       <rosparam param="gripper_move_group">'gripper'</rosparam>
+      <rosparam param="gripper_type">'robotiq-85'</rosparam>
 
       <include file="$(find ur3_moveit_config)/launch/planning_context.launch">
         <arg name="load_robot_description" value="true"/>
@@ -39,6 +40,7 @@
       <rosparam param="robot">'ur5'</rosparam>
       <rosparam param="arm_move_group">'manipulator'</rosparam>
       <rosparam param="gripper_move_group">'gripper'</rosparam>
+      <rosparam param="gripper_type">'robotiq-85'</rosparam>
 
       <include file="$(find ur5_moveit_config)/launch/planning_context.launch">
         <arg name="load_robot_description" value="true"/>
@@ -63,6 +65,7 @@
       <rosparam param="robot">'mico'</rosparam>
       <rosparam param="arm_move_group">'arm'</rosparam>
       <rosparam param="gripper_move_group">'gripper'</rosparam>
+      <rosparam param="gripper_type">'mico-3'</rosparam>
 
       <include file="$(find m1n6s300_moveit_config)/launch/planning_context.launch">
         <arg name="load_robot_description" value="true"/>
