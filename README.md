@@ -24,9 +24,10 @@ Curt Henrichs (cdhenrichs@wisc.edu)
 - Other required packages:
   - [RobotWebTools/rosbridge_suite](https://github.com/RobotWebTools/rosbridge_suite)
     - [GT-RAIL/rosauth](https://github.com/GT-RAIL/rosauth)
-  - [ros-industrial/universal_robot](https://github.com/ros-industrial/universal_robot)
   - [ros-planning/moveit_robots](https://github.com/ros-planning/moveit_robots)
   - [Wisc-HCI/robotiq_85_gripper](https://github.com/Wisc-HCI/robotiq_85_gripper)
+  - [Kinovarobotics/kinova-ros](https://github.com/Kinovarobotics/kinova-ros)
+  - [Wisc-HCI/robot_configurations](https://github.com/Wisc-HCI/robot_configurations)
 
 ## Run
 Enter following into terminal,
