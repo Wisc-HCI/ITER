@@ -121,16 +121,16 @@
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen"/>
 
     <!-- Start backend -->
-    <node pkg="iter" type="runner.py" name="runner" output="screen"/>
+    <node pkg="iter_app" type="runner.py" name="runner" output="screen"/>
 
     <!-- Start RAD UI -->
     <group if="$(arg rad_ui)">
-      <node name="web_server" pkg="iter" type="frontend_node_start.sh" args='$(find iter)/rad_ui' output='screen'/>
+      <node name="web_server" pkg="iter_app" type="frontend_node_start.sh" args='$(find iter_app)/rad_ui' output='screen'/>
     </group>
 
     <!-- Start cli -->
     <group if="$(arg use_cli)">
-      <node pkg="iter" type="cli.py" name="cli" output="screen"/>
+      <node pkg="iter_app" type="cli.py" name="cli" output="screen"/>
     </group>
 
 </launch>
