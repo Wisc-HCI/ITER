@@ -33,5 +33,5 @@ Curt Henrichs (cdhenrichs@wisc.edu)
 Enter following into terminal,
 
 '''
-roslaunch iter iter.launch robot:=ur5 simulated:=true
+roslaunch iter_app iter.launch robot:=ur5 simulated:=true
 '''
