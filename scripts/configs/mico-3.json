@@ -1,0 +1,76 @@
+{
+  "safe_height": 0.25,
+  "grasp_offset": 0.0325,
+  "grasp_effort": 1.1,
+  "release_effort": 0.8,
+  "num_iterations": 1,
+  "block_spacing": 0.06,
+  "workspace_position": {
+      "x": -0.1,
+      "y": 0.2,
+      "z": 0
+  },
+  "home_position": {
+    "x": 0,
+    "y": 0.1,
+    "z": 0.25
+  },
+  "down_gy_orientation": {
+    "x": 0,
+    "y": 1,
+    "z": 0,
+    "w": 0
+  },
+  "down_gx_orientation": {
+    "x": -0.7071067811865475,
+    "y": -0.7071067811865475,
+    "z": 0,
+    "w": 0
+  },
+  "queues": [
+    {
+      "name": "queue_b4x1",
+      "position": {
+        "x":0.18,
+        "y":0,
+        "z":0
+      }
+    },
+    {
+      "name": "queue_b3x1",
+      "position": {
+        "x":0.18,
+        "y":0.15,
+        "z":0
+      }
+    },
+    {
+      "name": "queue_b1x1_1",
+      "position": {
+        "x":-0.18,
+        "y":0,
+        "z":0
+      }
+    },
+    {
+      "name": "queue_b1x1_2",
+      "position": {
+        "x":-0.18,
+        "y":0.1,
+        "z":0
+      }
+    }
+  ],
+  "table": {
+    "position": {
+      "x": 0,
+      "y": 0.44,
+      "z": -0.01
+    },
+    "size": {
+      "x": 2,
+      "y": 1,
+      "z": 0.01
+    }
+  }
+}

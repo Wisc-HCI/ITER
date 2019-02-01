@@ -25,7 +25,7 @@ from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion
 
 ARM_MOVE_GROUP = rospy.get_param("arm_move_group")
 GRIPPER_MOVE_GROUP = rospy.get_param("gripper_move_group")
-GRIPER_TYPE = rospy.get_param("gripper_type")
+GRIPPER_TYPE = rospy.get_param("gripper_type")
 
 arm_group_commander = moveit_commander.MoveGroupCommander(ARM_MOVE_GROUP)
 gripper_group_commander = moveit_commander.MoveGroupCommander(GRIPPER_MOVE_GROUP)
@@ -100,11 +100,14 @@ class Grasp(Primitive):
 
     def operate(self):
 
-        if GRIPER_TYPE == 'mico-3':
+        if GRIPPER_TYPE == 'mico-3':
             gripper_group_commander.set_joint_value_target({'m1n6s300_joint_finger_1':self._effort})
             gripper_group_commander.set_joint_value_target({'m1n6s300_joint_finger_2':self._effort})
             gripper_group_commander.set_joint_value_target({'m1n6s300_joint_finger_3':self._effort})
-        else:
+        elif GRIPPER_TYPE == 'mico-2':
+            gripper_group_commander.set_joint_value_target({'m1n6s200_joint_finger_1':self._effort})
+            gripper_group_commander.set_joint_value_target({'m1n6s200_joint_finger_2':self._effort})
+        else: # Robotiq 85
             joint = gripper_group_commander.get_joints()[0]
             gripper_group_commander.set_joint_value_target({joint:self._effort})
 
@@ -119,12 +122,15 @@ class Release(Primitive):
         self._effort = effort
 
     def operate(self):
-        
-        if GRIPER_TYPE == 'mico-3':
+
+        if GRIPPER_TYPE == 'mico-3':
             gripper_group_commander.set_joint_value_target({'m1n6s300_joint_finger_1':self._effort})
             gripper_group_commander.set_joint_value_target({'m1n6s300_joint_finger_2':self._effort})
             gripper_group_commander.set_joint_value_target({'m1n6s300_joint_finger_3':self._effort})
-        else:
+        elif GRIPPER_TYPE == 'mico-2':
+            gripper_group_commander.set_joint_value_target({'m1n6s200_joint_finger_1':self._effort})
+            gripper_group_commander.set_joint_value_target({'m1n6s200_joint_finger_2':self._effort})
+        else: # Robotiq 85
             joint = gripper_group_commander.get_joints()[0]
             gripper_group_commander.set_joint_value_target({joint:self._effort})
 
