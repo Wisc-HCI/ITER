@@ -5,13 +5,11 @@
     <arg name="robot"/>
     <arg name="simulated" default='true'/>
     <arg name="use_cli" default='false'/>
-    <arg name="rad_ui" default='true'/>
+    <arg name="rad_ui" default='false'/>
 
     <!-- Include Rosbridge launches -->
     <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
-
-    <!-- Upload robot_descriptions and MoveIt Configs -->
-
+    
     <!-- UR3 -->
     <group if="$(eval arg('robot') == 'ur3')">
       <rosparam param="robot">'ur3'</rosparam>
@@ -20,7 +18,7 @@
       <rosparam param="gripper_type">'robotiq-85'</rosparam>
 
       <include file="$(find iter_app)/launch/ur3.launch">
-        <arg name="simulated" value="$(arg('simulated'))"/>
+        <arg name="simulated" value="$(arg simulated )"/>
       </include>
     </group>
 
@@ -32,7 +30,7 @@
       <rosparam param="gripper_type">'robotiq-85'</rosparam>
 
       <include file="$(find iter_app)/launch/ur5.launch">
-        <arg name="simulated" value="$(arg('simulated'))"/>
+        <arg name="simulated" value="$(arg simulated )"/>
       </include>
     </group>
 
@@ -44,7 +42,7 @@
       <rosparam param="gripper_type">'mico-3'</rosparam>
 
       <include file="$(find iter_app)/launch/mico-3.launch">
-        <arg name="simulated" value="$(arg('simulated'))"/>
+        <arg name="simulated" value="$(arg simulated )"/>
       </include>
     </group>
 
