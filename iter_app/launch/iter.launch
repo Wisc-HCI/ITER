@@ -5,120 +5,58 @@
     <arg name="robot"/>
     <arg name="simulated" default='true'/>
     <arg name="use_cli" default='false'/>
-    <arg name="rad_ui" default='true'/>
+    <arg name="rad_ui" default='false'/>
 
     <!-- Include Rosbridge launches -->
     <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
-
-    <!-- Upload robot_descriptions and MoveIt Configs -->
-
+    
     <!-- UR3 -->
     <group if="$(eval arg('robot') == 'ur3')">
-
       <rosparam param="robot">'ur3'</rosparam>
       <rosparam param="arm_move_group">'manipulator'</rosparam>
       <rosparam param="gripper_move_group">'gripper'</rosparam>
       <rosparam param="gripper_type">'robotiq-85'</rosparam>
 
-      <include file="$(find ur3_moveit_config)/launch/planning_context.launch">
-        <arg name="load_robot_description" value="true"/>
-      </include>
-      <include file="$(find ur3_moveit_config)/launch/move_group.launch">
-        <arg name="allow_trajectory_execution" value="true"/>
-        <arg name="fake_execution" value="true"/>
-        <arg name="info" value="true"/>
-      </include>
-      <!-- include RVIZ until simulation is working -->
-      <include if="$(arg simulated)" file="$(find ur3_moveit_config)/launch/moveit_rviz.launch">
-        <arg name="config" value="true"/>
+      <include file="$(find iter_app)/launch/ur3.launch">
+        <arg name="simulated" value="$(arg simulated )"/>
       </include>
     </group>
 
     <!-- UR5 -->
     <group if="$(eval arg('robot') == 'ur5')">
-
       <rosparam param="robot">'ur5'</rosparam>
       <rosparam param="arm_move_group">'manipulator'</rosparam>
       <rosparam param="gripper_move_group">'gripper'</rosparam>
       <rosparam param="gripper_type">'robotiq-85'</rosparam>
 
-      <include file="$(find ur5_moveit_config)/launch/planning_context.launch">
-        <arg name="load_robot_description" value="true"/>
-      </include>
-      <include file="$(find ur5_moveit_config)/launch/move_group.launch">
-        <arg name="allow_trajectory_execution" value="true"/>
-        <arg name="fake_execution" value="true"/>
-        <arg name="info" value="true"/>
-      </include>
-      <!-- include RVIZ until simulation is working -->
-      <include if="$(arg simulated)" file="$(find ur5_moveit_config)/launch/moveit_rviz.launch">
-        <arg name="config" value="true"/>
+      <include file="$(find iter_app)/launch/ur5.launch">
+        <arg name="simulated" value="$(arg simulated )"/>
       </include>
     </group>
 
     <!-- Kinova Mico 3 Finger-->
     <group if="$(eval arg('robot') == 'mico-3')">
-      <!-- https://github.com/Kinovarobotics/kinova-ros/wiki/MoveIt -->
-
-      <!-- m1n6s300 -->
-
       <rosparam param="robot">'mico-3'</rosparam>
       <rosparam param="arm_move_group">'arm'</rosparam>
       <rosparam param="gripper_move_group">'gripper'</rosparam>
       <rosparam param="gripper_type">'mico-3'</rosparam>
 
-      <include file="$(find m1n6s300_moveit_config)/launch/planning_context.launch">
-        <arg name="load_robot_description" value="true"/>
+      <include file="$(find iter_app)/launch/mico-3.launch">
+        <arg name="simulated" value="$(arg simulated )"/>
       </include>
-      <include file="$(find m1n6s300_moveit_config)/launch/move_group.launch">
-        <arg name="allow_trajectory_execution" value="true"/>
-        <arg name="fake_execution" value="true"/>
-        <arg name="info" value="true"/>
-      </include>
-
-      <!-- include RVIZ until simulation is working -->
-      <include if="$(arg simulated)" file="$(find m1n6s300_moveit_config)/launch/moveit_rviz.launch">
-        <arg name="config" value="true"/>
-      </include>
-
-      <!-- roslaunch kinova_bringup kinova_robot.launch kinova_robotType:=*robot_type* -->
     </group>
 
     <!-- Kinova Mico 2 Finger-->
     <group if="$(eval arg('robot') == 'mico-2')">
-      <!-- https://github.com/Kinovarobotics/kinova-ros/wiki/MoveIt -->
-
-      <!-- m1n6s200 -->
       <rosparam param="robot">'mico-2'</rosparam>
       <rosparam param="arm_move_group">'arm'</rosparam>
       <rosparam param="gripper_move_group">'gripper'</rosparam>
       <rosparam param="gripper_type">'mico-2'</rosparam>
 
-      <include file="$(find m1n6s200_moveit_config)/launch/planning_context.launch">
-        <arg name="load_robot_description" value="true"/>
+      <include file="$(find iter_app)/launch/mico-2.launch">
+        <arg name="simulated" value="$(arg simulated )"/>
       </include>
-      <include file="$(find m1n6s200_moveit_config)/launch/move_group.launch">
-        <arg name="allow_trajectory_execution" value="true"/>
-        <arg name="fake_execution" value="true"/>
-        <arg name="info" value="true"/>
-      </include>
-
-      <!-- include RVIZ until simulation is working -->
-      <include if="$(arg simulated)" file="$(find m1n6s200_moveit_config)/launch/moveit_rviz.launch">
-        <arg name="config" value="true"/>
-      </include>
-
-      <!-- roslaunch kinova_bringup kinova_robot.launch kinova_robotType:=*robot_type* -->
     </group>
-
-    <!-- If simulated, we do not have a robot connected, so publish fake joint states -->
-    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-      <param name="/use_gui" value="false"/>
-      <rosparam param="/source_list">['/move_group/fake_controller_joint_states']</rosparam>
-    </node>
-
-    <!-- Given the published joint states, publish tf for the robot links -->
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen"/>
 
     <!-- Start backend -->
     <node pkg="iter_app" type="runner.py" name="runner" output="screen"/>
