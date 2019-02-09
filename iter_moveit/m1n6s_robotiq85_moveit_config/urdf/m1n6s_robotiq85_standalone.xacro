@@ -14,10 +14,7 @@
 	xmlns:rendering="http://playerstage.sourceforge.net/gazebo/xmlschema/#rendering"
     xmlns:renderable="http://playerstage.sourceforge.net/gazebo/xmlschema/#renderable"
     xmlns:physics="http://playerstage.sourceforge.net/gazebo/xmlschema/#physics"
-	xmlns:xacro="http://ros.org/wiki/xacro" name="m1n6s200">
-
-
-  <xacro:include filename="$(find kinova_description)/urdf/m1n6s200.xacro"/>
+	xmlns:xacro="http://ros.org/wiki/xacro" name="m1n6s_robotiq85">
 
   <link name="root">
     <visual>
@@ -31,22 +28,35 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <box size = "0 0 0"/> 
+        <box size = "0 0 0"/>
       </geometry>
-    </collision>     
+    </collision>
   </link>
 
   <!-- for gazebo -->
   <link name="world"/>
-  
   <joint name="connect_root_and_world" type="fixed">
     <child link="root" />
     <parent link="world" />
-    <origin xyz="0 0 0" rpy="0 0 0" />    
-  </joint> 
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
 
-  <xacro:property name="robot_root" value="root" />
+	<!-- THE ROBOT -->
+	<link name="base_link"/>
 
-  <xacro:m1n6s200  base_parent="${robot_root}"/>
+	<!-- M1N6S Mico Arm -->
+	<xacro:include filename="$(find m1n6s_robotiq85_moveit_config)/urdf/m1n6s.xacro" />
+  <joint name="base_joint" type="fixed">
+		<parent link="root" />
+		<child link = "base_link" />
+		<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+	</joint>
+  <xacro:m1n6s base_parent="base_link" />
+
+	<!-- Robotiq 85-->
+	<xacro:include filename="$(find robotiq_85_description)/urdf/robotiq_85_gripper.urdf.xacro" />
+	<xacro:robotiq_85_gripper prefix="simple_gripper_" parent="m1n6s200_end_effector">
+	  <origin xyz="0 0 0" rpy="${pi/2} -${pi/2} 0" />
+	</xacro:robotiq_85_gripper>
 
 </robot>

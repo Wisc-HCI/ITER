@@ -9,7 +9,7 @@
   <arg name="debug" default="false" />
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
-  <include file="$(find m1n6s00_moveit_config)/launch/planning_context.launch">
+  <include file="$(find m1n6s_robotiq85_moveit_config)/launch/planning_context.launch">
     <arg name="load_robot_description" value="true"/>
   </include>
 
