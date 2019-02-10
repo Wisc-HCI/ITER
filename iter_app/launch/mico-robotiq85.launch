@@ -19,7 +19,12 @@
     </include>
 
     <!-- Launch gripper driver -->
-
+    <include file="$(find robotiq_85_bringup)/launch/robotiq_85.launch">
+      <arg name="dual_gripper" value="false"/>
+      <arg name="comport" value="/dev/ttyUSB0"/>
+      <arg name="baud" value="115200"/>
+      <arg name="run_test" value="true"/>
+    </include>
 
     <!-- Launch Moveit -->
     <include file="$(find m1n6s_robotiq85_moveit_config)/launch/m1n6s_robotiq85_demo.launch"></include>

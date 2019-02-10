@@ -100,6 +100,8 @@ class Grasp(Primitive):
 
     def operate(self):
 
+        arm_group_commander.clear_pose_targets()
+
         if GRIPPER_TYPE == 'mico-3':
             gripper_group_commander.set_joint_value_target({'m1n6s300_joint_finger_1':self._effort})
             gripper_group_commander.set_joint_value_target({'m1n6s300_joint_finger_2':self._effort})
@@ -122,6 +124,8 @@ class Release(Primitive):
         self._effort = effort
 
     def operate(self):
+
+        arm_group_commander.clear_pose_targets()
 
         if GRIPPER_TYPE == 'mico-3':
             gripper_group_commander.set_joint_value_target({'m1n6s300_joint_finger_1':self._effort})

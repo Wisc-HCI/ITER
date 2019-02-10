@@ -346,7 +346,7 @@
             "position": {
                 "y": 0.1, 
                 "x": 0, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -357,7 +357,7 @@
             }
         }, 
         {
-            "effort": 0.8, 
+            "effort": 0.32, 
             "name": "release"
         }, 
         {
@@ -372,7 +372,7 @@
             "position": {
                 "y": 0.1975, 
                 "x": 0.1955, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -386,7 +386,7 @@
             "position": {
                 "y": 0.1975, 
                 "x": 0.1955, 
-                "z": 0.0615
+                "z": 0.159
             }, 
             "name": "move", 
             "orientation": {
@@ -401,14 +401,14 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 1.1, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": 0.1975, 
                 "x": 0.1955, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -422,7 +422,7 @@
             "position": {
                 "y": 0.2475, 
                 "x": -0.0845, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -436,7 +436,7 @@
             "position": {
                 "y": 0.2475, 
                 "x": -0.0845, 
-                "z": 0.0615
+                "z": 0.159
             }, 
             "name": "move", 
             "orientation": {
@@ -447,7 +447,7 @@
             }
         }, 
         {
-            "effort": 0.8, 
+            "effort": 0.32, 
             "name": "release"
         }, 
         {
@@ -458,7 +458,7 @@
             "position": {
                 "y": 0.2475, 
                 "x": -0.0845, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -472,7 +472,7 @@
             "position": {
                 "y": 0.1975, 
                 "x": 0.2865, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -486,7 +486,7 @@
             "position": {
                 "y": 0.1975, 
                 "x": 0.2865, 
-                "z": 0.0615
+                "z": 0.159
             }, 
             "name": "move", 
             "orientation": {
@@ -501,14 +501,14 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 1.1, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": 0.1975, 
                 "x": 0.2865, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -522,7 +522,7 @@
             "position": {
                 "y": 0.2475, 
                 "x": 0.008499999999999994, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -536,7 +536,7 @@
             "position": {
                 "y": 0.2475, 
                 "x": 0.008499999999999994, 
-                "z": 0.0615
+                "z": 0.159
             }, 
             "name": "move", 
             "orientation": {
@@ -547,7 +547,7 @@
             }
         }, 
         {
-            "effort": 0.8, 
+            "effort": 0.32, 
             "name": "release"
         }, 
         {
@@ -558,7 +558,7 @@
             "position": {
                 "y": 0.2475, 
                 "x": 0.008499999999999994, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -572,7 +572,7 @@
             "position": {
                 "y": 0.063, 
                 "x": 0.1955, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -586,7 +586,7 @@
             "position": {
                 "y": 0.063, 
                 "x": 0.1955, 
-                "z": 0.07050000000000001
+                "z": 0.168
             }, 
             "name": "move", 
             "orientation": {
@@ -601,14 +601,14 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 1.1, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": 0.063, 
                 "x": 0.1955, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -622,7 +622,7 @@
             "position": {
                 "y": 0.21550000000000002, 
                 "x": -0.037000000000000005, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -636,7 +636,7 @@
             "position": {
                 "y": 0.21550000000000002, 
                 "x": -0.037000000000000005, 
-                "z": 0.1295
+                "z": 0.22699999999999998
             }, 
             "name": "move", 
             "orientation": {
@@ -647,7 +647,7 @@
             }
         }, 
         {
-            "effort": 0.8, 
+            "effort": 0.32, 
             "name": "release"
         }, 
         {
@@ -658,7 +658,7 @@
             "position": {
                 "y": 0.21550000000000002, 
                 "x": -0.037000000000000005, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -672,7 +672,7 @@
             "position": {
                 "y": 0.063, 
                 "x": 0.2865, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -686,7 +686,7 @@
             "position": {
                 "y": 0.063, 
                 "x": 0.2865, 
-                "z": 0.07050000000000001
+                "z": 0.168
             }, 
             "name": "move", 
             "orientation": {
@@ -701,14 +701,14 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 1.1, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": 0.063, 
                 "x": 0.2865, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -722,7 +722,7 @@
             "position": {
                 "y": 0.2775, 
                 "x": -0.037000000000000005, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -736,7 +736,7 @@
             "position": {
                 "y": 0.2775, 
                 "x": -0.037000000000000005, 
-                "z": 0.1295
+                "z": 0.22699999999999998
             }, 
             "name": "move", 
             "orientation": {
@@ -747,7 +747,7 @@
             }
         }, 
         {
-            "effort": 0.8, 
+            "effort": 0.32, 
             "name": "release"
         }, 
         {
@@ -758,7 +758,7 @@
             "position": {
                 "y": 0.2775, 
                 "x": -0.037000000000000005, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -776,7 +776,7 @@
             "position": {
                 "y": 0.0155, 
                 "x": -0.1955, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -790,7 +790,7 @@
             "position": {
                 "y": 0.0155, 
                 "x": -0.1955, 
-                "z": 0.0615
+                "z": 0.159
             }, 
             "name": "move", 
             "orientation": {
@@ -805,14 +805,14 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 1.1, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": 0.0155, 
                 "x": -0.1955, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -826,7 +826,7 @@
             "position": {
                 "y": 0.21550000000000002, 
                 "x": -0.0845, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -840,7 +840,7 @@
             "position": {
                 "y": 0.21550000000000002, 
                 "x": -0.0845, 
-                "z": 0.1595
+                "z": 0.257
             }, 
             "name": "move", 
             "orientation": {
@@ -851,7 +851,7 @@
             }
         }, 
         {
-            "effort": 0.8, 
+            "effort": 0.32, 
             "name": "release"
         }, 
         {
@@ -862,7 +862,7 @@
             "position": {
                 "y": 0.21550000000000002, 
                 "x": -0.0845, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -876,7 +876,7 @@
             "position": {
                 "y": 0.0155, 
                 "x": -0.2865, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -890,7 +890,7 @@
             "position": {
                 "y": 0.0155, 
                 "x": -0.2865, 
-                "z": 0.0615
+                "z": 0.159
             }, 
             "name": "move", 
             "orientation": {
@@ -905,14 +905,14 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 1.1, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": 0.0155, 
                 "x": -0.2865, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -926,7 +926,7 @@
             "position": {
                 "y": 0.21550000000000002, 
                 "x": 0.008499999999999994, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -940,7 +940,7 @@
             "position": {
                 "y": 0.21550000000000002, 
                 "x": 0.008499999999999994, 
-                "z": 0.1595
+                "z": 0.257
             }, 
             "name": "move", 
             "orientation": {
@@ -951,7 +951,7 @@
             }
         }, 
         {
-            "effort": 0.8, 
+            "effort": 0.32, 
             "name": "release"
         }, 
         {
@@ -962,7 +962,7 @@
             "position": {
                 "y": 0.21550000000000002, 
                 "x": 0.008499999999999994, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -976,7 +976,7 @@
             "position": {
                 "y": 0.0155, 
                 "x": -0.3775, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -990,7 +990,7 @@
             "position": {
                 "y": 0.0155, 
                 "x": -0.3775, 
-                "z": 0.0615
+                "z": 0.159
             }, 
             "name": "move", 
             "orientation": {
@@ -1005,14 +1005,14 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 1.1, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": 0.0155, 
                 "x": -0.3775, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1026,7 +1026,7 @@
             "position": {
                 "y": 0.2775, 
                 "x": 0.008499999999999994, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1040,7 +1040,7 @@
             "position": {
                 "y": 0.2775, 
                 "x": 0.008499999999999994, 
-                "z": 0.1595
+                "z": 0.257
             }, 
             "name": "move", 
             "orientation": {
@@ -1051,7 +1051,7 @@
             }
         }, 
         {
-            "effort": 0.8, 
+            "effort": 0.32, 
             "name": "release"
         }, 
         {
@@ -1062,7 +1062,7 @@
             "position": {
                 "y": 0.2775, 
                 "x": 0.008499999999999994, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1076,7 +1076,7 @@
             "position": {
                 "y": 0.0155, 
                 "x": -0.4685, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1090,7 +1090,7 @@
             "position": {
                 "y": 0.0155, 
                 "x": -0.4685, 
-                "z": 0.0615
+                "z": 0.159
             }, 
             "name": "move", 
             "orientation": {
@@ -1105,14 +1105,14 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 1.1, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": 0.0155, 
                 "x": -0.4685, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1126,7 +1126,7 @@
             "position": {
                 "y": 0.2775, 
                 "x": -0.0845, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1140,7 +1140,7 @@
             "position": {
                 "y": 0.2775, 
                 "x": -0.0845, 
-                "z": 0.1595
+                "z": 0.257
             }, 
             "name": "move", 
             "orientation": {
@@ -1151,7 +1151,7 @@
             }
         }, 
         {
-            "effort": 0.8, 
+            "effort": 0.32, 
             "name": "release"
         }, 
         {
@@ -1162,7 +1162,7 @@
             "position": {
                 "y": 0.2775, 
                 "x": -0.0845, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1180,7 +1180,7 @@
             "position": {
                 "y": 0.063, 
                 "x": 0.3775, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1194,7 +1194,7 @@
             "position": {
                 "y": 0.063, 
                 "x": 0.3775, 
-                "z": 0.07050000000000001
+                "z": 0.168
             }, 
             "name": "move", 
             "orientation": {
@@ -1209,14 +1209,14 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 1.1, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": 0.063, 
                 "x": 0.3775, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1230,7 +1230,7 @@
             "position": {
                 "y": 0.21550000000000002, 
                 "x": -0.037000000000000005, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1244,7 +1244,7 @@
             "position": {
                 "y": 0.21550000000000002, 
                 "x": -0.037000000000000005, 
-                "z": 0.2275
+                "z": 0.325
             }, 
             "name": "move", 
             "orientation": {
@@ -1255,7 +1255,7 @@
             }
         }, 
         {
-            "effort": 0.8, 
+            "effort": 0.32, 
             "name": "release"
         }, 
         {
@@ -1266,7 +1266,7 @@
             "position": {
                 "y": 0.21550000000000002, 
                 "x": -0.037000000000000005, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1280,7 +1280,7 @@
             "position": {
                 "y": 0.063, 
                 "x": 0.4685, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1294,7 +1294,7 @@
             "position": {
                 "y": 0.063, 
                 "x": 0.4685, 
-                "z": 0.07050000000000001
+                "z": 0.168
             }, 
             "name": "move", 
             "orientation": {
@@ -1309,14 +1309,14 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 1.1, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": 0.063, 
                 "x": 0.4685, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1330,7 +1330,7 @@
             "position": {
                 "y": 0.2775, 
                 "x": -0.037000000000000005, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1344,7 +1344,7 @@
             "position": {
                 "y": 0.2775, 
                 "x": -0.037000000000000005, 
-                "z": 0.2275
+                "z": 0.325
             }, 
             "name": "move", 
             "orientation": {
@@ -1355,7 +1355,7 @@
             }
         }, 
         {
-            "effort": 0.8, 
+            "effort": 0.32, 
             "name": "release"
         }, 
         {
@@ -1366,7 +1366,7 @@
             "position": {
                 "y": 0.2775, 
                 "x": -0.037000000000000005, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1380,7 +1380,7 @@
             "position": {
                 "y": 0.1975, 
                 "x": 0.3775, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1394,7 +1394,7 @@
             "position": {
                 "y": 0.1975, 
                 "x": 0.3775, 
-                "z": 0.0615
+                "z": 0.159
             }, 
             "name": "move", 
             "orientation": {
@@ -1409,14 +1409,14 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 1.1, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": 0.1975, 
                 "x": 0.3775, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1430,7 +1430,7 @@
             "position": {
                 "y": 0.2475, 
                 "x": -0.0845, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1444,7 +1444,7 @@
             "position": {
                 "y": 0.2475, 
                 "x": -0.0845, 
-                "z": 0.2575
+                "z": 0.35500000000000004
             }, 
             "name": "move", 
             "orientation": {
@@ -1455,7 +1455,7 @@
             }
         }, 
         {
-            "effort": 0.8, 
+            "effort": 0.32, 
             "name": "release"
         }, 
         {
@@ -1466,7 +1466,7 @@
             "position": {
                 "y": 0.2475, 
                 "x": -0.0845, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1480,7 +1480,7 @@
             "position": {
                 "y": 0.1975, 
                 "x": 0.4685, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1494,7 +1494,7 @@
             "position": {
                 "y": 0.1975, 
                 "x": 0.4685, 
-                "z": 0.0615
+                "z": 0.159
             }, 
             "name": "move", 
             "orientation": {
@@ -1509,14 +1509,14 @@
             "name": "connect_object"
         }, 
         {
-            "effort": 1.1, 
+            "effort": 0.58, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": 0.1975, 
                 "x": 0.4685, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1530,7 +1530,7 @@
             "position": {
                 "y": 0.2475, 
                 "x": 0.008499999999999994, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1544,7 +1544,7 @@
             "position": {
                 "y": 0.2475, 
                 "x": 0.008499999999999994, 
-                "z": 0.2575
+                "z": 0.35500000000000004
             }, 
             "name": "move", 
             "orientation": {
@@ -1555,7 +1555,7 @@
             }
         }, 
         {
-            "effort": 0.8, 
+            "effort": 0.32, 
             "name": "release"
         }, 
         {
@@ -1566,7 +1566,7 @@
             "position": {
                 "y": 0.2475, 
                 "x": 0.008499999999999994, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
@@ -1580,7 +1580,7 @@
             "position": {
                 "y": 0.1, 
                 "x": 0, 
-                "z": 0.25
+                "z": 0.35
             }, 
             "name": "move", 
             "orientation": {
