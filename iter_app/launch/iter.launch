@@ -71,7 +71,7 @@
     </group>
 
     <!-- Start backend -->
-    <!--<node pkg="iter_app" type="runner.py" name="runner" output="screen"/>-->
+    <node pkg="iter_app" type="runner.py" name="runner" output="screen"/>
 
     <!-- Start RAD UI -->
     <group if="$(arg rad_ui)">

@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
 <robot name="m1n6s_robotiq85" xmlns:xacro="http://ros.org/wiki/xacro">
 
+	<link name="root">
+  </link>
+
+  <!-- for gazebo -->
+  <link name="world"/>
+  <joint name="connect_root_and_world" type="fixed">
+    <child link="root" />
+    <parent link="world" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+
 	<!-- THE ROBOT -->
 	<link name="base_link" />
 

@@ -101,7 +101,7 @@
     <xacro:property name="joint_end_effector_type" value="fixed" />
     <xacro:property name="joint_end_effector_axis_xyz" value="0 0 0" />
     <xacro:property name="joint_end_effector_origin_xyz" value="0 0 -0.051" />
-    <xacro:property name="joint_end_effector_origin_rpy" value="${J_PI} 0 ${J_PI/2}" />
+    <xacro:property name="joint_end_effector_origin_rpy" value="${J_PI} 0 0" /> <!-- value="${J_PI} 0 ${J_PI/2}" -->
 
 
     <xacro:macro name="kinova_finger_fake" params="prefix finger_number hand finger_origin_xyz finger_origin_rpy">
