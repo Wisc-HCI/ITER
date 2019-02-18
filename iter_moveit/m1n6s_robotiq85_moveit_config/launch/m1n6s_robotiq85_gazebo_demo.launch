@@ -19,13 +19,13 @@
   </include>
 
   <!-- Run the main MoveIt executable without trajectory execution (we do not have controllers configured by default) -->
-  <include file="$(find m1n6s_robotiq85_moveit_config)/launch/move_group_m1n6s200.launch">
+  <include file="$(find m1n6s_robotiq85_moveit_config)/launch/move_group_m1n6s_robotiq85.launch">
     <arg name="allow_trajectory_execution" value="true"/>
     <arg name="fake_execution" value="false"/>
     <arg name="info" value="true"/>
     <arg name="debug" value="$(arg debug)"/>
     <arg name="joint_states_ns" value="/m1n6s200/joint_states"/>
-    <arg name="controller_manager" value="m1n6s200_ros_control"/>
+    <arg name="controller_manager" value="m1n6s_robotiq85_ros_control"/>
   </include>
 
   <!-- ros-control Controller parameters-->

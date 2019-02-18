@@ -22,6 +22,7 @@ from std_msgs.msg import Header
 from abc import ABCMeta, abstractmethod
 from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion
 
+rospy.sleep(10)
 
 ARM_MOVE_GROUP = rospy.get_param("arm_move_group")
 GRIPPER_MOVE_GROUP = rospy.get_param("gripper_move_group")
