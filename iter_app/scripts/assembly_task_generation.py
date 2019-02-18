@@ -34,7 +34,7 @@ if 'table' in config.keys():
 
 class Queue:
 
-    def __init__(self, origin_position, orientation, num_items, item_dimensions, spacing, name_unique='', offset_z=True):
+    def __init__(self, origin_position, orientation, num_items, item_dimensions, spacing, name_unique='', offset_z=True, mode='x'):
         self.origin_position = origin_position
         self.number_of_items = num_items
         self.idims = item_dimensions
@@ -44,6 +44,7 @@ class Queue:
                     + 'x' + str(item_dimensions[1])\
                     + 'x' + str(item_dimensions[2]) + name_unique
         self.offset_z = offset_z
+        self.mode = mode
 
         if orientation == 'HORIZONTAL_LEFT' or orientation == 'HORIZONTAL_RIGHT':
             self.orientation = orientation
@@ -51,17 +52,32 @@ class Queue:
             raise Exception('Invalid Orientation Enum');
 
     def _get(self,index):
-        global DOWN_GY_ORIENTATION
+        global DOWN_GX_ORIENTATION
 
-        target_position = {
-            'x': self.origin_position['x']
-                + (index * (self.spacing + self.idims[0]) + 0.5 * self.idims[0])
-                * (-1 if self.orientation == "HORIZONTAL_LEFT" else 1),
-            'y': self.origin_position['y'] + 0.5 * self.idims[1],
-            'z': self.origin_position['z'] + self.idims[2] * (0.5 if self.offset_z else 1)
-        }
+        if self.mode == 'x':
+            target_position = {
+                'x': self.origin_position['x']
+                    + (index * (self.spacing + self.idims[0]) + 0.5 * self.idims[0])
+                    * (-1 if self.orientation == "HORIZONTAL_LEFT" else 1),
+                'y': self.origin_position['y'] + 0.5 * self.idims[1],
+                'z': self.origin_position['z'] + self.idims[2] * (0.5 if self.offset_z else 1)
+            }
+        elif self.mode == 'y':
+            target_position = {
+                'x': self.origin_position['x'] + 0.5 * self.idims[1],
+                'y': self.origin_position['y']
+                    + (index * (self.spacing + self.idims[0]) + 0.5 * self.idims[0])
+                    * (-1 if self.orientation == "HORIZONTAL_LEFT" else 1),
+                'z': self.origin_position['z'] + self.idims[2] * (0.5 if self.offset_z else 1)
+            }
+        else:
+            target_position = {
+                'x': 0,
+                'y': 0,
+                'z': 0
+            }
 
-        target_orientation = copy.deepcopy(DOWN_GY_ORIENTATION)
+        target_orientation = copy.deepcopy(DOWN_GX_ORIENTATION)
 
         return target_position, target_orientation
 
@@ -77,15 +93,15 @@ class Queue:
 
         task_list = [
             # move from current position to above queue item
-            {
-                "name": "move",
-                "position": {
-                    'x': target_position['x'],
-                    'y': target_position['y'],
-                    'z': SAFE_HEIGHT
-                },
-                "orientation": target_orientation
-            },
+            #{
+            #    "name": "move",
+            #    "position": {
+            #        'x': target_position['x'],
+            #        'y': target_position['y'],
+            #        'z': SAFE_HEIGHT
+            #    },
+            #    "orientation": target_orientation
+            #},
             # move down to item
             {
                 "name": "move",
@@ -107,21 +123,22 @@ class Queue:
                 "effort": GRASP_EFFORT
             },
             # raise to homing position
-            {
-                "name": "move",
-                "position": {
-                    'x': target_position['x'],
-                    'y': target_position['y'],
-                    'z': SAFE_HEIGHT
-                },
-                "orientation": target_orientation
-            }
+            #{
+            #    "name": "move",
+            #    "position": {
+            #        'x': target_position['x'],
+            #        'y': target_position['y'],
+            #        'z': SAFE_HEIGHT
+            #    },
+            #    "orientation": target_orientation
+            #}
         ]
 
         self._index += 1
         return task_list, obj_id
 
     def env_list(self):
+        global DOWN_GY_ORIENTATION, DOWN_GX_ORIENTATION
 
         obj_list = []
 
@@ -133,12 +150,7 @@ class Queue:
                 'name': self.name + '_' + str(index),
                 'representation': 'box',
                 'position': target_position,
-                'orientation': {
-                    'x': 0,
-                    'y': 0,
-                    'z': 0,
-                    'w': 1
-                },
+                'orientation': copy.deepcopy(DOWN_GX_ORIENTATION),
                 'size': {
                     'x': (self.idims[0]),
                     'y': (self.idims[1]),
@@ -159,7 +171,7 @@ class AssemblyTask:
         return {
             'name': 'move',
             'position': copy.deepcopy(HOME_POSITION),
-            'orientation': copy.deepcopy(DOWN_GY_ORIENTATION)
+            'orientation': copy.deepcopy(DOWN_GX_ORIENTATION)
         }
 
     def wait_for_human(self):
@@ -665,7 +677,7 @@ class AssemblyTask:
 
         return task_list
 
-    def generate(self,queue_b4x1,queue_b3x1,queue_b1x1_1,queue_b1x1_2):
+    def generate(self,queue_b4x1,queue_b3x1,queue_b1x1_1):
         task_list = []
 
         task_list.append(self.home_position())
@@ -695,21 +707,18 @@ if __name__ == "__main__":
     QUEUES = {}
     for q in config['queues']:
         if q['name'] == 'queue_b4x1':
-            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_RIGHT',4,BLOCK_1x4,SPACING,offset_z=False)
+            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',4,BLOCK_1x4,SPACING,offset_z=False,mode=q['mode'])
         elif q['name'] == 'queue_b3x1':
-            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_RIGHT',4,BLOCK_1x3,SPACING)
-        elif q['name'] == 'queue_b1x1_1':
-            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',4,BLOCK_1x1,SPACING,'_1')
-        elif q['name'] == 'queue_b1x1_2':
-            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',4,BLOCK_1x1,SPACING,'_2')
+            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',4,BLOCK_1x3,SPACING,mode=q['mode'])
+        elif q['name'] == 'queue_b1x1':
+            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',4,BLOCK_1x1,SPACING,mode=q['mode'])
 
 
     taskGen = AssemblyTask()
     task_list = taskGen.generate(
         QUEUES['queue_b4x1'],
         QUEUES['queue_b3x1'],
-        QUEUES['queue_b1x1_1'],
-        QUEUES['queue_b1x1_2'])
+        QUEUES['queue_b1x1'])
 
     # convert to radians if Euler angles
     for t in task_list:
@@ -721,8 +730,7 @@ if __name__ == "__main__":
     env_list = []
     env_list += QUEUES['queue_b4x1'].env_list()
     env_list += QUEUES['queue_b3x1'].env_list()
-    env_list += QUEUES['queue_b1x1_1'].env_list()
-    env_list += QUEUES['queue_b1x1_2'].env_list()
+    env_list += QUEUES['queue_b1x1'].env_list()
 
     if USE_TABLE:
         env_list.append({
