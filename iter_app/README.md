@@ -19,25 +19,21 @@ developed.
 ## Contact
 Curt Henrichs (cdhenrichs@wisc.edu)
 
-### Requirements:
-- Must be installed as a ROS package in a ROS Workspace
-- Other required packages:
-  - [RobotWebTools/rosbridge_suite](https://github.com/RobotWebTools/rosbridge_suite)
-    - [GT-RAIL/rosauth](https://github.com/GT-RAIL/rosauth)
-  - [ros-planning/moveit_robots](https://github.com/ros-planning/moveit_robots)
-  - [Wisc-HCI/robotiq_85_gripper](https://github.com/Wisc-HCI/robotiq_85_gripper)
-  - [Kinovarobotics/kinova-ros](https://github.com/Kinovarobotics/kinova-ros)
-  - [Wisc-HCI/robot_configurations](https://github.com/Wisc-HCI/robot_configurations)
-  - [uos/rospy_message_converter](https://github.com/uos/rospy_message_converter.git)
-
 ## Run
-Enter following into terminal,
+Enter following into terminal to run ITTER application
 
 '''
 roslaunch iter_app iter.launch robot:=ur5 simulated:=true
 '''
 
+## Robots
+  - ur3
+  - ur5
+  - mico-2
+  - mico-3
+  - mico-robotiq85
 
+## Notes
 Note: try checking the frames and joints for name diff
 ROS bags trajectory replay
-Pickle 
+Pickle
