@@ -98,7 +98,7 @@ class Queue:
                 "position": {
                     'x': target_position['x'],
                     'y': target_position['y'],
-                    'z': target_position['z'] + GRASP_OFFSET + 0.05
+                    'z': target_position['z'] + GRASP_OFFSET + 0.055
                 },
                 "orientation": target_orientation
             },
@@ -128,7 +128,7 @@ class Queue:
                 "position": {
                     'x': target_position['x'],
                     'y': target_position['y'],
-                    'z': target_position['z'] + GRASP_OFFSET + 0.05
+                    'z': target_position['z'] + GRASP_OFFSET + 0.055
                 },
                 "orientation": target_orientation
             }
@@ -193,7 +193,7 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0] * 0.5,
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0] * 0.5 + 0.005,
                 'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
@@ -202,7 +202,7 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0] * 0.5,
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0] * 0.5 + 0.005,
                 'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + BLOCK_1x3[2] * 0.5 + GRASP_OFFSET
             },
@@ -219,7 +219,7 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0] * 0.5,
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x3[0] * 0.5 + 0.005,
                 'y': WORKSPACE_POSITION['y'] + BLOCK_1x3[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
@@ -271,7 +271,7 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5,
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5  - 0.005,
                 'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
@@ -280,7 +280,7 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5,
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5  - 0.005,
                 'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + BLOCK_1x4[2] * 0.5 + GRASP_OFFSET + BLOCK_1x3[2] + 0.02
             },
@@ -297,7 +297,7 @@ class AssemblyTask:
         task_list.append({
             'name': 'move',
             'position': {
-                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5,
+                'x': WORKSPACE_POSITION['x'] + BLOCK_1x4[1] * 0.5 - 0.005,
                 'y': WORKSPACE_POSITION['y'] + BLOCK_1x1[1] * 0.5,
                 'z': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
             },
@@ -709,7 +709,7 @@ if __name__ == "__main__":
         if q['name'] == 'queue_b4x1':
             QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',4,BLOCK_1x4,SPACING,offset_z=False,mode=q['mode'])
         elif q['name'] == 'queue_b3x1':
-            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',4,BLOCK_1x3,SPACING,mode=q['mode'])
+            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',4,BLOCK_1x3,SPACING,offset_z=False,mode=q['mode'])
         elif q['name'] == 'queue_b1x1':
             QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',4,BLOCK_1x1,SPACING,mode=q['mode'])
 
