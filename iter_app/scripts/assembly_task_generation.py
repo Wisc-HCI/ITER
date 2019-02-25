@@ -5,9 +5,9 @@ import copy
 import json
 import math
 
-BLOCK_1x4 = (0.031,0.126,0.038)
-BLOCK_1x3 = (0.031,0.095,0.058)
-BLOCK_1x1 = (0.031,0.031,0.058)
+BLOCK_1x4 = (0.031,0.126,0.018) #0.038 full
+BLOCK_1x3 = (0.031,0.095,0.036) #0.058 full
+BLOCK_1x1 = (0.031,0.031,0.036) #0.058 full
 
 if len(sys.argv) != 2:
     print 'must supply the robot config file to use'
@@ -93,15 +93,15 @@ class Queue:
 
         task_list = [
             # move from current position to above queue item
-            #{
-            #    "name": "move",
-            #    "position": {
-            #        'x': target_position['x'],
-            #        'y': target_position['y'],
-            #        'z': SAFE_HEIGHT
-            #    },
-            #    "orientation": target_orientation
-            #},
+            {
+                "name": "move",
+                "position": {
+                    'x': target_position['x'],
+                    'y': target_position['y'],
+                    'z': target_position['z'] + GRASP_OFFSET + 0.05
+                },
+                "orientation": target_orientation
+            },
             # move down to item
             {
                 "name": "move",
@@ -123,15 +123,15 @@ class Queue:
                 "effort": GRASP_EFFORT
             },
             # raise to homing position
-            #{
-            #    "name": "move",
-            #    "position": {
-            #        'x': target_position['x'],
-            #        'y': target_position['y'],
-            #        'z': SAFE_HEIGHT
-            #    },
-            #    "orientation": target_orientation
-            #}
+            {
+                "name": "move",
+                "position": {
+                    'x': target_position['x'],
+                    'y': target_position['y'],
+                    'z': target_position['z'] + GRASP_OFFSET + 0.05
+                },
+                "orientation": target_orientation
+            }
         ]
 
         self._index += 1
@@ -694,8 +694,8 @@ class AssemblyTask:
             })
 
             task_list += self.build_base(queue_b4x1,queue_b3x1)
-            task_list += self.build_pillars(queue_b1x1_1)
-            task_list += self.build_top(queue_b4x1,queue_b3x1)
+            #task_list += self.build_pillars(queue_b1x1_1)
+            #task_list += self.build_top(queue_b4x1,queue_b3x1)
             task_list.append(self.home_position())
             task_list.append(self.wait_for_human())
 

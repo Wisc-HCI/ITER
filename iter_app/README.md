@@ -35,3 +35,8 @@ Enter following into terminal,
 '''
 roslaunch iter_app iter.launch robot:=ur5 simulated:=true
 '''
+
+
+Note: try checking the frames and joints for name diff
+ROS bags trajectory replay
+Pickle 
