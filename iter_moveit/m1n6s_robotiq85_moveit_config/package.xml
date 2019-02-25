@@ -23,6 +23,8 @@
   <build_depend>kinova_description</build_depend>
   <run_depend>kinova_description</run_depend>
 
+  <exec_depend>message_generation</exec_depend>
+
 
   <buildtool_depend>catkin</buildtool_depend>
 

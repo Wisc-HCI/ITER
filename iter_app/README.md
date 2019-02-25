@@ -28,6 +28,7 @@ Curt Henrichs (cdhenrichs@wisc.edu)
   - [Wisc-HCI/robotiq_85_gripper](https://github.com/Wisc-HCI/robotiq_85_gripper)
   - [Kinovarobotics/kinova-ros](https://github.com/Kinovarobotics/kinova-ros)
   - [Wisc-HCI/robot_configurations](https://github.com/Wisc-HCI/robot_configurations)
+  - [uos/rospy_message_converter](https://github.com/uos/rospy_message_converter.git)
 
 ## Run
 Enter following into terminal,
