@@ -17,7 +17,7 @@
     <!-- Gripper specific robot state publisher and parameters -->
     <group unless="$(arg dual_gripper)">
         <group ns="/gripper">
-            <param name="robot_description" command="$(find xacro)/xacro.py $(find robotiq_85_description)/urdf/robotiq_85_gripper.xacro" />
+            <param name="robot_description" command="$(find xacro)/xacro.py $(find m1n6s_robotiq85_moveit_config)/urdf/robotiq85.xacro" />
 
             <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" >
                 <param name="robot_description" value="robot_description"/>
@@ -25,7 +25,7 @@
             </node>
 
             <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-                <rosparam param="source_list">[/gripper/joint_states]</rosparam>
+                <rosparam param="source_list">[/gripper/joint_state]</rosparam>
             </node>
         </group>
     </group>
