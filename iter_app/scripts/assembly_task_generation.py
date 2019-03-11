@@ -15,7 +15,7 @@ if len(sys.argv) != 2:
 
 configFileName = sys.argv[1]
 
-config = json.load(open('./configs/'+ configFileName +'.json','r'))
+config = json.load(open('./configs/assembly/'+ configFileName +'.json','r'))
 SAFE_HEIGHT = config['safe_height']
 GRASP_OFFSET = config['grasp_offset']
 GRASP_EFFORT = config['grasp_effort']
