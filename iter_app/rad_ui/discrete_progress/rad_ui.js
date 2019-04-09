@@ -1,59 +1,33 @@
 
 // define update functions
 
-function pad(num, size) {
-    var s = num+"";
-    while (s.length < size) s = "0" + s;
-    return s;
-}
-
-function formatTime(secondsRaw) {
-  var hours = Math.floor(secondsRaw / 3600);
-  secondsRaw -= hours * 3600;
-
-  var minutes = Math.floor(secondsRaw / 60);
-  secondsRaw -= minutes * 60;
-
-  var seconds = Math.floor(secondsRaw);
-
-  var timeStr = pad(hours,2) + ':'
-              + pad(minutes,2) + ':'
-              + pad(seconds,2);
-  return timeStr;
-}
-
-function updateProgressBar(value) {
-  $('#rad-1-progressbar').css('width',(value * 100) + '%');
-}
-
-function updateColor(seconds) {
+function updateColor(value,seconds) {
 
   var GREEN = 127;
   var RED = 0;
   var LOWER_BOUND = 15;
   var UPPER_BOUND = 60;
 
-  var scale;
+  var active = (value * 100) / 10;
 
-  if (seconds <= LOWER_BOUND) {
-    scale = RED;
-  } else if (seconds >= UPPER_BOUND) {
-    scale = GREEN;
-  } else {
-    scale = (GREEN - RED) / (UPPER_BOUND - LOWER_BOUND) * (seconds - LOWER_BOUND) + RED;
+  for (var i=0; i<10; i++) {
+
+    var color;
+    if (i < active) {
+      var scale;
+      if (seconds <= LOWER_BOUND) {
+        scale = RED;
+      } else {
+        scale = GREEN;
+      }
+      color = 'hsl(' + Math.round(scale) + ', 75%, 50%)';
+    } else {
+      color = 'grey';
+    }
+
+    $('#dot-'+i).css('background-color',color);
   }
 
-  color = 'hsl(' + Math.round(scale) + ', 75%, 50%)';
-
-  $('#rad-1-progressbar').css('background-color',color);
-}
-
-function updateNeglectTime(seconds) {
-  $('#time-1-text').html(formatTime(seconds));
-}
-
-function updateUpperBound(seconds) {
-  $('#upper-bound').html(formatTime(seconds));
 }
 
 // Setup ROS Subscribers
@@ -83,9 +57,6 @@ var listenerNegelectTime = new ROSLIB.Topic({
 
 listenerNegelectTime.subscribe(function(message) {
   if(message != undefined) {
-    updateNeglectTime(message.current);
-    updateColor(message.current);
-    updateUpperBound(message.initial);
-    updateProgressBar(message.current/message.initial);
+    updateColor(message.current/message.initial,message.current);
   }
 });

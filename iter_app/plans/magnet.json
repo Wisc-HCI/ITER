@@ -1,17 +1,17 @@
 {
     "environment": [
         {
-            "orientation": {
-                "y": -0.7071067811865475, 
-                "x": -0.7071067811865475, 
-                "z": 0, 
-                "w": 0
-            }, 
             "representation": "box", 
             "size": {
                 "y": 0.03, 
                 "x": 0.03, 
                 "z": 0.03
+            }, 
+            "orientation": {
+                "y": -0.7071067811865475, 
+                "x": -0.7071067811865475, 
+                "z": 0, 
+                "w": 0
             }, 
             "name": "queue0.03x0.03x0.03_0", 
             "position": {
@@ -21,17 +21,17 @@
             }
         }, 
         {
-            "orientation": {
-                "y": -0.7071067811865475, 
-                "x": -0.7071067811865475, 
-                "z": 0, 
-                "w": 0
-            }, 
             "representation": "box", 
             "size": {
                 "y": 0.03, 
                 "x": 0.03, 
                 "z": 0.03
+            }, 
+            "orientation": {
+                "y": -0.7071067811865475, 
+                "x": -0.7071067811865475, 
+                "z": 0, 
+                "w": 0
             }, 
             "name": "queue0.03x0.03x0.03_1", 
             "position": {
@@ -41,17 +41,17 @@
             }
         }, 
         {
-            "orientation": {
-                "y": -0.7071067811865475, 
-                "x": -0.7071067811865475, 
-                "z": 0, 
-                "w": 0
-            }, 
             "representation": "box", 
             "size": {
                 "y": 0.03, 
                 "x": 0.03, 
                 "z": 0.03
+            }, 
+            "orientation": {
+                "y": -0.7071067811865475, 
+                "x": -0.7071067811865475, 
+                "z": 0, 
+                "w": 0
             }, 
             "name": "queue0.03x0.03x0.03_2", 
             "position": {
@@ -61,17 +61,17 @@
             }
         }, 
         {
-            "orientation": {
-                "y": -0.7071067811865475, 
-                "x": -0.7071067811865475, 
-                "z": 0, 
-                "w": 0
-            }, 
             "representation": "box", 
             "size": {
                 "y": 0.03, 
                 "x": 0.03, 
                 "z": 0.03
+            }, 
+            "orientation": {
+                "y": -0.7071067811865475, 
+                "x": -0.7071067811865475, 
+                "z": 0, 
+                "w": 0
             }, 
             "name": "queue0.03x0.03x0.03_3", 
             "position": {
@@ -81,17 +81,17 @@
             }
         }, 
         {
-            "orientation": {
-                "y": 0, 
-                "x": 0, 
-                "z": 0, 
-                "w": 1
-            }, 
             "representation": "box", 
             "size": {
                 "y": 1, 
                 "x": 0.5, 
                 "z": 0.01
+            }, 
+            "orientation": {
+                "y": 0, 
+                "x": 0, 
+                "z": 0, 
+                "w": 1
             }, 
             "name": "tabletop", 
             "position": {
@@ -108,6 +108,10 @@
                 "x": 0.0, 
                 "z": 0.35
             }, 
+            "rad": {
+                "neglect_time": 0.008157014846801758, 
+                "is_interaction": false
+            }, 
             "name": "move", 
             "orientation": {
                 "y": -0.7071067811865475, 
@@ -117,15 +121,27 @@
             }
         }, 
         {
+            "rad": {
+                "neglect_time": 0.0991659164428711, 
+                "is_interaction": false
+            }, 
             "effort": 0.32, 
             "name": "release"
         }, 
         {
             "msg": "Task Iteration = 0", 
+            "rad": {
+                "neglect_time": 3.3855438232421875e-05, 
+                "is_interaction": false
+            }, 
             "name": "logger"
         }, 
         {
             "msg": "Task Progress: Building Base", 
+            "rad": {
+                "neglect_time": 5.9604644775390625e-06, 
+                "is_interaction": false
+            }, 
             "name": "logger"
         }, 
         {
@@ -133,6 +149,10 @@
                 "y": -0.185, 
                 "x": -0.235, 
                 "z": 0.305
+            }, 
+            "rad": {
+                "neglect_time": 2.9441421031951904, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -148,6 +168,10 @@
                 "x": -0.235, 
                 "z": 0.155
             }, 
+            "rad": {
+                "neglect_time": 3.2919371128082275, 
+                "is_interaction": false
+            }, 
             "name": "move", 
             "orientation": {
                 "y": -0.7071067811865475, 
@@ -158,9 +182,17 @@
         }, 
         {
             "object_name": "queue0.03x0.03x0.03_0", 
-            "name": "connect_object"
+            "name": "connect_object", 
+            "rad": {
+                "neglect_time": 1.0012381076812744, 
+                "is_interaction": false
+            }
         }, 
         {
+            "rad": {
+                "neglect_time": 1.70564603805542, 
+                "is_interaction": false
+            }, 
             "effort": 0.6, 
             "name": "grasp"
         }, 
@@ -169,6 +201,10 @@
                 "y": -0.185, 
                 "x": -0.235, 
                 "z": 0.305
+            }, 
+            "rad": {
+                "neglect_time": 3.2988059520721436, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -183,6 +219,10 @@
                 "y": -0.059, 
                 "x": -0.33499999999999996, 
                 "z": 0.29
+            }, 
+            "rad": {
+                "neglect_time": 6.483196973800659, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -198,6 +238,10 @@
                 "x": -0.33499999999999996, 
                 "z": 0.16
             }, 
+            "rad": {
+                "neglect_time": 2.709825038909912, 
+                "is_interaction": false
+            }, 
             "name": "move", 
             "orientation": {
                 "y": 1, 
@@ -207,18 +251,30 @@
             }
         }, 
         {
+            "rad": {
+                "neglect_time": 1.7052850723266602, 
+                "is_interaction": false
+            }, 
             "effort": 0.32, 
             "name": "release"
         }, 
         {
             "object_name": "queue0.03x0.03x0.03_0", 
-            "name": "disconnect_object"
+            "name": "disconnect_object", 
+            "rad": {
+                "neglect_time": 1.0015339851379395, 
+                "is_interaction": false
+            }
         }, 
         {
             "position": {
                 "y": -0.059, 
                 "x": -0.33499999999999996, 
                 "z": 0.29
+            }, 
+            "rad": {
+                "neglect_time": 2.7012670040130615, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -233,6 +289,10 @@
                 "y": -0.265, 
                 "x": -0.235, 
                 "z": 0.305
+            }, 
+            "rad": {
+                "neglect_time": 7.0863869190216064, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -248,6 +308,10 @@
                 "x": -0.235, 
                 "z": 0.155
             }, 
+            "rad": {
+                "neglect_time": 2.9166719913482666, 
+                "is_interaction": false
+            }, 
             "name": "move", 
             "orientation": {
                 "y": -0.7071067811865475, 
@@ -258,9 +322,17 @@
         }, 
         {
             "object_name": "queue0.03x0.03x0.03_1", 
-            "name": "connect_object"
+            "name": "connect_object", 
+            "rad": {
+                "neglect_time": 1.0016801357269287, 
+                "is_interaction": false
+            }
         }, 
         {
+            "rad": {
+                "neglect_time": 1.6903750896453857, 
+                "is_interaction": false
+            }, 
             "effort": 0.6, 
             "name": "grasp"
         }, 
@@ -269,6 +341,10 @@
                 "y": -0.265, 
                 "x": -0.235, 
                 "z": 0.305
+            }, 
+            "rad": {
+                "neglect_time": 2.898782968521118, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -283,6 +359,10 @@
                 "y": -0.059, 
                 "x": -0.33499999999999996, 
                 "z": 0.29
+            }, 
+            "rad": {
+                "neglect_time": 7.100574970245361, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -298,6 +378,10 @@
                 "x": -0.33499999999999996, 
                 "z": 0.195
             }, 
+            "rad": {
+                "neglect_time": 2.2965810298919678, 
+                "is_interaction": false
+            }, 
             "name": "move", 
             "orientation": {
                 "y": 1, 
@@ -307,18 +391,30 @@
             }
         }, 
         {
+            "rad": {
+                "neglect_time": 1.7031910419464111, 
+                "is_interaction": false
+            }, 
             "effort": 0.32, 
             "name": "release"
         }, 
         {
             "object_name": "queue0.03x0.03x0.03_1", 
-            "name": "disconnect_object"
+            "name": "disconnect_object", 
+            "rad": {
+                "neglect_time": 1.0015959739685059, 
+                "is_interaction": false
+            }
         }, 
         {
             "position": {
                 "y": -0.059, 
                 "x": -0.33499999999999996, 
                 "z": 0.29
+            }, 
+            "rad": {
+                "neglect_time": 2.290462017059326, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -333,6 +429,10 @@
                 "y": -0.345, 
                 "x": -0.235, 
                 "z": 0.305
+            }, 
+            "rad": {
+                "neglect_time": 7.298866033554077, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -348,6 +448,10 @@
                 "x": -0.235, 
                 "z": 0.155
             }, 
+            "rad": {
+                "neglect_time": 2.898893117904663, 
+                "is_interaction": false
+            }, 
             "name": "move", 
             "orientation": {
                 "y": -0.7071067811865475, 
@@ -358,9 +462,17 @@
         }, 
         {
             "object_name": "queue0.03x0.03x0.03_2", 
-            "name": "connect_object"
+            "name": "connect_object", 
+            "rad": {
+                "neglect_time": 1.0011999607086182, 
+                "is_interaction": false
+            }
         }, 
         {
+            "rad": {
+                "neglect_time": 1.7100670337677002, 
+                "is_interaction": false
+            }, 
             "effort": 0.6, 
             "name": "grasp"
         }, 
@@ -369,6 +481,10 @@
                 "y": -0.345, 
                 "x": -0.235, 
                 "z": 0.305
+            }, 
+            "rad": {
+                "neglect_time": 2.895672082901001, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -383,6 +499,10 @@
                 "y": -0.059, 
                 "x": -0.33499999999999996, 
                 "z": 0.29
+            }, 
+            "rad": {
+                "neglect_time": 7.314689874649048, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -398,6 +518,10 @@
                 "x": -0.33499999999999996, 
                 "z": 0.22999999999999998
             }, 
+            "rad": {
+                "neglect_time": 1.8969900608062744, 
+                "is_interaction": false
+            }, 
             "name": "move", 
             "orientation": {
                 "y": 1, 
@@ -407,18 +531,30 @@
             }
         }, 
         {
+            "rad": {
+                "neglect_time": 1.7042841911315918, 
+                "is_interaction": false
+            }, 
             "effort": 0.32, 
             "name": "release"
         }, 
         {
             "object_name": "queue0.03x0.03x0.03_2", 
-            "name": "disconnect_object"
+            "name": "disconnect_object", 
+            "rad": {
+                "neglect_time": 1.0010440349578857, 
+                "is_interaction": false
+            }
         }, 
         {
             "position": {
                 "y": -0.059, 
                 "x": -0.33499999999999996, 
                 "z": 0.29
+            }, 
+            "rad": {
+                "neglect_time": 1.8920950889587402, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -433,6 +569,10 @@
                 "y": -0.42500000000000004, 
                 "x": -0.235, 
                 "z": 0.305
+            }, 
+            "rad": {
+                "neglect_time": 6.6953020095825195, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -448,6 +588,10 @@
                 "x": -0.235, 
                 "z": 0.155
             }, 
+            "rad": {
+                "neglect_time": 3.28918719291687, 
+                "is_interaction": false
+            }, 
             "name": "move", 
             "orientation": {
                 "y": -0.7071067811865475, 
@@ -458,9 +602,17 @@
         }, 
         {
             "object_name": "queue0.03x0.03x0.03_3", 
-            "name": "connect_object"
+            "name": "connect_object", 
+            "rad": {
+                "neglect_time": 1.0015089511871338, 
+                "is_interaction": false
+            }
         }, 
         {
+            "rad": {
+                "neglect_time": 1.7213280200958252, 
+                "is_interaction": false
+            }, 
             "effort": 0.6, 
             "name": "grasp"
         }, 
@@ -469,6 +621,10 @@
                 "y": -0.42500000000000004, 
                 "x": -0.235, 
                 "z": 0.305
+            }, 
+            "rad": {
+                "neglect_time": 3.2800400257110596, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -483,6 +639,10 @@
                 "y": -0.059, 
                 "x": -0.33499999999999996, 
                 "z": 0.29
+            }, 
+            "rad": {
+                "neglect_time": 6.721903085708618, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -498,6 +658,10 @@
                 "x": -0.33499999999999996, 
                 "z": 0.265
             }, 
+            "rad": {
+                "neglect_time": 1.2815790176391602, 
+                "is_interaction": false
+            }, 
             "name": "move", 
             "orientation": {
                 "y": 1, 
@@ -507,18 +671,30 @@
             }
         }, 
         {
+            "rad": {
+                "neglect_time": 1.7595720291137695, 
+                "is_interaction": false
+            }, 
             "effort": 0.32, 
             "name": "release"
         }, 
         {
             "object_name": "queue0.03x0.03x0.03_3", 
-            "name": "disconnect_object"
+            "name": "disconnect_object", 
+            "rad": {
+                "neglect_time": 1.0007920265197754, 
+                "is_interaction": false
+            }
         }, 
         {
             "position": {
                 "y": -0.059, 
                 "x": -0.33499999999999996, 
                 "z": 0.29
+            }, 
+            "rad": {
+                "neglect_time": 1.3471410274505615, 
+                "is_interaction": false
             }, 
             "name": "move", 
             "orientation": {
@@ -534,6 +710,10 @@
                 "x": 0.0, 
                 "z": 0.35
             }, 
+            "rad": {
+                "neglect_time": 8.310240983963013, 
+                "is_interaction": false
+            }, 
             "name": "move", 
             "orientation": {
                 "y": -0.7071067811865475, 
@@ -543,6 +723,9 @@
             }
         }, 
         {
+            "rad": {
+                "is_interaction": true
+            }, 
             "name": "wait", 
             "condition": "button"
         }
