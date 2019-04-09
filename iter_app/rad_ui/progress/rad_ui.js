@@ -37,19 +37,13 @@ function updateColor(seconds) {
 
   if (seconds <= LOWER_BOUND) {
     scale = RED;
-  } else if (seconds >= UPPER_BOUND) {
-    scale = GREEN;
   } else {
-    scale = (GREEN - RED) / (UPPER_BOUND - LOWER_BOUND) * (seconds - LOWER_BOUND) + RED;
+    scale = GREEN;
   }
 
   color = 'hsl(' + Math.round(scale) + ', 75%, 50%)';
 
   $('#rad-1-progressbar').css('background-color',color);
-}
-
-function updateNeglectTime(seconds) {
-  $('#time-1-text').html(formatTime(seconds));
 }
 
 function updateUpperBound(seconds) {
@@ -78,12 +72,11 @@ ros.on('close', function() {
 var listenerNegelectTime = new ROSLIB.Topic({
   ros: ros,
   name: '/rad/neglect_time',
-  messageType: 'iter/NeglectTime'
+  messageType: 'iter_app/NeglectTime'
 });
 
 listenerNegelectTime.subscribe(function(message) {
   if(message != undefined) {
-    updateNeglectTime(message.current);
     updateColor(message.current);
     updateUpperBound(message.initial);
     updateProgressBar(message.current/message.initial);
