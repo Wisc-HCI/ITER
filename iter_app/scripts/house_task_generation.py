@@ -24,12 +24,13 @@ WORKSPACE_POSITION = config['workspace_position']
 HOME_POSITION = config['home_position']
 DOWN_GY_ORIENTATION = config['down_gy_orientation']
 DOWN_GX_ORIENTATION = config['down_gx_orientation']
-SPACING = config['BLOCK_SMALL_spacing']
+SPACING = config['block_spacing']
 
 USE_TABLE = False
 if 'table' in config.keys():
     USE_TABLE = True
     TABLE = config['table']
+WORKSPACE_ENV = config['workspace_env']
 
 class Queue:
 
@@ -222,7 +223,7 @@ class AssemblyTask:
             'condition': 'button'
         }
 
-    def build_house_1(self, queue):
+    def build_house_1(self, queue_small, queue_large):
         task_list = []
 
         task_list.append({
@@ -230,45 +231,45 @@ class AssemblyTask:
             'msg': 'Task Progress: Building House 1'
         })
 
-        task_list = task_list + queue.pick_n_place({
+        task_list = task_list + queue_large.pick_n_place({
             'x': WORKSPACE_POSITION['x'] + 0,
-            'y': WORKSPACE_POSITION['y'] + BLOCK_SMALL[1] * 0.5,
-            'z': WORKSPACE_POSITION['z'] + BLOCK_SMALL[2] * 0.5 + GRASP_OFFSET + 0.005,
+            'y': WORKSPACE_POSITION['y'] + BLOCK_LARGE[1] * 0.5,
+            'z': WORKSPACE_POSITION['z'] + BLOCK_LARGE[2] * 0.5 + GRASP_OFFSET + 0.005,
             'safe': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
         },DOWN_GY_ORIENTATION)
 
-        task_list = task_list + queue.pick_n_place({
-            'x': WORKSPACE_POSITION['x'] + BLOCK_SMALL[1] - BLOCK_SMALL[0],
-            'y': WORKSPACE_POSITION['y'] + BLOCK_SMALL[1] * 0.5,
-            'z': WORKSPACE_POSITION['z'] + BLOCK_SMALL[2] * 0.5 + GRASP_OFFSET + 0.005,
+        task_list = task_list + queue_large.pick_n_place({
+            'x': WORKSPACE_POSITION['x'] + BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0],
+            'y': WORKSPACE_POSITION['y'] + BLOCK_LARGE[1] * 0.5,
+            'z': WORKSPACE_POSITION['z'] + BLOCK_LARGE[2] * 0.5 + GRASP_OFFSET + 0.005,
             'safe': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
         },DOWN_GY_ORIENTATION)
 
-        task_list = task_list + queue.pick_n_place({
+        task_list = task_list + queue_small.pick_n_place({
             'x': WORKSPACE_POSITION['x'] + BLOCK_SMALL[0],
-            'y': WORKSPACE_POSITION['y'] + 0.5 * BLOCK_SMALL[0],
+            'y': WORKSPACE_POSITION['y'] + 0.5 * BLOCK_LARGE[0],
             'z': WORKSPACE_POSITION['z'] + BLOCK_SMALL[2] * 1.5 + GRASP_OFFSET + 0.011,
             'safe': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
         },DOWN_GX_ORIENTATION)
 
-        task_list = task_list + queue.pick_n_place({
+        task_list = task_list + queue_small.pick_n_place({
             'x': WORKSPACE_POSITION['x'] + BLOCK_SMALL[0],
-            'y': WORKSPACE_POSITION['y'] + BLOCK_SMALL[1] - 0.5 * BLOCK_SMALL[0],
+            'y': WORKSPACE_POSITION['y'] + BLOCK_LARGE[1] - 0.5 * BLOCK_SMALL[0],
             'z': WORKSPACE_POSITION['z'] + BLOCK_SMALL[2] * 1.5 + GRASP_OFFSET + 0.011,
             'safe': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
         },DOWN_GX_ORIENTATION)
 
-        task_list = task_list + queue.pick_n_place({
+        task_list = task_list + queue_large.pick_n_place({
             'x': WORKSPACE_POSITION['x'] + 0,
-            'y': WORKSPACE_POSITION['y'] + BLOCK_SMALL[1] * 0.5,
-            'z': WORKSPACE_POSITION['z'] + BLOCK_SMALL[2] * 1.5 + GRASP_OFFSET + 0.035,
+            'y': WORKSPACE_POSITION['y'] + BLOCK_LARGE[1] * 0.5,
+            'z': WORKSPACE_POSITION['z'] + BLOCK_LARGE[2] * 1.5 + GRASP_OFFSET + 0.035,
             'safe': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
         },DOWN_GY_ORIENTATION)
 
-        task_list = task_list + queue.pick_n_place({
-            'x': WORKSPACE_POSITION['x'] + BLOCK_SMALL[1] - BLOCK_SMALL[0],
-            'y': WORKSPACE_POSITION['y'] + BLOCK_SMALL[1] * 0.5,
-            'z': WORKSPACE_POSITION['z'] + BLOCK_SMALL[2] * 1.5 + GRASP_OFFSET + 0.035,
+        task_list = task_list + queue_large.pick_n_place({
+            'x': WORKSPACE_POSITION['x'] + BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0],
+            'y': WORKSPACE_POSITION['y'] + BLOCK_LARGE[1] * 0.5,
+            'z': WORKSPACE_POSITION['z'] + BLOCK_LARGE[2] * 1.5 + GRASP_OFFSET + 0.035,
             'safe': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
         },DOWN_GY_ORIENTATION)
 
@@ -310,17 +311,19 @@ class AssemblyTask:
                 'msg': 'Task Iteration = ' + str(i)
             })
 
-            task_list += self.build_house_1(queues['queue_b1x1_1'])
+            task_list += self.build_house_1(queues['queue_small_1'],queues['queue_large_1'])
             task_list.append(self.home_position())
             task_list.append(self.wait_for_human())
 
-            task_list += self.build_house_2(queues['queue_b1x1_2'])
+            '''
+            task_list += self.build_house_2(None)
             task_list.append(self.home_position())
             task_list.append(self.wait_for_human())
 
-            task_list += self.build_house_3(queues['queue_b1x1_3'])
+            task_list += self.build_house_3(None)
             task_list.append(self.home_position())
             task_list.append(self.wait_for_human())
+            '''
 
         return task_list
 
@@ -329,13 +332,14 @@ if __name__ == "__main__":
 
     QUEUES = {}
     for q in config['queues']:
-        if q['name'] == 'queue_b1x1_1':
-            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',6,BLOCK_SMALL,SPACING,mode=q['mode'],name_unique='_1',offset_z=False)
-        elif q['name'] == 'queue_b1x1_2':
-            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',6,BLOCK_SMALL,SPACING,mode=q['mode'],name_unique='_2',offset_z=False)
-        elif q['name'] == 'queue_b1x1_3':
-            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',6,BLOCK_SMALL,SPACING,mode=q['mode'],name_unique='_3',offset_z=False)
-
+        if q['name'] == 'queue_small_1':
+            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',6,BLOCK_SMALL,SPACING,mode=q['mode'],offset_z=False,name_unique='_s1')
+        elif q['name'] == 'queue_small_2':
+            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',6,BLOCK_SMALL,SPACING,mode=q['mode'],offset_z=False,name_unique='_s2')
+        elif q['name'] == 'queue_large_1':
+            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',6,BLOCK_LARGE,SPACING,mode=q['mode'],offset_z=False,name_unique='_l1')
+        elif q['name'] == 'queue_large_2':
+            QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_LEFT',6,BLOCK_LARGE,SPACING,mode=q['mode'],offset_z=False,name_unique='_l2')
 
     taskGen = AssemblyTask()
     task_list = taskGen.generate(QUEUES)
@@ -348,9 +352,8 @@ if __name__ == "__main__":
             t['orientation']['z'] = t['orientation']['z'] / 180.0 * math.pi
 
     env_list = []
-    env_list += QUEUES['queue_b1x1_1'].env_list()
-    env_list += QUEUES['queue_b1x1_2'].env_list()
-    env_list += QUEUES['queue_b1x1_3'].env_list()
+    for qkey in QUEUES.keys():
+        env_list += QUEUES[qkey].env_list()
 
     if USE_TABLE:
         env_list.append({
@@ -364,6 +367,20 @@ if __name__ == "__main__":
                 'w': 1
             },
             'size': TABLE['size']
+        })
+
+    for element in WORKSPACE_ENV:
+        env_list.append({
+            'name': element['name'],
+            'representation': 'box',
+            'position': element['position'],
+            'orientation': {
+                'x': 0,
+                'y': 0,
+                'z': 0,
+                'w': 1
+            },
+            'size': element['size']
         })
 
     task = {

@@ -2,7 +2,7 @@
   "safe_height": 0.3,
   "grasp_offset": 0.15,
   "grasp_effort": 0.61,
-  "release_effort": 0.5,
+  "release_effort": 0.48,
   "num_iterations": 1,
   "block_spacing": 0.04,
   "workspace_position": {
@@ -29,7 +29,25 @@
   },
   "queues": [
     {
-      "name": "queue_b1x1_1",
+      "name": "queue_small_1",
+      "position": {
+        "x":-0.30,
+        "y":-0.15,
+        "z":0.0
+      },
+      "mode": "y"
+    },
+    {
+      "name": "queue_small_2",
+      "position": {
+        "x":-0.38,
+        "y":-0.15,
+        "z":0.0
+      },
+      "mode": "y"
+    },
+    {
+      "name": "queue_large_1",
       "position": {
         "x":-0.10,
         "y":-0.15,
@@ -38,18 +56,9 @@
       "mode": "y"
     },
     {
-      "name": "queue_b1x1_2",
+      "name": "queue_large_2",
       "position": {
-        "x":-0.20,
-        "y":-0.15,
-        "z":0.0
-      },
-      "mode": "y"
-    },
-    {
-      "name": "queue_b1x1_3",
-      "position": {
-        "x":-0.30,
+        "x":-0.22,
         "y":-0.15,
         "z":0.0
       },
@@ -72,8 +81,8 @@
     {
       "name": "human_table",
       "position": {
-        "x": -1.0,
-        "y": -1.0,
+        "x": -0.7,
+        "y": 0.3,
         "z": -0.035
       },
       "size": {
