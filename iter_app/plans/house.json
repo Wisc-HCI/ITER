@@ -537,7 +537,7 @@
             }
         }, 
         {
-            "effort": 0.5, 
+            "effort": 0.4, 
             "name": "release"
         }, 
         {
@@ -561,6 +561,10 @@
                 "z": 0, 
                 "w": 0
             }
+        }, 
+        {
+            "effort": 0.4, 
+            "name": "release"
         }, 
         {
             "position": {
@@ -627,7 +631,7 @@
             }
         }, 
         {
-            "effort": 0.5, 
+            "effort": 0.48, 
             "name": "release"
         }, 
         {
@@ -661,6 +665,10 @@
                 "z": 0, 
                 "w": 0
             }
+        }, 
+        {
+            "effort": 0.4, 
+            "name": "release"
         }, 
         {
             "position": {
@@ -727,7 +735,7 @@
             }
         }, 
         {
-            "effort": 0.5, 
+            "effort": 0.48, 
             "name": "release"
         }, 
         {
@@ -761,6 +769,10 @@
                 "z": 0, 
                 "w": 0
             }
+        }, 
+        {
+            "effort": 0.4, 
+            "name": "release"
         }, 
         {
             "position": {
@@ -827,7 +839,7 @@
             }
         }, 
         {
-            "effort": 0.5, 
+            "effort": 0.48, 
             "name": "release"
         }, 
         {
@@ -861,6 +873,10 @@
                 "z": 0, 
                 "w": 0
             }
+        }, 
+        {
+            "effort": 0.4, 
+            "name": "release"
         }, 
         {
             "position": {
@@ -927,7 +943,7 @@
             }
         }, 
         {
-            "effort": 0.5, 
+            "effort": 0.48, 
             "name": "release"
         }, 
         {
@@ -961,6 +977,10 @@
                 "z": 0, 
                 "w": 0
             }
+        }, 
+        {
+            "effort": 0.4, 
+            "name": "release"
         }, 
         {
             "position": {
@@ -1027,7 +1047,7 @@
             }
         }, 
         {
-            "effort": 0.5, 
+            "effort": 0.48, 
             "name": "release"
         }, 
         {
@@ -1061,6 +1081,10 @@
                 "z": 0, 
                 "w": 0
             }
+        }, 
+        {
+            "effort": 0.4, 
+            "name": "release"
         }, 
         {
             "position": {
@@ -1127,7 +1151,7 @@
             }
         }, 
         {
-            "effort": 0.5, 
+            "effort": 0.48, 
             "name": "release"
         }, 
         {

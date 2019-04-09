@@ -18,7 +18,8 @@ config = json.load(open('./configs/house/'+ configFileName +'.json','r'))
 SAFE_HEIGHT = config['safe_height']
 GRASP_OFFSET = config['grasp_offset']
 GRASP_EFFORT = config['grasp_effort']
-RELEASE_EFFORT = config['release_effort']
+RELEASE_EFFORT_QUEUE = config['release_effort_queue']
+RELEASE_EFFORT_WORKSPACE = config['release_effort_workspace']
 NUM_ITERATIONS = config['num_iterations']
 WORKSPACE_POSITION = config['workspace_position']
 HOME_POSITION = config['home_position']
@@ -102,6 +103,11 @@ class Queue:
                 },
                 "orientation": target_orientation
             },
+            # open grippger to specified
+            {
+                'name': 'release',
+                'effort': RELEASE_EFFORT_QUEUE
+            },
             # move down to item
             {
                 "name": "move",
@@ -162,7 +168,7 @@ class Queue:
         })
         task_list.append({
             'name': 'release',
-            'effort': RELEASE_EFFORT
+            'effort': RELEASE_EFFORT_WORKSPACE
         })
         task_list.append({
             "name": "disconnect_object",
@@ -302,7 +308,7 @@ class AssemblyTask:
 
         task_list.append({
             'name': 'release',
-            'effort': RELEASE_EFFORT
+            'effort': RELEASE_EFFORT_QUEUE
         })
 
         for i in range(0,NUM_ITERATIONS):

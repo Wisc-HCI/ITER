@@ -2,7 +2,8 @@
   "safe_height": 0.3,
   "grasp_offset": 0.15,
   "grasp_effort": 0.61,
-  "release_effort": 0.48,
+  "release_effort_queue": 0.40,
+  "release_effort_workspace": 0.48,
   "num_iterations": 1,
   "block_spacing": 0.04,
   "workspace_position": {
