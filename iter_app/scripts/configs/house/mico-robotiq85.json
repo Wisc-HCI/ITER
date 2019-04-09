@@ -1,7 +1,7 @@
 {
   "safe_height": 0.3,
   "grasp_offset": 0.15,
-  "grasp_effort": 0.61,
+  "grasp_effort": 0.63,
   "release_effort": 0.48,
   "num_iterations": 1,
   "block_spacing": 0.04,
@@ -32,8 +32,8 @@
       "name": "queue_small_1",
       "position": {
         "x":-0.30,
-        "y":-0.15,
-        "z":0.0
+        "y":-0.175,
+        "z":-0.007
       },
       "mode": "y"
     },
@@ -41,8 +41,8 @@
       "name": "queue_small_2",
       "position": {
         "x":-0.38,
-        "y":-0.15,
-        "z":0.0
+        "y":-0.175,
+        "z":-0.007
       },
       "mode": "y"
     },
@@ -50,8 +50,8 @@
       "name": "queue_large_1",
       "position": {
         "x":-0.10,
-        "y":-0.15,
-        "z":0.0
+        "y":-0.175,
+        "z":-0.009
       },
       "mode": "y"
     },
@@ -59,8 +59,8 @@
       "name": "queue_large_2",
       "position": {
         "x":-0.22,
-        "y":-0.15,
-        "z":0.0
+        "y":-0.175,
+        "z":-0.009
       },
       "mode": "y"
     }
