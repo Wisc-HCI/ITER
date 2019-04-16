@@ -11,25 +11,6 @@ robot = moveit_commander.RobotCommander()
 scene = moveit_commander.PlanningSceneInterface()
 dynamic_environment_ids = []
 
-'''
-def generate_static_environment():
-    DEPTH = -0.01
-    #DEPTH = -0.05 $ debugging
-
-    scene.remove_world_object("table")
-    scene.add_box(
-        name="table",
-        pose=PoseStamped(
-            header=Header(frame_id=robot.get_planning_frame()),
-            pose=Pose(
-                position=Point(x=0, y=0.44 ,z=DEPTH),
-                orientation=Quaternion(x=0, y=0, z=0, w=1))),
-        size=(2, 1, 0.01))
-
-    rospy.sleep(1)
-    rospy.loginfo(scene.get_known_object_names())
-'''
-
 def generate_dynamic_environment(env_data):
     for obj in env_data:
 

@@ -52,7 +52,7 @@ function updateColor(value,seconds) {
   }
 }
 
-function updateNeglectTime(seconds) {
+function updateNeglectInterval(seconds) {
   $('#time-1-text').html(formatTime(seconds));
 }
 
@@ -79,12 +79,12 @@ ros.on('close', function() {
 var listenerNegelectTime = new ROSLIB.Topic({
   ros: ros,
   name: '/rad/neglect_time',
-  messageType: 'iter_app/NeglectTime'
+  messageType: 'iter_app/NeglectInterval'
 });
 
 listenerNegelectTime.subscribe(function(message) {
   if(message != undefined) {
-    updateNeglectTime(message.current);
+    updateNeglectInterval(message.current);
     updateColor(message.current/message.initial,message.current);
   }
 });

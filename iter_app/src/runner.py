@@ -12,7 +12,7 @@ rospy.init_node('runner', anonymous=True)
 import primitives as bp
 import environment as env
 
-from iter_app.msg import NeglectTime
+from iter_app.msg import RADTime, TimeInterval
 from std_msgs.msg import Float32, String
 from iter_app.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
 from time_mode_enum import TimeModeEnum
@@ -120,9 +120,9 @@ class RadSignal:
     SIGNAL_PUBLISH_TIME_STEP = 0.01
 
     def __init__(self):
-        self.pub_signal = rospy.Publisher('/rad/signal', Float32, queue_size=10)
-        self.pub_neglect_time = rospy.Publisher('/rad/neglect_time', NeglectTime, queue_size=10)
-        self.pub_interaction_time = rospy.Publisher('rad/interaction_time', Float32, queue_size=10)
+        self.pub_signal = rospy.Publisher('/rad/signal', RADTime, queue_size=10)
+        self.pub_neglect_time = rospy.Publisher('/rad/neglect_time', TimeInterval, queue_size=10)
+        self.pub_interaction_time = rospy.Publisher('rad/interaction_time', TimeInterval, queue_size=10)
 
         self._thread = None
         self._thread_alive = False
@@ -148,7 +148,7 @@ class RadSignal:
         global button_state
 
         try:
-            neglect_time = NeglectTime()
+            neglect_time = TimeInterval()
             interaction_time = 0
 
             for t in self._neglect_time_list:

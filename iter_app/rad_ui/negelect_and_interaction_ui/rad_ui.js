@@ -22,36 +22,32 @@ function formatTime(secondsRaw) {
   return timeStr;
 }
 
-function updateColor(value,seconds) {
+function updateProgressBar(value) {
+  $('#rad-1-progressbar').css('width',(value * 100) + '%');
+}
+
+function updateColor(seconds) {
 
   var GREEN = 127;
   var RED = 0;
   var LOWER_BOUND = 15;
   var UPPER_BOUND = 60;
 
-  var active = (value * 100) / 10;
+  var scale;
 
-  for (var i=0; i<10; i++) {
-
-    var color;
-    if (i < active) {
-      var scale;
-      if (seconds <= LOWER_BOUND) {
-        scale = RED;
-      } else {
-        scale = GREEN;
-      }
-      color = 'hsl(' + Math.round(scale) + ', 75%, 50%)';
-    } else {
-      color = 'grey';
-    }
-
-    $('#dot-'+i).css('background-color',color);
+  if (seconds <= LOWER_BOUND) {
+    scale = RED;
+  } else {
+    scale = GREEN;
   }
+
+  color = 'hsl(' + Math.round(scale) + ', 75%, 50%)';
+
+  $('#rad-1-progressbar').css('background-color',color);
 }
 
-function updateNeglectTime(seconds) {
-  $('#time-1-text').html(formatTime(seconds));
+function updateUpperBound(seconds) {
+  $('#upper-bound').html(formatTime(seconds));
 }
 
 // Setup ROS Subscribers
@@ -81,7 +77,8 @@ var listenerNegelectTime = new ROSLIB.Topic({
 
 listenerNegelectTime.subscribe(function(message) {
   if(message != undefined) {
-    updateNeglectTime(message.current);
-    updateColor(message.current/message.initial,message.current);
+    updateColor(message.current);
+    updateUpperBound(message.initial);
+    updateProgressBar(message.current/message.initial);
   }
 });
