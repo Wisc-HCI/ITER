@@ -70,10 +70,12 @@ class ConnectObjectToRobot(Primitive):
         self.box_name = object_name
 
     def operate(self):
+        '''
         eef_link = arm_group_commander.get_end_effector_link()
         touch_links = robot.get_link_names()
         scene.attach_box(eef_link, self.box_name, touch_links=touch_links)
         rospy.sleep(1)
+        '''
         return True
 
 
@@ -83,12 +85,14 @@ class DisconnectObjectFromRobot(Primitive):
         self.box_name = object_name
 
     def operate(self):
+        '''
         eef_link = arm_group_commander.get_end_effector_link()
 
         print '\n\n\n\n', eef_link, '\n\n\n\n'
 
         scene.remove_attached_object(eef_link, name=self.box_name)
         rospy.sleep(1)
+        '''
         return True
 
 

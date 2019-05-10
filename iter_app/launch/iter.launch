@@ -71,6 +71,7 @@
     </group>
 
     <!-- Start backend -->
+    <node pkg="iter_app" type="timing.py" name="timing" output="screen"/>
     <node pkg="iter_app" type="runner.py" name="runner" output="screen"/>
 
     <!-- Start RAD UI -->

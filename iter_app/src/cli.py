@@ -7,8 +7,9 @@ import rospy
 from time_mode_enum import TimeModeEnum
 from iter_app.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
 
-
+print 'Waiting for runner'
 rospy.wait_for_service('/runner/task_input')
+print 'Found runner'
 
 task_srv = rospy.ServiceProxy('/runner/task_input', Task)
 mode_set_srv = rospy.ServiceProxy('/runner/set/mode',ModeSet)

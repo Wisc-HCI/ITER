@@ -4,27 +4,22 @@ import sys
 import time
 import json
 import rospy
-import threading
+rospy.init_node('runner', anonymous=True)
 import moveit_commander
 moveit_commander.roscpp_initialize(sys.argv)
-
-rospy.init_node('runner', anonymous=True)
 import primitives as bp
-import environment as env
+#import environment as env
 
-from iter_app.msg import RADTime, TimeInterval
-from std_msgs.msg import Float32, String
-from iter_app.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
 from time_mode_enum import TimeModeEnum
+from std_msgs.msg import String, Int32, Bool
+from iter_app.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
 
 
-button_state = False
 def button_callback():
-    global button_state
-
+    #TODO write this for real
     str = raw_input('Press enter button to stop wait')
     button_state = True
-    return True #TODO write this for real
+    return button_state
 
 def generate_neglect_time_list(task_dict):
     time_list = []
@@ -46,30 +41,35 @@ def generate_neglect_time_list(task_dict):
 
 class Runner:
 
-    def __init__(self,start_timing_callback,stop_timing_callback):
+    def __init__(self):
         self.time_mode = TimeModeEnum.REPLAY
-        self.start_timing_callback = start_timing_callback
-        self.stop_timing_callback = stop_timing_callback
 
         self.task_input_srv = rospy.Service('/runner/task_input', Task, self.run_task)
         self.mode_set_srv = rospy.Service('/runner/set/mode', ModeSet, self.mode_update)
         self.mode_get_srv = rospy.Service('/runner/get/mode', ModeGet, self.mode_get)
 
+        self.time_start_topic = rospy.Publisher('time_node/start', String, queue_size=10)
+        self.time_stop_topic = rospy.Publisher('time_node/stop', Bool, queue_size=10)
+        self.time_sync_topic = rospy.Publisher('time_node/sync', Int32, queue_size=10)
+
     def run_task(self, json_string):
 
+        # data retrieved from interface
         data = json.loads(json_string.task_json)
 
-        if 'environment' in data.keys():
-            env.generate_dynamic_environment(data['environment'])
+        # if environment requested, load it
+        #if 'environment' in data.keys():
+        #    env.generate_dynamic_environment(data['environment'])
 
         primitives = [bp.instantiate_from_dict(obj,button_callback) for obj in data['task']]
         neglect_time_list = generate_neglect_time_list(data)
 
-        operate_status = True
-
+        # provide timing information to timing node
         if self.time_mode == TimeModeEnum.REPLAY:
-            self.start_timing_callback(neglect_time_list)
+            self.time_start_topic.publish(json.dumps(neglect_time_list))
 
+        # iterate over all primitives
+        operate_status = True
         for i in range(0,len(primitives)):
             print type(primitives[i]).__name__
 
@@ -88,16 +88,20 @@ class Runner:
                     }
             else:
                 operate_status = primitives[i].operate()
+                self.time_sync_topic.publish(i)
 
             if not operate_status:
                 break
 
+        # stop timing
         if self.time_mode == TimeModeEnum.REPLAY:
-            self.stop_timing_callback()
+            self.time_stop_topic.publish(True)
 
-        if 'environment' in data.keys():
-            env.clear_dynamic_environment()
+        # clear environment resources
+        #if 'environment' in data.keys():
+        #    env.clear_dynamic_environment()
 
+        # send results back to interface
         if self.time_mode == TimeModeEnum.CAPTURE:
             return TaskResponse(operate_status,json.dumps(data))
         else:
@@ -115,89 +119,10 @@ class Runner:
         return ModeGetResponse(self.time_mode.value)
 
 
-class RadSignal:
-
-    SIGNAL_PUBLISH_TIME_STEP = 0.01
-
-    def __init__(self):
-        self.pub_signal = rospy.Publisher('/rad/signal', RADTime, queue_size=10)
-        self.pub_neglect_time = rospy.Publisher('/rad/neglect_time', TimeInterval, queue_size=10)
-        self.pub_interaction_time = rospy.Publisher('rad/interaction_time', TimeInterval, queue_size=10)
-
-        self._thread = None
-        self._thread_alive = False
-        self._neglect_time_list = []
-
-    def start_timing(self,neglect_time_list):
-        if self._thread_alive == False:
-            self._neglect_time_list = neglect_time_list
-
-            self._thread = threading.Thread(target=self._thread_fnt)
-            self._thread_alive = True
-            self._thread.start()
-        else:
-            raise Exception('Already running a timing loop')
-
-    def stop_timing(self):
-        self._thread_alive = False
-        if self._thread != None:
-            self._thread.join(1)
-            self._thread = None
-
-    def _thread_fnt(self):
-        global button_state
-
-        try:
-            neglect_time = TimeInterval()
-            interaction_time = 0
-
-            for t in self._neglect_time_list:
-
-                if 'interaction' in t.keys() and t['interaction']:
-                    # Wait for interaction event
-                    interaction_time = 0
-                    current = base = time.time()
-
-                    while not button_state and self._thread_alive:
-
-                        interaction_time = current - base
-                        self.pub_interaction_time.publish(interaction_time)
-
-                        time.sleep(self.SIGNAL_PUBLISH_TIME_STEP)
-                        current = time.time()
-
-                    button_state = False
-                else:
-                    # Run through the prerecorded timing
-                    neglect_time.current = t["time"]
-                    neglect_time.initial = t["time"]
-
-                    current = base = time.time()
-
-                    while current < base + t["time"] and self._thread_alive:
-
-                        neglect_time.current = t["time"] - (current - base)
-                        self.pub_neglect_time.publish(neglect_time)
-
-                        time.sleep(self.SIGNAL_PUBLISH_TIME_STEP)
-                        current = time.time()
-
-                if not self._thread_alive:
-                    break
-
-        except Exception, e:
-            print e
-
-
 if __name__ == '__main__':
     time.sleep(10) # wait for everything to setup first
+    print "\n\n\n Runner is Ready\n\n\n"
+    runner = Runner()
 
-    rad = RadSignal()
-    runner = Runner(rad.start_timing,rad.stop_timing)
-
-    try:
-        while not rospy.is_shutdown():
-            rospy.spin()
-        rad.stop_timing()
-    except:
-        rad.stop_timing()
+    while not rospy.is_shutdown():
+        rospy.spin()
