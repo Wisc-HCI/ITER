@@ -1,4 +1,3 @@
-
 """
 {
     'task': [
@@ -10,26 +9,15 @@
 }
 """
 
-#TODO figure out gripper for grasp primitives
-
 import tf
 import time
 import rospy
-import moveit_commander
 
 from enum import Enum
 from std_msgs.msg import Header
 from abc import ABCMeta, abstractmethod
 from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion
 
-ARM_MOVE_GROUP = rospy.get_param("arm_move_group")
-GRIPPER_MOVE_GROUP = rospy.get_param("gripper_move_group")
-GRIPPER_TYPE = rospy.get_param("gripper_type")
-
-arm_group_commander = moveit_commander.MoveGroupCommander(ARM_MOVE_GROUP)
-gripper_group_commander = moveit_commander.MoveGroupCommander(GRIPPER_MOVE_GROUP)
-robot = moveit_commander.RobotCommander()
-scene = moveit_commander.PlanningSceneInterface()
 
 class PrimitiveEnum(Enum):
     GRASP = 'grasp'
@@ -39,7 +27,6 @@ class PrimitiveEnum(Enum):
     LOGGER = 'logger'
     CONNECT_OBJECT_TO_ROBOT = 'connect_object'
     DISCONNECT_OBJECT_FROM_ROBOT = 'disconnect_object'
-
 
 class ConditionEnum(Enum):
     TIME = 'time'
@@ -63,21 +50,14 @@ class DebugLogger(Primitive):
         print 'Logger Message: ', self._msg
         return True
 
-
 class ConnectObjectToRobot(Primitive):
 
     def __init__(self,object_name):
         self.box_name = object_name
 
     def operate(self):
-        '''
-        eef_link = arm_group_commander.get_end_effector_link()
-        touch_links = robot.get_link_names()
-        scene.attach_box(eef_link, self.box_name, touch_links=touch_links)
-        rospy.sleep(1)
-        '''
+        # Note: Not supported by RIK implementation
         return True
-
 
 class DisconnectObjectFromRobot(Primitive):
 
@@ -85,16 +65,8 @@ class DisconnectObjectFromRobot(Primitive):
         self.box_name = object_name
 
     def operate(self):
-        '''
-        eef_link = arm_group_commander.get_end_effector_link()
-
-        print '\n\n\n\n', eef_link, '\n\n\n\n'
-
-        scene.remove_attached_object(eef_link, name=self.box_name)
-        rospy.sleep(1)
-        '''
+        # Note: Not supported by RIK implementation
         return True
-
 
 class Grasp(Primitive):
 
@@ -102,24 +74,8 @@ class Grasp(Primitive):
         self._effort = effort
 
     def operate(self):
-
-        arm_group_commander.clear_pose_targets()
-
-        if GRIPPER_TYPE == 'mico-3':
-            gripper_group_commander.set_joint_value_target({'m1n6s300_joint_finger_1':self._effort})
-            gripper_group_commander.set_joint_value_target({'m1n6s300_joint_finger_2':self._effort})
-            gripper_group_commander.set_joint_value_target({'m1n6s300_joint_finger_3':self._effort})
-        elif GRIPPER_TYPE == 'mico-2':
-            gripper_group_commander.set_joint_value_target({'m1n6s200_joint_finger_1':self._effort})
-            gripper_group_commander.set_joint_value_target({'m1n6s200_joint_finger_2':self._effort})
-        else: # Robotiq 85
-            joint = gripper_group_commander.get_joints()[0]
-            gripper_group_commander.set_joint_value_target({joint:self._effort})
-
-        gripper_group_commander.go(wait=True)
-        gripper_group_commander.stop()
+        # TODO
         return True
-
 
 class Release(Primitive):
 
@@ -127,24 +83,8 @@ class Release(Primitive):
         self._effort = effort
 
     def operate(self):
-
-        arm_group_commander.clear_pose_targets()
-
-        if GRIPPER_TYPE == 'mico-3':
-            gripper_group_commander.set_joint_value_target({'m1n6s300_joint_finger_1':self._effort})
-            gripper_group_commander.set_joint_value_target({'m1n6s300_joint_finger_2':self._effort})
-            gripper_group_commander.set_joint_value_target({'m1n6s300_joint_finger_3':self._effort})
-        elif GRIPPER_TYPE == 'mico-2':
-            gripper_group_commander.set_joint_value_target({'m1n6s200_joint_finger_1':self._effort})
-            gripper_group_commander.set_joint_value_target({'m1n6s200_joint_finger_2':self._effort})
-        else: # Robotiq 85
-            joint = gripper_group_commander.get_joints()[0]
-            gripper_group_commander.set_joint_value_target({joint:self._effort})
-
-        gripper_group_commander.go(wait=True)
-        gripper_group_commander.stop()
+        # TODO
         return True
-
 
 class Move(Primitive):
 
@@ -171,14 +111,8 @@ class Move(Primitive):
             self._pose.orientation.w = orientation['w']
 
     def operate(self):
-        global arm_group_commander
-
-        arm_group_commander.clear_pose_targets()
-        arm_group_commander.set_pose_target(self._pose)
-        retVal = arm_group_commander.go(wait=True)
-        arm_group_commander.stop()
-        return retVal
-
+        # TODO
+        return True
 
 class Wait(Primitive):
 

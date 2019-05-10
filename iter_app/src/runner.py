@@ -1,18 +1,26 @@
 #!/usr/bin/env python
 
+## Note: Currently the environment is unsupported due to moveit having an issue
+## with stack smashing and with relaxed IK there is no built in support.
+
 import sys
 import time
 import json
 import rospy
-rospy.init_node('runner', anonymous=True)
-import moveit_commander
-moveit_commander.roscpp_initialize(sys.argv)
-import primitives as bp
-#import environment as env
 
 from time_mode_enum import TimeModeEnum
 from std_msgs.msg import String, Int32, Bool
 from iter_app.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
+
+
+rospy.init_node('runner', anonymous=True)
+
+
+if rospy.get_param('use_rik',False):
+    import primitives_rik as bp
+else:
+    import primitives_moveit as bp
+    #import environment_moveit as env
 
 
 def button_callback():

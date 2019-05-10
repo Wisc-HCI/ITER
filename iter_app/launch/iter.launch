@@ -8,6 +8,13 @@
     <arg name="use_cli" default='false'/>
     <arg name="rad_ui" default='false'/>
 
+    <group if="(eval arg('use_rik') == 'true')">
+      <rosparam param="use_rik">true</rosparam>
+    </group>
+    <group if="(eval arg('use_rik') == 'false')">
+      <rosparam param="use_rik">false</rosparam>
+    </group>
+
     <!-- Include Rosbridge launches -->
     <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
 
