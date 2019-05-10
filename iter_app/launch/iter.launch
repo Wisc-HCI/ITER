@@ -4,6 +4,7 @@
 
     <arg name="robot"/>
     <arg name="simulated" default='true'/>
+    <arg name="use_rik" default='true' />
     <arg name="use_cli" default='false'/>
     <arg name="rad_ui" default='false'/>
 
@@ -19,6 +20,7 @@
 
       <include file="$(find iter_app)/launch/ur3.launch">
         <arg name="simulated" value="$(arg simulated )"/>
+        <arg name="use_rik" value="$(arg use_rik)" />
       </include>
     </group>
 
@@ -31,6 +33,7 @@
 
       <include file="$(find iter_app)/launch/ur5.launch">
         <arg name="simulated" value="$(arg simulated )"/>
+        <arg name="use_rik" value="$(arg use_rik)" />
       </include>
     </group>
 
@@ -43,6 +46,7 @@
 
       <include file="$(find iter_app)/launch/mico-3.launch">
         <arg name="simulated" value="$(arg simulated )"/>
+        <arg name="use_rik" value="$(arg use_rik)" />
       </include>
     </group>
 
@@ -55,6 +59,7 @@
 
       <include file="$(find iter_app)/launch/mico-2.launch">
         <arg name="simulated" value="$(arg simulated )"/>
+        <arg name="use_rik" value="$(arg use_rik)" />
       </include>
     </group>
 
@@ -67,6 +72,7 @@
 
       <include file="$(find iter_app)/launch/mico-robotiq85.launch">
         <arg name="simulated" value="$(arg simulated )"/>
+        <arg name="use_rik" value="$(arg use_rik)" />
       </include>
     </group>
 

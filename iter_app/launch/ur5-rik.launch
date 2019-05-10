@@ -1,0 +1,7 @@
+<launch>
+
+  <arg name="simulated" default='true'/>
+
+  <!-- TODO -->
+
+</launch>
