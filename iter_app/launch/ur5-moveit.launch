@@ -49,7 +49,13 @@
       <arg name="run_test" value="false"/>
     </include>
 
-    <!-- TODO roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch -->
+    <!-- Moveit interface -->
+    <include file="$(find ur5_moveit_config)/launch/ur5_moveit_planning_execution.launch"></include>
+
+    <!-- RVIZ-->
+    <include file="$(find ur5_moveit_config)/launch/moveit_rviz.launch">
+      <arg name="config" value="true"/>
+    </include>
 
   </group>
 
