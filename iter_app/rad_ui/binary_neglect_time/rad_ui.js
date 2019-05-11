@@ -1,34 +1,23 @@
 
 // define update functions
 
-function updateColor(value,seconds) {
+function updateColor(seconds) {
 
   var GREEN = 127;
   var RED = 0;
   var LOWER_BOUND = 15;
   var UPPER_BOUND = 60;
 
-  var active = (value * 100) / 10;
-
-  for (var i=0; i<10; i++) {
-
-    var color;
-    if (i < active) {
-      var scale;
-      if (seconds <= LOWER_BOUND) {
-        scale = RED;
-      } else if (seconds >= UPPER_BOUND) {
-        scale = GREEN;
-      } else {
-        scale = (GREEN - RED) / (UPPER_BOUND - LOWER_BOUND) * (seconds - LOWER_BOUND) + RED;
-      }
-      color = 'hsl(' + Math.round(scale) + ', 75%, 50%)';
-    } else {
-      color = 'grey';
-    }
-
-    $('#dot-'+i).css('background-color',color);
+  var scale;
+  if (seconds <= LOWER_BOUND) {
+    scale = RED;
+  } else {
+    scale = GREEN;
   }
+  var color = 'hsl(' + Math.round(scale) + ', 75%, 50%)';
+
+  $('#dot-'+i).css('background-color',color);
+
 }
 
 // Setup ROS Subscribers
@@ -58,6 +47,6 @@ var listenerNegelectTime = new ROSLIB.Topic({
 
 listenerNegelectTime.subscribe(function(message) {
   if(message != undefined) {
-    updateColor(message.current/message.initial,message.current);
+    updateColor(message.current);
   }
 });
