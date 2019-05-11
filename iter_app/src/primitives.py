@@ -171,9 +171,11 @@ class Move(Primitive):
 
         arm_group_commander.clear_pose_targets()
         arm_group_commander.set_pose_target(self._pose)
-        retVal = arm_group_commander.go(wait=True)
+        retVal1 = arm_group_commander.go(wait=True)
         arm_group_commander.stop()
-        return retVal
+        arm_group_commander.set_pose_target(self._pose)
+        retVal2 = arm_group_commander.go(wait=True)
+        return retVal1 or retVal2
 
 
 class Wait(Primitive):

@@ -18,7 +18,8 @@ config = json.load(open('./configs/house/'+ configFileName +'.json','r'))
 SAFE_HEIGHT = config['safe_height']
 GRASP_OFFSET = config['grasp_offset']
 GRASP_EFFORT = config['grasp_effort']
-RELEASE_EFFORT = config['release_effort']
+RELEASE_EFFORT_QUEUE = config['release_effort_queue']
+RELEASE_EFFORT_WORKSPACE = config['release_effort_workspace']
 NUM_ITERATIONS = config['num_iterations']
 WORKSPACE_POSITION = config['workspace_position']
 HOME_POSITION = config['home_position']
@@ -102,6 +103,11 @@ class Queue:
                 },
                 "orientation": target_orientation
             },
+            # open grippger to specified
+            {
+                'name': 'release',
+                'effort': RELEASE_EFFORT_QUEUE
+            },
             # move down to item
             {
                 "name": "move",
@@ -162,7 +168,7 @@ class Queue:
         })
         task_list.append({
             'name': 'release',
-            'effort': RELEASE_EFFORT
+            'effort': RELEASE_EFFORT_WORKSPACE
         })
         task_list.append({
             "name": "disconnect_object",
@@ -232,44 +238,44 @@ class AssemblyTask:
         })
 
         task_list = task_list + queue_large.pick_n_place({
-            'x': WORKSPACE_POSITION['x'] + 0,
+            'x': WORKSPACE_POSITION['x'] - 0.25 * BLOCK_LARGE[0],
             'y': WORKSPACE_POSITION['y'] + BLOCK_LARGE[1] * 0.5,
-            'z': WORKSPACE_POSITION['z'] + BLOCK_LARGE[2] * 0.5 + GRASP_OFFSET + 0.005,
+            'z': WORKSPACE_POSITION['z'] + BLOCK_LARGE[2] * 0.5 + GRASP_OFFSET + 0.01,
             'safe': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
         },DOWN_GY_ORIENTATION)
 
         task_list = task_list + queue_large.pick_n_place({
-            'x': WORKSPACE_POSITION['x'] + BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0],
+            'x': WORKSPACE_POSITION['x'] + BLOCK_SMALL[1] - 1.0 * BLOCK_LARGE[0],
             'y': WORKSPACE_POSITION['y'] + BLOCK_LARGE[1] * 0.5,
-            'z': WORKSPACE_POSITION['z'] + BLOCK_LARGE[2] * 0.5 + GRASP_OFFSET + 0.005,
+            'z': WORKSPACE_POSITION['z'] + BLOCK_LARGE[2] * 0.5 + GRASP_OFFSET + 0.01,
             'safe': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
         },DOWN_GY_ORIENTATION)
 
         task_list = task_list + queue_small.pick_n_place({
             'x': WORKSPACE_POSITION['x'] + BLOCK_SMALL[0],
-            'y': WORKSPACE_POSITION['y'] + 0.5 * BLOCK_LARGE[0],
-            'z': WORKSPACE_POSITION['z'] + BLOCK_SMALL[2] * 1.5 + GRASP_OFFSET + 0.011,
+            'y': WORKSPACE_POSITION['y'] + 0.5 * BLOCK_SMALL[0],
+            'z': WORKSPACE_POSITION['z'] + BLOCK_SMALL[2] * 1.5 + GRASP_OFFSET + 0.015,
             'safe': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
         },DOWN_GX_ORIENTATION)
 
         task_list = task_list + queue_small.pick_n_place({
             'x': WORKSPACE_POSITION['x'] + BLOCK_SMALL[0],
             'y': WORKSPACE_POSITION['y'] + BLOCK_LARGE[1] - 0.5 * BLOCK_SMALL[0],
-            'z': WORKSPACE_POSITION['z'] + BLOCK_SMALL[2] * 1.5 + GRASP_OFFSET + 0.011,
+            'z': WORKSPACE_POSITION['z'] + BLOCK_SMALL[2] * 1.5 + GRASP_OFFSET + 0.015,
             'safe': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
         },DOWN_GX_ORIENTATION)
 
         task_list = task_list + queue_large.pick_n_place({
             'x': WORKSPACE_POSITION['x'] + 0,
             'y': WORKSPACE_POSITION['y'] + BLOCK_LARGE[1] * 0.5,
-            'z': WORKSPACE_POSITION['z'] + BLOCK_LARGE[2] * 1.5 + GRASP_OFFSET + 0.035,
+            'z': WORKSPACE_POSITION['z'] + BLOCK_LARGE[2] * 2.5 + GRASP_OFFSET + 0.015,
             'safe': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
         },DOWN_GY_ORIENTATION)
 
         task_list = task_list + queue_large.pick_n_place({
-            'x': WORKSPACE_POSITION['x'] + BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0],
+            'x': WORKSPACE_POSITION['x'] + BLOCK_SMALL[1] - 0.75 * BLOCK_LARGE[0],
             'y': WORKSPACE_POSITION['y'] + BLOCK_LARGE[1] * 0.5,
-            'z': WORKSPACE_POSITION['z'] + BLOCK_LARGE[2] * 1.5 + GRASP_OFFSET + 0.035,
+            'z': WORKSPACE_POSITION['z'] + BLOCK_LARGE[2] * 2.5 + GRASP_OFFSET + 0.015,
             'safe': WORKSPACE_POSITION['z'] + SAFE_HEIGHT
         },DOWN_GY_ORIENTATION)
 
@@ -302,7 +308,7 @@ class AssemblyTask:
 
         task_list.append({
             'name': 'release',
-            'effort': RELEASE_EFFORT
+            'effort': RELEASE_EFFORT_QUEUE
         })
 
         for i in range(0,NUM_ITERATIONS):

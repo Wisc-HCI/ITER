@@ -1,497 +1,497 @@
 {
     "environment": [
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.1, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.1, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.1x0.01524_l1_0", 
             "position": {
                 "y": -0.18516, 
                 "x": -0.05, 
-                "z": 0.0031200000000000004
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.1, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.1, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.1x0.01524_l1_1", 
             "position": {
                 "y": -0.24547999999999998, 
                 "x": -0.05, 
-                "z": 0.0031200000000000004
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.1, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.1, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.1x0.01524_l1_2", 
             "position": {
                 "y": -0.30579999999999996, 
                 "x": -0.05, 
-                "z": 0.0031200000000000004
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.1, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.1, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.1x0.01524_l1_3", 
             "position": {
                 "y": -0.36612, 
                 "x": -0.05, 
-                "z": 0.0031200000000000004
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.1, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.1, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.1x0.01524_l1_4", 
             "position": {
                 "y": -0.42644, 
                 "x": -0.05, 
-                "z": 0.0031200000000000004
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.1, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.1, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.1x0.01524_l1_5", 
             "position": {
                 "y": -0.48675999999999997, 
                 "x": -0.05, 
-                "z": 0.0031200000000000004
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.1, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.1, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.1x0.01524_l2_0", 
             "position": {
                 "y": -0.18516, 
                 "x": -0.16999999999999998, 
-                "z": 0.0031200000000000004
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.1, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.1, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.1x0.01524_l2_1", 
             "position": {
                 "y": -0.24547999999999998, 
                 "x": -0.16999999999999998, 
-                "z": 0.0031200000000000004
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.1, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.1, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.1x0.01524_l2_2", 
             "position": {
                 "y": -0.30579999999999996, 
                 "x": -0.16999999999999998, 
-                "z": 0.0031200000000000004
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.1, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.1, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.1x0.01524_l2_3", 
             "position": {
                 "y": -0.36612, 
                 "x": -0.16999999999999998, 
-                "z": 0.0031200000000000004
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.1, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.1, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.1x0.01524_l2_4", 
             "position": {
                 "y": -0.42644, 
                 "x": -0.16999999999999998, 
-                "z": 0.0031200000000000004
+                "z": 0.00362
             }
         }, 
         {
+            "orientation": {
+                "y": -0.7071067811865475, 
+                "x": -0.7071067811865475, 
+                "z": 0, 
+                "w": 0
+            }, 
             "representation": "box", 
             "size": {
                 "y": 0.1, 
                 "x": 0.02032, 
                 "z": 0.01524
             }, 
+            "name": "queue0.02032x0.1x0.01524_l2_5", 
+            "position": {
+                "y": -0.48675999999999997, 
+                "x": -0.16999999999999998, 
+                "z": 0.00362
+            }
+        }, 
+        {
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
             }, 
-            "name": "queue0.02032x0.1x0.01524_l2_5", 
-            "position": {
-                "y": -0.48675999999999997, 
-                "x": -0.16999999999999998, 
-                "z": 0.0031200000000000004
-            }
-        }, 
-        {
             "representation": "box", 
             "size": {
                 "y": 0.05842, 
                 "x": 0.02032, 
                 "z": 0.01524
-            }, 
-            "orientation": {
-                "y": -0.7071067811865475, 
-                "x": -0.7071067811865475, 
-                "z": 0, 
-                "w": 0
             }, 
             "name": "queue0.02032x0.05842x0.01524_s1_0", 
             "position": {
                 "y": -0.18516, 
                 "x": -0.27079, 
-                "z": 0.00412
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.05842, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.05842, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.05842x0.01524_s1_1", 
             "position": {
                 "y": -0.24547999999999998, 
                 "x": -0.27079, 
-                "z": 0.00412
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.05842, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.05842, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.05842x0.01524_s1_2", 
             "position": {
                 "y": -0.30579999999999996, 
                 "x": -0.27079, 
-                "z": 0.00412
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.05842, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.05842, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.05842x0.01524_s1_3", 
             "position": {
                 "y": -0.36612, 
                 "x": -0.27079, 
-                "z": 0.00412
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.05842, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.05842, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.05842x0.01524_s1_4", 
             "position": {
                 "y": -0.42644, 
                 "x": -0.27079, 
-                "z": 0.00412
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.05842, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.05842, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.05842x0.01524_s1_5", 
             "position": {
                 "y": -0.48675999999999997, 
                 "x": -0.27079, 
-                "z": 0.00412
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.05842, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.05842, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.05842x0.01524_s2_0", 
             "position": {
                 "y": -0.18516, 
                 "x": -0.35079, 
-                "z": 0.00412
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.05842, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.05842, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.05842x0.01524_s2_1", 
             "position": {
                 "y": -0.24547999999999998, 
                 "x": -0.35079, 
-                "z": 0.00412
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.05842, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.05842, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.05842x0.01524_s2_2", 
             "position": {
                 "y": -0.30579999999999996, 
                 "x": -0.35079, 
-                "z": 0.00412
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.05842, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.05842, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.05842x0.01524_s2_3", 
             "position": {
                 "y": -0.36612, 
                 "x": -0.35079, 
-                "z": 0.00412
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.05842, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.05842, 
+                "x": 0.02032, 
+                "z": 0.01524
             }, 
             "name": "queue0.02032x0.05842x0.01524_s2_4", 
             "position": {
                 "y": -0.42644, 
                 "x": -0.35079, 
-                "z": 0.00412
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.05842, 
-                "x": 0.02032, 
-                "z": 0.01524
-            }, 
             "orientation": {
                 "y": -0.7071067811865475, 
                 "x": -0.7071067811865475, 
                 "z": 0, 
                 "w": 0
             }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.05842, 
+                "x": 0.02032, 
+                "z": 0.01524
+            }, 
             "name": "queue0.02032x0.05842x0.01524_s2_5", 
             "position": {
                 "y": -0.48675999999999997, 
                 "x": -0.35079, 
-                "z": 0.00412
+                "z": 0.00362
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 1, 
-                "x": 0.5, 
-                "z": 0.01
-            }, 
             "orientation": {
                 "y": 0, 
                 "x": 0, 
                 "z": 0, 
                 "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 1, 
+                "x": 0.5, 
+                "z": 0.01
             }, 
             "name": "tabletop", 
             "position": {
@@ -501,17 +501,17 @@
             }
         }, 
         {
-            "representation": "box", 
-            "size": {
-                "y": 0.5, 
-                "x": 1, 
-                "z": 0.01
-            }, 
             "orientation": {
                 "y": 0, 
                 "x": 0, 
                 "z": 0, 
                 "w": 1
+            }, 
+            "representation": "box", 
+            "size": {
+                "y": 0.5, 
+                "x": 1, 
+                "z": 0.01
             }, 
             "name": "human_table", 
             "position": {
@@ -528,10 +528,6 @@
                 "x": 0.0, 
                 "z": 0.35
             }, 
-            "rad": {
-                "neglect_time": 0.6505460739135742, 
-                "is_interaction": false
-            }, 
             "name": "move", 
             "orientation": {
                 "y": -0.7071067811865475, 
@@ -541,38 +537,22 @@
             }
         }, 
         {
-            "rad": {
-                "neglect_time": 0.28697800636291504, 
-                "is_interaction": false
-            }, 
-            "effort": 0.48, 
+            "effort": 0.4, 
             "name": "release"
         }, 
         {
             "msg": "Task Iteration = 0", 
-            "rad": {
-                "neglect_time": 1.5974044799804688e-05, 
-                "is_interaction": false
-            }, 
             "name": "logger"
         }, 
         {
             "msg": "Task Progress: Building House 1", 
-            "rad": {
-                "neglect_time": 1.5974044799804688e-05, 
-                "is_interaction": false
-            }, 
             "name": "logger"
         }, 
         {
             "position": {
                 "y": -0.18516, 
                 "x": -0.05, 
-                "z": 0.30624
-            }, 
-            "rad": {
-                "neglect_time": 2.0419719219207764, 
-                "is_interaction": false
+                "z": 0.30724
             }, 
             "name": "move", 
             "orientation": {
@@ -583,14 +563,14 @@
             }
         }, 
         {
+            "effort": 0.4, 
+            "name": "release"
+        }, 
+        {
             "position": {
                 "y": -0.18516, 
                 "x": -0.05, 
-                "z": 0.15624
-            }, 
-            "rad": {
-                "neglect_time": 4.068264007568359, 
-                "is_interaction": false
+                "z": 0.15724
             }, 
             "name": "move", 
             "orientation": {
@@ -602,29 +582,17 @@
         }, 
         {
             "object_name": "queue0.02032x0.1x0.01524_l1_0", 
-            "name": "connect_object", 
-            "rad": {
-                "neglect_time": 1.00120210647583, 
-                "is_interaction": false
-            }
+            "name": "connect_object"
         }, 
         {
-            "rad": {
-                "neglect_time": 0.2904219627380371, 
-                "is_interaction": false
-            }, 
-            "effort": 0.63, 
+            "effort": 0.65, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": -0.18516, 
                 "x": -0.05, 
-                "z": 0.30624
-            }, 
-            "rad": {
-                "neglect_time": 4.243885040283203, 
-                "is_interaction": false
+                "z": 0.30724
             }, 
             "name": "move", 
             "orientation": {
@@ -637,12 +605,8 @@
         {
             "position": {
                 "y": -0.023999999999999994, 
-                "x": -0.35, 
-                "z": 0.29
-            }, 
-            "rad": {
-                "neglect_time": 8.861711978912354, 
-                "is_interaction": false
+                "x": -0.30507999999999996, 
+                "z": 0.292
             }, 
             "name": "move", 
             "orientation": {
@@ -655,12 +619,8 @@
         {
             "position": {
                 "y": -0.023999999999999994, 
-                "x": -0.35, 
-                "z": 0.15262
-            }, 
-            "rad": {
-                "neglect_time": 2.5021581649780273, 
-                "is_interaction": false
+                "x": -0.30507999999999996, 
+                "z": 0.15962
             }, 
             "name": "move", 
             "orientation": {
@@ -671,30 +631,18 @@
             }
         }, 
         {
-            "rad": {
-                "neglect_time": 0.2895388603210449, 
-                "is_interaction": false
-            }, 
             "effort": 0.48, 
             "name": "release"
         }, 
         {
             "object_name": "queue0.02032x0.1x0.01524_l1_0", 
-            "name": "disconnect_object", 
-            "rad": {
-                "neglect_time": 1.0008940696716309, 
-                "is_interaction": false
-            }
+            "name": "disconnect_object"
         }, 
         {
             "position": {
                 "y": -0.023999999999999994, 
-                "x": -0.35, 
-                "z": 0.29
-            }, 
-            "rad": {
-                "neglect_time": 2.6441550254821777, 
-                "is_interaction": false
+                "x": -0.30507999999999996, 
+                "z": 0.292
             }, 
             "name": "move", 
             "orientation": {
@@ -708,11 +656,7 @@
             "position": {
                 "y": -0.24547999999999998, 
                 "x": -0.05, 
-                "z": 0.30624
-            }, 
-            "rad": {
-                "neglect_time": 8.867964029312134, 
-                "is_interaction": false
+                "z": 0.30724
             }, 
             "name": "move", 
             "orientation": {
@@ -723,14 +667,14 @@
             }
         }, 
         {
+            "effort": 0.4, 
+            "name": "release"
+        }, 
+        {
             "position": {
                 "y": -0.24547999999999998, 
                 "x": -0.05, 
-                "z": 0.15624
-            }, 
-            "rad": {
-                "neglect_time": 3.712174892425537, 
-                "is_interaction": false
+                "z": 0.15724
             }, 
             "name": "move", 
             "orientation": {
@@ -742,29 +686,17 @@
         }, 
         {
             "object_name": "queue0.02032x0.1x0.01524_l1_1", 
-            "name": "connect_object", 
-            "rad": {
-                "neglect_time": 1.002990961074829, 
-                "is_interaction": false
-            }
+            "name": "connect_object"
         }, 
         {
-            "rad": {
-                "neglect_time": 0.2820320129394531, 
-                "is_interaction": false
-            }, 
-            "effort": 0.63, 
+            "effort": 0.65, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": -0.24547999999999998, 
                 "x": -0.05, 
-                "z": 0.30624
-            }, 
-            "rad": {
-                "neglect_time": 3.7054481506347656, 
-                "is_interaction": false
+                "z": 0.30724
             }, 
             "name": "move", 
             "orientation": {
@@ -777,12 +709,8 @@
         {
             "position": {
                 "y": -0.023999999999999994, 
-                "x": -0.30173999999999995, 
-                "z": 0.29
-            }, 
-            "rad": {
-                "neglect_time": 8.901684045791626, 
-                "is_interaction": false
+                "x": -0.26189999999999997, 
+                "z": 0.292
             }, 
             "name": "move", 
             "orientation": {
@@ -795,12 +723,8 @@
         {
             "position": {
                 "y": -0.023999999999999994, 
-                "x": -0.30173999999999995, 
-                "z": 0.15262
-            }, 
-            "rad": {
-                "neglect_time": 2.898808002471924, 
-                "is_interaction": false
+                "x": -0.26189999999999997, 
+                "z": 0.15962
             }, 
             "name": "move", 
             "orientation": {
@@ -811,30 +735,18 @@
             }
         }, 
         {
-            "rad": {
-                "neglect_time": 0.2852458953857422, 
-                "is_interaction": false
-            }, 
             "effort": 0.48, 
             "name": "release"
         }, 
         {
             "object_name": "queue0.02032x0.1x0.01524_l1_1", 
-            "name": "disconnect_object", 
-            "rad": {
-                "neglect_time": 1.0008800029754639, 
-                "is_interaction": false
-            }
+            "name": "disconnect_object"
         }, 
         {
             "position": {
                 "y": -0.023999999999999994, 
-                "x": -0.30173999999999995, 
-                "z": 0.29
-            }, 
-            "rad": {
-                "neglect_time": 2.9175190925598145, 
-                "is_interaction": false
+                "x": -0.26189999999999997, 
+                "z": 0.292
             }, 
             "name": "move", 
             "orientation": {
@@ -848,11 +760,7 @@
             "position": {
                 "y": -0.18516, 
                 "x": -0.27079, 
-                "z": 0.30824
-            }, 
-            "rad": {
-                "neglect_time": 6.69028902053833, 
-                "is_interaction": false
+                "z": 0.30724
             }, 
             "name": "move", 
             "orientation": {
@@ -863,14 +771,14 @@
             }
         }, 
         {
+            "effort": 0.4, 
+            "name": "release"
+        }, 
+        {
             "position": {
                 "y": -0.18516, 
                 "x": -0.27079, 
-                "z": 0.15824
-            }, 
-            "rad": {
-                "neglect_time": 2.9034838676452637, 
-                "is_interaction": false
+                "z": 0.15724
             }, 
             "name": "move", 
             "orientation": {
@@ -882,29 +790,17 @@
         }, 
         {
             "object_name": "queue0.02032x0.05842x0.01524_s1_0", 
-            "name": "connect_object", 
-            "rad": {
-                "neglect_time": 1.0021250247955322, 
-                "is_interaction": false
-            }
+            "name": "connect_object"
         }, 
         {
-            "rad": {
-                "neglect_time": 0.29412007331848145, 
-                "is_interaction": false
-            }, 
-            "effort": 0.63, 
+            "effort": 0.65, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": -0.18516, 
                 "x": -0.27079, 
-                "z": 0.30824
-            }, 
-            "rad": {
-                "neglect_time": 3.0980679988861084, 
-                "is_interaction": false
+                "z": 0.30724
             }, 
             "name": "move", 
             "orientation": {
@@ -917,12 +813,8 @@
         {
             "position": {
                 "y": -0.06384, 
-                "x": -0.32968, 
-                "z": 0.29
-            }, 
-            "rad": {
-                "neglect_time": 2.1067988872528076, 
-                "is_interaction": false
+                "x": -0.27968, 
+                "z": 0.292
             }, 
             "name": "move", 
             "orientation": {
@@ -935,12 +827,8 @@
         {
             "position": {
                 "y": -0.06384, 
-                "x": -0.32968, 
-                "z": 0.17386000000000001
-            }, 
-            "rad": {
-                "neglect_time": 2.4984798431396484, 
-                "is_interaction": false
+                "x": -0.27968, 
+                "z": 0.17986000000000002
             }, 
             "name": "move", 
             "orientation": {
@@ -951,30 +839,18 @@
             }
         }, 
         {
-            "rad": {
-                "neglect_time": 0.6944971084594727, 
-                "is_interaction": false
-            }, 
             "effort": 0.48, 
             "name": "release"
         }, 
         {
             "object_name": "queue0.02032x0.05842x0.01524_s1_0", 
-            "name": "disconnect_object", 
-            "rad": {
-                "neglect_time": 1.001035213470459, 
-                "is_interaction": false
-            }
+            "name": "disconnect_object"
         }, 
         {
             "position": {
                 "y": -0.06384, 
-                "x": -0.32968, 
-                "z": 0.29
-            }, 
-            "rad": {
-                "neglect_time": 2.502366065979004, 
-                "is_interaction": false
+                "x": -0.27968, 
+                "z": 0.292
             }, 
             "name": "move", 
             "orientation": {
@@ -988,11 +864,7 @@
             "position": {
                 "y": -0.24547999999999998, 
                 "x": -0.27079, 
-                "z": 0.30824
-            }, 
-            "rad": {
-                "neglect_time": 2.4855520725250244, 
-                "is_interaction": false
+                "z": 0.30724
             }, 
             "name": "move", 
             "orientation": {
@@ -1003,14 +875,14 @@
             }
         }, 
         {
+            "effort": 0.4, 
+            "name": "release"
+        }, 
+        {
             "position": {
                 "y": -0.24547999999999998, 
                 "x": -0.27079, 
-                "z": 0.15824
-            }, 
-            "rad": {
-                "neglect_time": 2.8310539722442627, 
-                "is_interaction": false
+                "z": 0.15724
             }, 
             "name": "move", 
             "orientation": {
@@ -1022,29 +894,17 @@
         }, 
         {
             "object_name": "queue0.02032x0.05842x0.01524_s1_1", 
-            "name": "connect_object", 
-            "rad": {
-                "neglect_time": 1.0009779930114746, 
-                "is_interaction": false
-            }
+            "name": "connect_object"
         }, 
         {
-            "rad": {
-                "neglect_time": 0.8735361099243164, 
-                "is_interaction": false
-            }, 
-            "effort": 0.63, 
+            "effort": 0.65, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": -0.24547999999999998, 
                 "x": -0.27079, 
-                "z": 0.30824
-            }, 
-            "rad": {
-                "neglect_time": 2.912440061569214, 
-                "is_interaction": false
+                "z": 0.30724
             }, 
             "name": "move", 
             "orientation": {
@@ -1057,12 +917,8 @@
         {
             "position": {
                 "y": 0.015840000000000007, 
-                "x": -0.32968, 
-                "z": 0.29
-            }, 
-            "rad": {
-                "neglect_time": 3.2952561378479004, 
-                "is_interaction": false
+                "x": -0.27968, 
+                "z": 0.292
             }, 
             "name": "move", 
             "orientation": {
@@ -1075,12 +931,8 @@
         {
             "position": {
                 "y": 0.015840000000000007, 
-                "x": -0.32968, 
-                "z": 0.17386000000000001
-            }, 
-            "rad": {
-                "neglect_time": 2.49141001701355, 
-                "is_interaction": false
+                "x": -0.27968, 
+                "z": 0.17986000000000002
             }, 
             "name": "move", 
             "orientation": {
@@ -1091,30 +943,18 @@
             }
         }, 
         {
-            "rad": {
-                "neglect_time": 0.30148792266845703, 
-                "is_interaction": false
-            }, 
             "effort": 0.48, 
             "name": "release"
         }, 
         {
             "object_name": "queue0.02032x0.05842x0.01524_s1_1", 
-            "name": "disconnect_object", 
-            "rad": {
-                "neglect_time": 1.0006470680236816, 
-                "is_interaction": false
-            }
+            "name": "disconnect_object"
         }, 
         {
             "position": {
                 "y": 0.015840000000000007, 
-                "x": -0.32968, 
-                "z": 0.29
-            }, 
-            "rad": {
-                "neglect_time": 2.504135847091675, 
-                "is_interaction": false
+                "x": -0.27968, 
+                "z": 0.292
             }, 
             "name": "move", 
             "orientation": {
@@ -1128,11 +968,7 @@
             "position": {
                 "y": -0.30579999999999996, 
                 "x": -0.05, 
-                "z": 0.30624
-            }, 
-            "rad": {
-                "neglect_time": 4.900544881820679, 
-                "is_interaction": false
+                "z": 0.30724
             }, 
             "name": "move", 
             "orientation": {
@@ -1143,14 +979,14 @@
             }
         }, 
         {
+            "effort": 0.4, 
+            "name": "release"
+        }, 
+        {
             "position": {
                 "y": -0.30579999999999996, 
                 "x": -0.05, 
-                "z": 0.15624
-            }, 
-            "rad": {
-                "neglect_time": 3.0834999084472656, 
-                "is_interaction": false
+                "z": 0.15724
             }, 
             "name": "move", 
             "orientation": {
@@ -1162,29 +998,17 @@
         }, 
         {
             "object_name": "queue0.02032x0.1x0.01524_l1_2", 
-            "name": "connect_object", 
-            "rad": {
-                "neglect_time": 1.0014209747314453, 
-                "is_interaction": false
-            }
+            "name": "connect_object"
         }, 
         {
-            "rad": {
-                "neglect_time": 0.22825884819030762, 
-                "is_interaction": false
-            }, 
-            "effort": 0.63, 
+            "effort": 0.65, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": -0.30579999999999996, 
                 "x": -0.05, 
-                "z": 0.30624
-            }, 
-            "rad": {
-                "neglect_time": 3.091761827468872, 
-                "is_interaction": false
+                "z": 0.30724
             }, 
             "name": "move", 
             "orientation": {
@@ -1197,12 +1021,8 @@
         {
             "position": {
                 "y": -0.023999999999999994, 
-                "x": -0.35, 
-                "z": 0.29
-            }, 
-            "rad": {
-                "neglect_time": 8.905432939529419, 
-                "is_interaction": false
+                "x": -0.3, 
+                "z": 0.292
             }, 
             "name": "move", 
             "orientation": {
@@ -1215,12 +1035,8 @@
         {
             "position": {
                 "y": -0.023999999999999994, 
-                "x": -0.35, 
-                "z": 0.19786
-            }, 
-            "rad": {
-                "neglect_time": 2.0771942138671875, 
-                "is_interaction": false
+                "x": -0.3, 
+                "z": 0.1951
             }, 
             "name": "move", 
             "orientation": {
@@ -1231,30 +1047,18 @@
             }
         }, 
         {
-            "rad": {
-                "neglect_time": 0.6373870372772217, 
-                "is_interaction": false
-            }, 
             "effort": 0.48, 
             "name": "release"
         }, 
         {
             "object_name": "queue0.02032x0.1x0.01524_l1_2", 
-            "name": "disconnect_object", 
-            "rad": {
-                "neglect_time": 1.001060962677002, 
-                "is_interaction": false
-            }
+            "name": "disconnect_object"
         }, 
         {
             "position": {
                 "y": -0.023999999999999994, 
-                "x": -0.35, 
-                "z": 0.29
-            }, 
-            "rad": {
-                "neglect_time": 2.280539035797119, 
-                "is_interaction": false
+                "x": -0.3, 
+                "z": 0.292
             }, 
             "name": "move", 
             "orientation": {
@@ -1268,11 +1072,7 @@
             "position": {
                 "y": -0.36612, 
                 "x": -0.05, 
-                "z": 0.30624
-            }, 
-            "rad": {
-                "neglect_time": 9.091032028198242, 
-                "is_interaction": false
+                "z": 0.30724
             }, 
             "name": "move", 
             "orientation": {
@@ -1283,14 +1083,14 @@
             }
         }, 
         {
+            "effort": 0.4, 
+            "name": "release"
+        }, 
+        {
             "position": {
                 "y": -0.36612, 
                 "x": -0.05, 
-                "z": 0.15624
-            }, 
-            "rad": {
-                "neglect_time": 2.7032089233398438, 
-                "is_interaction": false
+                "z": 0.15724
             }, 
             "name": "move", 
             "orientation": {
@@ -1302,29 +1102,17 @@
         }, 
         {
             "object_name": "queue0.02032x0.1x0.01524_l1_3", 
-            "name": "connect_object", 
-            "rad": {
-                "neglect_time": 1.0007288455963135, 
-                "is_interaction": false
-            }
+            "name": "connect_object"
         }, 
         {
-            "rad": {
-                "neglect_time": 0.6914350986480713, 
-                "is_interaction": false
-            }, 
-            "effort": 0.63, 
+            "effort": 0.65, 
             "name": "grasp"
         }, 
         {
             "position": {
                 "y": -0.36612, 
                 "x": -0.05, 
-                "z": 0.30624
-            }, 
-            "rad": {
-                "neglect_time": 2.895970106124878, 
-                "is_interaction": false
+                "z": 0.30724
             }, 
             "name": "move", 
             "orientation": {
@@ -1337,12 +1125,8 @@
         {
             "position": {
                 "y": -0.023999999999999994, 
-                "x": -0.30173999999999995, 
-                "z": 0.29
-            }, 
-            "rad": {
-                "neglect_time": 9.318766832351685, 
-                "is_interaction": false
+                "x": -0.25682, 
+                "z": 0.292
             }, 
             "name": "move", 
             "orientation": {
@@ -1355,12 +1139,8 @@
         {
             "position": {
                 "y": -0.023999999999999994, 
-                "x": -0.30173999999999995, 
-                "z": 0.19786
-            }, 
-            "rad": {
-                "neglect_time": 2.291069984436035, 
-                "is_interaction": false
+                "x": -0.25682, 
+                "z": 0.1951
             }, 
             "name": "move", 
             "orientation": {
@@ -1371,30 +1151,18 @@
             }
         }, 
         {
-            "rad": {
-                "neglect_time": 0.7007949352264404, 
-                "is_interaction": false
-            }, 
             "effort": 0.48, 
             "name": "release"
         }, 
         {
             "object_name": "queue0.02032x0.1x0.01524_l1_3", 
-            "name": "disconnect_object", 
-            "rad": {
-                "neglect_time": 1.0013620853424072, 
-                "is_interaction": false
-            }
+            "name": "disconnect_object"
         }, 
         {
             "position": {
                 "y": -0.023999999999999994, 
-                "x": -0.30173999999999995, 
-                "z": 0.29
-            }, 
-            "rad": {
-                "neglect_time": 2.2835237979888916, 
-                "is_interaction": false
+                "x": -0.25682, 
+                "z": 0.292
             }, 
             "name": "move", 
             "orientation": {
@@ -1410,10 +1178,6 @@
                 "x": 0.0, 
                 "z": 0.35
             }, 
-            "rad": {
-                "neglect_time": 11.843626976013184, 
-                "is_interaction": false
-            }, 
             "name": "move", 
             "orientation": {
                 "y": -0.7071067811865475, 
@@ -1423,9 +1187,6 @@
             }
         }, 
         {
-            "rad": {
-                "is_interaction": true
-            }, 
             "name": "wait", 
             "condition": "button"
         }

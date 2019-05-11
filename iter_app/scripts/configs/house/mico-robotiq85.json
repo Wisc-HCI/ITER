@@ -1,14 +1,15 @@
 {
   "safe_height": 0.3,
   "grasp_offset": 0.15,
-  "grasp_effort": 0.63,
-  "release_effort": 0.48,
+  "grasp_effort": 0.65,
+  "release_effort_queue": 0.40,
+  "release_effort_workspace": 0.48,
   "num_iterations": 1,
   "block_spacing": 0.04,
   "workspace_position": {
-      "x": -0.35,
+      "x": -0.30,
       "y": -0.074,
-      "z": -0.01
+      "z": -0.008
   },
   "home_position": {
     "x": 0.0,
@@ -33,7 +34,7 @@
       "position": {
         "x":-0.30,
         "y":-0.175,
-        "z":-0.007
+        "z":-0.008
       },
       "mode": "y"
     },
@@ -42,7 +43,7 @@
       "position": {
         "x":-0.38,
         "y":-0.175,
-        "z":-0.007
+        "z":-0.008
       },
       "mode": "y"
     },
@@ -51,7 +52,7 @@
       "position": {
         "x":-0.10,
         "y":-0.175,
-        "z":-0.009
+        "z":-0.008
       },
       "mode": "y"
     },
@@ -60,7 +61,7 @@
       "position": {
         "x":-0.22,
         "y":-0.175,
-        "z":-0.009
+        "z":-0.008
       },
       "mode": "y"
     }
