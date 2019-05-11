@@ -6,6 +6,7 @@
 
   <!-- If simulated, we do not have a robot connected -->
   <group if="$(eval arg('simulated') == true)">
+    <param name="robot_connected" value="false" />
 
     <include file="$(find ur3_moveit_config)/launch/planning_context.launch">
       <arg name="load_robot_description" value="true"/>
@@ -36,6 +37,7 @@
 
   <!-- Else, we launch physical robot -->
   <group if="$(eval arg('simulated') == false)">
+    <param name="robot_connected" value="true" />
     <!-- TODO -->
   </group>
 

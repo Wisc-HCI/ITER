@@ -4,6 +4,7 @@
 
   <!-- If simulated, we do not have a robot connected -->
   <group if="$(eval arg('simulated') == true)">
+    <param name="robot_connected" value="false" />
 
     <!-- Moveit -->
     <include file="$(find ur5_moveit_config)/launch/planning_context.launch">
@@ -33,7 +34,23 @@
 
   <!-- Else, we launch physical robot -->
   <group if="$(eval arg('simulated') == false)">
-    <!-- TODO -->
+    <param name="robot_connected" value="true" />
+
+    <!-- Launch robot driver -->
+    <include file="$(find ur_modern_driver)/launch/ur5_bringup.launch">
+      <arg name="robot_ip" value="10.130.229.132" />
+    </include>
+
+    <!-- Launch gripper driver -->
+    <include file="$(find m1n6s_robotiq85_moveit_config)/launch/robotiq_85.launch">
+      <arg name="dual_gripper" value="false"/>
+      <arg name="comport" value="/dev/ttyUSB0"/>
+      <arg name="baud" value="115200"/>
+      <arg name="run_test" value="false"/>
+    </include>
+
+    <!-- TODO roslaunch ur5_moveit_config ur5_moveit_planning_execution.launch -->
+
   </group>
 
 </launch>
