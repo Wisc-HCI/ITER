@@ -47,7 +47,7 @@
 
     <!-- Run gripper command action server, which receives planned motion goal under "gripper_command". After receiving the command from Moveit Rviz Plugin, this node act as an actionlib client and send the goal to the finger position action server from kinova_driver.  -->
     <node name="gripper_action_server" pkg="m1n6s_robotiq85_moveit_config" type="gripper_action_server.py" output="screen" respawn="false"/>
-
+  </group>
   </group>
 
   <!-- Setup robot configuration for Relaxed Ik -->

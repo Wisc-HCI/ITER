@@ -18,6 +18,19 @@ from std_msgs.msg import Header
 from abc import ABCMeta, abstractmethod
 from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion
 
+from robot_behavior.behavior_execution.planners.relaxedik import RelaxedIKPlanner
+
+
+planner = RelaxedIKPlanner(
+    {"follow_joint_trajectory":""},
+    {"follow_joint_trajectory":[
+        'shoulder_pan_joint',
+        'shoulder_lift_joint',
+        'elbow_joint',
+        'wrist_1_joint',
+        'wrist_2_joint',
+        'wrist_3_joint']})
+
 
 class PrimitiveEnum(Enum):
     GRASP = 'grasp'
@@ -71,48 +84,47 @@ class DisconnectObjectFromRobot(Primitive):
 class Grasp(Primitive):
 
     def __init__(self, effort=1):
-        self._effort = effort
+        self._plan = planner.plan_gripper_state('follow_joint_trajectory',[effort])
 
     def operate(self):
-        # TODO
-        return True
+        return planner.execute(self._plan)
 
 class Release(Primitive):
 
     def __init__(self, effort=1):
-        self._effort = effort
+        self._plan = planner.plan_gripper_state('follow_joint_trajectory',[effort])
 
     def operate(self):
-        # TODO
-        return True
+        return planner.execute(self._plan)
 
 class Move(Primitive):
 
     def __init__(self, position, orientation):
         # Convert from dictionary to Pose
-        self._pose = Pose()
-        self._pose.position.x = position['x']
-        self._pose.position.y = position['y']
-        self._pose.position.z = position['z']
+        pose = Pose()
+        pose.position.x = position['x']
+        pose.position.y = position['y']
+        pose.position.z = position['z']
 
         if 'w' not in orientation:
             (x,y,z,w)= tf.transformations.quaternion_from_euler(
                 orientation['x'],
                 orientation['y'],
                 orientation['z'])
-            self._pose.orientation.x = x
-            self._pose.orientation.y = y
-            self._pose.orientation.z = z
-            self._pose.orientation.w = w
+            pose.orientation.x = x
+            pose.orientation.y = y
+            pose.orientation.z = z
+            pose.orientation.w = w
         else:
-            self._pose.orientation.x = orientation['x']
-            self._pose.orientation.y = orientation['y']
-            self._pose.orientation.z = orientation['z']
-            self._pose.orientation.w = orientation['w']
+            pose.orientation.x = orientation['x']
+            pose.orientation.y = orientation['y']
+            pose.orientation.z = orientation['z']
+            pose.orientation.w = orientation['w']
+
+        self._plan = planner.plan_ee_pose('follow_joint_trajectory',pose)
 
     def operate(self):
-        # TODO
-        return True
+        return planner.execute(self._plan)
 
 class Wait(Primitive):
 

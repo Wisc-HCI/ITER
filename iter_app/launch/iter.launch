@@ -15,8 +15,7 @@
       <rosparam param="use_rik">false</rosparam>
     </group>
 
-    <!-- Include Rosbridge launches -->
-    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+    <!-- ROBOT ////////////////////////////////////////////////////// -->
 
     <!-- UR3 -->
     <group if="$(eval arg('robot') == 'ur3')">
@@ -82,6 +81,11 @@
         <arg name="use_rik" value="$(arg use_rik)" />
       </include>
     </group>
+
+    <!-- General Dependencies ////////////////////////////////////// -->
+
+    <!-- Include Rosbridge launches -->
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
 
     <!-- Start backend -->
     <node pkg="iter_app" type="timing.py" name="timing" output="screen"/>
