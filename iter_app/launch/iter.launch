@@ -7,8 +7,10 @@
     <arg name="use_rik" default='true' />
     <arg name="use_cli" default='false'/>
     <arg name="rad_ui" default='false'/>
+    <arg name="use_collision" default='false' />
 
-    <rosparam param="use_rik">$(arg use_rik)</rosparam>
+    <rosparam param="use_rik" subst_value="true">$(arg use_rik)</rosparam>
+    <rosparam param="use_collision" subst_value="true">$(arg use_collision)</rosparam>
 
     <!-- ROBOTs ////////////////////////////////////////////////////// -->
 

@@ -101,30 +101,29 @@ class Move(Primitive):
 
     def __init__(self, position, orientation):
         # Convert from dictionary to Pose
-        pose = Pose()
-        pose.position.x = position['x']
-        pose.position.y = position['y']
-        pose.position.z = position['z']
+        self._pose = Pose()
+        self._pose.position.x = position['x']
+        self._pose.position.y = position['y']
+        self._pose.position.z = position['z']
 
         if 'w' not in orientation:
             (x,y,z,w)= tf.transformations.quaternion_from_euler(
                 orientation['x'],
                 orientation['y'],
                 orientation['z'])
-            pose.orientation.x = x
-            pose.orientation.y = y
-            pose.orientation.z = z
-            pose.orientation.w = w
+            self._pose.orientation.x = x
+            self._pose.orientation.y = y
+            self._pose.orientation.z = z
+            self._pose.orientation.w = w
         else:
-            pose.orientation.x = orientation['x']
-            pose.orientation.y = orientation['y']
-            pose.orientation.z = orientation['z']
-            pose.orientation.w = orientation['w']
-
-        self._plan = planner.plan_ee_pose('follow_joint_trajectory',pose)
+            self._pose.orientation.x = orientation['x']
+            self._pose.orientation.y = orientation['y']
+            self._pose.orientation.z = orientation['z']
+            self._pose.orientation.w = orientation['w']
 
     def operate(self):
-        return planner.execute('follow_joint_trajectory',self._plan)
+        plan = planner.plan_ee_pose('follow_joint_trajectory',self._pose)
+        return planner.execute('follow_joint_trajectory',plan)
 
 class Wait(Primitive):
 

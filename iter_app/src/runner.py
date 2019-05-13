@@ -15,13 +15,19 @@ from iter_app.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, 
 
 rospy.init_node('runner')
 
-
-if rospy.get_param('use_rik',False):
+use_rik = rospy.get_param('use_rik',False)
+if use_rik:
     import primitives_rik as bp
+    #import environment_marker as env
 else:
     import primitives_moveit as bp
-    #import environment_moveit as env
-
+    use_collision = rospy.get_param('use_collision',False)
+    if use_collision:
+        #import environment_collision as env
+        pass
+    else:
+        #import environment_marker as env
+        pass
 
 def button_callback():
     #TODO write this for real
