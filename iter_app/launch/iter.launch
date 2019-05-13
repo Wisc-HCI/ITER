@@ -8,14 +8,9 @@
     <arg name="use_cli" default='false'/>
     <arg name="rad_ui" default='false'/>
 
-    <group if="(eval arg('use_rik') == 'true')">
-      <rosparam param="use_rik">true</rosparam>
-    </group>
-    <group if="(eval arg('use_rik') == 'false')">
-      <rosparam param="use_rik">false</rosparam>
-    </group>
+    <rosparam param="use_rik">$(arg use_rik)</rosparam>
 
-    <!-- ROBOT ////////////////////////////////////////////////////// -->
+    <!-- ROBOTs ////////////////////////////////////////////////////// -->
 
     <!-- UR3 -->
     <group if="$(eval arg('robot') == 'ur3')">

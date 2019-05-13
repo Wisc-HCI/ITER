@@ -13,7 +13,7 @@ from std_msgs.msg import String, Int32, Bool
 from iter_app.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
 
 
-rospy.init_node('runner', anonymous=True)
+rospy.init_node('runner')
 
 
 if rospy.get_param('use_rik',False):
@@ -69,6 +69,7 @@ class Runner:
         #if 'environment' in data.keys():
         #    env.generate_dynamic_environment(data['environment'])
 
+        print 'Instantiating'
         primitives = [bp.instantiate_from_dict(obj,button_callback) for obj in data['task']]
         neglect_time_list = generate_neglect_time_list(data)
 
@@ -77,6 +78,7 @@ class Runner:
             self.time_start_topic.publish(json.dumps(neglect_time_list))
 
         # iterate over all primitives
+        print 'Running'
         operate_status = True
         for i in range(0,len(primitives)):
             print type(primitives[i]).__name__
@@ -128,7 +130,7 @@ class Runner:
 
 
 if __name__ == '__main__':
-    time.sleep(10) # wait for everything to setup first
+    rospy.sleep(10) # wait for everything to setup first
     print "\n\n\n Runner is Ready\n\n\n"
     runner = Runner()
 

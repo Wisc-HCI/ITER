@@ -18,18 +18,18 @@ from std_msgs.msg import Header
 from abc import ABCMeta, abstractmethod
 from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion
 
-from robot_behavior.behavior_execution.planners.relaxedik import RelaxedIKPlanner
+from behavior_execution.planners.relaxedik import RelaxedIKPlanner
 
 
 planner = RelaxedIKPlanner(
-    {"follow_joint_trajectory":""},
+    {"follow_joint_trajectory":"gripper_command"},
     {"follow_joint_trajectory":[
-        'shoulder_pan_joint',
-        'shoulder_lift_joint',
-        'elbow_joint',
-        'wrist_1_joint',
-        'wrist_2_joint',
-        'wrist_3_joint']})
+        'simple_arm_shoulder_pan_joint',
+        'simple_arm_shoulder_lift_joint',
+        'simple_arm_elbow_joint',
+        'simple_arm_wrist_1_joint',
+        'simple_arm_wrist_2_joint',
+        'simple_arm_wrist_3_joint']})
 
 
 class PrimitiveEnum(Enum):
@@ -87,7 +87,7 @@ class Grasp(Primitive):
         self._plan = planner.plan_gripper_state('follow_joint_trajectory',[effort])
 
     def operate(self):
-        return planner.execute(self._plan)
+        return planner.execute('follow_joint_trajectory',self._plan)
 
 class Release(Primitive):
 
@@ -95,7 +95,7 @@ class Release(Primitive):
         self._plan = planner.plan_gripper_state('follow_joint_trajectory',[effort])
 
     def operate(self):
-        return planner.execute(self._plan)
+        return planner.execute('follow_joint_trajectory',self._plan)
 
 class Move(Primitive):
 
@@ -124,7 +124,7 @@ class Move(Primitive):
         self._plan = planner.plan_ee_pose('follow_joint_trajectory',pose)
 
     def operate(self):
-        return planner.execute(self._plan)
+        return planner.execute('follow_joint_trajectory',self._plan)
 
 class Wait(Primitive):
 

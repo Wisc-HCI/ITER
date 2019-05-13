@@ -2,6 +2,7 @@
   <param name="robot_type" value="ur5" />
 
   <arg name="simulated" default='true'/>
+  <arg name="limited" default='false' />
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <include file="$(find ur5_moveit_config)/launch/planning_context.launch">
@@ -13,10 +14,12 @@
   <group if="$(eval arg('simulated') == true)">
     <param name="robot_connected" value="false" />
 
+    <node name="fake_robot_controller" pkg="robot_behavior" type="fake_robot_controller.py"/>
+
     <!-- We do not have a robot connected, so publish fake joint states -->
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
       <param name="/use_gui" value="false"/>
-      <rosparam param="/source_list">[/move_group/fake_controller_joint_states]</rosparam>
+      <rosparam param="/source_list">[/fake_controller_joint_states]</rosparam>
     </node>
 
     <!-- Given the published joint states, publish tf for the robot links -->
@@ -44,7 +47,6 @@
     <node name="gripper_action_server" pkg="m1n6s_robotiq85_moveit_config" type="gripper_action_server.py" output="screen" respawn="false"/>
 
   </group>
-
 
   <!-- Setup robot configuration for Relaxed Ik -->
   <include file="$(find relaxed_ik)/launch/load_info_file.launch">
