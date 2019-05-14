@@ -49,12 +49,16 @@
   </group>
 
   <!-- Setup robot configuration for Relaxed Ik -->
+  <!--
   <include file="$(find relaxed_ik)/launch/load_info_file.launch">
     <arg name="info_file_name" value="ur5_info.yaml" />
   </include>
+-->
 
   <!-- Launch Relaxed IK -->
+  <!--
   <include file="$(find relaxed_ik)/launch/relaxed_ik_julia.launch" />
+-->
 
   <!-- TODO load Rviz -->
 
