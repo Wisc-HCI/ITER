@@ -1,4 +1,6 @@
 <!-- Initial structure taken from NRI Project -->
+<!-- Note if using Relaxed-IK must start the two nodes before running this
+     launch file. Also use the python variant for the near term.-->
 
 <launch>
 
