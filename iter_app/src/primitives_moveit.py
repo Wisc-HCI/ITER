@@ -22,6 +22,12 @@ from std_msgs.msg import Header
 from abc import ABCMeta, abstractmethod
 from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion
 
+use_collision = rospy.get_param('use_collision',False)
+if use_collision:
+    import environment_collision as env
+else:
+    import environment_marker as env
+
 
 ARM_MOVE_GROUP = rospy.get_param("arm_move_group")
 GRIPPER_MOVE_GROUP = rospy.get_param("gripper_move_group")
@@ -71,12 +77,7 @@ class ConnectObjectToRobot(Primitive):
         self.box_name = object_name
 
     def operate(self):
-        '''
-        eef_link = arm_group_commander.get_end_effector_link()
-        touch_links = robot.get_link_names()
-        scene.attach_box(eef_link, self.box_name, touch_links=touch_links)
-        rospy.sleep(1)
-        '''
+        #env.connect_obj_to_robot(self.box_name)
         return True
 
 class DisconnectObjectFromRobot(Primitive):
@@ -85,14 +86,7 @@ class DisconnectObjectFromRobot(Primitive):
         self.box_name = object_name
 
     def operate(self):
-        '''
-        eef_link = arm_group_commander.get_end_effector_link()
-
-        print '\n\n\n\n', eef_link, '\n\n\n\n'
-
-        scene.remove_attached_object(eef_link, name=self.box_name)
-        rospy.sleep(1)
-        '''
+        #env.disconnect_obj_from_robot(self.box_name)
         return True
 
 class Grasp(Primitive):

@@ -1,3 +1,4 @@
+import copy
 import time
 import rospy
 import moveit_commander
@@ -5,11 +6,14 @@ import moveit_commander
 from std_msgs.msg import Header
 from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion
 
-GRIPPER_MOVE_GROUP = rospy.get_param("gripper_move_group")
+ARM_MOVE_GROUP = rospy.get_param("arm_move_group")
 
+arm_group_commander = moveit_commander.MoveGroupCommander(ARM_MOVE_GROUP)
 robot = moveit_commander.RobotCommander()
 scene = moveit_commander.PlanningSceneInterface()
 dynamic_environment_ids = []
+
+grasped_list = []
 
 def generate_dynamic_environment(env_data):
     for obj in env_data:
@@ -42,7 +46,14 @@ def generate_dynamic_environment(env_data):
 
 
 def clear_dynamic_environment(ids=None):
+    global grasped_list
+    
     id_list = ids if ids is not None else dynamic_environment_ids
+
+    for id in grasped_list:
+        eef_link = arm_group_commander.get_end_effector_link()
+        scene.remove_attached_object(eef_link, name=id)
+    grasped_list = []
 
     remove_list = []
     for id in id_list:
@@ -58,3 +69,18 @@ def clear_dynamic_environment(ids=None):
 
     rospy.sleep(1)
     rospy.loginfo(scene.get_known_object_names())
+
+def connect_obj_to_robot(id):
+    eef_link = arm_group_commander.get_end_effector_link()
+    touch_links = robot.get_link_names()
+    scene.attach_box(eef_link, id, touch_links=touch_links)
+    rospy.sleep(1)
+
+    grasped_list.append(id)
+
+def disconnect_obj_from_robot(id):
+    eef_link = arm_group_commander.get_end_effector_link()
+    scene.remove_attached_object(eef_link, name=id)
+    rospy.sleep(1)
+
+    grasped_list.remove(id)
