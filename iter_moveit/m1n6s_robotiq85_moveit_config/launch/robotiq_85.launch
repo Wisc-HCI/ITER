@@ -15,6 +15,7 @@
     </node>
 
     <!-- Gripper specific robot state publisher and parameters -->
+    <!--
     <group unless="$(arg dual_gripper)">
         <group ns="/gripper">
             <param name="robot_description" command="$(find xacro)/xacro.py $(find m1n6s_robotiq85_moveit_config)/urdf/robotiq85.xacro" />
@@ -59,6 +60,7 @@
             </node>
         </group>
     </group>
+    -->
 
     <!-- Robotiq 85 ROS Test -->
     <node pkg="robotiq_85_driver" type="robotiq_85_test" name="robotiq_85_test" output="screen" if="$(arg run_test)">
