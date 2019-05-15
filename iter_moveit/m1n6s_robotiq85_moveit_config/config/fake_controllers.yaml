@@ -9,7 +9,7 @@ controller_list:
       - m1n6s200_joint_6
   - name: fake_gripper_controller
     joints:
-      - simple_gripper_robotiq_85_left_knuckle_joint
+      - robotiq_85_left_knuckle_joint
 
 initial:
   - group: arm

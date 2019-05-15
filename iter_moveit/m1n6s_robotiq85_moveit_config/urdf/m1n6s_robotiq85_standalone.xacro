@@ -55,7 +55,7 @@
 
 	<!-- Robotiq 85-->
 	<xacro:include filename="$(find robotiq_85_description)/urdf/robotiq_85_gripper.urdf.xacro" />
-	<xacro:robotiq_85_gripper prefix="simple_gripper_" parent="m1n6s200_end_effector">
+	<xacro:robotiq_85_gripper prefix="" parent="m1n6s200_end_effector">
 	  <origin xyz="0 0 0" rpy="${pi/2} -${pi/2} 0" />
 	</xacro:robotiq_85_gripper>
 

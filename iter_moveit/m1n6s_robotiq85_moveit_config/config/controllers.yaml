@@ -15,4 +15,4 @@ controller_list:
     type: GripperCommand
     default: true
     joints:
-      - simple_gripper_robotiq_85_left_knuckle_joint
+      - robotiq_85_left_knuckle_joint
