@@ -24,6 +24,9 @@ sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
 BIG_BLOCK_A = (22000,24000)
 SML_BLOCK_A = (10000,12000)
 
+BIG_BLOCK_R = (7,8)
+SML_BLOCK_R = (4,5)
+
 
 class BlockVision:
 
@@ -65,9 +68,15 @@ class BlockVision:
             rect = cv2.minAreaRect(cnt)
 
             # Filter by known attributes of blocks
+            #   check object area
+            #   check dimension ratio
             area = rect[1][0] * rect[1][1]
             if not ((area >= BIG_BLOCK_A[0] and area <= BIG_BLOCK_A[1]) or (area >= SML_BLOCK_A[0] and area <= SML_BLOCK_A[1])):
                 continue
+            ratio = max((rect[1][0] / rect[1][1]),(rect[1][1] / rect[1][0]))
+            if not ((ratio >= BIG_BLOCK_R[0] and ratio <= BIG_BLOCK_R[1]) or (ratio >= SML_BLOCK_R[0] and ratio <= SML_BLOCK_R[1])):
+                continue
+
 
             # Generate pose information
             '''
@@ -86,9 +95,9 @@ class BlockVision:
             '''
 
             # Update output image
-            min = tuple([int(rect[0][i] - rect[1][i]/2) for i in range(0,2)])
-            max = tuple([int(rect[0][i] + rect[1][i]/2) for i in range(0,2)])
-            cv2.rectangle(final_img,min,max,(0,255,0),2)
+            min_point = tuple([int(rect[0][i] - rect[1][i]/2) for i in range(0,2)])
+            max_point = tuple([int(rect[0][i] + rect[1][i]/2) for i in range(0,2)])
+            cv2.rectangle(final_img,min_point,max_point,(0,255,0),2)
 
         # Publish object poses
         poseMsg = PoseArray()
@@ -99,8 +108,8 @@ class BlockVision:
         imgMsg = CompressedImage()
         imgMsg.header.stamp = rospy.Time.now()
         imgMsg.format = "jpeg"
-        imgMsg.data = np.array(cv2.imencode('.jpg',thresh1)[1]).tostring()
-        self.img_pub.publish(imageMsg)
+        imgMsg.data = np.array(cv2.imencode('.jpg',final_img)[1]).tostring()
+        self.img_pub.publish(imgMsg)
 
 
 if __name__ == "__main__":
