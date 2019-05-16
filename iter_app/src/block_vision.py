@@ -30,7 +30,7 @@ class BlockVision:
     def __init__(self):
         self.pose_pub = rospy.Publisher("/block_vision/poses",PoseArray, queue_size=1)
         self.img_sub = rospy.Subscriber("/usb_cam/image_raw/compressed",CompressedImage,self._image_cb, queue_size=1)
-        self.img_pub = rospy.Publisher("/block_vision/image",CompressedImage, queue_size=1)
+        self.img_pub = rospy.Publisher("/block_vision/image/compressed",CompressedImage, queue_size=1)
 
 
     def _image_cb(self,imageMsg):
@@ -54,6 +54,7 @@ class BlockVision:
         _0, contours, _1 = cv2.findContours(morphed,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
         # Iterate through contours
+        poses = []
         final_img = image_np.copy()
         for cnt in contours:
 
@@ -65,13 +66,10 @@ class BlockVision:
 
             # Filter by known attributes of blocks
             area = rect[1][0] * rect[1][1]
-            print area
             if not ((area >= BIG_BLOCK_A[0] and area <= BIG_BLOCK_A[1]) or (area >= SML_BLOCK_A[0] and area <= SML_BLOCK_A[1])):
                 continue
 
             # Generate pose information
-            poses = []
-
             '''
             {
                 "position": {
@@ -93,14 +91,16 @@ class BlockVision:
             cv2.rectangle(final_img,min,max,(0,255,0),2)
 
         # Publish object poses
-        self.pose_pub.publish(poses)
+        poseMsg = PoseArray()
+        poseMsg.poses = poses
+        self.pose_pub.publish(poseMsg)
 
         # Publish final image
         imgMsg = CompressedImage()
         imgMsg.header.stamp = rospy.Time.now()
         imgMsg.format = "jpeg"
-        imgMsg.data = np.array(cv2.imencode('.jpg',final_img)[1]).tostring()
-        self.img_pub.publish(imgMsg)
+        imgMsg.data = np.array(cv2.imencode('.jpg',thresh1)[1]).tostring()
+        self.img_pub.publish(imageMsg)
 
 
 if __name__ == "__main__":
