@@ -9,7 +9,6 @@
 }
 """
 
-
 import tf
 import sys
 import time
@@ -21,12 +20,6 @@ from enum import Enum
 from std_msgs.msg import Header
 from abc import ABCMeta, abstractmethod
 from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion
-
-use_collision = rospy.get_param('use_collision',False)
-if use_collision:
-    import environment_collision as env
-else:
-    import environment_marker as env
 
 
 ARM_MOVE_GROUP = rospy.get_param("arm_move_group")
@@ -77,6 +70,7 @@ class ConnectObjectToRobot(Primitive):
         self.box_name = object_name
 
     def operate(self):
+        #TODO
         #env.connect_obj_to_robot(self.box_name)
         return True
 
@@ -86,6 +80,7 @@ class DisconnectObjectFromRobot(Primitive):
         self.box_name = object_name
 
     def operate(self):
+        #TODO
         #env.disconnect_obj_from_robot(self.box_name)
         return True
 

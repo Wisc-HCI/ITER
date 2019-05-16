@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 '''
+BlockVision Node
+
+Provides ITER with ability to capture blocks from a vision
+
 This node requires installation of opencv and its python wrapper. Additionally,
 this node requires the usb_cam node be running in order to provide an image
 stream to this node.
@@ -10,13 +14,15 @@ https://github.com/SMARTlab-Purdue/ros-tutorial-robot-control-vision/wiki/Instal
 for information on how to work through OpenCV
 '''
 
+import tf
 import sys
 import cv2
 import rospy
 import numpy as np
 
 from sensor_msgs.msg import CompressedImage
-from geometry_msgs.msg import Pose, PoseArray
+from geometry_msgs.msg import Pose, Point, Quaternion
+from iter_app.msgs import BlockPose, BlockPoseArray
 
 sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
 
@@ -31,7 +37,7 @@ SML_BLOCK_R = (4,5)
 class BlockVision:
 
     def __init__(self):
-        self.pose_pub = rospy.Publisher("/block_vision/poses",PoseArray, queue_size=1)
+        self.pose_pub = rospy.Publisher("/block_vision/poses",BlockPoseArray, queue_size=1)
         self.img_sub = rospy.Subscriber("/usb_cam/image_raw/compressed",CompressedImage,self._image_cb, queue_size=1)
         self.img_pub = rospy.Publisher("/block_vision/image/compressed",CompressedImage, queue_size=1)
 
@@ -73,26 +79,25 @@ class BlockVision:
             area = rect[1][0] * rect[1][1]
             if not ((area >= BIG_BLOCK_A[0] and area <= BIG_BLOCK_A[1]) or (area >= SML_BLOCK_A[0] and area <= SML_BLOCK_A[1])):
                 continue
+
+            type = BlockPose.UNKNOWN
             ratio = max((rect[1][0] / rect[1][1]),(rect[1][1] / rect[1][0]))
-            if not ((ratio >= BIG_BLOCK_R[0] and ratio <= BIG_BLOCK_R[1]) or (ratio >= SML_BLOCK_R[0] and ratio <= SML_BLOCK_R[1])):
+            if ratio >= BIG_BLOCK_R[0] and ratio <= BIG_BLOCK_R[1]:
+                type = BlockPose.LARGE
+            elif ratio >= SML_BLOCK_R[0] and ratio <= SML_BLOCK_R[1]:
+                type = BlockPose.SMALL
+            else:
                 continue
 
-
             # Generate pose information
-            '''
-            {
-                "position": {
-                    "x": rect[0][0] / width,
-                    "y": rect[0][1] / height,
-                    "z": 0
-                },
-                "orientation": {
-                    "x": 0,
-                    "y": 0,
-                    "z": rect[2]
-                }
-            }
-            '''
+            cx = (rect[0][0] - 0.5 * width) / width
+            cy = (rect[0][1] - 0.5 * height) / height
+            qx,qy,qz,qw = tf.transformations.quaternion_from_euler(0,0,rect[2])
+
+            block = BlockPose()
+            block.pose = Pose(position=Point(x=cx,y=cy,z=0),orientation=Quaternion(x=qx,y=qy,z=qz,w=qw))
+            block.type = type
+            poses.append(block)
 
             # Update output image
             min_point = tuple([int(rect[0][i] - rect[1][i]/2) for i in range(0,2)])
@@ -100,8 +105,8 @@ class BlockVision:
             cv2.rectangle(final_img,min_point,max_point,(0,255,0),2)
 
         # Publish object poses
-        poseMsg = PoseArray()
-        poseMsg.poses = poses
+        poseMsg = BlockPoseArray()
+        poseMsg.data = poses
         self.pose_pub.publish(poseMsg)
 
         # Publish final image

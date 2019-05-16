@@ -17,14 +17,9 @@ rospy.init_node('runner')
 use_rik = rospy.get_param('use_rik',False)
 if use_rik:
     import primitives_rik as bp
-    import environment_marker as env
 else:
     import primitives_moveit as bp
-    use_collision = rospy.get_param('use_collision',False)
-    if use_collision:
-        import environment_collision as env
-    else:
-        import environment_marker as env
+
 
 def button_callback():
     #TODO write this for real
@@ -69,8 +64,8 @@ class Runner:
         data = json.loads(json_string.task_json)
 
         # if environment requested, load it
-        if 'environment' in data.keys():
-            env.generate_dynamic_environment(data['environment'])
+        #if 'environment' in data.keys():
+        #    env.generate_dynamic_environment(data['environment'])
 
         print 'Instantiating'
         primitives = [bp.instantiate_from_dict(obj,button_callback) for obj in data['task']]
@@ -111,8 +106,8 @@ class Runner:
             self.time_stop_topic.publish(True)
 
         # clear environment resources
-        if 'environment' in data.keys():
-            env.clear_dynamic_environment()
+        #if 'environment' in data.keys():
+        #    env.clear_dynamic_environment()
 
         # send results back to interface
         if self.time_mode == TimeModeEnum.CAPTURE:
