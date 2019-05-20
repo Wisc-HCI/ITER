@@ -3,7 +3,7 @@
 import json
 import rospy
 
-from iter_app.msg import TimeInterval
+from iter_app.msg import RADTime, TimeInterval
 from std_msgs.msg import String, Int32, Bool
 
 
@@ -21,6 +21,7 @@ class TimingServer:
 
         self.pub_neglect_time = rospy.Publisher('/rad/neglect_time', TimeInterval, queue_size=10)
         self.pub_interaction_time = rospy.Publisher('rad/interaction_time', TimeInterval, queue_size=10)
+        self.pub_rad_signal = rospy.Publisher('/rad/signal', RADTime, queue_size=10)
 
         self._neglect_time_list = []
         self._run = False
@@ -46,23 +47,34 @@ class TimingServer:
         self._interaction_event = True
 
     def _fake_time_publisher(self):
+
+        signal = RADTime()
+
         timeInterval = TimeInterval()
         timeInterval.initial = self.FAKE_TIME_INITIAL
         timeInterval.current = self._fake_time
 
         if self._fake_mode == 'neglect':
+            signal.neglect_time = timeInterval
+            signal.mode = RADTime.NEGLECT_MODE
             self.pub_neglect_time.publish(timeInterval)
         else:
+            signal.interaction_time = timeInterval
+            signal.mode = RADTime.INTERACTION_MODE
             self.pub_interaction_time.publish(timeInterval)
+        self.pub_rad_signal.publish(signal)
 
         rospy.sleep(self.SIGNAL_PUBLISH_TIME_STEP)
-        self._fake_time -= self.SIGNAL_PUBLISH_TIME_STEP
 
-        if self._fake_time < 0:
-            self._fake_time = self.FAKE_TIME_INITIAL
-            if self._fake_mode == 'neglect':
+        if self._fake_mode == 'neglect':
+            self._fake_time -= self.SIGNAL_PUBLISH_TIME_STEP
+            if self._fake_time < 0:
+                self._fake_time = 0
                 self._fake_mode = 'interaction'
-            else:
+        else:
+            self._fake_time += self.SIGNAL_PUBLISH_TIME_STEP
+            if self._fake_time > self.FAKE_TIME_INITIAL:
+                self._fake_time = self.FAKE_TIME_INITIAL
                 self._fake_mode = 'neglect'
 
     def _real_time_publisher(self):
@@ -75,7 +87,11 @@ class TimingServer:
         for index in range(0,len(self._neglect_time_list)):
             t = self._neglect_time_list[index]
 
+            signal = RADTime()
+
             if 'interaction' in t.keys() and t['interaction']:
+                signal.mode = RADTime.INTERACTION_MODE
+
                 # Wait for interaction event
                 timeInterval.current = t["time"]
                 timeInterval.initial = t["time"]
@@ -84,17 +100,23 @@ class TimingServer:
 
                 while self._run and not self._interaction_event:
 
+                    #TODO this might be wrong need to test
                     timeInterval.current = current - base
                     if timeInterval.current > timeInterval.initial:
                         timeInterval.current = timeInterval.initial
 
                     self.pub_interaction_time.publish(timeInterval)
 
+                    signal.interaction_time = timeInterval
+                    self.pub_rad_signal.publish(signal)
+
                     time.sleep(self.SIGNAL_PUBLISH_TIME_STEP)
                     current = time.time()
 
                 self._interaction_event = False
             else:
+                signal.mode = RADTime.NEGLECT_MODE
+
                 # Run through the prerecorded timing
                 timeInterval.current = t["time"]
                 timeInterval.initial = t["time"]
@@ -106,14 +128,17 @@ class TimingServer:
                     timeInterval.current = t["time"] - (current - base)
                     self.pub_neglect_time.publish(timeInterval)
 
+                    signal.neglect_time = timeInterval
+                    self.pub_rad_signal.publish(signal)
+
                     time.sleep(self.SIGNAL_PUBLISH_TIME_STEP)
                     current = time.time()
 
     def loop(self):
-        fakeTime = rospy.get_param("fake_time",False)
+        fakeTime = rospy.get_param("~fake_time",False)
+        print 'Timing running in', 'fake' if fakeTime else 'real', 'time'
 
         while not rospy.is_shutdown():
-            rospy.spin()
 
             if fakeTime:
                 self._fake_time_publisher()
