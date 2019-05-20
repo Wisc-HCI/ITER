@@ -22,13 +22,13 @@ import numpy as np
 
 from sensor_msgs.msg import CompressedImage
 from geometry_msgs.msg import Pose, Point, Quaternion
-from iter_app.msgs import BlockPose, BlockPoseArray
+from iter_app.msg import BlockPose, BlockPoseArray
 
 sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
 
 
-BIG_BLOCK_A = (22000,24000)
-SML_BLOCK_A = (10000,12000)
+BIG_BLOCK_A = (100000000,200000000)
+SML_BLOCK_A = (1000,5000)
 
 BIG_BLOCK_R = (7,8)
 SML_BLOCK_R = (4,5)
@@ -77,10 +77,12 @@ class BlockVision:
             #   check object area
             #   check dimension ratio
             area = rect[1][0] * rect[1][1]
+            print area
             if not ((area >= BIG_BLOCK_A[0] and area <= BIG_BLOCK_A[1]) or (area >= SML_BLOCK_A[0] and area <= SML_BLOCK_A[1])):
                 continue
 
             type = BlockPose.UNKNOWN
+            '''
             ratio = max((rect[1][0] / rect[1][1]),(rect[1][1] / rect[1][0]))
             if ratio >= BIG_BLOCK_R[0] and ratio <= BIG_BLOCK_R[1]:
                 type = BlockPose.LARGE
@@ -88,6 +90,7 @@ class BlockVision:
                 type = BlockPose.SMALL
             else:
                 continue
+            '''
 
             # Generate pose information
             cx = (rect[0][0] - 0.5 * width) / width
@@ -100,9 +103,12 @@ class BlockVision:
             poses.append(block)
 
             # Update output image
-            min_point = tuple([int(rect[0][i] - rect[1][i]/2) for i in range(0,2)])
-            max_point = tuple([int(rect[0][i] + rect[1][i]/2) for i in range(0,2)])
-            cv2.rectangle(final_img,min_point,max_point,(0,255,0),2)
+            #min_point = tuple([int(rect[0][i] - rect[1][i]/2) for i in range(0,2)])
+            #max_point = tuple([int(rect[0][i] + rect[1][i]/2) for i in range(0,2)])
+            #cv2.rectangle(final_img,min_point,max_point,(0,255,0),2)
+            box = cv2.boxPoints(rect)
+            box = np.int0(box)
+            final_img = cv2.drawContours(final_img,[box],0,(0,255,0),2)
 
         # Publish object poses
         poseMsg = BlockPoseArray()
