@@ -7,7 +7,7 @@
 
   <arg name="flag_image_view_initial" default="false" />
   <arg name="flag_image_view_blocks" default="false" />
-  <arg name="flag_image_view_ar_2d" default="true" />
+  <arg name="flag_image_view_2d_points" default="true" />
 
   <arg name="video_src" default="/dev/video0" />
   <arg name="use_real_cam" default="true" />
@@ -48,12 +48,12 @@
     <remap from="camera_info"   to="/usb_cam/camera_info" />
   </node>
 
-  <node name="ar_2d_image_plot" pkg="iter_vision" type="ar_2d_image.py" output="screen">
+  <node name="plot_2d_points" pkg="iter_vision" type="plot_2d_points.py" output="screen">
     <remap from="/image/compressed" to="/block_vision/image/compressed" />
   </node>
 
-  <node if="$(arg flag_image_view_ar_2d)" name="image_view_ar" pkg="image_view" type="image_view" respawn="false" output="screen">
-    <remap from="image" to="/ar_2d/image" />
+  <node if="$(arg flag_image_view_2d_points)" name="image_view_2d_points" pkg="image_view" type="image_view" respawn="false" output="screen">
+    <remap from="image" to="/plot_2d_points/image" />
     <param name="autosize" value="true" />
     <param name="~image_transport" value="compressed" />
   </node>

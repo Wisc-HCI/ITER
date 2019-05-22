@@ -107,8 +107,8 @@ class BlockVision:
             '''
 
             # Generate pose information
-            cx = (rect[0][0] - 0.5 * width) / width
-            cy = (rect[0][1] - 0.5 * height) / height
+            cx = rect[0][0]
+            cy = rect[0][1]
             block = BlockPose()
             block.pose = Pose2D(x=cx,y=cy,theta=rect[2])
             block.type = type
