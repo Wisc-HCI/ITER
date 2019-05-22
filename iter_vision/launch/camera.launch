@@ -1,0 +1,33 @@
+
+<launch>
+
+  <arg name="video_src" default="/dev/video0" />
+  <arg name="use_real_cam" default="true" />
+  <arg name="static_cam_image" default="1-1.png" />
+
+
+  <group if="$(arg use_real_cam)">
+    <node name="usb_cam" pkg="usb_cam" type="usb_cam_node">
+      <param name="video_device" value="$(arg video_src)" />
+      <param name="image_width" value="640" />
+      <param name="image_height" value="480" />
+      <param name="pixel_format" value="mjpeg" />
+      <param name="camera_frame_id" value="usb_cam" />
+      <param name="io_method" value="mmap" />
+    </node>
+  </group>
+
+  <group unless="$(arg use_real_cam)">
+    <node name="static_cam" pkg="iter_vision" type="static_camera.py" output="screen">
+      <param name="~publish_rate" value="1" />
+      <param name="~image_filepath" value="$(find iter_vision)/images/$(arg static_cam_image)"/>
+      <param name="~camera_ns" value="static_cam"/>
+
+      <remap from="static_cam/camera_info" to="usb_cam/camera_info"/>
+    </node>
+
+    <node name="static_cam_republisher_raw" type="republish" pkg="image_transport" args="compressed in:=/static_cam/image_raw/ raw out:=/usb_cam/image_raw" />
+    <node name="static_cam_republisher_compressed" type="republish" pkg="image_transport" args="compressed in:=/static_cam/image_raw/ compressed out:=/usb_cam/image_raw" />
+  </group>
+
+</launch>

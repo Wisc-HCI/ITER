@@ -9,22 +9,26 @@
   <arg name="flag_image_view_blocks" default="false" />
   <arg name="flag_image_view_ar_2d" default="true" />
 
+  <arg name="video_src" default="/dev/video0" />
+  <arg name="use_real_cam" default="true" />
+  <arg name="static_cam_image" default="1-1.png" />
 
-  <node name="usb_cam" pkg="usb_cam" type="usb_cam_node" output="screen">
-    <param name="video_device" value="/dev/video0" />
-    <param name="image_width" value="640" />
-    <param name="image_height" value="480" />
-    <param name="pixel_format" value="mjpeg" /> <!-- dell=yuyv -->
-    <param name="camera_frame_id" value="usb_cam" />
-    <param name="io_method" value="mmap" />
-  </node>
+
+  <include file="$(find iter_vision)/launch/camera.launch">
+    <arg name="video_src" value="$(arg video_src)" />
+    <arg name="use_real_cam" value="$(arg use_real_cam)" />
+    <arg name="static_cam_image" value="$(arg static_cam_image)" />
+  </include>
 
   <node if="$(arg flag_image_view_initial)" name="image_view_initial" pkg="image_view" type="image_view" respawn="false" output="screen">
     <remap from="image" to="/usb_cam/image_raw" />
     <param name="autosize" value="true" />
+    <param name="~image_transport" value="compressed" />
   </node>
 
-  <node name="block_vision" pkg="iter_vision" type="block_vision.py" output="screen" />
+  <node name="block_vision" pkg="iter_vision" type="block_vision.py" output="screen">
+    <remap from="camera/image/compressed" to="usb_cam/image_raw/compressed"/>
+  </node>
 
   <node if="$(arg flag_image_view_blocks)" name="image_view_block_detect" pkg="image_view" type="image_view" respawn="false" output="screen">
     <remap from="image" to="/block_vision/image" />

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 '''
 BlockVision Node
 Author: Curt Henrichs
@@ -28,15 +29,14 @@ blocks are then published as a 2D pose in 3D space. Where centroid x,y is provid
 and z is 0 and where orientation is the Euler angle around the z-axis.
 '''
 
-import tf
 import sys
 import cv2
 import rospy
 import numpy as np
 
-from sensor_msgs.msg import CompressedImage
 from geometry_msgs.msg import Pose2D
-from iter_app.msg import BlockPose, BlockPoseArray
+from sensor_msgs.msg import CompressedImage
+from iter_vision.msg import BlockPose, BlockPoseArray
 
 sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
 
@@ -52,7 +52,7 @@ class BlockVision:
 
     def __init__(self):
         self.pose_pub = rospy.Publisher("/block_vision/poses",BlockPoseArray, queue_size=1)
-        self.img_sub = rospy.Subscriber("/usb_cam/image_raw/compressed",CompressedImage,self._image_cb, queue_size=1)
+        self.img_sub = rospy.Subscriber("/camera/image/compressed",CompressedImage,self._image_cb, queue_size=1)
         self.img_pub = rospy.Publisher("/block_vision/image/compressed",CompressedImage, queue_size=1)
 
 
