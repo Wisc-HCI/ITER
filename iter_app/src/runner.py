@@ -8,7 +8,7 @@ import time
 import json
 import rospy
 
-from time_mode_enum import TimeModeEnum
+from tools.time_mode_enum import TimeModeEnum
 from std_msgs.msg import String, Int32, Bool
 from iter_app.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
 
@@ -16,9 +16,9 @@ rospy.init_node('runner')
 
 use_rik = rospy.get_param('use_rik',False)
 if use_rik:
-    import primitives_rik as bp
+    import tools.primitives_rik as bp
 else:
-    import primitives_moveit as bp
+    import tools.primitives_moveit as bp
 
 
 def button_callback():

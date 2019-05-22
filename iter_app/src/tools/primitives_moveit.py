@@ -1,13 +1,30 @@
-"""
-{
-    'task': [
-        {
-            'name': <string ['wait, move, grasp, release']>
-            ... <params>
-        }
-    ]
-}
-"""
+'''
+Primitives Moveit
+Author: Curt Henrichs
+Date: 5-2-19
+
+Task primitives for runner implemented in MoveIt.
+
+MoveIt provides a robust and comprehensive interface to control a robotic arm
+and thus is a natural choice to develop the first iteration of ITER's primitive
+library.
+
+Primitve List:
+    - grasp
+            "Move the gripper to state specfied as target"
+    - release
+            "move the gripper, (identical to grasp)"
+    - move
+            "Commands robot to move end-effector to provided pose goal"
+    - wait
+            "Provides either interaction button or time based delay"
+    - logger
+            "Provides print functionality while debugging plan"
+    - connect-object-to-robot
+            "Currently unsupported, though intention is collision interfacing"
+    - disconnect-object-from-robot
+            "Currently unsupported, though intention is collision interfacing"
+'''
 
 import tf
 import sys

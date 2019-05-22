@@ -1,3 +1,11 @@
+'''
+Time Mode Enum
+Author: Curt Henrichs
+Date: 5-22-19
+
+Provides enum definition for modes of ITER's runner.
+'''
+
 from enum import Enum
 
 class TimeModeEnum(Enum):

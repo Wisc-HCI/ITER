@@ -1,10 +1,37 @@
 #!/usr/bin/env python
 
+'''
+CLI Node
+Author: Curt Henrichs
+Date: 5-22-19
+
+Command-Line Interace for task runer.
+
+This module provides a simple CLI to enter defined tasks for the ITER runner
+system.
+
+Commands include:
+    - help
+            "Provides list of commands"
+    - task <filepath>
+            "Runs plan specified in the filepath"
+    - get_mode
+            "Gets the current mode"
+            ['capture','replay']
+    - set_mode <mode>
+            "Sets the current mode"
+            ['capture','replay']
+
+Note: the modes 'capture' and 'replay' are used for the RAD subsystem. Capture
+will record the time per primitive in plan. Replay will use pre-recorded time to
+output timing estimates to the RAD display.
+'''
+
 import time
 import json
 import rospy
 
-from time_mode_enum import TimeModeEnum
+from tools.time_mode_enum import TimeModeEnum
 from iter_app.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
 
 print 'Waiting for runner'

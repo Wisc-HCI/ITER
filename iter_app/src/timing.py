@@ -1,9 +1,35 @@
 #!/usr/bin/env python
 
+'''
+Timing Node
+Author: Curt Henrichs
+Date: 5-22-19
+
+Provides RAD timing updates to ITER network.
+
+Inspired by fanout and robot-attention-demand (RAD) research with the concept of
+neglect and interaction time, this node attempt to convey the necessary signal
+as the task progresses. Thus a plan in the standard runner json format is provided,
+iterated over, and timing information published. Note: this plan must have
+pre-recorded timing information in order for the timing node to generate meaningful
+estimations.
+
+Timing information conveyed:
+    - neglect time
+            "Time that the robot is working independent of a human"
+    - interaction time
+            "Time that human is working with the robot or while the robot is idle"
+    - rad-signal
+            "Theoretically defined by RAD = (interaction time) / [(interaction time) + (neglect time)]"
+            "If provided as a real-time estimate, provides better understanding of task / subtask"
+'''
+
+#Note to self, https://ieeexplore.ieee.org/document/5641726
+
 import json
 import rospy
 
-from iter_app.msg import RADTime, TimeInterval
+from iter_app.msg import RADSignal, TimeInterval
 from std_msgs.msg import String, Int32, Bool
 
 
@@ -21,7 +47,7 @@ class TimingServer:
 
         self.pub_neglect_time = rospy.Publisher('/rad/neglect_time', TimeInterval, queue_size=10)
         self.pub_interaction_time = rospy.Publisher('rad/interaction_time', TimeInterval, queue_size=10)
-        self.pub_rad_signal = rospy.Publisher('/rad/signal', RADTime, queue_size=10)
+        self.pub_rad_signal = rospy.Publisher('/rad/signal', RADSignal, queue_size=10)
 
         self._neglect_time_list = []
         self._run = False
@@ -48,7 +74,7 @@ class TimingServer:
 
     def _fake_time_publisher(self):
 
-        signal = RADTime()
+        signal = RADSignal()
 
         timeInterval = TimeInterval()
         timeInterval.initial = self.FAKE_TIME_INITIAL
@@ -87,7 +113,7 @@ class TimingServer:
         for index in range(0,len(self._neglect_time_list)):
             t = self._neglect_time_list[index]
 
-            signal = RADTime()
+            signal = RADSignal()
 
             if 'interaction' in t.keys() and t['interaction']:
                 signal.mode = RADTime.INTERACTION_MODE

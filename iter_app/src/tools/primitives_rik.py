@@ -1,14 +1,35 @@
-"""
-{
-    'task': [
-        {
-            'name': <string ['wait, move, grasp, release']>
-            ... <params>
-        }
-    ]
-}
-"""
+'''
+Primitives Relaxed-IK
+Author: Curt Henrichs
+Date: 5-2-19
 
+Task primitives for runner implemented in Relaxed-IK.
+
+While MoveIt provides many nice features to get started in developing primitives,
+it is lacking in several aspects. Namely, repeatability of a task plan with same
+joint paths. Relaxed-IK attempts to solve this problem by treating the pose goal
+as an optimization problem where trade-offs in accuracy and joint travel are
+weighed.
+
+Using Wisconsin HCI's robot behavior package (developed for Authr), relaxed-ik was
+successfuly integrated for all moveit supported primitives for the runner.
+
+Primitve List:
+    - grasp
+            "Move the gripper to state specfied as target"
+    - release
+            "move the gripper, (identical to grasp)"
+    - move
+            "Commands robot to move end-effector to provided pose goal"
+    - wait
+            "Provides either interaction button or time based delay"
+    - logger
+            "Provides print functionality while debugging plan"
+    - connect-object-to-robot
+            "Currently unsupported, though intention is collision interfacing"
+    - disconnect-object-from-robot
+            "Currently unsupported, though intention is collision interfacing"
+'''
 import tf
 import time
 import rospy

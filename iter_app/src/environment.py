@@ -2,14 +2,13 @@
 
 '''
 Environment Node
-@author Curt Henrichs
-@date 5-16-19
+Author Curt Henrichs
+Date 5-16-19
 
 Provides environment context for ITER runner.
-- Captures BlockPose information from vision node, converts to world coordiates
-- Captures AR tag information used to handle camera conversion
+- Captures Block pose information from vision system
+- Handles Camera to Robot calibrated mapping in tf tree
 - Allows task specfic, pre-defined geometery between robot, camera, and tables
-
 '''
 
 import sys

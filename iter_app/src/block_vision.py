@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 '''
 BlockVision Node
+Author: Curt Henrichs
+Date: 5-22-19
 
 Provides ITER with ability to capture blocks from a vision
 
@@ -12,6 +14,18 @@ See tutorial
 https://github.com/SMARTlab-Purdue/ros-tutorial-robot-control-vision/wiki
 https://github.com/SMARTlab-Purdue/ros-tutorial-robot-control-vision/wiki/Installation
 for information on how to work through OpenCV
+
+The algorithm behind this module is rather simple (and brittle), future work to
+enhance / extend this is necessary. Currently it filters image in HSV space
+(removing low saturation and low value). Then applying erroision and dialation
+to clean up the binary image. The end result is a set of blobs which are fit to
+a min area rectangle where the area is filtered to be within the expected range
+of blocks (thereby eliminating small noise blobs and large invalid objects).
+
+After detecting the blocks, a ration between length and width is used to
+determine if the block is the large or small block. These resulting detected
+blocks are then published as a 2D pose in 3D space. Where centroid x,y is provided
+and z is 0 and where orientation is the Euler angle around the z-axis.
 '''
 
 import tf
@@ -103,9 +117,6 @@ class BlockVision:
             poses.append(block)
 
             # Update output image
-            #min_point = tuple([int(rect[0][i] - rect[1][i]/2) for i in range(0,2)])
-            #max_point = tuple([int(rect[0][i] + rect[1][i]/2) for i in range(0,2)])
-            #cv2.rectangle(final_img,min_point,max_point,(0,255,0),2)
             box = cv2.boxPoints(rect)
             box = np.int0(box)
             final_img = cv2.drawContours(final_img,[box],0,(0,255,0),2)

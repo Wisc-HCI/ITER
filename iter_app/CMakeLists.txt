@@ -52,7 +52,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
     FILES
     TimeInterval.msg
-    RADTime.msg
+    RADSignal.msg
     BlockPose.msg
     BlockPoseArray.msg
 )
