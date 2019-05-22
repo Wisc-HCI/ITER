@@ -7,6 +7,7 @@
 
   <arg name="flag_image_view_initial" default="false" />
   <arg name="flag_image_view_blocks" default="false" />
+  <arg name="flag_image_view_blocks_filter" default="true" />
   <arg name="flag_image_view_2d_points" default="true" />
 
   <arg name="video_src" default="/dev/video0" />
@@ -32,6 +33,12 @@
 
   <node if="$(arg flag_image_view_blocks)" name="image_view_block_detect" pkg="image_view" type="image_view" respawn="false" output="screen">
     <remap from="image" to="/block_vision/image" />
+    <param name="autosize" value="true" />
+    <param name="~image_transport" value="compressed" />
+  </node>
+
+  <node if="$(arg flag_image_view_blocks_filter)" name="image_view_block_detect" pkg="image_view" type="image_view" respawn="false" output="screen">
+    <remap from="image" to="/block_vision/filtered" />
     <param name="autosize" value="true" />
     <param name="~image_transport" value="compressed" />
   </node>

@@ -53,32 +53,31 @@ class BlockVision:
     def __init__(self):
         self.pose_pub = rospy.Publisher("/block_vision/poses",BlockPoseArray, queue_size=1)
         self.img_sub = rospy.Subscriber("/camera/image/compressed",CompressedImage,self._image_cb, queue_size=1)
-        self.img_pub = rospy.Publisher("/block_vision/image/compressed",CompressedImage, queue_size=1)
-
+        self.img_c_pub = rospy.Publisher("/block_vision/image/compressed",CompressedImage, queue_size=1)
+        self.img_f_pub = rospy.Publisher("/block_vision/filtered/compressed",CompressedImage, queue_size=1)
 
     def _image_cb(self,imageMsg):
 
         # Load in image
         np_arr = np.fromstring(imageMsg.data, np.uint8)
-        image_np = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
-        height, width, channels = image_np.shape
+        original_img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
-        # Apply an HSV filter to remove glare
-        # Note that algorithm is assuming the objects are against a black background
-        # otherwise another step to remove a solid background color is needed
-        hsv = cv2.cvtColor(image_np,cv2.COLOR_BGR2HSV)
-        thresh1 = cv2.inRange(hsv,(0,50,50),(179,255,255))
+        # Process image
+        filtered_img = self._img_filter(original_img)
 
-        # Denoise
-        kernel = np.ones((5,5),np.uint8)
-        morphed = cv2.morphologyEx(thresh1,cv2.MORPH_OPEN,kernel)
+        # Publish image after filtering
+        imgFMsg = CompressedImage()
+        imgFMsg.header.stamp = rospy.Time.now()
+        imgFMsg.format = "jpeg"
+        imgFMsg.data = np.array(cv2.imencode('.jpg',filtered_img)[1]).tostring()
+        self.img_f_pub.publish(imgFMsg)
 
         # Capture contours in image
-        _0, contours, _1 = cv2.findContours(morphed,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+        _0, contours, _1 = cv2.findContours(filtered_img,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
         # Iterate through contours
         poses = []
-        final_img = image_np.copy()
+        final_img = original_img.copy()
         for cnt in contours:
 
             # Fit rectangle to contour
@@ -125,12 +124,26 @@ class BlockVision:
         self.pose_pub.publish(poseMsg)
 
         # Publish final image
-        imgMsg = CompressedImage()
-        imgMsg.header.stamp = rospy.Time.now()
-        imgMsg.format = "jpeg"
-        imgMsg.data = np.array(cv2.imencode('.jpg',final_img)[1]).tostring()
-        self.img_pub.publish(imgMsg)
+        imgCMsg = CompressedImage()
+        imgCMsg.header.stamp = rospy.Time.now()
+        imgCMsg.format = "jpeg"
+        imgCMsg.data = np.array(cv2.imencode('.jpg',final_img)[1]).tostring()
+        self.img_c_pub.publish(imgCMsg)
 
+
+    def _img_filter(self, original_image):
+
+        # Apply an HSV filter to remove glare
+        # Note that algorithm is assuming the objects are against a black background
+        # otherwise another step to remove a solid background color is needed
+        hsv = cv2.cvtColor(original_image,cv2.COLOR_BGR2HSV)
+        thresh1 = cv2.inRange(hsv,(0,50,50),(179,255,255))
+
+        # Denoise
+        kernel = np.ones((5,5),np.uint8)
+        morphed = cv2.morphologyEx(thresh1,cv2.MORPH_OPEN,kernel)
+
+        return morphed
 
 if __name__ == "__main__":
     try:

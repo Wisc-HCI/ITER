@@ -44,16 +44,12 @@ class StaticImageCam:
         self.img_c_pub = rospy.Publisher(ns + "/image_raw/compressed",CompressedImage, queue_size=1)
         self.cam_pub = rospy.Publisher(ns + "/camera_info",CameraInfo,queue_size=1)
 
-        image = cv2.imread(image_filepath,cv2.IMREAD_COLOR)
-        self._imgCMsg = CompressedImage()
-        self._imgCMsg.format = "jpeg"
-        self._imgCMsg.data = np.array(cv2.imencode('.jpg',image)[1]).tostring()
-
         fin = open(CALIBRATION_FILEPATH,'r')
         camData = yaml.safe_load(fin)
         fin.close()
 
         self._camMsg = CameraInfo()
+        self._camMsg.header.frame_id = camData['camera_name']
         self._camMsg.height = camData['image_height']
         self._camMsg.width = camData['image_width']
         self._camMsg.distortion_model = camData['distortion_model']
@@ -61,6 +57,12 @@ class StaticImageCam:
         self._camMsg.K = camData['camera_matrix']['data']
         self._camMsg.R = camData['rectification_matrix']['data']
         self._camMsg.P = camData['projection_matrix']['data']
+
+        image = cv2.imread(image_filepath,cv2.IMREAD_COLOR)
+        self._imgCMsg = CompressedImage()
+        self._imgCMsg.header.frame_id = camData['camera_name']
+        self._imgCMsg.format = "jpeg"
+        self._imgCMsg.data = np.array(cv2.imencode('.jpg',image)[1]).tostring()
 
     def spin(self):
         while not rospy.is_shutdown():
