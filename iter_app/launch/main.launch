@@ -1,0 +1,42 @@
+<!-- Initial structure taken from NRI Project -->
+<!-- Note if using Relaxed-IK must start the two nodes before running this
+     launch file. Also use the python variant for the near term.-->
+
+<launch>
+
+    <!-- Global arguements -->
+    <arg name="robot"/>
+    <arg name="simulated" default='true'/>
+    <arg name="use_rik" default='true' />
+    <arg name="use_cli" default='false'/>
+    <arg name="rad_ui" default='false'/>
+    <arg name="use_collision" default='false' />
+
+    <!-- Global ROS Parameters -->
+    <rosparam param="use_rik" subst_value="true">$(arg use_rik)</rosparam>
+    <rosparam param="use_collision" subst_value="true">$(arg use_collision)</rosparam>
+
+    <!-- Include robot launches -->
+    <include file="$(find iter_app)/launch/robot.launch">
+      <arg name="robot" value="$(arg robot)"/>
+      <arg name="simulated" value="$(arg simulated)"/>
+      <arg name="use_rik" value="$(arg use_rik)"/>
+    </include>
+
+    <!-- Include Rosbridge launches -->
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+
+    <!-- Include Vision System -->
+    <!-- TODO -->
+
+    <!-- Start backend -->
+    <node pkg="iter_app" type="timing.py" name="timing" output="screen"/>
+    <node pkg="iter_app" type="runner.py" name="runner" output="screen"/>
+
+    <!-- Start RAD UI -->
+    <node if="$(arg rad_ui)" name="web_server" pkg="iter_app" type="frontend_node_start.sh" args='$(find iter_app)/rad_ui' output='screen'/>
+
+    <!-- Start CLI -->
+    <node if="$(arg use_cli)" pkg="iter_app" type="cli.py" name="cli" output="screen"/>
+
+</launch>
