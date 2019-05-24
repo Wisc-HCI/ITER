@@ -14,7 +14,9 @@
   <group if="$(eval arg('simulated') == true)">
     <param name="robot_connected" value="false" />
 
-    <node name="fake_robot_controller" pkg="robot_behavior" type="fake_robot_controller.py"/>
+    <node name="virtual_robot_controller" pkg="robot_behavior" type="virtual_robot_controller">
+      <param name="~gripper_joint" value="robotiq_85_left_knuckle_joint" />
+    </node>
 
     <!-- We do not have a robot connected, so publish fake joint states -->
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">

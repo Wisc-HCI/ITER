@@ -12,12 +12,14 @@
   <group if="$(eval arg('simulated') == true)">
     <param name="robot_connected" value="false" />
 
-    <node name="fake_robot_controller" pkg="robot_behavior" type="fake_robot_controller"/>
+    <node name="virtual_robot_controller" pkg="robot_behavior" type="virtual_robot_controller">
+      <param name="~gripper_joint" value="[m1n6s200_joint_finger_1,m1n6s200_joint_finger_2]" />
+    </node>
 
     <!-- We do not have a robot connected, so publish fake joint states -->
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
       <param name="/use_gui" value="false"/>
-      <rosparam param="/source_list">[/fake_controller_joint_states]</rosparam>
+      <rosparam param="/source_list">[/virtual_robot_controller_joint_states]</rosparam>
       <param name="zeros/m1n6s200_joint_2" value="3.1415"/>
       <param name="zeros/m1n6s200_joint_3" value="3.1415"/>
     </node>

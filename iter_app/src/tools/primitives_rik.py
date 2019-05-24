@@ -37,20 +37,24 @@ import rospy
 from enum import Enum
 from std_msgs.msg import Header
 from abc import ABCMeta, abstractmethod
-from geometry_msgs.msg import PoseStamped, Pose, Point, Quaternion
+from geometry_msgs.msg import Pose, Point, Quaternion
 
 from behavior_execution.planners.relaxedik import RelaxedIKPlanner
+
+
+POSE_OFFSET = Pose(position=Point(),orientation=Quaternion())
 
 
 planner = RelaxedIKPlanner(
     {"follow_joint_trajectory":"gripper_command"},
     {"follow_joint_trajectory":[
-        'simple_arm_shoulder_pan_joint',
-        'simple_arm_shoulder_lift_joint',
-        'simple_arm_elbow_joint',
-        'simple_arm_wrist_1_joint',
-        'simple_arm_wrist_2_joint',
-        'simple_arm_wrist_3_joint']})
+        'shoulder_pan_joint',
+        'shoulder_lift_joint',
+        'elbow_joint',
+        'wrist_1_joint',
+        'wrist_2_joint',
+        'wrist_3_joint']},
+    pose_offsets={"follow_joint_trajectory": POSE_OFFSET})
 
 
 class PrimitiveEnum(Enum):

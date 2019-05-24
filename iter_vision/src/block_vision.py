@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+#TODO fix the 2D orientation, currently orientation is relative to either width or length
+# depending on which one is closer to horizontal, we need to pick a fixed frame of reference (perhaps longest dimension?)
+
 '''
 BlockVision Node
 Author: Curt Henrichs
@@ -41,8 +44,7 @@ from iter_vision.msg import BlockPose, BlockPoseArray
 sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
 
 
-BIG_BLOCK_A = (100000000,200000000)
-SML_BLOCK_A = (1000,5000)
+AREA_FILTER = (1000,5000)
 
 BIG_BLOCK_R = (7,8)
 SML_BLOCK_R = (4,5)
@@ -91,7 +93,7 @@ class BlockVision:
             #   check dimension ratio
             area = rect[1][0] * rect[1][1]
             #print area
-            if not ((area >= BIG_BLOCK_A[0] and area <= BIG_BLOCK_A[1]) or (area >= SML_BLOCK_A[0] and area <= SML_BLOCK_A[1])):
+            if not (area >= AREA_FILTER[0] and area <= AREA_FILTER[1]):
                 continue
 
             type = BlockPose.UNKNOWN
@@ -101,8 +103,6 @@ class BlockVision:
                 type = BlockPose.LARGE
             elif ratio >= SML_BLOCK_R[0] and ratio <= SML_BLOCK_R[1]:
                 type = BlockPose.SMALL
-            else:
-                continue
             '''
 
             # Generate pose information

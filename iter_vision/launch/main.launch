@@ -12,7 +12,7 @@
 
   <arg name="video_src" default="/dev/video0" />
   <arg name="use_real_cam" default="true" />
-  <arg name="static_cam_image" default="1-1.png" />
+  <arg name="static_cam_image" default="1-4.png" />
 
 
   <include file="$(find iter_vision)/launch/camera.launch">
@@ -55,7 +55,7 @@
     <remap from="camera_info"   to="/usb_cam/camera_info" />
   </node>
 
-  <node name="plot_2d_points" pkg="iter_vision" type="plot_2d_points.py" output="screen">
+  <node if="$(arg flag_image_view_2d_points)" name="plot_2d_points" pkg="iter_vision" type="plot_2d_points.py" output="screen">
     <remap from="/image/compressed" to="/block_vision/image/compressed" />
   </node>
 
@@ -64,5 +64,7 @@
     <param name="autosize" value="true" />
     <param name="~image_transport" value="compressed" />
   </node>
+
+  <node name="block_pose" pkg="iter_vision" type="block_pose.py" output="screen"/>
 
 </launch>
