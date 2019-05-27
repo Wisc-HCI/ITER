@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-#TODO fix the 2D orientation, currently orientation is relative to either width or length
-# depending on which one is closer to horizontal, we need to pick a fixed frame of reference (perhaps longest dimension?)
-
 '''
 BlockVision Node
 Author: Curt Henrichs
@@ -44,10 +41,10 @@ from iter_vision.msg import BlockPose, BlockPoseArray
 sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
 
 
-AREA_FILTER = (1000,5000)
+AREA_FILTER = (600,5000)
 
-BIG_BLOCK_R = (7,8)
-SML_BLOCK_R = (4,5)
+BIG_BLOCK_R = (9,11)
+SML_BLOCK_R = (4,6)
 
 
 class BlockVision:
@@ -79,6 +76,7 @@ class BlockVision:
 
         # Iterate through contours
         poses = []
+        count = 0
         final_img = original_img.copy()
         for cnt in contours:
 
@@ -96,27 +94,49 @@ class BlockVision:
             if not (area >= AREA_FILTER[0] and area <= AREA_FILTER[1]):
                 continue
 
+            # Update output image
+            box = cv2.boxPoints(rect)
+            box = np.int0(box)
+            final_img = cv2.drawContours(final_img,[box],0,(0,255,0),2)
+
+            # Classify
             type = BlockPose.UNKNOWN
-            '''
             ratio = max((rect[1][0] / rect[1][1]),(rect[1][1] / rect[1][0]))
             if ratio >= BIG_BLOCK_R[0] and ratio <= BIG_BLOCK_R[1]:
                 type = BlockPose.LARGE
             elif ratio >= SML_BLOCK_R[0] and ratio <= SML_BLOCK_R[1]:
                 type = BlockPose.SMALL
-            '''
+            #print type
 
             # Generate pose information
             cx = rect[0][0]
             cy = rect[0][1]
+            rotation = rect[2]
+            if len(box) > 0:
+                x_min = x_max = box[0][0]
+                y_min = y_max = box[0][1]
+                for b in box:
+                    if b[0] < x_min:
+                        x_min = b[0]
+                    if b[1] < y_min:
+                        y_min = b[1]
+                    if b[0] > x_max:
+                        x_max = b[0]
+                    if b[1] > y_max:
+                        y_max = b[1]
+                x_ax = x_max - x_min
+                y_ax = y_max - y_min
+                rotation += 90 if y_ax > x_ax else 0
+
+            # Package message
             block = BlockPose()
-            block.pose = Pose2D(x=cx,y=cy,theta=rect[2])
+            block.pose = Pose2D(x=cx,y=cy,theta=rotation)
             block.type = type
+            block.id = count
             poses.append(block)
 
-            # Update output image
-            box = cv2.boxPoints(rect)
-            box = np.int0(box)
-            final_img = cv2.drawContours(final_img,[box],0,(0,255,0),2)
+            # Update ID counter
+            count += 1
 
         # Publish object poses
         poseMsg = BlockPoseArray()
@@ -137,7 +157,7 @@ class BlockVision:
         # Note that algorithm is assuming the objects are against a black background
         # otherwise another step to remove a solid background color is needed
         hsv = cv2.cvtColor(original_image,cv2.COLOR_BGR2HSV)
-        thresh1 = cv2.inRange(hsv,(0,50,50),(179,255,255))
+        thresh1 = cv2.inRange(hsv,(0,20,150),(179,255,255)) #0, 50, 50
 
         # Denoise
         kernel = np.ones((5,5),np.uint8)
