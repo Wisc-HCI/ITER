@@ -18,7 +18,7 @@ import rospy
 import numpy as np
 
 from sensor_msgs.msg import CompressedImage
-from iter_vision.msg import BlockPose, BlockPoseArray
+from iter_vision.msg import BlockPose2D, BlockPose2DArray
 from ar_track_alvar_msgs.msg import AlvarMarker2D, AlvarMarker2DArray
 
 sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
@@ -30,7 +30,7 @@ class AR2DDraw:
         self.img_sub = rospy.Subscriber("image/compressed", CompressedImage, self._image_cb, queue_size=1)
         self.img_pub = rospy.Publisher("plot_2d_points/image/compressed", CompressedImage, queue_size=1)
         self.art_sub = rospy.Subscriber("cam_pose_marker", AlvarMarker2DArray, self._art_cb, queue_size=5)
-        self.blk_sub = rospy.Subscriber("/block_vision/poses", BlockPoseArray, self._blk_cb, queue_size=5)
+        self.blk_sub = rospy.Subscriber("/block_vision/poses", BlockPose2DArray, self._blk_cb, queue_size=5)
 
         self._markers = []
         self._blocks = []

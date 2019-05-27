@@ -65,6 +65,8 @@
     <param name="~image_transport" value="compressed" />
   </node>
 
-  <node name="block_pose" pkg="iter_vision" type="block_pose.py" output="screen"/>
+  <node name="block_pose" pkg="iter_vision" type="block_pose.py" output="screen">
+      <param name="parent_frame_id" value="usb_cam"/>
+  </node>
 
 </launch>

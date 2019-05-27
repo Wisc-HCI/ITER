@@ -51,8 +51,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
-  BlockPose.msg
-  BlockPoseArray.msg
+  BlockPose2D.msg
+  BlockPose2DArray.msg
+  BlockPose3D.msg
+  BlockPose3DArray.msg
 )
 
 ## Generate services in the 'srv' folder

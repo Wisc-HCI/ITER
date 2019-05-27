@@ -36,21 +36,21 @@ import numpy as np
 
 from geometry_msgs.msg import Pose2D
 from sensor_msgs.msg import CompressedImage
-from iter_vision.msg import BlockPose, BlockPoseArray
+from iter_vision.msg import BlockPose2D, BlockPose2DArray
 
 sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
 
 
 AREA_FILTER = (600,5000)
 
-BIG_BLOCK_R = (9,11)
-SML_BLOCK_R = (4,6)
+BIG_BLOCK_R = (5,6)
+SML_BLOCK_R = (2,3)
 
 
 class BlockVision:
 
     def __init__(self):
-        self.pose_pub = rospy.Publisher("/block_vision/poses",BlockPoseArray, queue_size=1)
+        self.pose_pub = rospy.Publisher("/block_vision/poses",BlockPose2DArray, queue_size=1)
         self.img_sub = rospy.Subscriber("/camera/image/compressed",CompressedImage,self._image_cb, queue_size=1)
         self.img_c_pub = rospy.Publisher("/block_vision/image/compressed",CompressedImage, queue_size=1)
         self.img_f_pub = rospy.Publisher("/block_vision/filtered/compressed",CompressedImage, queue_size=1)
@@ -90,7 +90,6 @@ class BlockVision:
             #   check object area
             #   check dimension ratio
             area = rect[1][0] * rect[1][1]
-            #print area
             if not (area >= AREA_FILTER[0] and area <= AREA_FILTER[1]):
                 continue
 
@@ -100,13 +99,12 @@ class BlockVision:
             final_img = cv2.drawContours(final_img,[box],0,(0,255,0),2)
 
             # Classify
-            type = BlockPose.UNKNOWN
+            type = BlockPose2D.UNKNOWN
             ratio = max((rect[1][0] / rect[1][1]),(rect[1][1] / rect[1][0]))
             if ratio >= BIG_BLOCK_R[0] and ratio <= BIG_BLOCK_R[1]:
-                type = BlockPose.LARGE
+                type = BlockPose2D.LARGE
             elif ratio >= SML_BLOCK_R[0] and ratio <= SML_BLOCK_R[1]:
-                type = BlockPose.SMALL
-            #print type
+                type = BlockPose2D.SMALL
 
             # Generate pose information
             cx = rect[0][0]
@@ -129,7 +127,7 @@ class BlockVision:
                 rotation += 90 if y_ax > x_ax else 0
 
             # Package message
-            block = BlockPose()
+            block = BlockPose2D()
             block.pose = Pose2D(x=cx,y=cy,theta=rotation)
             block.type = type
             block.id = count
@@ -139,7 +137,7 @@ class BlockVision:
             count += 1
 
         # Publish object poses
-        poseMsg = BlockPoseArray()
+        poseMsg = BlockPose2DArray()
         poseMsg.blocks = poses
         self.pose_pub.publish(poseMsg)
 
@@ -149,7 +147,6 @@ class BlockVision:
         imgCMsg.format = "jpeg"
         imgCMsg.data = np.array(cv2.imencode('.jpg',final_img)[1]).tostring()
         self.img_c_pub.publish(imgCMsg)
-
 
     def _img_filter(self, original_image):
 
@@ -164,6 +161,7 @@ class BlockVision:
         morphed = cv2.morphologyEx(thresh1,cv2.MORPH_OPEN,kernel)
 
         return morphed
+
 
 if __name__ == "__main__":
     try:
