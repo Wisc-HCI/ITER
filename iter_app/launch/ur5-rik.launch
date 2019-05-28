@@ -2,6 +2,7 @@
   <param name="robot_type" value="ur5" />
 
   <arg name="simulated" default='true'/>
+  <arg name="rik_use_julia" default='false'/>
   <arg name="limited" default='false' />
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
@@ -51,16 +52,13 @@
   </group>
 
   <!-- Setup robot configuration for Relaxed Ik -->
-  <!--
   <include file="$(find relaxed_ik)/launch/load_info_file.launch">
     <arg name="info_file_name" value="ur5_info.yaml" />
   </include>
--->
 
   <!-- Launch Relaxed IK -->
-  <!--
-  <include file="$(find relaxed_ik)/launch/relaxed_ik_julia.launch" />
--->
+  <include if="$(arg rik_use_julia)" file="$(find relaxed_ik)/launch/relaxed_ik_julia.launch" />
+  <include unless="$(arg rik_use_julia)" file="$(find relaxed_ik)/launch/relaxed_ik_python.launch" />
 
   <!-- TODO load Rviz -->
 

@@ -8,6 +8,7 @@
     <arg name="robot"/>
     <arg name="simulated" default='true'/>
     <arg name="use_rik" default='true' />
+    <arg name="rik_use_julia" default="false"/>
     <arg name="use_cli" default='false'/>
     <arg name="rad_ui" default='false'/>
     <arg name="use_collision" default='false' />
@@ -21,6 +22,7 @@
       <arg name="robot" value="$(arg robot)"/>
       <arg name="simulated" value="$(arg simulated)"/>
       <arg name="use_rik" value="$(arg use_rik)"/>
+      <arg name="rik_use_julia" value="$(arg rik_use_julia)"/>
     </include>
 
     <!-- Include Rosbridge launches -->
