@@ -1,5 +1,8 @@
 import sys
+import uuid
 import moveit_commander
+
+from iter_app.msg import EnvironmentObject
 
 moveit_commander.roscpp_initialize(sys.argv)
 
@@ -15,59 +18,67 @@ grasped_list = []
 
 def generate_dynamic_environment(env_data):
     global dynamic_environment_ids
+    status = True
 
     for obj in env_data:
 
-        if obj['representation'] != 'box':
-            raise('Invalide object representation')
+        # Determine ID
+        id = obj.id
+        if id == "":
+            id = str(uuid.uuid1().hex)
 
-        dynamic_environment_ids.append(obj['name'])
+        # Handle representations
+        #   Currently only box
+        if obj.representation != EnvironmentObject.REPRESENTATION_BOX:
+            status = False
+            continue
 
-        scene.remove_world_object(obj['name'])
+        dynamic_environment_ids.append(id)
+
+        scene.remove_world_object(id)
         scene.add_box(
-            name=obj['name'],
+            name=id,
             pose=PoseStamped(
                 header=Header(frame_id=robot.get_planning_frame()),
-                pose=Pose(
-                    position=Point(
-                        x=obj['position']['x'],
-                        y=obj['position']['y'],
-                        z=obj['position']['z']),
-                    orientation=Quaternion(
-                        x=obj['orientation']['x'],
-                        y=obj['orientation']['y'],
-                        z=obj['orientation']['z'],
-                        w=obj['orientation']['w']))),
-            size=(obj['size']['x'], obj['size']['y'], obj['size']['z']))
+                pose=obj.pose),
+            size=(obj.size.x, obj.size.y, obj.size.z))
 
     rospy.sleep(1)
     rospy.loginfo(scene.get_known_object_names())
     print dynamic_environment_ids
+    return status
 
-def clear_dynamic_environment(ids=None):
+def clear_dynamic_environment(ids=[], all=False):
     global dynamic_environment_ids, grasped_list
+    status = True
 
-    id_list = ids if ids is not None else dynamic_environment_ids
+    # prepare delete list
+    if all:
+        delete_list = dynamic_environment_ids
+        for id in ids:
+            delete_list.remove(id)
+    else:
+        delete_list = ids
 
+    # Remove from grapsing
     for id in grasped_list:
         eef_link = arm_group_commander.get_end_effector_link()
         scene.remove_attached_object(eef_link, name=id)
     grasped_list = []
 
-    remove_list = []
-    for id in id_list:
-
+    # Remove all objects
+    for id in delete_list:
         scene.remove_world_object(id)
-        remove_list.append(id)
-
-    for id in remove_list:
         try:
             dynamic_environment_ids.remove(id)
-        except ValueError:
-            pass
+        except:
+            status = False
+            continue
 
     rospy.sleep(1)
     rospy.loginfo(scene.get_known_object_names())
+
+    return status
 
 def connect_obj_to_robot(id, *args):
     eef_link = arm_group_commander.get_end_effector_link()
@@ -76,6 +87,7 @@ def connect_obj_to_robot(id, *args):
     rospy.sleep(1)
 
     grasped_list.append(id)
+    return True
 
 def disconnect_obj_from_robot(id, *args):
     eef_link = arm_group_commander.get_end_effector_link()
@@ -83,3 +95,10 @@ def disconnect_obj_from_robot(id, *args):
     rospy.sleep(1)
 
     grasped_list.remove(id)
+    return False
+
+def get_all_task_ids():
+    return dynamic_environment_ids
+
+def get_grasped_ids():
+    return grasped_list

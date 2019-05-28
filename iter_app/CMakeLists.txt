@@ -53,7 +53,7 @@ add_message_files(
     FILES
     RADSignal.msg
     TimeInterval.msg
-    ObjectRepresentation.msg
+    EnvironmentObject.msg
 )
 
 ## Generate services in the 'srv' folder
