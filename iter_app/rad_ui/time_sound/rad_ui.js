@@ -2,28 +2,39 @@
 
 // define constants
 
-var GREEN = 127;
-var RED = 0;
-
-var NEGLECT_LOWER_BOUND = 15;
-
 var AUDIO = new Audio('./samsterbirdies__beep-warning.mp3');
 
 // define update functions
 
-function updateColor(seconds) {
+function pad(num, size) {
+    var s = num+"";
+    while (s.length < size) s = "0" + s;
+    return s;
+}
 
-  var scale;
+function formatTime(secondsRaw) {
+  var hours = Math.floor(secondsRaw / 3600);
+  secondsRaw -= hours * 3600;
+
+  var minutes = Math.floor(secondsRaw / 60);
+  secondsRaw -= minutes * 60;
+
+  var seconds = Math.floor(secondsRaw);
+
+  var timeStr = pad(hours,2) + ':'
+              + pad(minutes,2) + ':'
+              + pad(seconds,2);
+  return timeStr;
+}
+
+function updateTime(seconds) {
+  $('#time-1-text').html(formatTime(seconds));
+}
+
+function warningCheck(seconds) {
   if (seconds <= NEGLECT_LOWER_BOUND) {
-    scale = RED;
     playWarning();
-  } else {
-    scale = GREEN;
   }
-  var color = 'hsl(' + Math.round(scale) + ', 75%, 50%)';
-
-  $('#dot-'+i).css('background-color',color);
-
 }
 
 var playedWarning = false;
@@ -72,9 +83,11 @@ listenerRadSignal.subscribe(function(message) {
       modeChanged();
     }
 
+    var interval;
     if (message.mode == 0) { // neglect time
       interval = message.neglect_time;
-      updateColor(interval.current);
+      warningCheck(interval.current);
+      updateTime(interval.current);
     }
 
   }

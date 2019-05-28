@@ -22,6 +22,10 @@ function formatTime(secondsRaw) {
   return timeStr;
 }
 
+function updateTime(seconds) {
+  $('#time-1-text').html(formatTime(seconds));
+}
+
 // Setup ROS Subscribers
 
 var ros = new ROSLIB.Ros({
@@ -41,14 +45,21 @@ ros.on('close', function() {
   alert('Connection to websocket server closed.');
 });
 
-var listenerNegelectTime = new ROSLIB.Topic({
+var listenerRadSignal = new ROSLIB.Topic({
   ros: ros,
-  name: '/rad/neglect_time',
-  messageType: 'iter_app/TimeInterval'
+  name: '/rad/signal',
+  messageType: 'iter_app/RADTime'
 });
 
-listenerNegelectTime.subscribe(function(message) {
+var currentMode = -1;
+listenerRadSignal.subscribe(function(message) {
   if(message != undefined) {
-    updateNeglectTime(message.current);
+
+    var interval;
+    if (message.mode == 0) { // neglect time
+      interval = message.neglect_time;
+      updateTime(interval.current);
+    }
+
   }
 });

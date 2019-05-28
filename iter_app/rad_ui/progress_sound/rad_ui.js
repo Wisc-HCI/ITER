@@ -58,6 +58,18 @@ function updateUpperBound(seconds) {
   $('#upper-bound').html(formatTime(seconds));
 }
 
+var playedWarning = false;
+function playWarning() {
+  if (!playedWarning) {
+    AUDIO.play();
+    playedWarning = true;
+  }
+}
+
+function modeChanged() {
+  playedWarning = false;
+}
+
 // Setup ROS Subscribers
 
 var ros = new ROSLIB.Ros({

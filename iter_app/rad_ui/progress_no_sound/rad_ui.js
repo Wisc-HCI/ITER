@@ -1,4 +1,3 @@
-//Warning sound = https://freesound.org/people/SamsterBirdies/sounds/467882/
 
 // define constants
 
@@ -84,11 +83,6 @@ var listenerRadSignal = new ROSLIB.Topic({
 var currentMode = -1;
 listenerRadSignal.subscribe(function(message) {
   if(message != undefined) {
-
-    if (currentMode != message.mode) {
-      currentMode = message.mode;
-      modeChanged();
-    }
 
     var interval;
     if (message.mode == 0) { // neglect time

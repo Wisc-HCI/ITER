@@ -51,11 +51,6 @@ var currentMode = -1;
 listenerRadSignal.subscribe(function(message) {
   if(message != undefined) {
 
-    if (currentMode != message.mode) {
-      currentMode = message.mode;
-      modeChanged();
-    }
-
     if (message.mode == 0) { // neglect time
       interval = message.neglect_time;
       updateColor(interval.current);
