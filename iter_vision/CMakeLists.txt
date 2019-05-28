@@ -60,6 +60,7 @@ add_message_files(
 ## Generate services in the 'srv' folder
 add_service_files(
   FILES
+  ColorSelect.srv
   GetEEPose.srv
   GetTagPose.srv
   GetTagToEETransform.srv

@@ -1,0 +1,21 @@
+float32 min_hue
+float32 max_hue
+
+float32 MIN_HUE_VALUE = 0
+float32 MAX_HUE_VALUE = 180
+
+float32 COLOR_RED_MIN = 0
+float32 COLOR_RED_MAX = 30
+float32 COLOR_YELLOW_MIN = 30
+float32 COLOR_YELLOW_MAX = 60
+float32 COLOR_GREEN_MIN = 60
+float32 COLOR_GREEN_MAX = 90
+float32 COLOR_CYAN_MIN = 90
+float32 COLOR_CYAN_MAX = 120
+float32 COLOR_BLUE_MIN = 120
+float32 COLOR_BLUE_MAX = 150
+float32 COLOR_MAGENTA_MIN = 150
+float32 COLOR_MAGENTA_MAX = 180
+
+---
+bool status

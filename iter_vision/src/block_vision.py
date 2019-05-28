@@ -37,11 +37,12 @@ import numpy as np
 from geometry_msgs.msg import Pose2D
 from sensor_msgs.msg import CompressedImage
 from iter_vision.msg import BlockPose2D, BlockPose2DArray
+from iter_vision.srv import ColorSelect, ColorSelectRequest, ColorSelectResponse
 
 sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
 
 
-AREA_FILTER = (600,5000)
+AREA_FILTER = (600,4000)
 
 BIG_BLOCK_R = (5,6)
 SML_BLOCK_R = (2,3)
@@ -50,10 +51,28 @@ SML_BLOCK_R = (2,3)
 class BlockVision:
 
     def __init__(self):
+        self._min_hue = ColorSelectRequest.MIN_HUE_VALUE
+        self._max_hue = ColorSelectRequest.MAX_HUE_VALUE
+
         self.pose_pub = rospy.Publisher("/block_vision/poses",BlockPose2DArray, queue_size=1)
         self.img_sub = rospy.Subscriber("/camera/image/compressed",CompressedImage,self._image_cb, queue_size=1)
         self.img_c_pub = rospy.Publisher("/block_vision/image/compressed",CompressedImage, queue_size=1)
         self.img_f_pub = rospy.Publisher("/block_vision/filtered/compressed",CompressedImage, queue_size=1)
+
+        self.color_select_srv = rospy.Service("/block_vision/color_select",ColorSelect,self._color_select_cb)
+
+    def _color_select_cb(self,response):
+        status = True
+
+        if self._min_hue < ColorSelectRequest.MIN_HUE_VALUE:
+            status = False
+        elif seld._max_hue > ColorSelectRequest.MAX_HUE_VALUE:
+            status = False
+        else:
+            self._min_hue = response.min_hue
+            self._max_hue = response.max_hue
+
+        return ColorSelectResponse(status=status)
 
     def _image_cb(self,imageMsg):
 
@@ -154,7 +173,7 @@ class BlockVision:
         # Note that algorithm is assuming the objects are against a black background
         # otherwise another step to remove a solid background color is needed
         hsv = cv2.cvtColor(original_image,cv2.COLOR_BGR2HSV)
-        thresh1 = cv2.inRange(hsv,(0,20,150),(179,255,255)) #0, 50, 50
+        thresh1 = cv2.inRange(hsv,(self._min_hue,20,150),(self._max_hue,255,255)) #0, 50, 50
 
         # Denoise
         kernel = np.ones((5,5),np.uint8)
