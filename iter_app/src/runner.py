@@ -1,7 +1,39 @@
 #!/usr/bin/env python
 
+'''
+Runner Node
+Author: Curt Henrichs
+Date: 5-28-19
+
+ITER's main application node.
+
+Runner node provides services to run a fully defined job as a JSON string and
+interacts with environment, timing, and respectiv primitive nodes to coordinate
+the job.
+
+Services provided:
+    - /runner/task_input
+    - /runner/get_mode
+    - /runner/set_mode
+
+Services requested:
+    - (TODO environment client)
+
+Topics published:
+    - /time_node/start
+    - /time_node/stop
+    - /time_node/sync
+
+Topics subscribed:
+    - /button/state (TODO ifttt connection)
+
+Parameters required:
+    - use_rik
+
+'''
+
 ## Note: Currently the environment is unsupported due to moveit having an issue
-## with stack smashing and with relaxed IK there is no built in support.
+## with stack smashing and with relaxed IK there is no built in support for dynamic environments.
 
 import sys
 import time
@@ -19,30 +51,6 @@ if use_rik:
     import tools.primitives_rik as bp
 else:
     import tools.primitives_moveit as bp
-
-
-def button_callback():
-    #TODO write this for real
-    str = raw_input('Press enter button to stop wait')
-    button_state = True
-    return button_state
-
-def generate_neglect_time_list(task_dict):
-    time_list = []
-    temp_neglect_time = 0
-
-    for obj in task_dict['task']:
-        if 'rad' in obj.keys():
-            if 'is_interaction' in obj['rad'] and obj['rad']['is_interaction']: # push time to list
-                time_list.append({"time": temp_neglect_time})
-                temp_neglect_time = 0
-                time_list.append({"interaction": True})
-            elif 'neglect_time' in obj['rad']: # increment by amount
-                temp_neglect_time += obj['rad']['neglect_time']
-
-    time_list.append({"time": temp_neglect_time})
-
-    return time_list
 
 
 class Runner:
@@ -68,8 +76,8 @@ class Runner:
         #    env.generate_dynamic_environment(data['environment'])
 
         print 'Instantiating'
-        primitives = [bp.instantiate_from_dict(obj,button_callback) for obj in data['task']]
-        neglect_time_list = generate_neglect_time_list(data)
+        primitives = [bp.instantiate_from_dict(obj,self._button_callback) for obj in data['task']]
+        neglect_time_list = self._generate_neglect_time_list(data)
 
         # provide timing information to timing node
         if self.time_mode == TimeModeEnum.REPLAY:
@@ -125,6 +133,30 @@ class Runner:
 
     def mode_get(self, data):
         return ModeGetResponse(self.time_mode.value)
+
+    def _generate_neglect_time_list(self,task_dict):
+        time_list = []
+        temp_neglect_time = 0
+
+        for obj in task_dict['task']:
+            if 'rad' in obj.keys():
+                if 'is_interaction' in obj['rad'] and obj['rad']['is_interaction']: # push time to list
+                    time_list.append({"time": temp_neglect_time})
+                    temp_neglect_time = 0
+                    time_list.append({"interaction": True})
+                elif 'neglect_time' in obj['rad']: # increment by amount
+                    temp_neglect_time += obj['rad']['neglect_time']
+
+        time_list.append({"time": temp_neglect_time})
+
+        return time_list
+
+    def _button_callback():
+        #TODO write this for real
+        str = raw_input('Press enter button to stop wait')
+        button_state = True
+        return button_state
+
 
 
 if __name__ == '__main__':

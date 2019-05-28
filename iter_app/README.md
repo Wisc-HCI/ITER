@@ -37,3 +37,9 @@ roslaunch iter_app iter.launch robot:=ur5 simulated:=true
 Note: try checking the frames and joints for name diff
 ROS bags trajectory replay
 Pickle
+
+
+
+## Ref for later
+https://github.com/JamesGiller/ifttt-ros
+Note to self, https://ieeexplore.ieee.org/document/5641726

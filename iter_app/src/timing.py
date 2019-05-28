@@ -24,8 +24,6 @@ Timing information conveyed:
             "If provided as a real-time estimate, provides better understanding of task / subtask"
 '''
 
-#Note to self, https://ieeexplore.ieee.org/document/5641726
-
 import json
 import rospy
 
@@ -53,6 +51,7 @@ class TimingServer:
         self._run = False
         self._sync_index = 0
         self._interaction_event = False
+        self._in_interaction_task = False
 
         self._fake_time = 60
         self._fake_mode = 'neglect'
@@ -70,7 +69,8 @@ class TimingServer:
         self._sync_index = syncIndex
 
     def _interaction_event_trigger(self, noop):
-        self._interaction_event = True
+        if self._in_interaction_task:
+            self._interaction_event = True
 
     def _fake_time_publisher(self):
 
@@ -105,31 +105,41 @@ class TimingServer:
 
     def _real_time_publisher(self):
         #TODO use indexing method for task loop. Use this index with the sync index
-        #TODO provide ideal interaction time as an output not the actual time currently taken
 
         timeInterval = TimeInterval()
         interaction_time = 0
 
-        for index in range(0,len(self._neglect_time_list)):
-            t = self._neglect_time_list[index]
-
+        index = 0
+        while index  < len(self._neglect_time_list):
             signal = RADSignal()
 
+            # Re-sync
+            if index > self._sync_index:
+                # out of sync - ahead of runner
+                index = self._sync_index
+            elif index < self._sync_index:
+                # out of sync - behind runner
+                index = self._sync_index
+
+            t = self._neglect_time_list[index]
+
+            # run timing for task primitive
             if 'interaction' in t.keys() and t['interaction']:
                 signal.mode = RADSignal.INTERACTION_MODE
+                self._in_interaction_task = True
 
                 # Wait for interaction event
-                timeInterval.current = t["time"]
+                timeInterval.current = 0
                 timeInterval.initial = t["time"]
-
                 current = base = time.time()
 
                 while self._run and not self._interaction_event:
+                    if index != self._sync_index:
+                        # sync event means moving to next primitive in runner
+                        # done with this task
+                        break
 
-                    #TODO this might be wrong need to test
                     timeInterval.current = current - base
-                    if timeInterval.current > timeInterval.initial:
-                        timeInterval.current = timeInterval.initial
 
                     self.pub_interaction_time.publish(timeInterval)
 
@@ -139,7 +149,9 @@ class TimingServer:
                     time.sleep(self.SIGNAL_PUBLISH_TIME_STEP)
                     current = time.time()
 
+                self._in_interaction_task = False
                 self._interaction_event = False
+                
             else:
                 signal.mode = RADSignal.NEGLECT_MODE
 
@@ -150,6 +162,10 @@ class TimingServer:
                 current = base = time.time()
 
                 while self._run and current < base + t["time"]:
+                    if index != self._sync_index:
+                        # sync event means moving to next primitive in runner
+                        # done with this task
+                        break
 
                     timeInterval.current = t["time"] - (current - base)
                     self.pub_neglect_time.publish(timeInterval)
@@ -159,6 +175,9 @@ class TimingServer:
 
                     time.sleep(self.SIGNAL_PUBLISH_TIME_STEP)
                     current = time.time()
+
+            # increment loop counter
+            index += 1
 
     def loop(self):
         fakeTime = rospy.get_param("~fake_time",False)

@@ -51,8 +51,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
     FILES
-    TimeInterval.msg
     RADSignal.msg
+    TimeInterval.msg
+    ObjectRepresentation.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -61,6 +62,13 @@ add_service_files(
    Task.srv
    ModeGet.srv
    ModeSet.srv
+   CalibrateRobotToCamera.srv
+   ClearTaskObjects.srv
+   ConnectTaskObject.srv
+   GenerateTaskObjects.srv
+   GetEnvironmentState.srv
+   GetVisionObject.srv
+   ReleaseTaskObject.srv
 )
 
 ## Generate actions in the 'action' folder
