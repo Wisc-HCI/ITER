@@ -69,4 +69,8 @@
       <param name="parent_frame_id" value="usb_cam"/>
   </node>
 
+  <node name="robot_camera_align" pkg="iter_vision" type="robot_camera_align.py">
+    <param name="reference_frame" value="usb_cam"/>
+  </node>
+
 </launch>

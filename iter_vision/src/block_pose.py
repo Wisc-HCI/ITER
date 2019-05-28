@@ -14,10 +14,11 @@ Publishes these coordinates as a BlockPose3DArray and updates TF entries for blo
 identified.
 
 Takes in rosparam for 'parent_frame_id' which defines parent to block pose transforms
+Takes in rosparam for 'rotation_constant' which is partially dependent on camera to table pose relationship
+however for a roughly top-down view it is approximately 1.
 '''
 
 import tf
-import sys
 import math
 import rospy
 import numpy as np
@@ -35,8 +36,9 @@ ROTATION_CONSTANT = 1
 
 class BlockPoseNode:
 
-    def __init__(self, parent_frame_id):
+    def __init__(self, parent_frame_id, rotation_constant):
         self._parent_frame_id = parent_frame_id
+        self._rotation_constant = rotation_constant
 
         self.ar3_sub = rospy.Subscriber("ar_pose_marker", AlvarMarkerArray, self._ar3_cb, queue_size=5)
         self.ar2_sub = rospy.Subscriber("cam_pose_marker", AlvarMarker2DArray, self._ar2_cb, queue_size=5)
@@ -107,7 +109,7 @@ class BlockPoseNode:
                                    y=projection[1,0],
                                    z=projection[2,0])
 
-                rz =  ROTATION_CONSTANT * (b2.pose.theta / 180 * math.pi) - self._image_orienation
+                rz = self._rotation_constant * (b2.pose.theta / 180 * math.pi) - self._image_orienation
                 q = tf.transformations.quaternion_from_euler(0,0,rz)
                 x,y,z,w = tf.transformations.quaternion_multiply(self._plane_orientation, q)
                 orientation = Quaternion(x=x,y=y,z=z,w=w)
@@ -143,7 +145,8 @@ if __name__ == "__main__":
     try:
         rospy.init_node("block_pose", anonymous=True)
         parent_frame_id = rospy.get_param("parent_frame_id",'usb_cam')
-        node = BlockPoseNode(parent_frame_id)
+        rotation_constant = rospy.get_param("rotation_constant",ROTATION_CONSTANT)
+        node = BlockPoseNode(parent_frame_id,rotation_constant)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
