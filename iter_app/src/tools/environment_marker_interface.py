@@ -69,7 +69,7 @@ def clear_dynamic_environment(ids=[], all=False):
     for id in delete_list:
         try:
             del markers[id]
-            if id in grasped.keys()
+            if id in grasped.keys():
                 del grasped[id]
         except:
             status = False

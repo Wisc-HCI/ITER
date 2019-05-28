@@ -1,6 +1,3 @@
-<!-- https://github.com/Kinovarobotics/kinova-ros/wiki/MoveIt -->
-<!-- m1n6s300 -->
-
 <launch>
 
   <arg name="simulated" default='true'/>
@@ -9,7 +6,7 @@
 
   <!-- If using Relaxed-IK -->
   <group if="$(eval arg('use_rik') == true)">
-    <include file="$(find iter_app)/launch/mico-robotiq85-rik.launch">
+    <include file="$(find iter_app)/launch/robots/ur5-rik.launch">
       <arg name="simulated" value="$(arg simulated)"/>
       <arg name="rik_use_julia" value="$(arg rik_use_julia)"/>
     </include>
@@ -17,7 +14,7 @@
 
   <!-- Else, use moveit-->
   <group if="$(eval arg('use_rik') == false)">
-    <include file="$(find iter_app)/launch/mico-robotiq85-moveit.launch">
+    <include file="$(find iter_app)/launch/robots/ur5-moveit.launch">
       <arg name="simulated" value="$(arg simulated)"/>
     </include>
   </group>

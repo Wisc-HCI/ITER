@@ -9,7 +9,7 @@
 
   <!-- If using Relaxed-IK -->
   <group if="$(eval arg('use_rik') == true)">
-    <include file="$(find iter_app)/launch/mico-3-rik.launch">
+    <include file="$(find iter_app)/launch/robots/mico-3-rik.launch">
       <arg name="simulated" value="$(arg simulated)"/>
       <arg name="rik_use_julia" value="$(arg rik_use_julia)"/>
     </include>
@@ -17,7 +17,7 @@
 
   <!-- Else, use moveit-->
   <group if="$(eval arg('use_rik') == false)">
-    <include file="$(find iter_app)/launch/mico-3-moveit.launch">
+    <include file="$(find iter_app)/launch/robots/mico-3-moveit.launch">
       <arg name="simulated" value="$(arg simulated)"/>
     </include>
   </group>

@@ -13,7 +13,7 @@
     <rosparam param="gripper_move_group">'gripper'</rosparam>
     <rosparam param="gripper_type">'robotiq-85'</rosparam>
 
-    <include file="$(find iter_app)/launch/ur3.launch">
+    <include file="$(find iter_app)/launch/robots/ur3.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
       <arg name="rik_use_julia" value="$(arg rik_use_julia)"/>
@@ -27,7 +27,7 @@
     <rosparam param="gripper_move_group">'gripper'</rosparam>
     <rosparam param="gripper_type">'robotiq-85'</rosparam>
 
-    <include file="$(find iter_app)/launch/ur5.launch">
+    <include file="$(find iter_app)/launch/robots/ur5.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
       <arg name="rik_use_julia" value="$(arg rik_use_julia)"/>
@@ -41,7 +41,7 @@
     <rosparam param="gripper_move_group">'gripper'</rosparam>
     <rosparam param="gripper_type">'mico-3'</rosparam>
 
-    <include file="$(find iter_app)/launch/mico-3.launch">
+    <include file="$(find iter_app)/launch/robots/mico-3.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
       <arg name="rik_use_julia" value="$(arg rik_use_julia)"/>
@@ -55,7 +55,7 @@
     <rosparam param="gripper_move_group">'gripper'</rosparam>
     <rosparam param="gripper_type">'mico-2'</rosparam>
 
-    <include file="$(find iter_app)/launch/mico-2.launch">
+    <include file="$(find iter_app)/launch/robots/mico-2.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
       <arg name="rik_use_julia" value="$(arg rik_use_julia)"/>
@@ -69,7 +69,7 @@
     <rosparam param="gripper_move_group">'gripper'</rosparam>
     <rosparam param="gripper_type">'robotiq-85'</rosparam>
 
-    <include file="$(find iter_app)/launch/mico-robotiq85.launch">
+    <include file="$(find iter_app)/launch/robots/mico-robotiq85.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
       <arg name="rik_use_julia" value="$(arg rik_use_julia)"/>
