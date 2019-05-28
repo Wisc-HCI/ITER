@@ -158,7 +158,6 @@ class Runner:
         return button_state
 
 
-
 if __name__ == '__main__':
     rospy.sleep(10) # wait for everything to setup first
     print "\n\n\n Runner is Ready\n\n\n"

@@ -47,7 +47,7 @@ class Environment:
         self._release_task_obj_srv = rospy.Service("/environment/release_task_object",ReleaseTaskObject,self._release_task_obj)
         self._get_vision_obj_srv = rospy.Service("/environment/get_vision_object",GetVisionObject,self._get_vision_obj)
         self._cal_bot_to_cam_srv = rospy.Service("/environment/calibrate_robot_to_camera",CalibrateRobotToCamera,self._cal_bot_to_cam)
-        self._get_state_srv = rospy.Service("/environment/get_state",GetEnvrionmentState,self._get_state)
+        self._get_state_srv = rospy.Service("/environment/get_state",GetEnvironmentState,self._get_state)
 
     def _generate_task_objs(self, request):
         # Generates new markers of objects defined by array of objects provided
@@ -88,5 +88,10 @@ class Environment:
         #   - ar tags
         pass
 
+
 if __name__ == "__main__":
-    pass
+
+    env = Environment()
+
+    while not rospy.is_shutdown():
+        rospy.spin()
