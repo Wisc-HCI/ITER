@@ -77,7 +77,7 @@ ros.on('close', function() {
 var listenerRadSignal = new ROSLIB.Topic({
   ros: ros,
   name: '/rad/signal',
-  messageType: 'iter_app/RADTime'
+  messageType: 'iter_app/RADSignal'
 });
 
 var currentMode = -1;

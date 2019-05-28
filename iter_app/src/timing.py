@@ -82,11 +82,11 @@ class TimingServer:
 
         if self._fake_mode == 'neglect':
             signal.neglect_time = timeInterval
-            signal.mode = RADTime.NEGLECT_MODE
+            signal.mode = RADSignal.NEGLECT_MODE
             self.pub_neglect_time.publish(timeInterval)
         else:
             signal.interaction_time = timeInterval
-            signal.mode = RADTime.INTERACTION_MODE
+            signal.mode = RADSignal.INTERACTION_MODE
             self.pub_interaction_time.publish(timeInterval)
         self.pub_rad_signal.publish(signal)
 
@@ -116,7 +116,7 @@ class TimingServer:
             signal = RADSignal()
 
             if 'interaction' in t.keys() and t['interaction']:
-                signal.mode = RADTime.INTERACTION_MODE
+                signal.mode = RADSignal.INTERACTION_MODE
 
                 # Wait for interaction event
                 timeInterval.current = t["time"]
@@ -141,7 +141,7 @@ class TimingServer:
 
                 self._interaction_event = False
             else:
-                signal.mode = RADTime.NEGLECT_MODE
+                signal.mode = RADSignal.NEGLECT_MODE
 
                 # Run through the prerecorded timing
                 timeInterval.current = t["time"]

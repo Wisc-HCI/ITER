@@ -2,6 +2,8 @@
 
 // define constants
 
+var NEGLECT_LOWER_BOUND = 15;
+
 var AUDIO = new Audio('./samsterbirdies__beep-warning.mp3');
 
 // define update functions
@@ -71,7 +73,7 @@ ros.on('close', function() {
 var listenerRadSignal = new ROSLIB.Topic({
   ros: ros,
   name: '/rad/signal',
-  messageType: 'iter_app/RADTime'
+  messageType: 'iter_app/RADSignal'
 });
 
 var currentMode = -1;
