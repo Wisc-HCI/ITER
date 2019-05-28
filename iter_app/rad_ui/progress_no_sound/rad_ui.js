@@ -1,3 +1,11 @@
+//Warning sound = https://freesound.org/people/SamsterBirdies/sounds/467882/
+
+// define constants
+
+var GREEN = 127;
+var RED = 0;
+
+var NEGLECT_LOWER_BOUND = 15;
 
 // define update functions
 
@@ -26,35 +34,27 @@ function updateProgressBar(value) {
   $('#rad-1-progressbar').css('width',(value * 100) + '%');
 }
 
-function updateColor(seconds) {
-
-  var GREEN = 127;
-  var RED = 0;
-  var LOWER_BOUND = 15;
-  var UPPER_BOUND = 60;
-
-  var scale;
-
-  if (seconds <= LOWER_BOUND) {
-    scale = RED;
-  } else if (seconds >= UPPER_BOUND) {
-    scale = GREEN;
-  } else {
-    scale = (GREEN - RED) / (UPPER_BOUND - LOWER_BOUND) * (seconds - LOWER_BOUND) + RED;
-  }
-
+function _updateColor(scale) {
   color = 'hsl(' + Math.round(scale) + ', 75%, 50%)';
-
   $('#rad-1-progressbar').css('background-color',color);
 }
 
-function updateNeglectTime(seconds) {
-  $('#time-1-text').html(formatTime(seconds));
+function updateColorNeglect(seconds) {
+
+  var scale;
+  if (seconds <= NEGLECT_LOWER_BOUND) {
+    scale = RED;
+  } else {
+    scale = GREEN;
+  }
+
+  _updateColor(scale);
 }
 
 function updateUpperBound(seconds) {
   $('#upper-bound').html(formatTime(seconds));
 }
+
 
 // Setup ROS Subscribers
 
@@ -75,17 +75,28 @@ ros.on('close', function() {
   alert('Connection to websocket server closed.');
 });
 
-var listenerNegelectTime = new ROSLIB.Topic({
+var listenerRadSignal = new ROSLIB.Topic({
   ros: ros,
-  name: '/rad/neglect_time',
-  messageType: 'iter_app/TimeInterval'
+  name: '/rad/signal',
+  messageType: 'iter_app/RADTime'
 });
 
-listenerNegelectTime.subscribe(function(message) {
+var currentMode = -1;
+listenerRadSignal.subscribe(function(message) {
   if(message != undefined) {
-    updateNeglectTime(message.current);
-    updateColor(message.current);
-    updateUpperBound(message.initial);
-    updateProgressBar(message.current/message.initial);
+
+    if (currentMode != message.mode) {
+      currentMode = message.mode;
+      modeChanged();
+    }
+
+    var interval;
+    if (message.mode == 0) { // neglect time
+      interval = message.neglect_time;
+      updateColorNeglect(interval.current);
+      updateUpperBound(interval.initial);
+      updateProgressBar(interval.current/interval.initial);
+    }
+
   }
 });

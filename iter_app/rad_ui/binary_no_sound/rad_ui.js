@@ -1,15 +1,17 @@
 
+// define constants
+
+var GREEN = 127;
+var RED = 0;
+
+var NEGLECT_LOWER_BOUND = 15;
+
 // define update functions
 
 function updateColor(seconds) {
 
-  var GREEN = 127;
-  var RED = 0;
-  var LOWER_BOUND = 15;
-  var UPPER_BOUND = 60;
-
   var scale;
-  if (seconds <= LOWER_BOUND) {
+  if (seconds <= NEGLECT_LOWER_BOUND) {
     scale = RED;
   } else {
     scale = GREEN;
@@ -39,14 +41,25 @@ ros.on('close', function() {
   alert('Connection to websocket server closed.');
 });
 
-var listenerNegelectTime = new ROSLIB.Topic({
+var listenerRadSignal = new ROSLIB.Topic({
   ros: ros,
-  name: '/rad/neglect_time',
-  messageType: 'iter_app/TimeInterval'
+  name: '/rad/signal',
+  messageType: 'iter_app/RADTime'
 });
 
-listenerNegelectTime.subscribe(function(message) {
+var currentMode = -1;
+listenerRadSignal.subscribe(function(message) {
   if(message != undefined) {
-    updateColor(message.current);
+
+    if (currentMode != message.mode) {
+      currentMode = message.mode;
+      modeChanged();
+    }
+
+    if (message.mode == 0) { // neglect time
+      interval = message.neglect_time;
+      updateColor(interval.current);
+    }
+
   }
 });

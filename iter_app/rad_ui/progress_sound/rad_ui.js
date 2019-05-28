@@ -6,7 +6,6 @@ var GREEN = 127;
 var RED = 0;
 
 var NEGLECT_LOWER_BOUND = 15;
-var INTERACTION_UPPER_BOUND = 15;
 
 var AUDIO = new Audio('./samsterbirdies__beep-warning.mp3');
 
@@ -55,37 +54,8 @@ function updateColorNeglect(seconds) {
   _updateColor(scale);
 }
 
-function updateColorInteraction(seconds, total) {
-
-  var scale;
-  if (seconds >= total - INTERACTION_UPPER_BOUND) {
-    scale = RED;
-    playWarning();
-  } else {
-    scale = GREEN;
-  }
-
-  _updateColor(scale);
-}
-
 function updateUpperBound(seconds) {
   $('#upper-bound').html(formatTime(seconds));
-}
-
-function updateMode(modeStr) {
-  $('#mode-field').html('Mode: '+ modeStr);
-}
-
-var playedWarning = false;
-function playWarning() {
-  if (!playedWarning) {
-    AUDIO.play();
-    playedWarning = true;
-  }
-}
-
-function modeChanged() {
-  playedWarning = false;
 }
 
 // Setup ROS Subscribers
@@ -126,14 +96,9 @@ listenerRadSignal.subscribe(function(message) {
     if (message.mode == 0) { // neglect time
       interval = message.neglect_time;
       updateColorNeglect(interval.current);
-      updateMode('NEGLECT');
-    } else if (message.mode == 1) { // interaction time
-      interval = message.interaction_time
-      updateColorInteraction(interval.current,interval.initial);
-      updateMode('INTERACTION');
+      updateUpperBound(interval.initial);
+      updateProgressBar(interval.current/interval.initial);
     }
 
-    updateUpperBound(interval.initial);
-    updateProgressBar(interval.current/interval.initial);
   }
 });
