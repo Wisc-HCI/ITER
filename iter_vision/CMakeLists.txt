@@ -61,10 +61,7 @@ add_message_files(
 add_service_files(
   FILES
   ColorSelect.srv
-  GetEEPose.srv
   GetTagPose.srv
-  GetTagToEETransform.srv
-  SetTagToEETransform.srv
 )
 
 ## Generate actions in the 'action' folder

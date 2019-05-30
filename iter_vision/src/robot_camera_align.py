@@ -28,11 +28,8 @@ import math
 import rospy
 import numpy as np
 
-from iter_vision.srv import GetEEPose, GetEEPoseResponse
-from iter_vision.srv import GetTagPose, GetTagPoseResponse
-from iter_vision.srv import GetTagToEETransform, GetTagToEETransformResponse
-from iter_vision.srv import SetTagToEETransform, SetTagToEETransformResponse
 from geometry_msgs.msg import Pose, Vector3, Quaternion
+from iter_vision.srv import GetTagPose, GetTagPoseResponse
 
 class RobotCameraAlignment:
 
@@ -41,9 +38,6 @@ class RobotCameraAlignment:
         self._etr = Pose(position=Vector3(x=0,y=0,z=0),orientation=Quaternion(x=0,y=0,z=0,w=1))
 
         self._get_tag_pose_srv = rospy.Service('/robot_camera_align/get_tag_pose',GetTagPose, self._tf_pose_cb)
-        self._get_ee_pose_srv = rospy.Service('/robot_camera_align/get_ee_pose',GetEEPose, self._ee_pose_cb)
-        self._get_tag_to_ee_tf_srv = rospy.Service('/robot_camera_align/get_tag_to_ee_transform', GetTagToEETransform, self._get_ee_tag_r_cb)
-        self._set_tag_to_ee_tf_srv = rospy.Service('/robot_camera_align/set_tag_to_ee_transform', SetTagToEETransform, self._set_ee_tag_r_cb)
 
         self._tf_listener = tf.TransformListener()
 
@@ -57,40 +51,15 @@ class RobotCameraAlignment:
             rotation = None
         return status, translation, rotation
 
-    def _extract_ee_transform(self):
-        translation = [self._etr.position.x,self._etr.position.y,self._etr.position.z]
-        rotation = [self._etr.orientation.x,self._etr.orientation.y,self._etr.orientation.z,self._etr.orientation.w]
-        return translation, rotation
-
     def _tf_pose_cb(self, request):
-        status, translation, rotation = self._tf_lookup(request.tag_frame_id)
+        status, pos, rot = self._tf_lookup(request.tag_frame_id)
 
         pose = Pose()
         if status:
-            pose.position = translation
-            pose.orientation = rotation
+            pose.position = Vector3(x=pos[0],y=pos[1],z=pos[2])
+            pose.orientation = Quaternion(x=rot[0],y=rot[1],z=rot[2],w=rot[3])
 
         return GetTagPoseResponse(pose=pose,status=status)
-
-    def _ee_pose_cb(self, request):
-        status, ar_trans, ar_rot = self._tf_lookup(request.tag_frame_id)
-        ee_trans, ee_rot = self._extract_ee_transform()
-
-        pose = Pose()
-        if status:
-            (px,py,pz) = np.add(np.matrix(ar_trans),np.matrix(ee_trans))
-            (ox,oy,oz,ow) = tf.transformations.quaternion_multiply(ar_rot,ee_rot).tolist()
-            pose.position = Vector3(x=px,y=py,z=pz)
-            pose.orientation = Quaternion(x=ox,y=oy,z=oz,w=ow)
-
-        return GetEEPoseResponse(pose=pose,status=status)
-
-    def _set_ee_tag_r_cb(self, request):
-        self._etr = request.transform
-        return SetTagToEETransformResponse(True)
-
-    def _get_ee_tag_r_cb(self, request):
-        return GetTagToEETransformResponse(transform=self._etr)
 
 
 if __name__ == "__main__":

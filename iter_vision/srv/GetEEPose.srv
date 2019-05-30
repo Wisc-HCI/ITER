@@ -1,4 +1,0 @@
-string tag_frame_id
----
-geometry_msgs/Pose pose
-bool status
