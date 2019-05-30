@@ -8,12 +8,12 @@
   <group if="$(eval arg('simulated') == true)">
     <param name="robot_connected" value="false" />
 
-    <include file="$(find ur3_moveit_config)/launch/planning_context.launch">
+    <include file="$(find ur3_robotiq85_moveit_config)/launch/planning_context.launch">
       <arg name="load_robot_description" value="true"/>
     </include>
 
     <!-- Moveit -->
-    <include file="$(find ur3_moveit_config)/launch/move_group.launch">
+    <include file="$(find ur3_robotiq85_moveit_config)/launch/move_group.launch">
       <arg name="allow_trajectory_execution" value="true"/>
       <arg name="fake_execution" value="$(arg simulated)"/>
       <arg name="info" value="true"/>
@@ -29,7 +29,7 @@
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen"/>
 
     <!-- RVIZ-->
-    <include file="$(find ur3_moveit_config)/launch/moveit_rviz.launch">
+    <include file="$(find ur3_robotiq85_moveit_config)/launch/moveit_rviz.launch">
       <arg name="config" value="true"/>
     </include>
 
