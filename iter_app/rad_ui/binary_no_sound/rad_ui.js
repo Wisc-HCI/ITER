@@ -18,7 +18,7 @@ function updateColor(seconds) {
   }
   var color = 'hsl(' + Math.round(scale) + ', 75%, 50%)';
 
-  $('#dot-'+i).css('background-color',color);
+  $('#dot-0').css('background-color',color);
 
 }
 
