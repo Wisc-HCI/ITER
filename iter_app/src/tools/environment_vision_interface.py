@@ -26,7 +26,7 @@ def get_block(type):
     global blocks
 
     if type != None: # attempt block match
-        for bid = blocks.keys():
+        for bid in blocks.keys():
             if blocks[bid][1] == type:
                 return bid
     elif len(blocks.keys()) > 0: # get first block found
@@ -34,20 +34,23 @@ def get_block(type):
 
     return None # No block with type found
 
+def get_arg_tag(id):
+    return ar_tags[id] if id in ar_tags else None
+
 def _ar3_cb(message):
     global ar_tags
 
     ar_tags = {}
     for m in message.markers:
-        ar_tags[m.id] = m.pose.pose
+        ar_tags[str(m.id)] = m.pose.pose
 
 def _bk3_cb(message):
     global blocks
 
     blocks = {}
     for b in message.blocks:
-        blocks[b.id] = (b.pose,b.type)
+        blocks[str(b.id)] = (b.pose,b.type)
 
 
-self.ar3_sub = rospy.Subscriber("/ar_pose_marker", AlvarMarkerArray, _ar3_cb, queue_size=5)
-self.pose_pub = rospy.Subscriber("/block_poses", BlockPose3DArray, _bk3_cb, queue_size=5)
+ar3_sub = rospy.Subscriber("/ar_pose_marker", AlvarMarkerArray, _ar3_cb, queue_size=5)
+pose_pub = rospy.Subscriber("/block_poses", BlockPose3DArray, _bk3_cb, queue_size=5)

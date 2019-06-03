@@ -36,9 +36,10 @@ ROTATION_CONSTANT = 1
 
 class BlockPoseNode:
 
-    def __init__(self, parent_frame_id, rotation_constant):
+    def __init__(self, parent_frame_id, rotation_constant,tag_id_list):
         self._parent_frame_id = parent_frame_id
         self._rotation_constant = rotation_constant
+        self._tag_id_list = tag_id_list
 
         self.ar3_sub = rospy.Subscriber("ar_pose_marker", AlvarMarkerArray, self._ar3_cb, queue_size=5)
         self.ar2_sub = rospy.Subscriber("cam_pose_marker", AlvarMarker2DArray, self._ar2_cb, queue_size=5)
@@ -81,7 +82,10 @@ class BlockPoseNode:
             Y = None
             for m3 in self._ar3_markers:
                 for m2 in self._ar2_markers:
-                    if m3.id == m2.id:
+
+                    # if match and either in tag list or if not using tag list
+                    processTag = (m3.id == m2.id) and (self._tag_id_list is None or str(m2.id) in self._tag_id_list)
+                    if processTag:
                         if count == 0:
                             A, Y = self._point_position_eqs(m2.pose.x,m2.pose.y,m3.pose.pose.position.x,m3.pose.pose.position.y,m3.pose.pose.position.z)
                             r2 = m2.pose.theta
@@ -144,9 +148,10 @@ class BlockPoseNode:
 if __name__ == "__main__":
     try:
         rospy.init_node("block_pose", anonymous=True)
-        parent_frame_id = rospy.get_param("parent_frame_id",'usb_cam')
-        rotation_constant = rospy.get_param("rotation_constant",ROTATION_CONSTANT)
-        node = BlockPoseNode(parent_frame_id,rotation_constant)
+        parent_frame_id = rospy.get_param("~parent_frame_id",'usb_cam')
+        rotation_constant = rospy.get_param("~rotation_constant",ROTATION_CONSTANT)
+        tag_id_list = rospy.get_param('~tag_id_list',None)
+        node = BlockPoseNode(parent_frame_id,rotation_constant,tag_id_list)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass

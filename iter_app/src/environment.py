@@ -8,10 +8,9 @@ Date 5-16-19
 Provides environment context for ITER runner.
 
 '''
-#TODO need to create a tf publisher for usb_cam to /map
-#TODO launched static publisher should be for /map to base_link = 0
 
 
+# __MODES__ for environment object type
 MODE_COLLISION_MOVEIT = 'collision_moveit'
 MODE_MARKER = 'marker'
 
@@ -19,10 +18,11 @@ MODE_MARKER = 'marker'
 import tf
 import uuid
 import rospy
+import tf2_ros
 
 from std_msgs.msg import Header
 from iter_app.msg import EnvironmentObject
-from geometry_msgs.msg import Pose, Vector3, Quaternion
+from geometry_msgs.msg import Pose, Vector3, Quaternion, TransformStamped
 
 from iter_app.srv import GetVisionObject, GetVisionObjectResponse
 from iter_app.srv import ClearTaskObjects, ClearTaskObjectsResponse
@@ -44,14 +44,23 @@ elif mode == MODE_MARKER:
 else:
     raise Exception('Invalid environment mode selected')
 
-import environment_vision_interface as vision_env_interface
+import tools.environment_vision_interface as vision_env_interface
+
+
+DEFAULT_TF = {
+        'position': (0,0,0),
+        'orientation': (0,0,0,1)
+    }
 
 
 class Environment:
 
-    def __init__(self):
-        self._transformer = tf.Transformer(True, rospy.Duration(10.0))
+    def __init__(self,calibrate_ar_tag_id):
+        self._tf_transformer = tf.Transformer(True, rospy.Duration(10.0))
+        self._tf_broadcaster = tf2_ros.StaticTransformBroadcaster()
+        self._calibrate_ar_tag_id = calibrate_ar_tag_id
         self._get_cam_pose = rospy.ServiceProxy('/robot_camera_align/get_tag_pose',GetTagPose)
+        self._update_baselink_map_tf(DEFAULT_TF['position'],DEFAULT_TF['orientation'])
 
         self._gen_task_objs_srv = rospy.Service("/environment/generate_task_objects",GenerateTaskObjects,self._generate_task_objs)
         self._clear_task_objs_srv = rospy.Service("/environment/clear_task_objects",ClearTaskObjects,self._clear_task_objs)
@@ -60,6 +69,22 @@ class Environment:
         self._get_vision_obj_srv = rospy.Service("/environment/get_vision_object",GetVisionObject,self._get_vision_obj)
         self._cal_bot_to_cam_srv = rospy.Service("/environment/calibrate_robot_to_camera",CalibrateRobotToCamera,self._cal_bot_to_cam)
         self._get_state_srv = rospy.Service("/environment/get_state",GetEnvironmentState,self._get_state)
+
+    def _update_baselink_map_tf(self,pos,rot):
+        msg = TransformStamped()
+        msg.header.stamp = rospy.Time.now()
+        msg.header.frame_id = 'base_link'
+        msg.child_frame_id = 'map'
+
+        msg.transform.translation = Vector3(x=pos[0],y=pos[1],z=pos[2])
+        msg.transform.rotation = Quaternion(x=rot[0],y=rot[1],z=rot[2],w=rot[3])
+
+        self._tf_broadcaster.sendTransform(msg)
+
+    def _pose_msg_to_tf(self,msg):
+        pos = (msg.position.x,msg.position.y,msg.position.z)
+        rot = (msg.orientation.x,msg.orientation.y,msg.orientation.z,msg.orientation.w)
+        return pos, rot
 
     def _generate_task_objs(self, request):
         # Generates new markers of objects defined by array of objects provided
@@ -100,7 +125,7 @@ class Environment:
             return response
         response.vision_id = 'block_{0}'.format(id)
 
-        (pos, rot) = self._transformer.lookupTransform(response.vision_id,request.frame_id, rospy.Time(0))
+        (pos, rot) = self._tf_transformer.lookupTransform(response.vision_id,request.frame_id, rospy.Time(0))
         response.pose = Pose(position=Vector3(x=pos[0],y=pos[1],z=pos[2]),
                              orientation=Quaternion(x=rot[0],y=rot[1],z=rot[2],w=rot[3]))
 
@@ -118,7 +143,28 @@ class Environment:
     def _cal_bot_to_cam(self, request):
         # probe camera to robot transform, note robot's ar tag must be within
         # camera's field of view
-        pass
+
+        # find calibration tag
+        tagId = request.ar_tag_id if request.ar_tag_id != "" else self._calibrate_ar_tag_id
+        tagPose = vision_env_interface.get_arg_tag(tagId)
+        if tagPose == None:
+            return CalibrateRobotToCameraResponse(status=False)
+
+        # pre-process poses into tfs
+        tagPos, tagRot = self._pose_msg_to_tf(tagPose)
+        eePos_bl, eeRot_bl = self._pose_msg_to_tf(request.ee_pose)
+        gtaPos, gtaRot = self._pose_msg_to_tf(request.tag_grip_tf)
+
+        # adjust tag pose to be root ee relative to map
+        eePos_mp = [tagPos[i] + gtaPos[i] for i in range(0,len(tagPos))]
+        eeRot_mp = tf.transformation.quaternion_multiply(tagRot,gtaRot)
+
+        # compute transform between base_link and map
+        position = [eePos_bl[i] + eePos_mp[i] for i in range(0,len(eePos_bl))]
+        rotation = tf.transformation.quaternion_multiply(eeRot_bl,eeRot_mp)
+        self._update_baselink_map_tf(position,rotation)
+
+        return CalibrateRobotToCameraResponse(status=True)
 
     def _get_state(self, request):
         return GetEnvironmentState(
@@ -129,6 +175,7 @@ class Environment:
 
 
 if __name__ == "__main__":
-    env = Environment()
+    calibrate_tag = rospy.get_param('~calibrate_ar_tag_id',None)
+    env = Environment(calibrate_tag)
     while not rospy.is_shutdown():
         rospy.spin()

@@ -49,6 +49,11 @@ gripper_group_commander = moveit_commander.MoveGroupCommander(GRIPPER_MOVE_GROUP
 robot = moveit_commander.RobotCommander()
 scene = moveit_commander.PlanningSceneInterface()
 
+environmentClient = None
+def __init__(envClient):
+    global environmentClient
+    environmentClient = envClient
+
 
 class PrimitiveEnum(Enum):
     GRASP = 'grasp'
@@ -58,6 +63,9 @@ class PrimitiveEnum(Enum):
     LOGGER = 'logger'
     CONNECT_OBJECT_TO_ROBOT = 'connect_object'
     DISCONNECT_OBJECT_FROM_ROBOT = 'disconnect_object'
+    CALIBRATE_ROBOT_TO_CAMERA = 'calibrate_robot_to_camera'
+    PICK_AND_PLACE_VISION = 'pick_and_place_vision'
+    PICK_AND_PLACE_STATIC = 'pick_and_place_static'
 
 class ConditionEnum(Enum):
     TIME = 'time'
@@ -149,7 +157,6 @@ class Release(Primitive):
         gripper_group_commander.stop()
         return True
 
-
 class Move(Primitive):
 
     def __init__(self, position, orientation):
@@ -182,7 +189,6 @@ class Move(Primitive):
         retVal = arm_group_commander.go(wait=True)
         arm_group_commander.stop()
         return retVal
-
 
 class Wait(Primitive):
 
@@ -236,6 +242,14 @@ class Wait(Primitive):
 
         return ret_val
 
+class CalibrateRobotToCamera:
+    pass
+
+class PickAndPlaceVision:
+    pass
+
+class PickAndPlaceStatic:
+    pass
 
 def instantiate_from_dict(obj, button_callback):
 
@@ -254,5 +268,11 @@ def instantiate_from_dict(obj, button_callback):
         return ConnectObjectToRobot(obj['object_name'])
     elif name == PrimitiveEnum.DISCONNECT_OBJECT_FROM_ROBOT.value:
         return DisconnectObjectFromRobot(obj['object_name'])
+    elif name == PrimitiveEnum.CALIBRATE_ROBOT_TO_CAMERA.value:
+        return CalibrateRobotToCamera()
+    elif name == PrimitiveEnum.PICK_AND_PLACE_VISION.value:
+        return PickAndPlaceVision()
+    elif name == PrimitiveEnum.PICK_AND_PLACE_STATIC.value:
+        return PickAndPlaceStatic()
     else:
         raise Exception('Invalid behavior primitive supplied')

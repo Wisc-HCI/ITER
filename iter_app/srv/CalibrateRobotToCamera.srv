@@ -1,3 +1,5 @@
-
+string ar_tag_id                    # (optional) if empty uses node's parameter
+geometry_msgs/Pose ee_pose          # relative to base_link
+geometry_msgs/Pose tag_grip_tf      # relative to map
 ---
 bool status

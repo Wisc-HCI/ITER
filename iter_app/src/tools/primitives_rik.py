@@ -44,6 +44,10 @@ from behavior_execution.planners.relaxedik import RelaxedIKPlanner
 
 POSE_OFFSET = Pose(position=Point(),orientation=Quaternion())
 
+environmentClient = None
+def __init__(envClient):
+    global environmentClient
+    environmentClient = envClient
 
 planner = RelaxedIKPlanner(
     {"follow_joint_trajectory":"gripper_command"},
@@ -65,6 +69,9 @@ class PrimitiveEnum(Enum):
     LOGGER = 'logger'
     CONNECT_OBJECT_TO_ROBOT = 'connect_object'
     DISCONNECT_OBJECT_FROM_ROBOT = 'disconnect_object'
+    CALIBRATE_ROBOT_TO_CAMERA = 'calibrate_robot_to_camera'
+    PICK_AND_PLACE_VISION = 'pick_and_place_vision'
+    PICK_AND_PLACE_STATIC = 'pick_and_place_static'
 
 class ConditionEnum(Enum):
     TIME = 'time'
@@ -202,6 +209,15 @@ class Wait(Primitive):
 
         return ret_val
 
+class CalibrateRobotToCamera:
+    pass
+
+class PickAndPlaceVision:
+    pass
+
+class PickAndPlaceStatic:
+    pass
+
 
 def instantiate_from_dict(obj, button_callback):
 
@@ -220,5 +236,11 @@ def instantiate_from_dict(obj, button_callback):
         return ConnectObjectToRobot(obj['object_name'])
     elif name == PrimitiveEnum.DISCONNECT_OBJECT_FROM_ROBOT.value:
         return DisconnectObjectFromRobot(obj['object_name'])
+    elif name == PrimitiveEnum.CALIBRATE_ROBOT_TO_CAMERA.value:
+        return CalibrateRobotToCamera()
+    elif name == PrimitiveEnum.PICK_AND_PLACE_VISION.value:
+        return PickAndPlaceVision()
+    elif name == PrimitiveEnum.PICK_AND_PLACE_STATIC.value:
+        return PickAndPlaceStatic()
     else:
         raise Exception('Invalid behavior primitive supplied')

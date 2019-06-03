@@ -40,17 +40,21 @@ import time
 import json
 import rospy
 
-from tools.time_mode_enum import TimeModeEnum
 from std_msgs.msg import String, Int32, Bool
+from tools.time_mode_enum import TimeModeEnum
+from tools.environment_client import EnvironmentClient
 from iter_app.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
 
 rospy.init_node('runner')
+envClient = EnvironmentClient()
 
 use_rik = rospy.get_param('use_rik',False)
 if use_rik:
     import tools.primitives_rik as bp
+    bp.__init__(envClient)
 else:
     import tools.primitives_moveit as bp
+    bp.__init__(envClient)
 
 
 class Runner:
@@ -72,8 +76,8 @@ class Runner:
         data = json.loads(json_string.task_json)
 
         # if environment requested, load it
-        #if 'environment' in data.keys():
-        #    env.generate_dynamic_environment(data['environment'])
+        if 'environment' in data.keys():
+            pass #TODO
 
         print 'Instantiating'
         primitives = [bp.instantiate_from_dict(obj,self._button_callback) for obj in data['task']]
@@ -114,8 +118,8 @@ class Runner:
             self.time_stop_topic.publish(True)
 
         # clear environment resources
-        #if 'environment' in data.keys():
-        #    env.clear_dynamic_environment()
+        if 'environment' in data.keys():
+            pass #TODO
 
         # send results back to interface
         if self.time_mode == TimeModeEnum.CAPTURE:

@@ -29,10 +29,16 @@
     <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
 
     <!-- Include Vision System -->
-    <!-- TODO -->
+    <include file="$(find iter_vision)/launch/main.launch">
+      <arg name="video_src" value="/dev/video0"/>
+      <arg name="use_real_cam" default="false"/>
+    </include>
 
     <!-- Start backend -->
-    <node pkg="iter_app" type="environment.py" name="environment" output="screen"/>
+    <node pkg="iter_app" type="environment.py" name="environment" output="screen">
+      <param name="mode" value="marker"/>
+      <param name="calibrate_ar_tag_id" value="4"/>
+    </node>
     <node pkg="iter_app" type="timing.py" name="timing" output="screen"/>
     <node pkg="iter_app" type="runner.py" name="runner" output="screen"/>
 

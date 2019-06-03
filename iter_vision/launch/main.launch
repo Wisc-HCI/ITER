@@ -67,6 +67,7 @@
 
   <node name="block_pose" pkg="iter_vision" type="block_pose.py" output="screen">
       <param name="parent_frame_id" value="usb_cam"/>
+      <param name="tag_id_list" value="['0','1','2','3']"/>
   </node>
 
   <node name="robot_camera_align" pkg="iter_vision" type="robot_camera_align.py">
