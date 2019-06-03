@@ -21,15 +21,10 @@ Primitve List:
             "move the gripper, (identical to grasp)"
     - move
             "Commands robot to move end-effector to provided pose goal"
-    - wait
-            "Provides either interaction button or time based delay"
-    - logger
-            "Provides print functionality while debugging plan"
-    - connect-object-to-robot
-            "Currently unsupported, though intention is collision interfacing"
-    - disconnect-object-from-robot
-            "Currently unsupported, though intention is collision interfacing"
+    - get_pose
+            ""
 '''
+
 import tf
 import time
 import rospy
@@ -39,7 +34,7 @@ from std_msgs.msg import Header
 from tools.pose_conversion import *
 from abc import ABCMeta, abstractmethod
 from geometry_msgs.msg import Pose, Point, Quaternion
-from tools.primitives.abstract import AbstractBehaviorPrimitives, Primitive
+from tools.primitives.abstract import AbstractBehaviorPrimitives, Primitive, ReturnablePrimitive
 
 from behavior_execution.planners.relaxedik import RelaxedIKPlanner
 
@@ -63,30 +58,8 @@ class PrimitiveEnum(Enum):
     GRASP = 'grasp'
     RELEASE = 'release'
     MOVE = 'move'
-    CONNECT_OBJECT_TO_ROBOT = 'connect_object'
-    DISCONNECT_OBJECT_FROM_ROBOT = 'disconnect_object'
-    PICK_AND_PLACE_VISION = 'pick_and_place_vision'
-    PICK_AND_PLACE_STATIC = 'pick_and_place_static'
-    CALIBRATE_ROBOT_TO_CAMERA = 'calibrate_robot_to_camera'
+    GET_POSE = 'get_pose'
 
-
-class ConnectObjectToRobot(Primitive):
-
-    def __init__(self,object_name):
-        self.box_name = object_name
-
-    def operate(self):
-        # TODO
-        return True
-
-class DisconnectObjectFromRobot(Primitive):
-
-    def __init__(self,object_name):
-        self.box_name = object_name
-
-    def operate(self):
-        # TODO
-        return True
 
 class Grasp(Primitive):
 
@@ -114,120 +87,43 @@ class Move(Primitive):
         plan = planner.plan_ee_pose('follow_joint_trajectory',self._pose)
         return planner.execute('follow_joint_trajectory',plan)
 
-class PickAndPlaceVision(Primitive):
-
-    def __init__(self,object_type,path_to_region,path_to_destination,grasp_effort,release_effort,envClient, **kwargs):
-        self._type = object_type
-        self._path_to_region = [Move(dct['position'],dct['orientation']) for dct in path_to_region]
-        self._path_to_dest = [Move(dct['position'],dct['orientation']) for dct in path_to_destination]
-        self._grasp = Grasp(grasp_effort)
-        self._release = Release(release_effort)
-        self._envClient = envClient
+class GetPose(ReturnablePrimitive):
 
     def operate(self):
-        status = True
-
-        # find object, getid
-        resp = self._envClient.get_vision_object(self._type,'base_link')
-        status = resp.status
-
-        # move to region
-        if status:
-            for m in self._path_to_region:
-                status = m.operate()
-                if not status:
-                    break
-
-        # get pose of object relative to base_link
-        if status:
-            dPose = pose_msg_to_dct(resp.pose)
-            Move(dPose['position'],dPose['orientation']).operate()
-
-        # grasp
-        if status:
-            status = ConnectObjectToRobot(resp.task_id,self._envClient).operate()
-            status = status or self._grasp.operate()
-
-        # move to destination
-        if status:
-            for m in self._path_to_dest:
-                status = m.operate()
-                if not status:
-                    break
-
-        # release
-        if status:
-            status = self._release.operate()
-            status = status or DisconnectObjectFromRobot(resp.task_id,self._envClient).operate()
-
-        return status
-
-class PickAndPlaceStatic(Primitive):
-
-    def __init__(self,path_to_object,path_to_destination,object_name,grasp_effort,release_effort,envClient, **kwargs):
-        self._ops = []
-        self._ops = self._ops + [Move(dct['position'],dct['orientation']) for dct in path_to_object]
-        self._ops.append(ConnectObjectToRobot(object_name,envClient))
-        self._ops.append(Grasp(grasp_effort))
-        self._ops = self._ops + [Move(dct['position'],dct['orientation']) for dct in path_to_destination]
-        self._ops.append(DisconnectObjectFromRobot(object_name,envClient))
-        self._ops.append(Release(release_effort))
-
-    def operate(self):
-        status = True
-        for op in self._ops:
-            status = op.operate()
-            if not status:
-                break
-        return status
-
-class CalibrateRobotToCamera(Primitive):
-
-    def __init__(self,envClient,path_to_region,tag_to_ee_transform):
-        self._envClient = envClient
-        self._path = [Move(dct['position'],dct['orientation']) for dct in path_to_region]
-        self._transform = pose_dct_to_msg(tag_to_ee_transform)
-
-    def operate(self):
-        status = True
-
-        # place robot into camera field of view
-        for m in path:
-            status = m.operate()
-            if not status
-                break
-
-        # run calibration routine
-        if status:
-            ee_pose = planner.get_ee_pose('follow_joint_trajectory')
-            status = self._envClient.calibrate_robot_to_camera('',ee_pose,self._transform)
-
-        return status
+        return True, planner.get_ee_pose('follow_joint_trajectory')
 
 
 class RelaxedIKBehaviorPrimitives(AbstractBehaviorPrimitives):
 
-    def __init__(self, envClient):
-        super(AbstractBehaviorPrimitives,self).__init__(envClient)
+    def __init__(self, parent=None):
+        super(RelaxedIKBehaviorPrimitives,self).__init__(parent)
 
-    def instantiate_from_dict(obj, button_callback):
+    def instantiate_from_dict(self, dct, **kwargs):
 
-        name = obj['name']
+        name = dct['name']
         if name == PrimitiveEnum.GRASP.value:
-            return Grasp(obj['effort'])
+            return Grasp(dct['effort'])
         elif name == PrimitiveEnum.RELEASE.value:
-            return Release(obj['effort'])
+            return Release(dct['effort'])
         elif name == PrimitiveEnum.MOVE.value:
-            return Move(obj['position'],obj['orientation'])
-        elif name == PrimitiveEnum.CONNECT_OBJECT_TO_ROBOT.value:
-            return ConnectObjectToRobot(obj['object_name'],self._envClient)
-        elif name == PrimitiveEnum.DISCONNECT_OBJECT_FROM_ROBOT.value:
-            return DisconnectObjectFromRobot(obj['object_name'],self._envClient)
-        elif name == PrimitiveEnum.PICK_AND_PLACE_VISION.value:
-            return PickAndPlaceVision(envClient=self._envClient, **obj)
-        elif name == PrimitiveEnum.PICK_AND_PLACE_STATIC.value:
-            return PickAndPlaceStatic(envClient=self._envClient, **obj)
-        elif name == PrimitiveEnum.CALIBRATE_ROBOT_TO_CAMERA.value:
-            return CalibrateRobotToCamera(self._envClient,obj['path_to_region'],obj['tag_to_ee_transform'])
+            return Move(dct['position'],dct['orientation'])
+        elif name = PrimitiveEnum.GET_POSE.value:
+            return GetPose()
+        elif self.parent != None:
+            return self.parent.instantiate_from_dict(dct,**kwargs)
         else:
-            return super(AbstractBehaviorPrimitives,self).instantiate_from_dict(obj,button_callback)
+            raise Exception('Invalid behavior primitive supplied')
+
+    def lookup(self, primitive_type):
+        if primitive_type == PrimitiveEnum.GRASP.value:
+            return Grasp
+        elif primitive_type == PrimitiveEnum.RELEASE.value:
+            return Release
+        elif primitive_type == PrimitiveEnum.MOVE.value:
+            return Move
+        elif primitive_type == PrimitiveEnum.GET_POSE.value:
+            return GetPose
+        elif self.parent != None:
+            return self.parent.lookup(primitive_type)
+        else:
+            raise Exception('Invalid behavior primitive supplied')

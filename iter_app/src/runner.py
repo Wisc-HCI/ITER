@@ -17,7 +17,13 @@ Services provided:
     - /runner/set_mode
 
 Services requested:
-    - (TODO environment client)
+    - /environment/generate_task_objects
+    - /environment/clear_task_objects
+    - /environment/connect_task_object
+    - /environment/release_task_object
+    - /environment/get_vision_object
+    - /environment/calibrate_robot_to_camera
+    - /environment/get_state
 
 Topics published:
     - /time_node/start
@@ -29,11 +35,10 @@ Topics subscribed:
 
 Parameters required:
     - use_rik
+    - ~start_delay_time
 
 '''
 
-## Note: Currently the environment is unsupported due to moveit having an issue
-## with stack smashing and with relaxed IK there is no built in support for dynamic environments.
 
 import sys
 import time
@@ -48,16 +53,26 @@ from tools.time_mode_enum import TimeModeEnum
 from tools.environment_client import EnvironmentClient
 from iter_app.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
 
+
 rospy.init_node('runner')
 envClient = EnvironmentClient()
 
+from tools.primitives.default import DefaultBehaviorPrimitives
+
 use_rik = rospy.get_param('use_rik',False)
 if use_rik:
-    from tools.primitives.rik import RelaxedIKBehaviorPrimitives
-    bp = RelaxedIKBehaviorPrimitives(envClient)
+    from tools.primitives.rik import RelaxedIKBehaviorPrimitives as PhysicalBehaviorPrimitives
 else:
-    from tools.primitives.moveit import MoveItBehaviorPrimitives
-    bp = MoveItBehaviorPrimitives(envClient)
+    from tools.primitives.moveit import MoveItBehaviorPrimitives as PhysicalBehaviorPrimitives
+
+from tools.primitives.environment_aware import EnvironmentAwareBehaviorPrimitives
+
+bp = EnvironmentAwareBehaviorPrimitives(envClient=envClient,
+     parent=PhysicalBehaviorPrimitives(
+     parent=DefaultBehaviorPrimitives()))
+
+
+DEFAULT_NODE_START_DELAY_TIME = 10
 
 
 class Runner:
@@ -178,8 +193,11 @@ class Runner:
 
 
 if __name__ == '__main__':
-    rospy.sleep(10) # wait for everything to setup first
+
+    start_delay_time = rospy.get_param('~start_delay_time',DEFAULT_NODE_START_DELAY_TIME)
+    rospy.sleep(start_delay_time)
     print "\n\n\n Runner is Ready\n\n\n"
+
     runner = Runner()
 
     while not rospy.is_shutdown():
