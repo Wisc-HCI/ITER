@@ -38,13 +38,13 @@ rospy.init_node('environment')
 
 mode = rospy.get_param('~mode',MODE_MARKER)
 if mode == MODE_COLLISION_MOVEIT:
-    import tools.environment_collision_moveit_interface as task_env_interface
+    import tools.environment_interface.collision_moveit as task_env
 elif mode == MODE_MARKER:
-    import tools.environment_marker_interface as task_env_interface
+    import tools.environment_interface.marker as task_env
 else:
     raise Exception('Invalid environment mode selected')
 
-import tools.environment_vision_interface as vision_env_interface
+import tools.environment_interface.vision as vision_env
 
 
 DEFAULT_TF = {
@@ -88,23 +88,23 @@ class Environment:
 
     def _generate_task_objs(self, request):
         # Generates new markers of objects defined by array of objects provided
-        return GenerateTaskObjectsResponse(status=task_env_interface.generate_dynamic_environment(request.objects))
+        return GenerateTaskObjectsResponse(status=task_env.generate_dynamic_environment(request.objects))
 
     def _clear_task_objs(self, request):
         # Clears set of objects defined by array of string IDs
-        return ClearTaskObjectsResponse(status=task_env_interface.clear_dynamic_environment(request.ids,request.all))
+        return ClearTaskObjectsResponse(status=task_env.clear_dynamic_environment(request.ids,request.all))
 
     def _connect_task_obj(self, request):
         # Connects object to robot
         # Provide a pose which is used for release to calculate the transformation
         # over movement used to plot new object
-        return ConnectTaskObjectResponse(status=task_env_interface.connect_obj_to_robot(request.id,request.pose))
+        return ConnectTaskObjectResponse(status=task_env.connect_obj_to_robot(request.id,request.pose))
 
     def _release_task_obj(self, request):
         # Disconnects object from robot
         # Provide a pose which is used to calculate the transformation over
         # movement used to plot new object
-        return ReleaseTaskObjectResponse(status=task_env_interface.disconnect_obj_from_robot(request.id,request.pose))
+        return ReleaseTaskObjectResponse(status=task_env.disconnect_obj_from_robot(request.id,request.pose))
 
     def _get_vision_obj(self, request):
         # Finds a object from vision set that meets the criteria given.
@@ -112,12 +112,12 @@ class Environment:
         # Returns pose of object with ID.
         type = None
         if request.type == 'large':
-            type = vision_env_interface.BLOCK_LARGE
+            type = vision_env.BLOCK_LARGE
         elif request.type == 'small':
-            type = vision_env_interface.BLOCK_SMALL
+            type = vision_env.BLOCK_SMALL
         elif request.type == 'unknown':
-            type = vision_env_interface.BLOCK_UNKNOWN
-        id = vision_env_interface.get_block(type)
+            type = vision_env.BLOCK_UNKNOWN
+        id = vision_env.get_block(type)
 
         response = GetVisionObjectResponse()
         response.status = not id is None
@@ -131,7 +131,7 @@ class Environment:
 
         response.task_id = response.vision_id + '_' + str(uuid.uuid1().hex)
 
-        response.status = task_env_interface.generate_dynamic_environment(EnvironmentObject(
+        response.status = task_env.generate_dynamic_environment(EnvironmentObject(
             representation=EnvironmentObject.REPRESENTATION_BOX,
             id=response.task_id,
             size=Vector3(0.1,0.1,0.1), #Note, this is for representation only
@@ -146,7 +146,7 @@ class Environment:
 
         # find calibration tag
         tagId = request.ar_tag_id if request.ar_tag_id != "" else self._calibrate_ar_tag_id
-        tagPose = vision_env_interface.get_arg_tag(tagId)
+        tagPose = vision_env.get_arg_tag(tagId)
         if tagPose == None:
             return CalibrateRobotToCameraResponse(status=False)
 
@@ -168,10 +168,10 @@ class Environment:
 
     def _get_state(self, request):
         return GetEnvironmentState(
-            grasped_task_objects=task_env_interface.get_grasped_ids(),
-            all_task_objects=task_env_interface.get_all_task_ids(),
-            all_vision_objects=vision_env_interface.get_vision_ids(),
-            all_ar_tags=vision_env_interface.get_ar_ids())
+            grasped_task_objects=task_env.get_grasped_ids(),
+            all_task_objects=task_env.get_all_task_ids(),
+            all_vision_objects=vision_env.get_vision_ids(),
+            all_ar_tags=vision_env.get_ar_ids())
 
 
 if __name__ == "__main__":

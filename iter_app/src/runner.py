@@ -40,6 +40,9 @@ import time
 import json
 import rospy
 
+from tools.pose_conversion import *
+from geometry_msgs.msg import Vector3
+from iter_app.msg import EnvironmentObject
 from std_msgs.msg import String, Int32, Bool
 from tools.time_mode_enum import TimeModeEnum
 from tools.environment_client import EnvironmentClient
@@ -50,11 +53,11 @@ envClient = EnvironmentClient()
 
 use_rik = rospy.get_param('use_rik',False)
 if use_rik:
-    import tools.primitives_rik as bp
-    bp.__init__(envClient)
+    from tools.primitives.rik import RelaxedIKBehaviorPrimitives
+    bp = RelaxedIKBehaviorPrimitives(envClient)
 else:
-    import tools.primitives_moveit as bp
-    bp.__init__(envClient)
+    from tools.primitives.moveit import MoveItBehaviorPrimitives
+    bp = MoveItBehaviorPrimitives(envClient)
 
 
 class Runner:
@@ -71,13 +74,17 @@ class Runner:
         self.time_sync_topic = rospy.Publisher('time_node/sync', Int32, queue_size=10)
 
     def run_task(self, json_string):
+        global envClient, bp
 
         # data retrieved from interface
         data = json.loads(json_string.task_json)
 
         # if environment requested, load it
         if 'environment' in data.keys():
-            pass #TODO
+            objects = [self._env_obj_pkg(dct) for dct in data['environment']]
+            resp = envClient.generate_task_objects(objects)
+            if not resp.status:
+                return TaskResponse(False,'{}')
 
         print 'Instantiating'
         primitives = [bp.instantiate_from_dict(obj,self._button_callback) for obj in data['task']]
@@ -119,13 +126,13 @@ class Runner:
 
         # clear environment resources
         if 'environment' in data.keys():
-            pass #TODO
+            operate_status = operate_status or envClient.clear_task_objects([],True).status
 
         # send results back to interface
         if self.time_mode == TimeModeEnum.CAPTURE:
             return TaskResponse(operate_status,json.dumps(data))
         else:
-            return TaskResponse(operate_status,'')
+            return TaskResponse(operate_status,'{}')
 
     def mode_update(self, data):
         mode = TimeModeEnum.from_str(data.mode)
@@ -154,6 +161,14 @@ class Runner:
         time_list.append({"time": temp_neglect_time})
 
         return time_list
+
+    def _env_obj_pkg(self,obj_dct):
+        return EnvironmentObject(representation=EnvironmentObject.REPRESENTATION_BOX,
+                                 id=obj_dct['object_name'],
+                                 size=Vector3(x=obj_dct['size']['x'],
+                                              y=obj_dct['size']['y'],
+                                              z=obj_dct['size']['z']),
+                                 pose=pose_dct_to_msg(obj_dct))
 
     def _button_callback():
         #TODO write this for real
