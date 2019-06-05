@@ -1,0 +1,9 @@
+{
+  "environment": [],
+  "task": [
+    {
+      "name": "grasp",
+      "effort": 0.5
+    }
+  ]
+}

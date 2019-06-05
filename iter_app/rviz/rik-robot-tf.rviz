@@ -4,8 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Global Options1
-        - /Status1
+        - /RobotModel1
       Splitter Ratio: 0.5
     Tree Height: 674
   - Class: rviz/Selection
@@ -167,8 +166,16 @@ Visualization Manager:
                                 {}
       Update Interval: 0
       Value: true
-    - Attached Body Color: 150; 50; 150
-      Class: moveit_rviz_plugin/RobotState
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /environment/markers
+      Name: MarkerArray
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Alpha: 1
+      Class: rviz/RobotModel
       Collision Enabled: false
       Enabled: true
       Links:
@@ -274,12 +281,10 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-      Name: RobotState
-      Robot Alpha: 1
+      Name: RobotModel
       Robot Description: robot_description
-      Robot State Topic: display_robot_state
-      Show All Links: true
-      Show Highlights: true
+      TF Prefix: ""
+      Update Interval: 0
       Value: true
       Visual Enabled: true
   Enabled: true
@@ -322,10 +327,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.170202434
+      Pitch: 0.980202317
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.84540558
+      Yaw: 0.667218685
     Saved: ~
 Window Geometry:
   Displays:

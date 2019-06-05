@@ -1,0 +1,8 @@
+{
+  "environment": [],
+  "task": [
+    {
+      "name": "get_pose",
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "environment": [],
+  "task": [
+    {
+      "name": "release",
+      "effort": 0.5
+    }
+  ]
+}

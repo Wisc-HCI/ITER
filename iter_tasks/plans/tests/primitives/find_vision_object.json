@@ -1,0 +1,9 @@
+{
+  "environment": [],
+  "task": [
+    {
+      "name": "find_vision_object",
+      "object_type": "test"
+    }
+  ]
+}

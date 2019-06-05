@@ -1,0 +1,19 @@
+{
+  "environment": [],
+  "task": [
+    {
+      "name": "move",
+      "position": {
+        "y": 0.25,
+        "x": 0.1,
+        "z": 0.1
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ]
+}

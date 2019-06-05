@@ -1,0 +1,10 @@
+{
+  "environment": [],
+  "task": [
+    {
+        "name": "wait",
+        "condition": "button",
+        "timeout": 10
+    }
+  ]
+}
