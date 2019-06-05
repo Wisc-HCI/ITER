@@ -60,6 +60,7 @@
   <node if="$(arg rik_use_julia)" pkg="relaxed_ik" type="relaxed_ik_node.jl" name="relaxed_ik_node"/>
   <node unless="$(arg rik_use_julia)" pkg="relaxed_ik" type="relaxed_ik_node.py" name="relaxed_ik_node"/>
 
-  <!-- TODO load Rviz -->
+  <!-- RVIZ -->
+  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find iter_app)/rviz/rik-robot-tf.rviz"/>
 
 </launch>
