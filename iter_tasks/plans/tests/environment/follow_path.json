@@ -1,0 +1,85 @@
+{
+  "title": "follow-path-test",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [
+    {
+      "name": "tabletop",
+      "position": {
+        "y": 0.25,
+        "x": 0,
+        "z": -0.035
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
+  "task": [
+    {
+      "name": "move",
+      "position": {
+        "y": 0.0,
+        "x": 0.0,
+        "z": 0.0
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "move",
+      "position": {
+        "y": 0.0,
+        "x": 0.1,
+        "z": 0.0
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "move",
+      "position": {
+        "y": 0.1,
+        "x": 0.1,
+        "z": 0.0
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "move",
+      "position": {
+        "y": 0.1,
+        "x": 0.0,
+        "z": 0.0
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+        "name": "wait",
+        "condition": "button",
+        "timeout": 10
+    }
+  ]
+}

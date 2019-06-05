@@ -1,9 +1,38 @@
 {
-  "title": "pick-and-place-static-test",
+  "title": "static-pick-and-place-test",
   "author": "Curt Henrichs",
   "version": "0.0.1",
   "frame_id": "base_link",
-  "environment": [],
+  "environment": [
+    {
+      "name": "test",
+      "position": {
+        "x": 0.1,
+        "y": 0.1,
+        "z": 0.1
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+      "name": "tabletop",
+      "position": {
+        "y": 0.25,
+        "x": 0,
+        "z": -0.035
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0,
+        "z": 0,
+        "w": 1
+      }
+    }
+  ],
   "task": [
     {
       "name": "pick_and_place_static",
@@ -70,6 +99,11 @@
       "object_name": "test",
       "grasp_effort": 0.5,
       "release_effort": 0.5
+    },
+    {
+        "name": "wait",
+        "condition": "button",
+        "timeout": 10
     }
   ]
 }

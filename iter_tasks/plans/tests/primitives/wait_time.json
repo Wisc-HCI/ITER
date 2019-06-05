@@ -1,10 +1,14 @@
 {
+  "title": "wait-time-test",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
   "environment": [],
   "task": [
     {
-        "name": "wait",
-        "condition": "time",
-        "value": 5
+      "name": "wait",
+      "condition": "time",
+      "value": 5
     }
   ]
 }
