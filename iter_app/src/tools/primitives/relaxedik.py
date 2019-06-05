@@ -107,7 +107,7 @@ class RelaxedIKBehaviorPrimitives(AbstractBehaviorPrimitives):
             return Release(dct['effort'])
         elif name == PrimitiveEnum.MOVE.value:
             return Move(dct['position'],dct['orientation'])
-        elif name = PrimitiveEnum.GET_POSE.value:
+        elif name == PrimitiveEnum.GET_POSE.value:
             return GetPose()
         elif self.parent != None:
             return self.parent.instantiate_from_dict(dct,**kwargs)

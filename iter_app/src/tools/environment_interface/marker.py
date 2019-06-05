@@ -11,7 +11,7 @@ from visualization_msgs.msg import Marker, MarkerArray
 def _refresh(*args):
     global marker_pub, markers
 
-    self.marker_pub.publish([markers[id] for id in markers.keys()])
+    marker_pub.publish([markers[id] for id in markers.keys()])
 
 def generate_dynamic_environment(env_data):
     global markers, reference_frame
@@ -81,7 +81,7 @@ def connect_obj_to_robot(id, pose):
     global grasped
 
     if id not in grasped.keys():
-        grased[id] = pose
+        grasped[id] = pose
     else:
         return False
 

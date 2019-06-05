@@ -70,7 +70,7 @@ def load_task(task_file_name):
     # Request
     response = task_srv(txStr)
 
-    if response.recorded_task:
+    if response.end_status and response.recorded_task and get_mode() == TimeModeEnum.CAPTURE.value:
         try:
             f = open(task_file_name,'w')
             try:

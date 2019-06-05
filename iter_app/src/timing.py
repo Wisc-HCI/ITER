@@ -24,6 +24,7 @@ Timing information conveyed:
             "If provided as a real-time estimate, provides better understanding of task / subtask"
 '''
 
+import time
 import json
 import rospy
 
@@ -56,17 +57,20 @@ class TimingServer:
         self._fake_time = 60
         self._fake_mode = 'neglect'
 
-    def _start_timing(self,json_string):
-        self._neglect_time_list = json.loads(json_string.data)
+    def _start_timing(self,message):
+        self._neglect_time_list = json.loads(message.data)
+        self._sync_index = 0
+        self._interaction_event = False
+        self._in_interaction_task = False
         self._run = True
 
     def _stop_timing(self, noop):
         # set neglect time to null
         self._run = False
 
-    def _sync_timing(self, syncIndex):
+    def _sync_timing(self, message):
         # call this once a primitive is done running
-        self._sync_index = syncIndex
+        self._sync_index = message.data
 
     def _interaction_event_trigger(self, noop):
         if self._in_interaction_task:
@@ -110,7 +114,7 @@ class TimingServer:
         interaction_time = 0
 
         index = 0
-        while index  < len(self._neglect_time_list):
+        while index < len(self._neglect_time_list):
             signal = RADSignal()
 
             # Re-sync
@@ -120,6 +124,9 @@ class TimingServer:
             elif index < self._sync_index:
                 # out of sync - behind runner
                 index = self._sync_index
+
+            if index >= len(self._neglect_time_list):
+                break
 
             t = self._neglect_time_list[index]
 
@@ -151,7 +158,7 @@ class TimingServer:
 
                 self._in_interaction_task = False
                 self._interaction_event = False
-                
+
             else:
                 signal.mode = RADSignal.NEGLECT_MODE
 

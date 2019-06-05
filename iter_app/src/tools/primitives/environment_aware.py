@@ -133,7 +133,7 @@ class CalibrateRobotToCamera(Primitive):
         # place robot into camera field of view
         for m in path:
             status = m.operate()
-            if not status
+            if not status:
                 break
 
         # run calibration routine
@@ -147,7 +147,7 @@ class CalibrateRobotToCamera(Primitive):
 class EnvironmentAwareBehaviorPrimitives(AbstractBehaviorPrimitives):
 
     def __init__(self, envClient, parent=None):
-        super(MoveItBehaviorPrimitives,self).__init__(parent)
+        super(EnvironmentAwareBehaviorPrimitives,self).__init__(parent)
         self._envClient = envClient
 
     def instantiate_from_dict(self, dct, **kwargs):
@@ -171,7 +171,7 @@ class EnvironmentAwareBehaviorPrimitives(AbstractBehaviorPrimitives):
             raise Exception('Invalid behavior primitive supplied')
 
     def lookup(self, primitive_type):
-        if name == PrimitiveEnum.FIND_VISION_OBJECT.value:
+        if primitive_type == PrimitiveEnum.FIND_VISION_OBJECT.value:
             return FindVisionObject
         elif primitive_type == PrimitiveEnum.CONNECT_OBJECT_TO_ROBOT.value:
             return ConnectObjectToRobot

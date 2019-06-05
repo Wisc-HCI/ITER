@@ -32,7 +32,7 @@ Topics published:
 
 Topics subscribed:
     - /button/state (TODO ifttt connection)
-
+rrikik
 Parameters required:
     - use_rik
     - ~start_delay_time
@@ -61,7 +61,7 @@ from tools.primitives.default import DefaultBehaviorPrimitives
 
 use_rik = rospy.get_param('use_rik',False)
 if use_rik:
-    from tools.primitives.rik import RelaxedIKBehaviorPrimitives as PhysicalBehaviorPrimitives
+    from tools.primitives.relaxedik import RelaxedIKBehaviorPrimitives as PhysicalBehaviorPrimitives
 else:
     from tools.primitives.moveit import MoveItBehaviorPrimitives as PhysicalBehaviorPrimitives
 
@@ -102,7 +102,7 @@ class Runner:
                 return TaskResponse(False,'{}')
 
         print 'Instantiating'
-        primitives = [bp.instantiate_from_dict(obj,self._button_callback) for obj in data['task']]
+        primitives = [bp.instantiate_from_dict(obj,button_callback=self._button_callback) for obj in data['task']]
         neglect_time_list = self._generate_neglect_time_list(data)
 
         # provide timing information to timing node
@@ -179,13 +179,13 @@ class Runner:
 
     def _env_obj_pkg(self,obj_dct):
         return EnvironmentObject(representation=EnvironmentObject.REPRESENTATION_BOX,
-                                 id=obj_dct['object_name'],
+                                 id=obj_dct['name'],
                                  size=Vector3(x=obj_dct['size']['x'],
                                               y=obj_dct['size']['y'],
                                               z=obj_dct['size']['z']),
                                  pose=pose_dct_to_msg(obj_dct))
 
-    def _button_callback():
+    def _button_callback(self):
         #TODO write this for real
         str = raw_input('Press enter button to stop wait')
         button_state = True

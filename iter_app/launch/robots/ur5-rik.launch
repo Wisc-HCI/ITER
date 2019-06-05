@@ -57,8 +57,9 @@
   </include>
 
   <!-- Launch Relaxed IK -->
-  <include if="$(arg rik_use_julia)" file="$(find relaxed_ik)/launch/relaxed_ik_julia.launch" />
-  <include unless="$(arg rik_use_julia)" file="$(find relaxed_ik)/launch/relaxed_ik_python.launch" />
+  <node if="$(arg rik_use_julia)" pkg="relaxed_ik" type="relaxed_ik_node.jl" name="relaxed_ik_node"/>
+  <node unless="$(arg rik_use_julia)" pkg="relaxed_ik" type="relaxed_ik_node.py" name="relaxed_ik_node"/>
+
 
   <!-- TODO load Rviz -->
 
