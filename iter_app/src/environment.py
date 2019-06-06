@@ -56,7 +56,7 @@ DEFAULT_TF = {
 class Environment:
 
     def __init__(self,calibrate_ar_tag_id):
-        self._tf_transformer = tf.Transformer(True, rospy.Duration(10.0))
+        self._tf_listener = tf.TransformListener()
         self._tf_broadcaster = tf2_ros.StaticTransformBroadcaster()
         self._calibrate_ar_tag_id = calibrate_ar_tag_id
         self._get_cam_pose = rospy.ServiceProxy('/robot_camera_align/get_tag_pose',GetTagPose)
@@ -98,13 +98,15 @@ class Environment:
         # Connects object to robot
         # Provide a pose which is used for release to calculate the transformation
         # over movement used to plot new object
-        return ConnectTaskObjectResponse(status=task_env.connect_obj_to_robot(request.id,request.pose))
+        status = task_env.connect_obj_to_robot(request.id,request.pose)
+        return ConnectTaskObjectResponse(status=status)
 
     def _release_task_obj(self, request):
         # Disconnects object from robot
         # Provide a pose which is used to calculate the transformation over
         # movement used to plot new object
-        return ReleaseTaskObjectResponse(status=task_env.disconnect_obj_from_robot(request.id,request.pose))
+        status = task_env.disconnect_obj_from_robot(request.id,request.pose)
+        return ReleaseTaskObjectResponse(status=status)
 
     def _get_vision_obj(self, request):
         # Finds a object from vision set that meets the criteria given.
@@ -125,18 +127,18 @@ class Environment:
             return response
         response.vision_id = 'block_{0}'.format(id)
 
-        (pos, rot) = self._tf_transformer.lookupTransform(response.vision_id,request.frame_id, rospy.Time(0))
+        (pos, rot) = self._tf_listener.lookupTransform(response.vision_id,request.frame_id, rospy.Time(0))
         response.pose = Pose(position=Vector3(x=pos[0],y=pos[1],z=pos[2]),
                              orientation=Quaternion(x=rot[0],y=rot[1],z=rot[2],w=rot[3]))
 
         response.task_id = response.vision_id + '_' + str(uuid.uuid1().hex)
 
-        response.status = task_env.generate_dynamic_environment(EnvironmentObject(
+        response.status = task_env.generate_dynamic_environment([EnvironmentObject(
             representation=EnvironmentObject.REPRESENTATION_BOX,
             id=response.task_id,
             size=Vector3(0.1,0.1,0.1), #Note, this is for representation only
             pose=response.pose
-        ))
+        )])
 
         return response
 

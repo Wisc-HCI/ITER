@@ -6,7 +6,7 @@
   "environment": [],
   "task": [
     {
-      "name": "get_pose",
+      "name": "get_pose"
     }
   ]
 }

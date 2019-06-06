@@ -24,7 +24,7 @@ def generate_dynamic_environment(env_data):
             id = str(uuid.uuid1().hex)
 
         # Create base marker message
-        markers[id] = Marker(id=id,ns='markers')
+        markers[id] = Marker(id=uuid.uuid1().int & 0xffffffffL,ns='markers')
         markers[id].header.frame_id = reference_frame
         markers[id].color = ColorRGBA(r=0,b=0,g=1,a=1)
 
@@ -80,19 +80,21 @@ def clear_dynamic_environment(ids=[], all=False):
 def connect_obj_to_robot(id, pose):
     global grasped
 
-    if id not in grasped.keys():
+    if not id in grasped.keys() and id in markers.keys():
         grasped[id] = pose
+        return True
     else:
         return False
 
 def disconnect_obj_from_robot(id, pose):
     global grasped
 
-    if id in grasped.keys():
+    if id in grasped.keys() and id in markers.keys():
         #TODO update with a new pose
         del grasped[id]
-    else:
         return True
+    else:
+        return False
 
 def get_all_task_ids():
     global markers

@@ -8,6 +8,7 @@
 '''
 
 from enum import Enum
+from tools.pose_conversion import *
 from tools.primitives.abstract import AbstractBehaviorPrimitives, Primitive, ReturnablePrimitive
 
 
@@ -39,7 +40,9 @@ class ConnectObjectToRobot(Primitive):
 
     def operate(self):
         status, ee_pose = self._get_pose.operate()
-        return status and self._envClient.connect_task_object(self._id,ee_pose).status
+        status = status and self._envClient.connect_task_object(self._id,ee_pose).status
+        print 'status', status
+        return status
 
 class DisconnectObjectFromRobot(Primitive):
 
@@ -50,7 +53,9 @@ class DisconnectObjectFromRobot(Primitive):
 
     def operate(self):
         status, ee_pose = self._get_pose.operate()
-        return status and self._envClient.release_task_object(self._id,ee_pose).status
+        status = status and self._envClient.release_task_object(self._id,ee_pose).status
+        print 'status', status
+        return status
 
 class PickAndPlaceVision(Primitive):
 
@@ -121,7 +126,7 @@ class PickAndPlaceStatic(Primitive):
 
 class CalibrateRobotToCamera(Primitive):
 
-    def __init__(self,envClient,path_to_region,tag_to_ee_transform,lookup):
+    def __init__(self,envClient,path_to_region,tag_to_ee_transform,lookup, **kwargs):
         self._envClient = envClient
         self._path = [lookup('move')(dct['position'],dct['orientation']) for dct in path_to_region]
         self._transform = pose_dct_to_msg(tag_to_ee_transform)

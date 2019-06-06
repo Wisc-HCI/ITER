@@ -52,7 +52,7 @@ from std_msgs.msg import String, Int32, Bool
 from tools.time_mode_enum import TimeModeEnum
 from tools.environment_client import EnvironmentClient
 from iter_app.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
-
+from tools.primitives.abstract import Primitive, ReturnablePrimitive
 
 rospy.init_node('runner')
 envClient = EnvironmentClient()
@@ -92,7 +92,10 @@ class Runner:
         global envClient, bp
 
         # data retrieved from interface
-        data = json.loads(json_string.task_json)
+        try:
+            data = json.loads(json_string.task_json)
+        except:
+            return TaskResponse(False,'{}')
 
         # if environment requested, load it
         if 'environment' in data.keys():
@@ -118,10 +121,20 @@ class Runner:
             if self.time_mode == TimeModeEnum.CAPTURE:
                 if type(primitives[i]) is bp.Wait and primitives[i].condition == bp.ConditionEnum.BUTTON.value:
                     data['task'][i]['rad'] = {'is_interaction': True}
-                    operate_status = primitives[i].operate()
+
+                    if isinstance(ReturnablePrimitive,primitives[i]):
+                        operate_status, result = primitives[i].operate()
+                    else:
+                        operate_status = primitives[i].operate()
+
                 else:
                     start = time.time()
-                    operate_status = primitives[i].operate()
+
+                    if isinstance(ReturnablePrimitive,primitives[i]):
+                        operate_status, result = primitives[i].operate()
+                    else:
+                        operate_status = primitives[i].operate()
+
                     stop = time.time()
 
                     data['task'][i]['rad'] = {
@@ -129,7 +142,12 @@ class Runner:
                         'is_interaction': False
                     }
             else:
-                operate_status = primitives[i].operate()
+
+                if isinstance(primitives[i],ReturnablePrimitive):
+                    operate_status, result = primitives[i].operate()
+                else:
+                    operate_status = primitives[i].operate()
+
                 self.time_sync_topic.publish(i)
 
             if not operate_status:
@@ -141,7 +159,8 @@ class Runner:
 
         # clear environment resources
         if 'environment' in data.keys():
-            operate_status = operate_status or envClient.clear_task_objects([],True).status
+            clear_status = envClient.clear_task_objects([],True).status
+            operate_status = operate_status and clear_status
 
         # send results back to interface
         if self.time_mode == TimeModeEnum.CAPTURE:
