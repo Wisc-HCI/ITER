@@ -44,6 +44,7 @@ import sys
 import time
 import json
 import rospy
+import traceback
 
 from tools.pose_conversion import *
 from geometry_msgs.msg import Vector3
@@ -95,14 +96,15 @@ class Runner:
         try:
             data = json.loads(json_string.task_json)
         except:
-            return TaskResponse(False,'{}')
+            traceback.print_exc()
+            return TaskResponse(False,'{}','Error parsing json stringified task')
 
         # if environment requested, load it
         if 'environment' in data.keys():
             objects = [self._env_obj_pkg(dct) for dct in data['environment']]
             resp = envClient.generate_task_objects(objects)
             if not resp.status:
-                return TaskResponse(False,'{}')
+                return TaskResponse(False,'{}','Failed to load environment')
 
         print 'Instantiating'
         primitives = [bp.instantiate_from_dict(obj,button_callback=self._button_callback) for obj in data['task']]
@@ -158,15 +160,22 @@ class Runner:
             self.time_stop_topic.publish(True)
 
         # clear environment resources
+        responseMsg = ''
         if 'environment' in data.keys():
             clear_status = envClient.clear_task_objects([],True).status
+
+            if not operate_status:
+                responseMsg = 'failed during task execution'
+            elif not clear_status:
+                responseMsg = 'failed during environment teardown'
+
             operate_status = operate_status and clear_status
 
         # send results back to interface
         if self.time_mode == TimeModeEnum.CAPTURE:
-            return TaskResponse(operate_status,json.dumps(data))
+            return TaskResponse(operate_status,json.dumps(data),responseMsg)
         else:
-            return TaskResponse(operate_status,'{}')
+            return TaskResponse(operate_status,'{}',responseMsg)
 
     def mode_update(self, data):
         mode = TimeModeEnum.from_str(data.mode)

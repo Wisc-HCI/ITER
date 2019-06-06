@@ -82,6 +82,7 @@ def load_task(task_file_name):
         except:
             print '[-] Error handling file : Write'
 
+    print response.msg
     return response.end_status
 
 if __name__ == "__main__":
