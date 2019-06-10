@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+# note there is a difference between robot orientation and base_link orientation
 import sys
 import copy
 import json
@@ -199,7 +200,7 @@ class Queue:
                 'name': self.name + '_' + str(index),
                 'representation': 'box',
                 'position': target_position,
-                'orientation': copy.deepcopy(DOWN_GX_ORIENTATION),
+                'orientation': copy.deepcopy(DOWN_GY_ORIENTATION),
                 'size': {
                     'x': (self.idims[0]),
                     'y': (self.idims[1]),
@@ -358,8 +359,8 @@ if __name__ == "__main__":
             t['orientation']['z'] = t['orientation']['z'] / 180.0 * math.pi
 
     env_list = []
-    #for qkey in QUEUES.keys():
-    #    env_list += QUEUES[qkey].env_list()
+    for qkey in QUEUES.keys():
+        env_list += QUEUES[qkey].env_list()
 
     if USE_TABLE:
         env_list.append({

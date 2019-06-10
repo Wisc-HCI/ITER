@@ -10,11 +10,10 @@ from visualization_msgs.msg import Marker, MarkerArray
 
 def _refresh(*args):
     global marker_pub, markers
-
-    marker_pub.publish([markers[id] for id in markers.keys()])
+    marker_pub.publish(MarkerArray(markers=[markers[id] for id in markers.keys()]))
 
 def generate_dynamic_environment(env_data):
-    global markers, reference_frame
+    global markers, reference_frame, count
     status = True
 
     for obj in env_data:
@@ -24,7 +23,7 @@ def generate_dynamic_environment(env_data):
             id = str(uuid.uuid1().hex)
 
         # Create base marker message
-        markers[id] = Marker(id=uuid.uuid1().int & 0xffffffffL,ns='markers')
+        markers[id] = Marker(id=count,ns='markers')
         markers[id].header.frame_id = reference_frame
         markers[id].color = ColorRGBA(r=0,b=0,g=1,a=1)
 
@@ -40,6 +39,9 @@ def generate_dynamic_environment(env_data):
         # Update marker pose and size
         markers[id].scale = obj.size
         markers[id].pose = obj.pose
+
+        markers[id].action = Marker.ADD
+        count += 1
 
     _refresh()
     return status
@@ -106,7 +108,7 @@ def get_grasped_ids():
 
     return grasped.keys()
 
-
+count = 0
 markers = {}
 grasped = {}
 
