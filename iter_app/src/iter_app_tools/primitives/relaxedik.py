@@ -31,10 +31,10 @@ import rospy
 
 from enum import Enum
 from std_msgs.msg import Header
-from tools.pose_conversion import *
+from iter_app_tools.pose_conversion import *
 from abc import ABCMeta, abstractmethod
 from geometry_msgs.msg import Pose, Point, Quaternion
-from tools.primitives.abstract import AbstractBehaviorPrimitives, Primitive, ReturnablePrimitive
+from iter_app_tools.primitives.abstract import AbstractBehaviorPrimitives, Primitive, ReturnablePrimitive
 
 from behavior_execution.planners.relaxedik import RelaxedIKPlanner
 from behavior_execution.planners.gripper_command import GripperCommandPlanner
@@ -45,6 +45,10 @@ infoFileName = rospy.get_param('info_file_name')
 
 relaxedikPlanner = RelaxedIKPlanner('follow_joint_trajectory',pathToRikSrc,infoFileName)
 gripperPlanner = GripperCommandPlanner('gripper_command')
+
+
+def initialize_robot():
+    relaxedikPlanner.initialize_robot()
 
 
 class PrimitiveEnum(Enum):

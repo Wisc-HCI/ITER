@@ -5,7 +5,7 @@
   <arg name="rik_use_julia" default='false'/>
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
-  <param name="$robot_description" command="$(find xacro)/xacro --inorder '$(find robot_descriptions)/urdf/kinova_mico/relaxed_ik_m1n6s200.xacro'" />
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find robot_descriptions)/urdf/kinova_mico/relaxed_ik_m1n6s200.xacro'" />
 
   <!-- If simulated, we do not have a robot connected -->
   <group if="$(eval arg('simulated') == true)">
@@ -49,7 +49,6 @@
   <!-- Setup robot configuration for Relaxed Ik -->
   <param name="path_to_relaxed_ik_src" value="$(find relaxed_ik)/src"/>
   <param name="info_file_name" value="mico_2_info.yaml"/>
-  <param name="ee_link" value="m1n6s200_end_effector"/>
 
   <!-- RVIZ -->
   <node type="rviz" name="rviz" pkg="rviz" args="-d $(find iter_app)/rviz/rik-robot-tf.rviz"/>

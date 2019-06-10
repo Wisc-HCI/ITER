@@ -8,8 +8,8 @@
 '''
 
 from enum import Enum
-from tools.pose_conversion import *
-from tools.primitives.abstract import AbstractBehaviorPrimitives, Primitive, ReturnablePrimitive
+from iter_app_tools.pose_conversion import *
+from iter_app_tools.primitives.abstract import AbstractBehaviorPrimitives, Primitive, ReturnablePrimitive
 
 
 class PrimitiveEnum(Enum):

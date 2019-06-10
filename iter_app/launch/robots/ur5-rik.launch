@@ -6,7 +6,7 @@
   <arg name="limited" default='false' />
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
-  <param name="$robot_description" command="$(find xacro)/xacro --inorder '$(find robot_descriptions)/urdf/universal_robots/relaxed_ik_ur5_robotiq_85.urdf.xacro'" />
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find robot_descriptions)/urdf/universal_robots/relaxed_ik_ur5_robotiq_85.urdf.xacro'" />
 
   <!-- If simulated, we do not have a robot connected -->
   <group if="$(eval arg('simulated') == true)">
@@ -51,7 +51,6 @@
   <!-- Setup robot configuration for Relaxed Ik -->
   <param name="path_to_relaxed_ik_src" value="$(find relaxed_ik)/src"/>
   <param name="info_file_name" value="ur5_info.yaml"/>
-  <param name="ee_link" value="tool0"/>
 
   <!-- RVIZ -->
   <node type="rviz" name="rviz" pkg="rviz" args="-d $(find iter_app)/rviz/rik-robot-tf.rviz"/>

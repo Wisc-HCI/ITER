@@ -29,9 +29,9 @@ moveit_commander.roscpp_initialize(sys.argv)
 
 from enum import Enum
 from std_msgs.msg import Header
-from tools.pose_conversion import *
+from iter_app_tools.pose_conversion import *
 from abc import ABCMeta, abstractmethod
-from tools.primitives.abstract import AbstractBehaviorPrimitives, Primitive, ReturnablePrimitive
+from iter_app_tools.primitives.abstract import AbstractBehaviorPrimitives, Primitive, ReturnablePrimitive
 
 
 ARM_MOVE_GROUP = rospy.get_param("arm_move_group")
@@ -43,6 +43,10 @@ arm_group_commander = moveit_commander.MoveGroupCommander(ARM_MOVE_GROUP)
 gripper_group_commander = moveit_commander.MoveGroupCommander(GRIPPER_MOVE_GROUP)
 robot = moveit_commander.RobotCommander()
 scene = moveit_commander.PlanningSceneInterface()
+
+
+def initialize_robot():
+    pass # Defined for API consistency
 
 
 class PrimitiveEnum(Enum):

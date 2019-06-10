@@ -38,13 +38,13 @@ rospy.init_node('environment')
 
 mode = rospy.get_param('~mode',MODE_MARKER)
 if mode == MODE_COLLISION_MOVEIT:
-    import tools.environment_interface.collision_moveit as task_env
+    import iter_app_tools.environment_interface.collision_moveit as task_env
 elif mode == MODE_MARKER:
-    import tools.environment_interface.marker as task_env
+    import iter_app_tools.environment_interface.marker as task_env
 else:
     raise Exception('Invalid environment mode selected')
 
-import tools.environment_interface.vision as vision_env
+import iter_app_tools.environment_interface.vision as vision_env
 
 
 DEFAULT_TF = {

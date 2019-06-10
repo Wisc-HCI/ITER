@@ -7,8 +7,7 @@ Date: 5-22-19
 
 Command-Line Interace for task runer.
 
-This module provides a simple CLI to enter defined tasks for the ITER runner
-system.
+This module provides a simple CLI to enter defined tasks for the ITER runner.
 
 Commands include:
     - help
@@ -31,7 +30,7 @@ import time
 import json
 import rospy
 
-from tools.time_mode_enum import TimeModeEnum
+from iter_app_tools.time_mode_enum import TimeModeEnum
 from iter_app.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
 
 print 'Waiting for runner'

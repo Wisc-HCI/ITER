@@ -1,7 +1,3 @@
-<!-- Initial structure taken from NRI Project -->
-<!-- Note if using Relaxed-IK must start the two nodes before running this
-     launch file. Also use the python variant for the near term.-->
-
 <launch>
 
     <!-- Global arguements -->
@@ -46,6 +42,6 @@
     <node if="$(arg rad_ui)" name="web_server" pkg="iter_app" type="frontend_node_start.sh" args='$(find iter_app)/rad_ui' output='screen'/>
 
     <!-- Start CLI -->
-    <node if="$(arg use_cli)" pkg="iter_app" type="cli.py" name="cli" output="screen"/>
+    <node if="$(arg use_cli)" pkg="iter_tasks" type="cli.py" name="cli" output="screen"/>
 
 </launch>

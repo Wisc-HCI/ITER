@@ -8,7 +8,7 @@
 import time
 
 from enum import Enum
-from tools.primitives.abstract import Primitive, AbstractBehaviorPrimitives
+from iter_app_tools.primitives.abstract import Primitive, AbstractBehaviorPrimitives
 
 class PrimitiveEnum(Enum):
     WAIT = 'wait'

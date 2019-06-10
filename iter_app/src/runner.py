@@ -46,27 +46,30 @@ import json
 import rospy
 import traceback
 
-from tools.pose_conversion import *
+from iter_app_tools.pose_conversion import *
 from geometry_msgs.msg import Vector3
 from iter_app.msg import EnvironmentObject
 from std_msgs.msg import String, Int32, Bool
-from tools.time_mode_enum import TimeModeEnum
-from tools.environment_client import EnvironmentClient
+from iter_app_tools.time_mode_enum import TimeModeEnum
+from iter_app_tools.environment_client import EnvironmentClient
 from iter_app.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
-from tools.primitives.abstract import Primitive, ReturnablePrimitive
+from iter_app_tools.primitives.abstract import Primitive, ReturnablePrimitive
 
 rospy.init_node('runner')
 envClient = EnvironmentClient()
 
-from tools.primitives.default import DefaultBehaviorPrimitives
+from iter_app_tools.primitives.default import DefaultBehaviorPrimitives
 
 use_rik = rospy.get_param('use_rik',False)
 if use_rik:
-    from tools.primitives.relaxedik import RelaxedIKBehaviorPrimitives as PhysicalBehaviorPrimitives
+    from iter_app_tools.primitives.relaxedik import RelaxedIKBehaviorPrimitives as PhysicalBehaviorPrimitives
+    from iter_app_tools.primitives.relaxedik import initialize_robot
 else:
-    from tools.primitives.moveit import MoveItBehaviorPrimitives as PhysicalBehaviorPrimitives
+    from iter_app_tools.primitives.moveit import MoveItBehaviorPrimitives as PhysicalBehaviorPrimitives
+    from iter_app_tools.primitives.moveit import initialize_robot
 
-from tools.primitives.environment_aware import EnvironmentAwareBehaviorPrimitives
+from iter_app_tools.primitives.environment_aware import EnvironmentAwareBehaviorPrimitives
+
 
 bp = EnvironmentAwareBehaviorPrimitives(envClient=envClient,
      parent=PhysicalBehaviorPrimitives(
@@ -227,6 +230,8 @@ if __name__ == '__main__':
     print "\n\n\n Runner is Ready\n\n\n"
 
     runner = Runner()
+
+    initialize_robot()
 
     while not rospy.is_shutdown():
         rospy.spin()
