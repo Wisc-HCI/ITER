@@ -37,21 +37,14 @@ from geometry_msgs.msg import Pose, Point, Quaternion
 from tools.primitives.abstract import AbstractBehaviorPrimitives, Primitive, ReturnablePrimitive
 
 from behavior_execution.planners.relaxedik import RelaxedIKPlanner
+from behavior_execution.planners.gripper_command import GripperCommandPlanner
 
 
-POSE_OFFSET = Pose(position=Point(),orientation=Quaternion())
+pathToRikSrc = rospy.get_param('path_to_relaxed_ik_src')
+infoFileName = rospy.get_param('info_file_name')
 
-
-planner = RelaxedIKPlanner(
-    {"follow_joint_trajectory":"gripper_command"},
-    {"follow_joint_trajectory":[
-        'shoulder_pan_joint',
-        'shoulder_lift_joint',
-        'elbow_joint',
-        'wrist_1_joint',
-        'wrist_2_joint',
-        'wrist_3_joint']},
-    pose_offsets={"follow_joint_trajectory": POSE_OFFSET})
+relaxedikPlanner = RelaxedIKPlanner('follow_joint_trajectory',pathToRikSrc,infoFileName)
+gripperPlanner = GripperCommandPlanner('gripper_command')
 
 
 class PrimitiveEnum(Enum):
@@ -64,18 +57,18 @@ class PrimitiveEnum(Enum):
 class Grasp(Primitive):
 
     def __init__(self, effort=1):
-        self._plan = planner.plan_gripper_state('follow_joint_trajectory',[effort])
+        self._plan = gripperPlanner.plan_gripper_state(effort)
 
     def operate(self):
-        return planner.execute('follow_joint_trajectory',self._plan)
+        return gripperPlanner.execute_gripper_state(self._plan)
 
 class Release(Primitive):
 
     def __init__(self, effort=1):
-        self._plan = planner.plan_gripper_state('follow_joint_trajectory',[effort])
+        self._plan = gripperPlanner.plan_gripper_state(effort)
 
     def operate(self):
-        return planner.execute('follow_joint_trajectory',self._plan)
+        return gripperPlanner.execute_gripper_state(self._plan)
 
 class Move(Primitive):
 
@@ -84,13 +77,12 @@ class Move(Primitive):
         self._pose = pose_dct_to_msg({'position':position,'orientation':orientation})
 
     def operate(self):
-        plan = planner.plan_ee_pose('follow_joint_trajectory',self._pose)
-        return planner.execute('follow_joint_trajectory',plan)
+        return relaxedikPlanner.set_ee_pose(self._pose,validate=False)
 
 class GetPose(ReturnablePrimitive):
 
     def operate(self):
-        return True, planner.get_ee_pose('follow_joint_trajectory')
+        return True, relaxedikPlanner.get_ee_pose()
 
 
 class RelaxedIKBehaviorPrimitives(AbstractBehaviorPrimitives):
