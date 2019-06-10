@@ -147,7 +147,7 @@ class Environment:
         # camera's field of view
 
         # find calibration tag
-        tagId = request.ar_tag_id if request.ar_tag_id != "" else self._calibrate_ar_tag_id
+        tagId = int(request.ar_tag_id) if request.ar_tag_id != "" else self._calibrate_ar_tag_id
         tagPose = vision_env.get_arg_tag(tagId)
         if tagPose == None:
             return CalibrateRobotToCameraResponse(status=False)

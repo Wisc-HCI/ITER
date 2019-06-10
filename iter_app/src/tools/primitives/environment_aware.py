@@ -126,8 +126,9 @@ class PickAndPlaceStatic(Primitive):
 
 class CalibrateRobotToCamera(Primitive):
 
-    def __init__(self,envClient,path_to_region,tag_to_ee_transform,lookup, **kwargs):
+    def __init__(self,envClient,path_to_region,tag_to_ee_transform,lookup,tag_id='', **kwargs):
         self._envClient = envClient
+        self._tag_id = tag_id
         self._path = [lookup('move')(dct['position'],dct['orientation']) for dct in path_to_region]
         self._transform = pose_dct_to_msg(tag_to_ee_transform)
         self._get_pose = lookup('get_pose')()
@@ -144,7 +145,7 @@ class CalibrateRobotToCamera(Primitive):
         # run calibration routine
         if status:
             status, ee_pose = self._get_pose.operate()
-            status = status and self._envClient.calibrate_robot_to_camera('',ee_pose,self._transform)
+            status = status and self._envClient.calibrate_robot_to_camera(self._tag_id,ee_pose,self._transform)
 
         return status
 
