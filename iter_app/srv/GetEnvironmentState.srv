@@ -1,0 +1,5 @@
+---
+string[] grasped_task_objects
+string[] all_task_objects
+string[] all_vision_objects
+string[] all_ar_tags

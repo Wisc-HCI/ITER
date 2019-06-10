@@ -1,0 +1,48 @@
+<launch>
+
+    <!-- Global arguements -->
+    <arg name="robot"/>
+    <arg name="simulated" default='true'/>
+    <arg name="use_rik" default='true' />
+    <arg name="rik_use_julia" default="false"/>
+    <arg name="use_cli" default='false'/>
+    <arg name="rad_ui" default='false'/>
+    <arg name="use_collision" default='false' />
+    <arg name="use_real_cam" default='false' />
+
+    <!-- Global ROS Parameters -->
+    <rosparam param="use_rik" subst_value="true">$(arg use_rik)</rosparam>
+    <rosparam param="use_collision" subst_value="true">$(arg use_collision)</rosparam>
+
+    <!-- Include robot launches -->
+    <include file="$(find iter_app)/launch/robot.launch">
+      <arg name="robot" value="$(arg robot)"/>
+      <arg name="simulated" value="$(arg simulated)"/>
+      <arg name="use_rik" value="$(arg use_rik)"/>
+      <arg name="rik_use_julia" value="$(arg rik_use_julia)"/>
+    </include>
+
+    <!-- Include Rosbridge launches -->
+    <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+
+    <!-- Include Vision System -->
+    <include file="$(find iter_vision)/launch/main.launch">
+      <arg name="video_src" value="/dev/video0"/>
+      <arg name="use_real_cam" default="$(arg use_real_cam)"/>
+    </include>
+
+    <!-- Start backend -->
+    <node pkg="iter_app" type="environment.py" name="environment" output="screen">
+      <param name="mode" value="marker"/>
+      <param name="calibrate_ar_tag_id" value="4"/>
+    </node>
+    <node pkg="iter_app" type="timing.py" name="timing" output="screen"/>
+    <node pkg="iter_app" type="runner.py" name="runner" output="screen"/>
+
+    <!-- Start RAD UI -->
+    <node if="$(arg rad_ui)" name="web_server" pkg="iter_app" type="frontend_node_start.sh" args='$(find iter_app)/rad_ui' output='screen'/>
+
+    <!-- Start CLI -->
+    <node if="$(arg use_cli)" pkg="iter_tasks" type="cli.py" name="cli" output="screen"/>
+
+</launch>

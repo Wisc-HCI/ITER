@@ -1,0 +1,47 @@
+{
+  "title": "fixed-pose-test",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [
+    {
+      "name": "test",
+      "position": {
+        "x": 0.3,
+        "y": 0.3,
+        "z": 0.3
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      },
+      "size": {
+        "y": 0.1,
+        "x": 0.1,
+        "z": 0.1
+      }
+    }
+  ],
+  "task": [
+    {
+      "name": "move",
+      "position": {
+        "x": 0.3,
+        "y": 0.3,
+        "z": 0.3
+      },
+      "orientation": {
+        "x": 0,
+        "y": 1,
+        "z": 0,
+        "w": 0
+      }
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    }
+  ]
+}

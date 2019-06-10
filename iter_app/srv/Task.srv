@@ -2,3 +2,4 @@ string task_json      # Input JSON string with primitives to run
 ---
 bool end_status       # Result status of operation
 string recorded_task  # If capture mode, returns updated JSON string else empty
+string msg            # Error message

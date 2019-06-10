@@ -1,0 +1,11 @@
+<launch>
+
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+
+  <node pkg="iter_app" type="timing.py" name="timing" output="screen">
+    <param name="fake_time" value="true" />
+  </node>
+
+  <node name="web_server" pkg="iter_app" type="frontend_node_start.sh" args='$(find iter_app)/rad_ui' output='screen'/>
+
+</launch>

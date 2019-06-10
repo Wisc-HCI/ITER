@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  geometry_msgs
   message_generation
 )
 
@@ -21,7 +22,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
 ## See http://ros.org/doc/api/catkin/html/user_guide/setup_dot_py.html
-# catkin_python_setup()
+catkin_python_setup()
 
 ################################################
 ## Declare ROS messages, services and actions ##
@@ -50,8 +51,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
     FILES
+    RADSignal.msg
     TimeInterval.msg
-    RADTime.msg
+    EnvironmentObject.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -60,6 +62,13 @@ add_service_files(
    Task.srv
    ModeGet.srv
    ModeSet.srv
+   CalibrateRobotToCamera.srv
+   ClearTaskObjects.srv
+   ConnectTaskObject.srv
+   GenerateTaskObjects.srv
+   GetEnvironmentState.srv
+   GetVisionObject.srv
+   ReleaseTaskObject.srv
 )
 
 ## Generate actions in the 'action' folder
@@ -73,6 +82,7 @@ add_service_files(
 generate_messages(
    DEPENDENCIES
    std_msgs
+   geometry_msgs
 )
 
 ################################################
@@ -107,7 +117,7 @@ generate_messages(
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES experiment_therblig_task_runner
-  CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
+  CATKIN_DEPENDS roscpp rospy std_msgs geometry_msgs message_runtime
 #  DEPENDS system_lib
 )
 

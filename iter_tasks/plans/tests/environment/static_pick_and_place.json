@@ -1,0 +1,119 @@
+{
+  "title": "static-pick-and-place-test",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [
+    {
+      "name": "test",
+      "position": {
+        "x": 0.1,
+        "y": 0.1,
+        "z": 0.1
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      },
+      "size": {
+        "y": 0.005,
+        "x": 0.005,
+        "z": 0.005
+      }
+    },
+    {
+      "name": "tabletop",
+      "position": {
+        "y": 0,
+        "x": 0,
+        "z": 0
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0,
+        "z": 0,
+        "w": 1
+      },
+      "size": {
+        "y": 1,
+        "x": 1,
+        "z": 0.001
+      }
+    }
+  ],
+  "task": [
+    {
+      "name": "pick_and_place_static",
+      "path_to_object": [
+        {
+          "name": "move",
+          "position": {
+            "x": 0.25,
+            "y": 0.25,
+            "z": 0.3
+          },
+          "orientation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        },
+        {
+          "name": "move",
+          "position": {
+            "x": 0.1,
+            "y": 0.1,
+            "z": 0.1
+          },
+          "orientation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ],
+      "path_to_destination": [
+        {
+          "name": "move",
+          "position": {
+            "x": 0.25,
+            "y": 0.25,
+            "z": 0.3
+          },
+          "orientation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        },
+        {
+          "name": "move",
+          "position": {
+            "x": -0.25,
+            "y": 0,
+            "z": 0.3
+          },
+          "orientation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ],
+      "object_name": "test",
+      "grasp_effort": 0.5,
+      "release_effort": 0.5
+    },
+    {
+        "name": "wait",
+        "condition": "button",
+        "timeout": 10
+    }
+  ]
+}

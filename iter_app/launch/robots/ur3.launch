@@ -1,0 +1,22 @@
+<launch>
+
+  <arg name="simulated" default='true'/>
+  <arg name="use_rik" default='true' />
+  <arg name="rik_use_julia" default='false'/>
+
+  <!-- If using Relaxed-IK -->
+  <group if="$(eval arg('use_rik') == true)">
+    <include file="$(find iter_app)/launch/robots/ur3-rik.launch">
+      <arg name="simulated" value="$(arg simulated)"/>
+      <arg name="rik_use_julia" value="$(arg rik_use_julia)"/>
+    </include>
+  </group>
+
+  <!-- Else, use moveit-->
+  <group if="$(eval arg('use_rik') == false)">
+    <include file="$(find iter_app)/launch/robots/ur3-moveit.launch">
+      <arg name="simulated" value="$(arg simulated)"/>
+    </include>
+  </group>
+
+</launch>

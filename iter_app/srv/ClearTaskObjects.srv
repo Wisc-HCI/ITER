@@ -1,0 +1,6 @@
+# Note, if boolean all is true then all task objects but those in ids list will
+# be cleared. If all is false, then only ids in list will be cleared
+string[] ids
+bool all
+---
+bool status

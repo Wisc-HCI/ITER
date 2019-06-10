@@ -1,0 +1,77 @@
+<launch>
+
+  <arg name="marker_size" default="5.0" />
+  <arg name="max_new_marker_error" default="0.05" />
+  <arg name="max_track_error" default="0.05" />
+  <arg name="output_frame" default="/map" />
+
+  <arg name="flag_image_view_initial" default="false" />
+  <arg name="flag_image_view_blocks" default="false" />
+  <arg name="flag_image_view_blocks_filter" default="true" />
+  <arg name="flag_image_view_2d_points" default="true" />
+
+  <arg name="video_src" default="/dev/video0" />
+  <arg name="use_real_cam" default="true" />
+  <arg name="static_cam_image" default="1-4.png" />
+
+
+  <include file="$(find iter_vision)/launch/camera.launch">
+    <arg name="video_src" value="$(arg video_src)" />
+    <arg name="use_real_cam" value="$(arg use_real_cam)" />
+    <arg name="static_cam_image" value="$(arg static_cam_image)" />
+  </include>
+
+  <node if="$(arg flag_image_view_initial)" name="image_view_initial" pkg="image_view" type="image_view" respawn="false" output="screen">
+    <remap from="image" to="/usb_cam/image_raw" />
+    <param name="autosize" value="true" />
+    <param name="~image_transport" value="compressed" />
+  </node>
+
+  <node name="block_vision" pkg="iter_vision" type="block_vision.py" output="screen">
+    <remap from="camera/image/compressed" to="usb_cam/image_raw/compressed"/>
+  </node>
+
+  <node if="$(arg flag_image_view_blocks)" name="image_view_block_detect" pkg="image_view" type="image_view" respawn="false" output="screen">
+    <remap from="image" to="/block_vision/image" />
+    <param name="autosize" value="true" />
+    <param name="~image_transport" value="compressed" />
+  </node>
+
+  <node if="$(arg flag_image_view_blocks_filter)" name="image_view_block_detect" pkg="image_view" type="image_view" respawn="false" output="screen">
+    <remap from="image" to="/block_vision/filtered" />
+    <param name="autosize" value="true" />
+    <param name="~image_transport" value="compressed" />
+  </node>
+
+  <node name="camera_transform_publisher" pkg="tf2_ros" type="static_transform_publisher" args="0 0 0 0 0 0 1 /map /usb_cam"/>
+
+  <node name="ar_track_alvar" pkg="ar_track_alvar" type="individualMarkersNoKinect" respawn="false" output="screen">
+    <param name="marker_size"           type="double" value="$(arg marker_size)" />
+    <param name="max_new_marker_error"  type="double" value="$(arg max_new_marker_error)" />
+    <param name="max_track_error"       type="double" value="$(arg max_track_error)" />
+    <param name="output_frame"          type="string" value="$(arg output_frame)" />
+
+    <remap from="camera_image"  to="/usb_cam/image_raw" />
+    <remap from="camera_info"   to="/usb_cam/camera_info" />
+  </node>
+
+  <node if="$(arg flag_image_view_2d_points)" name="plot_2d_points" pkg="iter_vision" type="plot_2d_points.py" output="screen">
+    <remap from="/image/compressed" to="/block_vision/image/compressed" />
+  </node>
+
+  <node if="$(arg flag_image_view_2d_points)" name="image_view_2d_points" pkg="image_view" type="image_view" respawn="false" output="screen">
+    <remap from="image" to="/plot_2d_points/image" />
+    <param name="autosize" value="true" />
+    <param name="~image_transport" value="compressed" />
+  </node>
+
+  <node name="block_pose" pkg="iter_vision" type="block_pose.py" output="screen">
+      <param name="parent_frame_id" value="usb_cam"/>
+      <param name="tag_id_list" value="['0','1','2','3']"/>
+  </node>
+
+  <node name="robot_camera_align" pkg="iter_vision" type="robot_camera_align.py">
+    <param name="reference_frame" value="usb_cam"/>
+  </node>
+
+</launch>

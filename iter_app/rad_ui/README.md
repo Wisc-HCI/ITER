@@ -1,11 +1,11 @@
-# RAD UI
+# Interdependence Task Experiment Runner - RAD UI
 
 ## Overview
 Present RAD (Robot Attention Demand) signal as progress bar and remaining
-neglect time as timer. Color scales between green to red to signal immediacy
+neglect time as timer. Color switches between green to red to signal immediacy
 of robots need.
 
-UI connects with ROS backend on topics `/rad/signal` and `/rad/neglect_time`.
+UI connects with ROS backend on topics `/rad/signal`.
 
 ## Contact
 Curt Henrichs (cdhenrichs@wisc.edu)

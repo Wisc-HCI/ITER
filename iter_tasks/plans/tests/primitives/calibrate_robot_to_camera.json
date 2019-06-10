@@ -1,0 +1,42 @@
+{
+  "title": "calibrate-robot-to-camera-test",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [],
+  "task": [
+    {
+      "name": "calibrate_robot_to_camera",
+      "path_to_region": [
+        {
+          "name": "move",
+          "position": {
+            "x": 0.1,
+            "y": -0.1,
+            "z": 0
+          },
+          "orientation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+          }
+        }
+      ],
+      "tag_to_ee_transform": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "orientation": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "w": 1
+        }
+      },
+      "tag_id": "4"
+    }
+  ]
+}
