@@ -48,7 +48,7 @@ gripperPlanner = GripperCommandPlanner('gripper_command')
 
 
 def initialize_robot():
-    relaxedikPlanner.initialize_robot()
+    relaxedikPlanner.initialize()
 
 
 class PrimitiveEnum(Enum):

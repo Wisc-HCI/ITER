@@ -2,7 +2,6 @@
   <param name="robot_type" value="m1n6s200" />
 
   <arg name="simulated" default='true'/>
-  <arg name="rik_use_julia" default='false'/>
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find robot_descriptions)/urdf/kinova_mico/relaxed_ik_m1n6s_robotiq85.xacro'" />
@@ -22,9 +21,6 @@
       <param name="zeros/m1n6s200_joint_2" value="3.1415"/>
       <param name="zeros/m1n6s200_joint_3" value="3.1415"/>
     </node>
-
-    <!-- Given the published joint states, publish tf for the robot links -->
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
   </group>
 
 
@@ -49,9 +45,11 @@
     </include>
 
     <!-- Run gripper command action server, which receives planned motion goal under "gripper_command". After receiving the command from Moveit Rviz Plugin, this node act as an actionlib client and send the goal to the finger position action server from kinova_driver.  -->
-    <node name="gripper_action_server" pkg="m1n6s_robotiq85_moveit_config" type="gripper_action_server.py" output="screen" respawn="false"/>
+    <node name="gripper_action_server" pkg="robotiq_85_driver" type="gripper_action_server.py" output="screen" respawn="false"/>
   </group>
-  </group>
+
+  <!-- Given the published joint states, publish tf for the robot links -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
 
   <!-- Setup robot configuration for Relaxed Ik -->
   <param name="path_to_relaxed_ik_src" value="$(find relaxed_ik)/src"/>

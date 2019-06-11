@@ -227,10 +227,11 @@ if __name__ == '__main__':
 
     start_delay_time = rospy.get_param('~start_delay_time',DEFAULT_NODE_START_DELAY_TIME)
     rospy.sleep(start_delay_time)
-    print "\n\n\n Runner is Ready\n\n\n"
+    print "\n\nRunner is Ready\n\n"
 
     runner = Runner()
 
+    print '\n\nInitializing Robot\n\n'
     initialize_robot()
 
     while not rospy.is_shutdown():

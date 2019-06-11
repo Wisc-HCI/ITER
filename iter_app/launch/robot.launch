@@ -4,7 +4,6 @@
   <arg name="robot"/>
   <arg name="simulated" default='true'/>
   <arg name="use_rik" default='true' />
-  <arg name="rik_use_julia" default='false'/>
 
   <!-- UR3 -->
   <group if="$(eval arg('robot') == 'ur3')">
@@ -16,7 +15,6 @@
     <include file="$(find iter_app)/launch/robots/ur3.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
-      <arg name="rik_use_julia" value="$(arg rik_use_julia)"/>
     </include>
   </group>
 
@@ -30,7 +28,6 @@
     <include file="$(find iter_app)/launch/robots/ur5.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
-      <arg name="rik_use_julia" value="$(arg rik_use_julia)"/>
     </include>
   </group>
 
@@ -44,7 +41,6 @@
     <include file="$(find iter_app)/launch/robots/mico-3.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
-      <arg name="rik_use_julia" value="$(arg rik_use_julia)"/>
     </include>
   </group>
 
@@ -58,7 +54,6 @@
     <include file="$(find iter_app)/launch/robots/mico-2.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
-      <arg name="rik_use_julia" value="$(arg rik_use_julia)"/>
     </include>
   </group>
 
@@ -72,7 +67,6 @@
     <include file="$(find iter_app)/launch/robots/mico-robotiq85.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
-      <arg name="rik_use_julia" value="$(arg rik_use_julia)"/>
     </include>
   </group>
 

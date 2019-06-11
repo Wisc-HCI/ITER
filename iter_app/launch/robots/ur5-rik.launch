@@ -2,11 +2,10 @@
   <param name="robot_type" value="ur5" />
 
   <arg name="simulated" default='true'/>
-  <arg name="rik_use_julia" default='false'/>
   <arg name="limited" default='false' />
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
-  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find robot_descriptions)/urdf/universal_robots/relaxed_ik_ur5_robotiq_85.urdf.xacro'" />
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find robot_descriptions)/urdf/universal_robots/relaxed_ik_ur5_robotiq_85.xacro'" />
 
   <!-- If simulated, we do not have a robot connected -->
   <group if="$(eval arg('simulated') == true)">
@@ -35,22 +34,27 @@
       <arg name="robot_ip" value="10.130.229.132" />
     </include>
 
-    <!-- Launch gripper driver -->
-    <include file="$(find m1n6s_robotiq85_moveit_config)/launch/robotiq_85.launch">
-      <arg name="dual_gripper" value="false"/>
-      <arg name="comport" value="/dev/ttyUSB0"/>
-      <arg name="baud" value="115200"/>
-      <arg name="run_test" value="false"/>
-    </include>
+    <!-- Robotiq 85 ROS Driver -->
+    <node pkg="robotiq_85_driver" type="robotiq_85_driver" name="robotiq_85_driver" respawn="true" output="screen">
+        <param name="num_grippers" value="1"/>
+        <param name="comport" value="/dev/ttyUSB0" />
+        <param name="baud" value="115200" />
+    </node>
 
     <!-- Run gripper command action server, which receives planned motion goal under "gripper_command". After receiving the command from Moveit Rviz Plugin, this node act as an actionlib client and send the goal to the finger position action server from kinova_driver.  -->
-    <node name="gripper_action_server" pkg="m1n6s_robotiq85_moveit_config" type="gripper_action_server.py" output="screen" respawn="false"/>
+    <node name="gripper_action_server" pkg="robotiq_85_driver" type="gripper_action_server.py" output="screen" respawn="false"/>
+
+    <!-- Joint Publisher -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+      <param name="/use_gui" value="false"/>
+      <rosparam param="/source_list">['/gripper/joint_state','/ur_joint_states']</rosparam>
+    </node>
 
   </group>
 
   <!-- Setup robot configuration for Relaxed Ik -->
   <param name="path_to_relaxed_ik_src" value="$(find relaxed_ik)/src"/>
-  <param name="info_file_name" value="ur5_info.yaml"/>
+  <param name="info_file_name" value="info_ur5.yaml"/>
 
   <!-- RVIZ -->
   <node type="rviz" name="rviz" pkg="rviz" args="-d $(find iter_app)/rviz/rik-robot-tf.rviz"/>
