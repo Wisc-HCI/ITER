@@ -349,7 +349,41 @@ if __name__ == "__main__":
             QUEUES[q['name']] = Queue(q['position'],'HORIZONTAL_RIGHT',6,BLOCK_LARGE,SPACING,mode=q['mode'],offset_z=False,name_unique='_l2')
 
     taskGen = AssemblyTask()
-    task_list = taskGen.generate(QUEUES)
+    task_list = [
+        {
+            "name": "move",
+            "position": {
+                "y": 0.5,
+                "x": -0.15,
+                "z": 0
+            },
+            "orientation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+            }
+        },
+        {
+            "name": "move",
+            "position": {
+                "y": 0.5,
+                "x": -0.15,
+                "z": 0
+            },
+            "orientation": {
+                "x": 0.5,
+                "y": 0.5,
+                "z": -0.5,
+                "w": 0.5
+            }
+        },
+        {
+            "name": "wait",
+            "condition": "button"
+        },
+    ]
+    task_list += taskGen.generate(QUEUES)
 
     # convert to radians if Euler angles
     for t in task_list:

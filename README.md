@@ -59,3 +59,6 @@ Enter following into terminal to run ITER application
 ```
 roslaunch iter_app main.launch robot:=ur5 simulated:=true
 ```
+
+## Notes / Todo
+- https://github.com/Wisc-HCI/hci_demos/blob/master/mimicry_control/bin/mico_controller.py
