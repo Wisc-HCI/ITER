@@ -1,6 +1,6 @@
 {
-  "safe_height": 0.5,
-  "grasp_offset": 0.3,
+  "safe_height": 0.4,
+  "grasp_offset": 0.2,
   "grasp_effort": 0.66,
   "release_effort_queue": 0.30,
   "release_effort_workspace": 0.48,
@@ -9,12 +9,12 @@
   "workspace_position": {
       "x": 0.1,
       "y": 0.375,
-      "z": 0
+      "z": -0.05
   },
   "home_position": {
     "x": 0.0,
     "y": 0.35,
-    "z": 0.1
+    "z": 0.2
   },
   "down_gy_orientation": {
     "x": 0.5,
@@ -34,7 +34,7 @@
       "position": {
         "x":-0.25,
         "y":0.31,
-        "z": 0
+        "z": -0.05
       },
       "mode": "y"
     },
@@ -43,7 +43,7 @@
       "position": {
         "x":-0.18,
         "y":0.31,
-        "z": 0
+        "z": -0.05
       },
       "mode": "y"
     },
@@ -52,7 +52,7 @@
       "position": {
         "x":-0.375,
         "y":0.31,
-        "z": 0
+        "z": -0.05
       },
       "mode": "y"
     },
@@ -61,7 +61,7 @@
       "position": {
         "x":-0.5,
         "y":0.31,
-        "z": 0
+        "z": -0.05
       },
       "mode": "y"
     }
@@ -78,19 +78,5 @@
         "z": 0.01
     }
   },
-  "workspace_env": [
-    {
-        "size": {
-            "y": 0.01,
-            "x": 2,
-            "z": 2
-        },
-        "name": "wall-front",
-        "position": {
-            "y": 0.9,
-            "x": 0,
-            "z": 0
-        }
-    }
-  ]
+  "workspace_env": []
 }
