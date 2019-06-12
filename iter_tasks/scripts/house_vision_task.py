@@ -6,6 +6,9 @@ import copy
 import json
 import math
 
+from iter_tasks_tools import data_type, environment, primitives
+
+
 BLOCK_SMALL = (0.02032,0.05842,0.01524)
 BLOCK_LARGE = (0.02032,0.10,0.01524)
 
@@ -15,7 +18,7 @@ if len(sys.argv) != 2:
 
 configFileName = sys.argv[1]
 
-config = json.load(open('./configs/house/'+ configFileName +'.json','r'))
+config = json.load(open('./configs/house_vision/'+ configFileName +'.json','r'))
 SAFE_HEIGHT = config['safe_height']
 GRASP_OFFSET = config['grasp_offset']
 GRASP_EFFORT = config['grasp_effort']
@@ -98,11 +101,7 @@ class AssemblyTask:
         self._region = region
 
     def home_position(self):
-        return {
-            'name': 'move',
-            'position': copy.deepcopy(HOME_POSITION),
-            'orientation': copy.deepcopy(DOWN_GX_ORIENTATION)
-        }
+        return primitives.move(copy.deepcopy(HOME_POSITION),copy.deepcopy(DOWN_GX_ORIENTATION))
 
     def wait_for_human(self):
         return {
@@ -233,5 +232,5 @@ if __name__ == "__main__":
     }
 
     # save final file
-    f = open('../plans/house.json','w')
+    f = open('../plans/house_vision.json','w')
     json.dump(task,f,indent=4)

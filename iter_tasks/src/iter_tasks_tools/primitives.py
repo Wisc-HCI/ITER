@@ -62,14 +62,14 @@ def release(effort):
                         'effort': effort
                         })
 
-def wait_button(condition, timeout):
+def wait_button(timeout):
     return json.dumps({'name': 'wait',
-                        'condition': condition,
+                        'condition': 'button',
                         'timeout': timeout
                         })
 
-def wait_time(condition, value):
+def wait_time(value):
     return json.dumps({'name': 'wait',
-                        'condition': condition,
+                        'condition': 'time',
                         'value': value
                         })
