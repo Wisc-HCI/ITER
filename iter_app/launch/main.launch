@@ -8,6 +8,7 @@
     <arg name="rad_ui" default='false'/>
     <arg name="use_collision" default='false' />
     <arg name="use_real_cam" default='false' />
+    <arg name="video_src" default='/dev/video0' />
 
     <!-- Global ROS Parameters -->
     <rosparam param="use_rik" subst_value="true">$(arg use_rik)</rosparam>
@@ -25,7 +26,7 @@
 
     <!-- Include Vision System -->
     <include file="$(find iter_vision)/launch/main.launch">
-      <arg name="video_src" value="/dev/video0"/>
+      <arg name="video_src" value="$(arg video_src)"/>
       <arg name="use_real_cam" default="$(arg use_real_cam)"/>
     </include>
 

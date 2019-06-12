@@ -76,8 +76,8 @@ bp = EnvironmentAwareBehaviorPrimitives(envClient=envClient,
      parent=DefaultBehaviorPrimitives()))
 
 
-DEFAULT_NODE_START_DELAY_TIME = 10
-
+DEFAULT_NODE_START_DELAY_TIME = 5
+DEFAULT_NODE_INITIALIZE_DELAY_TIME = 2
 
 class Runner:
 
@@ -226,13 +226,17 @@ class Runner:
 if __name__ == '__main__':
 
     start_delay_time = rospy.get_param('~start_delay_time',DEFAULT_NODE_START_DELAY_TIME)
+    initialize_delay_time = rospy.get_param('~initialize_delay_time',DEFAULT_NODE_INITIALIZE_DELAY_TIME)
+
     rospy.sleep(start_delay_time)
-    print "\n\nRunner is Ready\n\n"
+    print "\n\nRunner is Starting\n\n"
 
     runner = Runner()
 
+    rospy.sleep(initialize_delay_time)
     print '\n\nInitializing Robot\n\n'
     initialize_robot()
 
+    print "\n\nRunner is Ready\n\n"
     while not rospy.is_shutdown():
         rospy.spin()

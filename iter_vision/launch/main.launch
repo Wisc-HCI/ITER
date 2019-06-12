@@ -12,7 +12,7 @@
 
   <arg name="video_src" default="/dev/video0" />
   <arg name="use_real_cam" default="true" />
-  <arg name="static_cam_image" default="1-4.png" />
+  <arg name="static_cam_image" default="2-8-cal-tag.png" />
 
 
   <include file="$(find iter_vision)/launch/camera.launch">
