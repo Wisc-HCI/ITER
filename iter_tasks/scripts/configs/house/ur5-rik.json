@@ -1,15 +1,15 @@
 {
   "safe_height": 0.4,
-  "grasp_offset": 0.2,
+  "grasp_offset": 0.16,
   "grasp_effort": 0.66,
   "release_effort_queue": 0.30,
-  "release_effort_workspace": 0.48,
+  "release_effort_workspace": 0.59,
   "num_iterations": 1,
   "block_spacing": 0.04,
   "workspace_position": {
       "x": 0.1,
       "y": 0.375,
-      "z": -0.05
+      "z": -0.17
   },
   "home_position": {
     "x": 0.0,
@@ -34,7 +34,7 @@
       "position": {
         "x":-0.25,
         "y":0.31,
-        "z": -0.05
+        "z": -0.175
       },
       "mode": "y"
     },
@@ -43,7 +43,7 @@
       "position": {
         "x":-0.18,
         "y":0.31,
-        "z": -0.05
+        "z": -0.175
       },
       "mode": "y"
     },
@@ -52,7 +52,7 @@
       "position": {
         "x":-0.375,
         "y":0.31,
-        "z": -0.05
+        "z": -0.17
       },
       "mode": "y"
     },
@@ -61,7 +61,7 @@
       "position": {
         "x":-0.5,
         "y":0.31,
-        "z": -0.05
+        "z": -0.17
       },
       "mode": "y"
     }
@@ -70,12 +70,12 @@
     "position": {
         "y": 0.25,
         "x": 0,
-        "z": -0.175
+        "z": -0.19
     },
     "size": {
         "y": 0.6,
         "x": 1.0,
-        "z": 0.01
+        "z": 0.015
     }
   },
   "workspace_env": []
