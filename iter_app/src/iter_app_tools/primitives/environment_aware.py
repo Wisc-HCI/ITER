@@ -147,13 +147,11 @@ class CalibrateRobotToCamera(Primitive):
                 break
 
         # give some time for vision system to process
-        print 'sleeping'
+        print 'calibrating...'
         rospy.sleep(15)
-        print 'calibrating'
 
         # run calibration routine
         if status:
-            print 'callining calibration'
             status, ee_pose = self._get_pose.operate()
             status = status and self._envClient.calibrate_robot_to_camera(self._tag_id,ee_pose,self._transform).status
 

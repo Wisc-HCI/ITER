@@ -5,11 +5,11 @@ import json
 def position(x,y,z):
     return {'x': x, 'y': y, 'z':z}
 
-def orientation(y, x, z, w):
-    return {'y': y, 'x': x, 'z': z, 'w': w}
+def orientation(x, y, z, w):
+    return {'x': x, 'y': y, 'z': z, 'w': w}
 
-def size(y, x, z):
-    return {'y': y, 'x': x, 'z': z}
+def size(x, y, z):
+    return {'x': x, 'y': y, 'z': z}
 
 def color(r, g, b, a):
     # range 0-1 for parameters
@@ -17,7 +17,7 @@ def color(r, g, b, a):
 
 def environment_object(name, position, orientation, size, color=color(0,1,0,1)):
     return {'name': name,
-           'position'L position,
+           'position': position,
            'orientation': orientation,
            'size': size,
            'color': color}
@@ -25,8 +25,8 @@ def environment_object(name, position, orientation, size, color=color(0,1,0,1)):
 def plan(title,author,version,frame_id,environment,task, description=''):
     return {'title': title,
            'author': author,
-           'version': verison,
+           'version': version,
            'frame_id': frame_id,
-           'description', description,
+           'description': description,
            'environment': environment,
            'task': task}

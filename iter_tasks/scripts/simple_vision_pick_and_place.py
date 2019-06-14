@@ -27,7 +27,7 @@ GRASP_EFFORT = 0.66
 RELEASE_EFFORT_REGION = 0.35
 RELEASE_EFFORT_WORKSPACE = 0.59
 
-GRAPS_OFFSET = dt.position(0,0,0.16)
+GRASP_OFFSET = dt.position(0,0,0.16)
 
 
 def move_home():
@@ -50,12 +50,11 @@ def pick_and_place_block(block_type,target_position,target_orientation):
     action = pm.pick_and_place_vision(
         object_type=block_type,
         path_to_region=[
-            pm.move(REGION_POSITION,DOWN_GY_ORIENTATION),
-            pm.release(RELEASE_EFFORT_REGION)
+            pm.move(REGION_POSITION,DOWN_GY_ORIENTATION)
         ],
         path_to_destination=[
             pm.move(REGION_POSITION,DOWN_GY_ORIENTATION),
-            pm.move(safe_position,target_orientation)
+            pm.move(safe_position,target_orientation),
             pm.move(target_position,target_orientation)
         ],
         grasp_effort=GRASP_EFFORT,
@@ -67,6 +66,7 @@ def build_house_base():
     task_list = []
 
     task_list.append(pm.logger('Building House'))
+    task_list.append(pm.release(RELEASE_EFFORT_REGION))
 
     position = copy.deepcopy(WORKSPACE_POSITION)
     position['x'] += 0.5 * BLOCK_LARGE[0] + GRASP_OFFSET['x']
@@ -104,13 +104,13 @@ if __name__ == "__main__":
     plan = dt.plan(
         title='UR5 Simple Vision Pick-And-Place Task',
         author='Curt Henrichs',
-        description='Simple vision task to prove out vision pipeline'
+        description='Simple vision task to prove out vision pipeline',
         version='0.0.1',
         frame_id='base_link',
         environment=env_list,
         task=task_list)
 
-    path_to_src = os.path.abspath(__file__)
-    print path_to_src
-    f = open(os.path.join(path_to_src,'../plans/simple_vision.json'),'w')
-    json.dumps(task,f,indent=2)
+    path_to_scripts = os.path.dirname(os.path.realpath(__file__))
+    file_path = os.path.join(path_to_scripts,'../plans/simple_vision.json')
+    f = open(file_path,'w')
+    json.dump(plan,f,indent=2)
