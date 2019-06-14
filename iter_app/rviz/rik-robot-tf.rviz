@@ -6,7 +6,6 @@ Panels:
       Expanded:
         - /TF1
         - /TF1/Frames1
-        - /RobotModel1
         - /InteractiveMarkers1
       Splitter Ratio: 0.5
     Tree Height: 484
@@ -57,12 +56,14 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
+        ar_marker_0:
+          Value: true
         ar_marker_1:
-          Value: false
+          Value: true
         ar_marker_2:
-          Value: false
+          Value: true
         ar_marker_3:
-          Value: false
+          Value: true
         ar_marker_4:
           Value: true
         base:
@@ -70,17 +71,21 @@ Visualization Manager:
         base_link:
           Value: true
         block_0:
-          Value: false
+          Value: true
         block_1:
-          Value: false
+          Value: true
         block_2:
-          Value: false
+          Value: true
         block_3:
-          Value: false
+          Value: true
         block_4:
-          Value: false
+          Value: true
         block_5:
-          Value: false
+          Value: true
+        block_6:
+          Value: true
+        block_7:
+          Value: true
         calibration_point_1:
           Value: false
         calibration_point_2:
@@ -113,6 +118,8 @@ Visualization Manager:
           Value: false
         tool0:
           Value: false
+        tool0_controller:
+          Value: false
         upper_arm_link:
           Value: false
         usb_cam:
@@ -134,11 +141,14 @@ Visualization Manager:
         world:
           base_link:
             base:
-              {}
+              tool0_controller:
+                {}
             calibration_point_1:
               calibration_point_2:
                 map:
                   usb_cam:
+                    ar_marker_0:
+                      {}
                     ar_marker_1:
                       {}
                     ar_marker_2:
@@ -158,6 +168,10 @@ Visualization Manager:
                     block_4:
                       {}
                     block_5:
+                      {}
+                    block_6:
+                      {}
+                    block_7:
                       {}
             shoulder_link:
               upper_arm_link:
@@ -188,7 +202,7 @@ Visualization Manager:
       Marker Topic: /environment/markers
       Name: MarkerArray
       Namespaces:
-        {}
+        markers: true
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -353,10 +367,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.064796932
+      Pitch: 0.104796693
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.92222404
+      Yaw: 0.214074016
     Saved: ~
 Window Geometry:
   Displays:
