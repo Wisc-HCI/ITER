@@ -9,18 +9,46 @@
       "name": "calibrate_robot_to_camera",
       "path_to_region": [
         {
-          "name": "move",
-          "position": {
-            "x": 0.1,
-            "y": -0.1,
-            "z": 0
-          },
-          "orientation": {
-            "x": 0,
-            "y": 0,
-            "z": 0,
-            "w": 1
-          }
+            "position": {
+                "y": 0.35,
+                "x": 0.0,
+                "z": 0.1
+            },
+            "name": "move",
+            "orientation": {
+                "y": 0,
+                "x": 0.7071067811865475,
+                "z": -0.7071067811865475,
+                "w": 0
+            }
+        },
+        {
+            "position": {
+                "y": 0.7,
+                "x": 0.0,
+                "z": 0.1
+            },
+            "name": "move",
+            "orientation": {
+              "y": 0.7071067811865475,
+              "x": 0.7071067811865475,
+              "z": 0,
+              "w": 0
+            }
+        },
+        {
+            "position": {
+                "y": 0.7,
+                "x": 0.0,
+                "z": 0.03
+            },
+            "name": "move",
+            "orientation": {
+              "y": 0.7071067811865475,
+              "x": 0.7071067811865475,
+              "z": 0,
+              "w": 0
+            }
         }
       ],
       "tag_to_ee_transform": {

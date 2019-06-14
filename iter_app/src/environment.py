@@ -16,12 +16,16 @@ MODE_MARKER = 'marker'
 
 
 import tf
+import time
 import uuid
 import rospy
 import tf2_ros
 
-from std_msgs.msg import Header
+from tf.transformations import *
+from visualization_msgs.msg import *
 from iter_app.msg import EnvironmentObject
+from std_msgs.msg import Header, ColorRGBA
+from interactive_markers.interactive_marker_server import *
 from geometry_msgs.msg import Pose, Vector3, Quaternion, TransformStamped
 
 from iter_app.srv import GetVisionObject, GetVisionObjectResponse
@@ -48,9 +52,25 @@ import iter_app_tools.environment_interface.vision as vision_env
 
 
 DEFAULT_TF = {
-        'position': (0,0,0),
-        'orientation': (0,0,0,1)
+        'position': (-0.0498019680381, 0.872681796551, 0.34569761157),
+        'orientation': (-0.0167846251279,-0.976989865303,0.2126237005,0.000687647901941)
     }
+
+'''
+position:
+  x: -0.0498019680381
+  y: 0.872681796551
+  z: 0.34569761157
+orientation:
+  x: -0.0167846251279
+  y: -0.976989865303
+  z: 0.2126237005
+  w: 0.000687647901941
+
+'''
+
+
+CALIBRATE_TAG_WAIT_TIMEOUT = 30
 
 
 class Environment:
@@ -69,6 +89,56 @@ class Environment:
         self._get_vision_obj_srv = rospy.Service("/environment/get_vision_object",GetVisionObject,self._get_vision_obj)
         self._cal_bot_to_cam_srv = rospy.Service("/environment/calibrate_robot_to_camera",CalibrateRobotToCamera,self._cal_bot_to_cam)
         self._get_state_srv = rospy.Service("/environment/get_state",GetEnvironmentState,self._get_state)
+
+        self._interactive_marker_server = InteractiveMarkerServer("interactive_markers")
+
+        self._camera_marker = InteractiveMarker()
+        self._camera_marker.header.frame_id = "base_link"
+        self._camera_marker.name = "camera_marker"
+        self._camera_marker.description = "Camera TF rotation marker"
+        self._camera_marker.scale = 0.5
+        self._camera_marker.pose = Pose(position=Vector3(x=DEFAULT_TF['position'][0],
+                                                         y=DEFAULT_TF['position'][1],
+                                                         z=DEFAULT_TF['position'][2]),
+                                        orientation=Quaternion(x=DEFAULT_TF['orientation'][0],
+                                                               y=DEFAULT_TF['orientation'][1],
+                                                               z=DEFAULT_TF['orientation'][2],
+                                                               w=DEFAULT_TF['orientation'][3]))
+
+        print self._camera_marker
+
+        box_marker = Marker()
+        box_marker.type = Marker.CUBE
+        box_marker.scale = Vector3(x=0.1,y=0.1,z=0.1)
+        box_marker.color = ColorRGBA(r=0.5,g=05,b=0.5,a=0.75)
+
+        box_control = InteractiveMarkerControl()
+        box_control.always_visible = True
+        box_control.markers.append(box_marker)
+        self._camera_marker.controls.append(box_control)
+
+        controls = {
+            'rotate_x': {'orientation': Quaternion(x=1,y=0,z=0,w=1), 'mode': InteractiveMarkerControl.ROTATE_AXIS},
+            'rotate_y': {'orientation': Quaternion(x=0,y=0,z=1,w=1), 'mode': InteractiveMarkerControl.ROTATE_AXIS},
+            'rotate_z': {'orientation': Quaternion(x=0,y=1,z=0,w=1), 'mode': InteractiveMarkerControl.ROTATE_AXIS},
+            'move_x': {'orientation': Quaternion(x=1,y=0,z=0,w=1), 'mode': InteractiveMarkerControl.MOVE_AXIS},
+            'move_y': {'orientation': Quaternion(x=0,y=0,z=1,w=1), 'mode': InteractiveMarkerControl.MOVE_AXIS},
+            'move_z': {'orientation': Quaternion(x=0,y=1,z=0,w=1), 'mode': InteractiveMarkerControl.MOVE_AXIS}
+        }
+        for key in controls.keys():
+            control = InteractiveMarkerControl()
+            control.name = key
+            control.orientation = controls[key]['orientation']
+            control.interaction_mode = controls[key]['mode']
+            self._camera_marker.controls.append(control)
+
+        self._interactive_marker_server.insert(self._camera_marker,self._process_cam_marker_feedback)
+        self._interactive_marker_server.applyChanges()
+
+    def _process_cam_marker_feedback(self, feedback):
+        print feedback.pose
+        pos, rot = self._pose_msg_to_tf(feedback.pose)
+        self._update_baselink_map_tf(pos,rot)
 
     def _update_baselink_map_tf(self,pos,rot):
         msg = TransformStamped()
@@ -146,25 +216,36 @@ class Environment:
         # probe camera to robot transform, note robot's ar tag must be within
         # camera's field of view
 
+        #TODO this is in development and currently broken. Furture work to
+        # finish  / fix this.
+        # Essentially what needs to be done, is calculate correct position and orientation
+
+        print 'in env calibration'
+
         # find calibration tag
-        tagId = int(request.ar_tag_id) if request.ar_tag_id != "" else self._calibrate_ar_tag_id
-        tagPose = vision_env.get_arg_tag(tagId)
+        tagId = request.ar_tag_id if request.ar_tag_id != "" else str(self._calibrate_ar_tag_id)
+
+        tagPose = None
+        base_time = time.time()
+        while tagPose == None and (time.time() - base_time) < CALIBRATE_TAG_WAIT_TIMEOUT:
+            tagPose = vision_env.get_arg_tag(tagId)
+            rospy.sleep(0.1)
+
         if tagPose == None:
             return CalibrateRobotToCameraResponse(status=False)
 
         # pre-process poses into tfs
         tagPos, tagRot = self._pose_msg_to_tf(tagPose)
-        eePos_bl, eeRot_bl = self._pose_msg_to_tf(request.ee_pose)
+        eePos, eeRot = self._pose_msg_to_tf(request.ee_pose)
         gtaPos, gtaRot = self._pose_msg_to_tf(request.tag_grip_tf)
 
-        # adjust tag pose to be root ee relative to map
-        eePos_mp = [tagPos[i] + gtaPos[i] for i in range(0,len(tagPos))]
-        eeRot_mp = tf.transformation.quaternion_multiply(tagRot,gtaRot)
-
         # compute transform between base_link and map
-        position = [eePos_bl[i] + eePos_mp[i] for i in range(0,len(eePos_bl))]
-        rotation = tf.transformation.quaternion_multiply(eeRot_bl,eeRot_mp)
-        self._update_baselink_map_tf(position,rotation)
+        position = [0 + eePos[i] + gtaPos[i] + tagPos[i] for i in range(0,len(eePos))]
+        rotation = quaternion_multiply(quaternion_multiply(quaternion_multiply([0,0,0,1],eeRot),[0,0.707,0,0.707]),quaternion_inverse(tagRot))
+        #TODO get the orientation down as right now it is not correct
+        #self._update_baselink_map_tf(position,DEFAULT_TF['orientation'])
+
+        print 'result', position, rotation
 
         return CalibrateRobotToCameraResponse(status=True)
 
@@ -181,3 +262,8 @@ if __name__ == "__main__":
     env = Environment(calibrate_tag)
     while not rospy.is_shutdown():
         rospy.spin()
+
+'''
+ee base_link (-0.00014280138463369698, 0.7043176170517356, 0.03148795015642926) (0.7071123348779547, 0.7070964926275097, -0.0021216872712473476, 0.0014813576356059509)
+ee map [-0.06534820393737668, -0.03666618769995965, 0.2988520098005764] [ 0.67575675  0.70129839 -0.11709213  0.1944809 ]
+'''

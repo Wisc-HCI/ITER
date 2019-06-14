@@ -7,6 +7,8 @@
             "Currently unsupported, though intention is collision interfacing"
 '''
 
+import rospy
+
 from enum import Enum
 from iter_app_tools.pose_conversion import *
 from iter_app_tools.primitives.abstract import AbstractBehaviorPrimitives, Primitive, ReturnablePrimitive
@@ -137,16 +139,22 @@ class CalibrateRobotToCamera(Primitive):
         status = True
 
         # place robot into camera field of view
-        for m in path:
+        for m in self._path:
             status = m.operate()
             if not status:
                 break
 
+        # give some time for vision system to process
+        print 'sleeping'
+        rospy.sleep(5)
+
         # run calibration routine
         if status:
+            print 'callining calibration'
             status, ee_pose = self._get_pose.operate()
-            status = status and self._envClient.calibrate_robot_to_camera(self._tag_id,ee_pose,self._transform)
+            status = status and self._envClient.calibrate_robot_to_camera(self._tag_id,ee_pose,self._transform).status
 
+        print status
         return status
 
 
