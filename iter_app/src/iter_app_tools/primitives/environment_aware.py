@@ -146,7 +146,8 @@ class CalibrateRobotToCamera(Primitive):
 
         # give some time for vision system to process
         print 'sleeping'
-        rospy.sleep(5)
+        rospy.sleep(15)
+        print 'calibrating'
 
         # run calibration routine
         if status:
