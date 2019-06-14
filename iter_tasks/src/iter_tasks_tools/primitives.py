@@ -1,75 +1,69 @@
 # Olivia Zhao 6/10/19
 
 
-import json
-
 def calibrate_robot_to_camera(path_to_region, tag_to_ee_transform, tag_id):
-    return json.dumps({'name': 'calibrate_robot_to_camera',
-                        'path_to_region':path_to_region,
-                        'tag_to_ee_transform':tag_to_ee_transform,
-                        'tag_id': tag_id })
+    return {'name': 'calibrate_robot_to_camera',
+            'path_to_region':path_to_region,
+            'tag_to_ee_transform':tag_to_ee_transform,
+            'tag_id': tag_id }
 
 def connect_object(object_name):
-    return json.dumps({'name': 'connect_object',
-                        'object_name': object_name})
+    return {'name': 'connect_object',
+            'object_name': object_name}
 
 def disconnect_object(test_id):
-    return json.dumps({'name': 'disconnect_object',
-                        'object_name': test_id})
+    return {'name': 'disconnect_object',
+            'object_name': test_id}
 
 def find_vision_object(object_type):
-    return json.dumps({'name':'find_vision_object',
-                        'object_type': object_type})
+    return {'name':'find_vision_object',
+            'object_type': object_type}
 
 def get_pose():
-    return json.dumps({'name':'get_pose'})
+    return {'name':'get_pose'}
 
 def grasp(effort):
-    return json.dumps({'name':'grasp',
-                        'effort': effort})
+    return {'name':'grasp',
+            'effort': effort}
 
 def logger(msg):
-    return json.dumps({'name': 'logger',
-                        'msg':msg})
+    return {'name': 'logger',
+            'msg':msg}
 
 def move(position, orientation):
-    return json.dumps({'name': 'move',
-                        'position': position,
-                        'orientation': orientation})
+    return {'name': 'move',
+            'position': position,
+            'orientation': orientation}
 
-def pick_and_place_static(path_to_object, path_to_destination,
-    object_name, grasp_effort, release_effort):
-    return json.dumps({'name':'pick_and_place_static',
-                        'path_to_object': path_to_object,
-                        'path_to_destination': path_to_destination,
-                        'object_name': object_name,
-                        'grasp_effort': grasp_effort,
-                        'release_effort': release_effort
-                        })
+def pick_and_place_static(path_to_object, path_to_destination, object_name, grasp_effort, release_effort):
+    return {'name':'pick_and_place_static',
+            'path_to_object': path_to_object,
+            'path_to_destination': path_to_destination,
+            'object_name': object_name,
+            'grasp_effort': grasp_effort,
+            'release_effort': release_effort}
 
-def pick_and_place_vision(object_type, path_to_region, path_to_destination,
-    grasp_effort, release_effort):
-    return json.dumps({'name': 'pick_and_place_vision',
-                        'object_type': object_type,
-                        'path_to_region': path_to_region,
-                        'path_to_destination': path_to_destination,
-                        'grasp_effort': grasp_effort,
-                        'release_effort': release_effort
-                        })
+def pick_and_place_vision(object_type, path_to_region, path_to_destination, grasp_effort, release_effort, grasp_offset):
+    return {'name': 'pick_and_place_vision',
+            'object_type': object_type,
+            'path_to_region': path_to_region,
+            'path_to_destination': path_to_destination,
+            'grasp_effort': grasp_effort,
+            'release_effort': release_effort,
+            'grasp_offset': grasp_offset}
 
 def release(effort):
-    return json.dumps({'name': 'release',
-                        'effort': effort
-                        })
+    return {'name': 'release',
+            'effort': effort}
 
-def wait_button(timeout):
-    return json.dumps({'name': 'wait',
-                        'condition': 'button',
-                        'timeout': timeout
-                        })
+def wait_button(timeout=None):
+    msg = {'name': 'wait',
+            'condition': 'button'}
+    if timeout != None:
+        msg['timeout'] = timeout
+    return msg
 
 def wait_time(value):
-    return json.dumps({'name': 'wait',
-                        'condition': 'time',
-                        'value': value
-                        })
+    return {'name': 'wait',
+            'condition': 'time',
+            'value': value}

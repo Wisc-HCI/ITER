@@ -61,7 +61,7 @@ class DisconnectObjectFromRobot(Primitive):
 
 class PickAndPlaceVision(Primitive):
 
-    def __init__(self,object_type,path_to_region,path_to_destination,grasp_effort,release_effort,envClient,lookup, **kwargs):
+    def __init__(self,object_type,path_to_region,path_to_destination,grasp_effort,release_effort,grasp_offset,envClient,lookup, **kwargs):
         self._find_obj = FindVisionObject(object_type,envClient)
         self._path_to_region = [lookup('move')(dct['position'],dct['orientation']) for dct in path_to_region]
         self._path_to_dest = [lookup('move')(dct['position'],dct['orientation']) for dct in path_to_destination]
@@ -69,12 +69,14 @@ class PickAndPlaceVision(Primitive):
         self._release = lookup('release')(release_effort)
         self._envClient = envClient
         self._lookup = lookup
+        self._grasp_offset = grasp_offset
 
     def operate(self):
         status = True
 
         # find object, getid
         status, (obj_id, pose) = self._find_obj.operate()
+        #TODO apply grasp offset to object's pose
 
         # move to region
         if status:

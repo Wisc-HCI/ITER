@@ -6,7 +6,8 @@ import copy
 import json
 import math
 
-from iter_tasks_tools import data_type, environment, primitives
+import iter_tasks_tools.data_types as dt
+import iter_tasks_tools.primitives as pm
 
 
 BLOCK_SMALL = (0.02032,0.05842,0.01524)
