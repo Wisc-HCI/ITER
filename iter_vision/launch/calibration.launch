@@ -1,0 +1,26 @@
+
+<!-- Calibration Instructions -->
+<!-- Start this launch file to configure usb_cam then, -->
+<!-- http://wiki.ros.org/camera_calibration -->
+<!-- Invoke: rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/usb_cam/image_raw camera:=/usb_cam  -->
+
+<launch>
+
+  <arg name="video_src" default="/dev/video0" />
+
+  <node name="usb_cam" pkg="usb_cam" type="usb_cam_node">
+    <param name="video_device" value="$(arg video_src)" />
+    <param name="image_width" value="640" />
+    <param name="image_height" value="480" />
+    <param name="pixel_format" value="yuyv" />
+    <param name="camera_frame_id" value="usb_cam" />
+    <param name="io_method" value="mmap" />
+  </node>
+
+  <node name="image_view_initial" pkg="image_view" type="image_view" respawn="false" output="screen">
+    <remap from="image" to="/usb_cam/image_raw" />
+    <param name="autosize" value="true" />
+    <param name="~image_transport" value="compressed" />
+  </node>
+
+</launch>

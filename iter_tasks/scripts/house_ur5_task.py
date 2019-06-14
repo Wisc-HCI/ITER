@@ -194,7 +194,6 @@ class Queue:
 
         for index in range(0,self.number_of_items):
             target_position, target_orientation = self._get(index)
-            target_position['z'] = target_position['z'] * (1 if self.offset_z else 0.5)
 
             obj_list.append({
                 'name': self.name + '_' + str(index),

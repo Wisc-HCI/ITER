@@ -5,9 +5,9 @@
   <arg name="max_track_error" default="0.05" />
   <arg name="output_frame" default="/map" />
 
-  <arg name="flag_image_view_initial" default="true" />
+  <arg name="flag_image_view_initial" default="false" />
   <arg name="flag_image_view_blocks" default="false" />
-  <arg name="flag_image_view_blocks_filter" default="false" />
+  <arg name="flag_image_view_blocks_filter" default="true" />
   <arg name="flag_image_view_2d_points" default="true" />
 
   <arg name="video_src" default="/dev/video0" />
