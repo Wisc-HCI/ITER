@@ -116,7 +116,7 @@ class BlockVision:
         # Note that algorithm is assuming the objects are against a black background
         # otherwise another step to remove a solid background color is needed
         hsv = cv2.cvtColor(original_img,cv2.COLOR_BGR2HSV)
-        thresh1 = cv2.inRange(hsv,(self._min_hue,22,100),(self._max_hue,255,255)) #0, 50, 50
+        thresh1 = cv2.inRange(hsv,(self._min_hue,20,100),(self._max_hue,255,255)) #0, 50, 50
 
         # Denoise
         kernel = np.ones((5,5),np.uint8)
