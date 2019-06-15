@@ -29,6 +29,9 @@ blocks are then published as a 2D pose in 3D space. Where centroid x,y is provid
 and z is 0 and where orientation is the Euler angle around the z-axis.
 '''
 
+# TODO large blocks not being detected
+# HSV needs to be adjusted for lighting
+
 import sys
 import cv2
 import rospy

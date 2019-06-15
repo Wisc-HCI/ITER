@@ -52,7 +52,10 @@ class AR2DDraw:
 
             box = cv2.boxPoints(rect)
             box = np.int0(box)
-            image = cv2.drawContours(image,[box],0,(255,0,0),2)
+            color = (255,0,0)
+            image = cv2.drawContours(image,[box],0,color,2)
+            textPos = (rect[0][0]+rect[1][0],rect[0][1]+rect[1][1])
+            cv2.putText(image,'ar_tag_{0}'.format(m.id),textPos,cv2.FONT_HERSHEY_SIMPLEX,1,color,2)
 
         # Update image with block info
         for b in self._blocks:
@@ -64,7 +67,10 @@ class AR2DDraw:
 
             box = cv2.boxPoints(rect)
             box = np.int0(box)
-            image = cv2.drawContours(image,[box],0,(0,0,255),2)
+            color = (0,0,255)
+            image = cv2.drawContours(image,[box],0,color,2)
+            textPos = (rect[0][0]+rect[1][0],rect[0][1]+rect[1][1])
+            cv2.putText(image,'block_{0}: {1}'.format(b.id,b.type),textPos,cv2.FONT_HERSHEY_SIMPLEX,1,color,2)
 
         # Write output image
         imgMsg = CompressedImage()

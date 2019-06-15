@@ -73,7 +73,7 @@ def build_house_base():
     position['y'] += 0.5 * BLOCK_LARGE[1] + GRASP_OFFSET['y']
     position['z'] += 0.5 * BLOCK_LARGE[2] + GRASP_OFFSET['z'] + 0.005
     task_list.append(pick_and_place_block(
-        block_type='large',
+        block_type='small',
         target_position=copy.deepcopy(position),
         target_orientation=DOWN_GY_ORIENTATION))
 
