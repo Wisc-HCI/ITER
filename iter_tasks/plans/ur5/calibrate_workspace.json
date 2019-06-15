@@ -1,0 +1,84 @@
+{
+  "title": "calibrate-robot-to-camera-test",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [],
+  "task": [
+    {
+      "name": "calibrate_robot_to_camera",
+      "path_to_region": [
+        {
+          "name": "move",
+          "position": {
+            "y": 0.35,
+            "x": 0.0,
+            "z": 0.1
+          },
+          "orientation": {
+            "y": 0,
+            "x": 0.7071067811865475,
+            "z": -0.7071067811865475,
+            "w": 0
+          }
+        },
+        {
+          "name": "move",
+          "position": {
+            "y": 0.7,
+            "x": 0.0,
+            "z": 0.1
+          },
+          "orientation": {
+            "y": 0.7071067811865475,
+            "x": 0.7071067811865475,
+            "z": 0,
+            "w": 0
+          }
+        },
+        {
+          "name": "move",
+          "position": {
+            "y": 0.7,
+            "x": 0.0,
+            "z": 0.03
+          },
+          "orientation": {
+            "y": 0.7071067811865475,
+            "x": 0.7071067811865475,
+            "z": 0,
+            "w": 0
+          }
+        }
+      ],
+      "tag_to_ee_transform": {
+        "position": {
+          "x": 0.0179353356361,
+          "y": 5.51296398044e-05,
+          "z": -0.0375585407019
+        },
+        "orientation": {
+          "x": -0.998296976089,
+          "y": 0.000357139826519,
+          "z": -0.00438843620941,
+          "w": -0.0581783130765
+        }
+      },
+      "tag_id": "4"
+    },
+    {
+      "name": "move",
+      "position": {
+        "y": 0.35,
+        "x": 0.0,
+        "z": 0.1
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0.7071067811865475,
+        "z": -0.7071067811865475,
+        "w": 0
+      }
+    }
+  ]
+}
