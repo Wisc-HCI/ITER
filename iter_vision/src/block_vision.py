@@ -84,7 +84,7 @@ class BlockVision:
         original_img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
         # Process image
-        filtered_img = self._img_filter(original_img)
+        filtered_img = self._hsv_vision_image_filter(original_img)
 
         # Publish image after filtering
         imgFMsg = CompressedImage()
@@ -93,6 +93,38 @@ class BlockVision:
         imgFMsg.data = np.array(cv2.imencode('.jpg',filtered_img)[1]).tostring()
         self.img_f_pub.publish(imgFMsg)
 
+        # detect bloks from image
+        final_img, poses = self._contour_based_detection(original_img,filtered_img)
+
+        print '----------------'
+        print poses
+
+        # Publish object poses
+        poseMsg = BlockPose2DArray()
+        poseMsg.blocks = poses
+        self.pose_pub.publish(poseMsg)
+
+        # Publish final image
+        imgCMsg = CompressedImage()
+        imgCMsg.header.stamp = rospy.Time.now()
+        imgCMsg.format = "jpeg"
+        imgCMsg.data = np.array(cv2.imencode('.jpg',final_img)[1]).tostring()
+        self.img_c_pub.publish(imgCMsg)
+
+    def _hsv_vision_image_filter(self, original_img):
+        # Apply an HSV filter to remove glare
+        # Note that algorithm is assuming the objects are against a black background
+        # otherwise another step to remove a solid background color is needed
+        hsv = cv2.cvtColor(original_img,cv2.COLOR_BGR2HSV)
+        thresh1 = cv2.inRange(hsv,(self._min_hue,22,100),(self._max_hue,255,255)) #0, 50, 50
+
+        # Denoise
+        kernel = np.ones((5,5),np.uint8)
+        morphed = cv2.morphologyEx(thresh1,cv2.MORPH_OPEN,kernel)
+
+        return morphed
+
+    def _contour_based_detection(self,original_img,filtered_img):
         # Capture contours in image
         _0, contours, _1 = cv2.findContours(filtered_img,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
@@ -158,32 +190,7 @@ class BlockVision:
             # Update ID counter
             count += 1
 
-        # Publish object poses
-        poseMsg = BlockPose2DArray()
-        poseMsg.blocks = poses
-        self.pose_pub.publish(poseMsg)
-
-        # Publish final image
-        imgCMsg = CompressedImage()
-        imgCMsg.header.stamp = rospy.Time.now()
-        imgCMsg.format = "jpeg"
-        imgCMsg.data = np.array(cv2.imencode('.jpg',final_img)[1]).tostring()
-        self.img_c_pub.publish(imgCMsg)
-
-    def _img_filter(self, original_image):
-
-        # Apply an HSV filter to remove glare
-        # Note that algorithm is assuming the objects are against a black background
-        # otherwise another step to remove a solid background color is needed
-        hsv = cv2.cvtColor(original_image,cv2.COLOR_BGR2HSV)
-        thresh1 = cv2.inRange(hsv,(self._min_hue,25,150),(self._max_hue,255,255)) #0, 50, 50
-
-        # Denoise
-        kernel = np.ones((5,5),np.uint8)
-        morphed = cv2.morphologyEx(thresh1,cv2.MORPH_OPEN,kernel)
-
-        return morphed
-
+        return final_img, poses
 
 if __name__ == "__main__":
     try:
