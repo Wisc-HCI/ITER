@@ -17,13 +17,17 @@ https://github.com/SMARTlab-Purdue/ros-tutorial-robot-control-vision/wiki/Instal
 for information on how to work through OpenCV
 
 The algorithm behind this module is rather simple (and brittle), future work to
-enhance / extend this is necessary. Currently it filters image in HSV space
-(removing low saturation and low value). Then applying erroision and dialation
-to clean up the binary image. The end result is a set of blobs which are fit to
-a min area rectangle where the area is filtered to be within the expected range
-of blocks (thereby eliminating small noise blobs and large invalid objects).
+enhance / extend this is necessary. Currently it applies Canny Edge detection and
+dialation + erosion to generate "interesting" regions. Then it filters image
+in HSV space (removing low saturation and low value). Next applying erroision
+and dialation to clean up the final binary image. The end result is a set of
+blobs which are fit to a min area rectangle where the area is filtered to be
+within the expected range of blocks (thereby eliminating small noise blobs and
+large invalid objects).
+Then
 
-After detecting the blocks, a ration between length and width is used to
+***
+After detecting the blocks, a ratio between length and width is used to
 determine if the block is the large or small block. These resulting detected
 blocks are then published as a 2D pose in 3D space. Where centroid x,y is provided
 and z is 0 and where orientation is the Euler angle around the z-axis.
@@ -174,19 +178,11 @@ class BlockVision:
             box = np.int0(box)
             final_img = cv2.drawContours(final_img,[box],0,(0,255,0),2)
 
-            # Classify
-            type = BlockPose2D.UNKNOWN
-            ratio = max((rect[1][0] / rect[1][1]),(rect[1][1] / rect[1][0]))
-            if ratio >= BIG_BLOCK_RATIO[0] and ratio < BIG_BLOCK_RATIO[1]:
-                type = BlockPose2D.LARGE
-            elif ratio >= SML_BLOCK_RATIO[0] and ratio < SML_BLOCK_RATIO[1]:
-                type = BlockPose2D.SMALL
-
-            print ratio
-
-            # Generate pose information
+            # Generate block information
             cx = rect[0][0]
             cy = rect[0][1]
+            primary_dim = max([rect[1][0],rect[1][1]])
+            secondary_dim = min([rect[1][0],rect[1][1]])
             rotation = rect[2]
             if len(box) > 0:
                 x_min = x_max = box[0][0]
@@ -204,6 +200,9 @@ class BlockVision:
                 y_ax = y_max - y_min
                 rotation += 90 if y_ax > x_ax else 0
 
+            # Classify
+            type = self._block_classification(primary_dim,secondary_dim,rotation)
+
             # Package message
             block = BlockPose2D()
             block.pose = Pose2D(x=cx,y=cy,theta=rotation)
@@ -215,6 +214,20 @@ class BlockVision:
             count += 1
 
         return final_img, poses
+
+    def _block_classification(self,primary_axis,secondary_axis,primary_rotation):
+        type = BlockPose2D.UNKNOWN
+        ratio = primary_axis / secondary_axis
+
+        print '[{0}, {1}, {2}],'.format(ratio, primary_axis, primary_rotation)
+
+        #TODO replace with better classifer
+        if ratio >= BIG_BLOCK_RATIO[0] and ratio < BIG_BLOCK_RATIO[1]:
+            type = BlockPose2D.LARGE
+        elif ratio >= SML_BLOCK_RATIO[0] and ratio < SML_BLOCK_RATIO[1]:
+            type = BlockPose2D.SMALL
+
+        return type
 
 
 if __name__ == "__main__":
