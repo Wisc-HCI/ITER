@@ -201,10 +201,11 @@ class Environment:
             type = vision_env.BLOCK_SMALL
         elif request.type == 'unknown':
             type = vision_env.BLOCK_UNKNOWN
+
         id = vision_env.get_block(type)
 
         response = GetVisionObjectResponse()
-        response.status = not id is None
+        response.status = not id == None
         if not response.status:
             return response
         response.vision_id = 'block_{0}'.format(id)
@@ -248,6 +249,10 @@ class Environment:
         self._calibration_tfs['c2_to_mp']['position'] = tagPos
         self._calibration_tfs['c2_to_mp']['rotation'] = tagRot
 
+        self._calibration_marker.pose=Pose(
+            position=Vector3(x=gtaPos[0],y=gtaPos[1],z=gtaPos[2]),
+            orientation=Quaternion(x=gtaRot[0],y=gtaRot[1],z=gtaRot[2],w=gtaRot[3]))
+
         return CalibrateRobotToCameraResponse(status=True)
 
     def _get_state(self, request):
@@ -262,62 +267,3 @@ if __name__ == "__main__":
     calibrate_tag = rospy.get_param('~calibrate_ar_tag_id',None)
     env = Environment(calibrate_tag)
     env.spin()
-
-
-#===============================================================================
-#                            Old Manual Calibration
-#===============================================================================
-
-'''
-self._interactive_marker_server = InteractiveMarkerServer("interactive_markers")
-
-self._calibration_marker = InteractiveMarker()
-self._calibration_marker.header.frame_id = "base_link"
-self._calibration_marker.name = "camera_marker"
-self._calibration_marker.description = "Camera TF rotation marker"
-self._calibration_marker.scale = 0.5
-self._calibration_marker.pose = Pose(position=Vector3(x=DEFAULT_TF['position'][0],
-                                                 y=DEFAULT_TF['position'][1],
-                                                 z=DEFAULT_TF['position'][2]),
-                                orientation=Quaternion(x=DEFAULT_TF['orientation'][0],
-                                                       y=DEFAULT_TF['orientation'][1],
-                                                       z=DEFAULT_TF['orientation'][2],
-                                                       w=DEFAULT_TF['orientation'][3]))
-
-print self._calibration_marker
-
-box_marker = Marker()
-box_marker.type = Marker.CUBE
-box_marker.scale = Vector3(x=0.1,y=0.1,z=0.1)
-box_marker.color = ColorRGBA(r=0.5,g=05,b=0.5,a=0.75)
-
-box_control = InteractiveMarkerControl()
-box_control.always_visible = True
-box_control.markers.append(box_marker)
-self._calibration_marker.controls.append(box_control)
-
-controls = {
-    'rotate_x': {'orientation': Quaternion(x=1,y=0,z=0,w=1), 'mode': InteractiveMarkerControl.ROTATE_AXIS},
-    'rotate_y': {'orientation': Quaternion(x=0,y=0,z=1,w=1), 'mode': InteractiveMarkerControl.ROTATE_AXIS},
-    'rotate_z': {'orientation': Quaternion(x=0,y=1,z=0,w=1), 'mode': InteractiveMarkerControl.ROTATE_AXIS},
-    'move_x': {'orientation': Quaternion(x=1,y=0,z=0,w=1), 'mode': InteractiveMarkerControl.MOVE_AXIS},
-    'move_y': {'orientation': Quaternion(x=0,y=0,z=1,w=1), 'mode': InteractiveMarkerControl.MOVE_AXIS},
-    'move_z': {'orientation': Quaternion(x=0,y=1,z=0,w=1), 'mode': InteractiveMarkerControl.MOVE_AXIS}
-}
-for key in controls.keys():
-    control = InteractiveMarkerControl()
-    control.name = key
-    control.orientation = controls[key]['orientation']
-    control.interaction_mode = controls[key]['mode']
-    self._calibration_marker.controls.append(control)
-
-self._interactive_marker_server.insert(self._calibration_marker,self._process_cam_marker_feedback)
-self._interactive_marker_server.applyChanges()
-'''
-
-'''
-def _process_cam_marker_feedback(self, feedback):
-print feedback.pose
-pos, rot = self._pose_msg_to_tf(feedback.pose)
-self._update_baselink_map_tf(pos,rot)
-'''

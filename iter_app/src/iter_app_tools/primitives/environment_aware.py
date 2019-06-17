@@ -75,7 +75,9 @@ class PickAndPlaceVision(Primitive):
         status = True
 
         # find object, getid
+        print 'I am here'
         status, (obj_id, pose) = self._find_obj.operate()
+        print 'I am not here'
         #TODO apply grasp offset to object's pose
 
         # move to region
