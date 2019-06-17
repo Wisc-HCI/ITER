@@ -17,13 +17,17 @@ https://github.com/SMARTlab-Purdue/ros-tutorial-robot-control-vision/wiki/Instal
 for information on how to work through OpenCV
 
 The algorithm behind this module is rather simple (and brittle), future work to
-enhance / extend this is necessary. Currently it filters image in HSV space
-(removing low saturation and low value). Then applying erroision and dialation
-to clean up the binary image. The end result is a set of blobs which are fit to
-a min area rectangle where the area is filtered to be within the expected range
-of blocks (thereby eliminating small noise blobs and large invalid objects).
+enhance / extend this is necessary. Currently it applies Canny Edge detection and
+dialation + erosion to generate "interesting" regions. Then it filters image
+in HSV space (removing low saturation and low value). Next applying erroision
+and dialation to clean up the final binary image. The end result is a set of
+blobs which are fit to a min area rectangle where the area is filtered to be
+within the expected range of blocks (thereby eliminating small noise blobs and
+large invalid objects).
+Then
 
-After detecting the blocks, a ration between length and width is used to
+***
+After detecting the blocks, a ratio between length and width is used to
 determine if the block is the large or small block. These resulting detected
 blocks are then published as a 2D pose in 3D space. Where centroid x,y is provided
 and z is 0 and where orientation is the Euler angle around the z-axis.
@@ -47,8 +51,11 @@ sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
 
 AREA_FILTER = (600,4000)
 
-BIG_BLOCK_R = (5,6)
-SML_BLOCK_R = (2,3)
+SML_BLOCK_AREA = (,)
+BIG_BLOCK_AREA = (,)
+
+BIG_BLOCK_RATIO = (3.5,7.5)
+SML_BLOCK_RATIO = (2,4)
 
 
 class BlockVision:
@@ -84,7 +91,10 @@ class BlockVision:
         original_img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
         # Process image
-        filtered_img = self._hsv_vision_image_filter(original_img)
+        canny_mask = self._canny_filter(original_img)
+        #filtered_img = canny_mask
+        temp_img = cv2.bitwise_and(original_img,original_img,mask=canny_mask)
+        filtered_img = self._hsv_vision_image_filter(temp_img)
 
         # Publish image after filtering
         imgFMsg = CompressedImage()
@@ -96,8 +106,8 @@ class BlockVision:
         # detect bloks from image
         final_img, poses = self._contour_based_detection(original_img,filtered_img)
 
-        print '----------------'
-        print poses
+        #print '----------------'
+        #print poses
 
         # Publish object poses
         poseMsg = BlockPose2DArray()
@@ -116,17 +126,33 @@ class BlockVision:
         # Note that algorithm is assuming the objects are against a black background
         # otherwise another step to remove a solid background color is needed
         hsv = cv2.cvtColor(original_img,cv2.COLOR_BGR2HSV)
-        thresh1 = cv2.inRange(hsv,(self._min_hue,20,100),(self._max_hue,255,255)) #0, 50, 50
+        thresh1 = cv2.inRange(hsv,(self._min_hue,10,100),(self._max_hue,255,255)) #0, 50, 50
 
         # Denoise
-        kernel = np.ones((5,5),np.uint8)
-        morphed = cv2.morphologyEx(thresh1,cv2.MORPH_OPEN,kernel)
+        kernel_5 = np.ones((5,5),np.uint8)
+        kernel_3 = np.ones((3,3),np.uint8)
+        erosion = cv2.erode(thresh1,kernel_5,iterations=1)
+        dilation = cv2.dilate(erosion,kernel_5,iterations=2)
+        erosion = cv2.erode(dilation,kernel_5,iterations=2)
+        dilation = cv2.dilate(erosion,kernel_5,iterations=1)
+        erosion = cv2.erode(dilation,kernel_5,iterations=2)
+        dilation = cv2.dilate(erosion,kernel_3,iterations=2)
+        return dilation
 
-        return morphed
+    def _canny_filter(self, original_img):
+        gray = cv2.cvtColor(original_img, cv2.COLOR_BGR2GRAY)
+        edges = cv2.Canny(original_img,100,200)
+
+        kernel = np.ones((5,5),np.uint8)
+        dilation = cv2.dilate(edges,kernel,iterations=5)
+        erosion = cv2.erode(dilation,kernel,iterations=4)
+        return erosion
 
     def _contour_based_detection(self,original_img,filtered_img):
         # Capture contours in image
         _0, contours, _1 = cv2.findContours(filtered_img,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+
+        print '----------------'
 
         # Iterate through contours
         poses = []
@@ -152,17 +178,11 @@ class BlockVision:
             box = np.int0(box)
             final_img = cv2.drawContours(final_img,[box],0,(0,255,0),2)
 
-            # Classify
-            type = BlockPose2D.UNKNOWN
-            ratio = max((rect[1][0] / rect[1][1]),(rect[1][1] / rect[1][0]))
-            if ratio >= BIG_BLOCK_R[0] and ratio <= BIG_BLOCK_R[1]:
-                type = BlockPose2D.LARGE
-            elif ratio >= SML_BLOCK_R[0] and ratio <= SML_BLOCK_R[1]:
-                type = BlockPose2D.SMALL
-
-            # Generate pose information
+            # Generate block information
             cx = rect[0][0]
             cy = rect[0][1]
+            primary_dim = max([rect[1][0],rect[1][1]])
+            secondary_dim = min([rect[1][0],rect[1][1]])
             rotation = rect[2]
             if len(box) > 0:
                 x_min = x_max = box[0][0]
@@ -180,6 +200,9 @@ class BlockVision:
                 y_ax = y_max - y_min
                 rotation += 90 if y_ax > x_ax else 0
 
+            # Classify
+            type = self._block_classification(primary_dim,secondary_dim,rotation)
+
             # Package message
             block = BlockPose2D()
             block.pose = Pose2D(x=cx,y=cy,theta=rotation)
@@ -191,6 +214,21 @@ class BlockVision:
             count += 1
 
         return final_img, poses
+
+    def _block_classification(self,primary_axis,secondary_axis,primary_rotation):
+        type = BlockPose2D.UNKNOWN
+        ratio = primary_axis / secondary_axis
+
+        print '[{0}, {1}, {2}],'.format(ratio, primary_axis, primary_rotation)
+
+        #TODO replace with better classifer
+        if ratio >= BIG_BLOCK_RATIO[0] and ratio < BIG_BLOCK_RATIO[1]:
+            type = BlockPose2D.LARGE
+        elif ratio >= SML_BLOCK_RATIO[0] and ratio < SML_BLOCK_RATIO[1]:
+            type = BlockPose2D.SMALL
+
+        return type
+
 
 if __name__ == "__main__":
     try:
