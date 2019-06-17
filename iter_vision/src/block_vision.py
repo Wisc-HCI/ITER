@@ -33,11 +33,10 @@ blocks are then published as a 2D pose in 3D space. Where centroid x,y is provid
 and z is 0 and where orientation is the Euler angle around the z-axis.
 '''
 
-# TODO large blocks not being detected
-# HSV needs to be adjusted for lighting
-
+import os
 import sys
 import cv2
+import yaml
 import rospy
 import numpy as np
 
@@ -46,13 +45,15 @@ from sensor_msgs.msg import CompressedImage
 from iter_vision.msg import BlockPose2D, BlockPose2DArray
 from iter_vision.srv import ColorSelect, ColorSelectRequest, ColorSelectResponse
 
+from sklearn.neural_network import MLPClassifier
+from sklearn.model_selection import train_test_split
+
+
 sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
+DATA_FILEPATH = os.path.join(os.path.dirname(__file__),'config/block_features.yaml')
 
 
-AREA_FILTER = (600,4000)
-
-SML_BLOCK_AREA = (,)
-BIG_BLOCK_AREA = (,)
+AREA_FILTER = (500,4000)
 
 BIG_BLOCK_RATIO = (3.5,7.5)
 SML_BLOCK_RATIO = (2,4)
@@ -70,6 +71,34 @@ class BlockVision:
         self.img_f_pub = rospy.Publisher("/block_vision/filtered/compressed",CompressedImage, queue_size=1)
 
         self.color_select_srv = rospy.Service("/block_vision/color_select",ColorSelect,self._color_select_cb)
+
+        self._classifier = self._train_classifier()
+
+    def _train_classifier(self):
+        fin = open(DATA_FILEPATH,'r')
+        data = yaml.safe_load(fin)
+        fin.close()
+
+        # format data into dataset
+        features = []
+        labels = []
+        features += data['small_blocks']
+        labels += [[0,1] for i in range(0,len(data['small_blocks']))]
+        features += data['large_blocks']
+        labels += [[1,0] for i in range(0,len(data['large_blocks']))]
+
+        train_features, test_features, train_labels, test_labels = train_test_split(features,labels,shuffle=True,test_size=0.25)
+
+        # train model
+        network = MLPClassifier(solver='lbfgs',alpha=1e-5,hidden_layer_sizes=(10,),activation='relu',verbose=True)
+        model  = network.fit(train_features,train_labels)
+
+        # scoring
+        #score = model.score(test_features,test_labels)
+        #print 'Score: {0}'.format(score)
+
+        return model
+
 
     def _color_select_cb(self,response):
         status = True
@@ -105,9 +134,6 @@ class BlockVision:
 
         # detect bloks from image
         final_img, poses = self._contour_based_detection(original_img,filtered_img)
-
-        #print '----------------'
-        #print poses
 
         # Publish object poses
         poseMsg = BlockPose2DArray()
@@ -152,7 +178,7 @@ class BlockVision:
         # Capture contours in image
         _0, contours, _1 = cv2.findContours(filtered_img,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
-        print '----------------'
+        #print '----------------'
 
         # Iterate through contours
         poses = []
@@ -170,6 +196,7 @@ class BlockVision:
             #   check object area
             #   check dimension ratio
             area = rect[1][0] * rect[1][1]
+            #print area
             if not (area >= AREA_FILTER[0] and area <= AREA_FILTER[1]):
                 continue
 
@@ -219,13 +246,24 @@ class BlockVision:
         type = BlockPose2D.UNKNOWN
         ratio = primary_axis / secondary_axis
 
-        print '[{0}, {1}, {2}],'.format(ratio, primary_axis, primary_rotation)
+        #print '[{0}, {1}, {2}],'.format(ratio, primary_axis, primary_rotation)
+
+        label = self._classifier.predict([[ratio,primary_axis,primary_rotation]])[0]
+        print label
+        print self._classifier.predict_proba([[ratio,primary_axis,primary_rotation]])
+
+        if label[0] == 1:
+            type = BlockPose2D.LARGE
+        elif label[1] == 1:
+            type = BlockPose2D.SMALL
 
         #TODO replace with better classifer
+        '''
         if ratio >= BIG_BLOCK_RATIO[0] and ratio < BIG_BLOCK_RATIO[1]:
             type = BlockPose2D.LARGE
         elif ratio >= SML_BLOCK_RATIO[0] and ratio < SML_BLOCK_RATIO[1]:
             type = BlockPose2D.SMALL
+        '''
 
         return type
 
