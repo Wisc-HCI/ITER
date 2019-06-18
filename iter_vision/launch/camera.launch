@@ -14,7 +14,7 @@
       <param name="pixel_format" value="mjpeg" /> <!-- yuyv -->
       <param name="camera_frame_id" value="usb_cam" />
       <param name="io_method" value="mmap" />
-      <param name="framerate" value="2" />
+      <param name="framerate" value="1" />
     </node>
   </group>
 

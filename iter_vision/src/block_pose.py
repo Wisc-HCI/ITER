@@ -100,7 +100,7 @@ class BlockPoseNode:
             if count >= 3:
                 invA = np.linalg.pinv(A)
                 self._computed_position_transform = invA * Y
-                self._image_orienation = r2
+                self._image_orienation = (2 * math.pi - r2 / 180.0 * math.pi)
                 self._plane_orientation = r3
 
         # Apply transform from 2D space to 3D space on blocks
@@ -113,10 +113,18 @@ class BlockPoseNode:
                                    y=projection[1,0],
                                    z=projection[2,0])
 
-                rz = self._rotation_constant * (b2.pose.theta / 180 * math.pi) - self._image_orienation
+                print '-------------'
+                print b2.id
+                print b2.pose.theta
+
+                raw_angle = (2 * math.pi - b2.pose.theta / 180.0 * math.pi)
+                rz = self._rotation_constant * raw_angle - self._image_orienation
                 q = tf.transformations.quaternion_from_euler(0,0,rz)
+                print q
                 x,y,z,w = tf.transformations.quaternion_multiply(self._plane_orientation, q)
                 orientation = Quaternion(x=x,y=y,z=z,w=w)
+                print orientation
+                print '-------------'
 
                 b3 = BlockPose3D()
                 b3.header.stamp = currentTime
