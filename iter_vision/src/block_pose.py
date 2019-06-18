@@ -75,8 +75,7 @@ class BlockPoseNode:
         if self._new_ar_flag:
             # Find A input matrix and Y output matrix
             # Also compute the standard cam to plane orientation
-            r3 = [0,0,0]
-            r2 = 0
+            rotations = []
             count = 0
             A = None
             Y = None
@@ -88,18 +87,32 @@ class BlockPoseNode:
                     if processTag:
                         if count == 0:
                             A, Y = self._point_position_eqs(m2.pose.x,m2.pose.y,m3.pose.pose.position.x,m3.pose.pose.position.y,m3.pose.pose.position.z)
-                            r2 = m2.pose.theta
-                            r3 = [m3.pose.pose.orientation.x,m3.pose.pose.orientation.y,m3.pose.pose.orientation.z,m3.pose.pose.orientation.w]
                         else:
                             a, y = self._point_position_eqs(m2.pose.x,m2.pose.y,m3.pose.pose.position.x,m3.pose.pose.position.y,m3.pose.pose.position.z)
                             A = np.append(A,a,axis=0)
                             Y = np.append(Y,y,axis=0)
+
+                        r2 = m2.pose.theta
+                        r3 = [m3.pose.pose.orientation.x,m3.pose.pose.orientation.y,m3.pose.pose.orientation.z,m3.pose.pose.orientation.w]
+                        rotations.append([r2,r3])
+
                         count += 1
 
             # At least minimum eqs matrix for psuedo-inverse
             if count >= 3:
+
+                # calculate position transform
                 invA = np.linalg.pinv(A)
                 self._computed_position_transform = invA * Y
+
+                # calculate orientation transform
+                median = np.median([r[0] for r in rotations])
+                r2 = rotations[0][0]
+                r3 = rotations[0][1]
+                for r in rotations:
+                    if abs(median - r[0]) < abs(median - r2):
+                        r2 = r[0]
+                        r3 = r[1]
                 self._image_orienation = (2 * math.pi - r2 / 180.0 * math.pi)
                 self._plane_orientation = r3
 
@@ -113,18 +126,11 @@ class BlockPoseNode:
                                    y=projection[1,0],
                                    z=projection[2,0])
 
-                print '-------------'
-                print b2.id
-                print b2.pose.theta
-
                 raw_angle = (2 * math.pi - b2.pose.theta / 180.0 * math.pi)
                 rz = self._rotation_constant * raw_angle - self._image_orienation
                 q = tf.transformations.quaternion_from_euler(0,0,rz)
-                print q
                 x,y,z,w = tf.transformations.quaternion_multiply(self._plane_orientation, q)
                 orientation = Quaternion(x=x,y=y,z=z,w=w)
-                print orientation
-                print '-------------'
 
                 b3 = BlockPose3D()
                 b3.header.stamp = currentTime
