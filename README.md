@@ -27,6 +27,7 @@ The following packages are provided:
   - Provides vision subsystem for finding blocks defined by AR boundary
 - [ar_track_alvar](./ar_track_alvar/README.md)
   - modified open-source alvar AR tag tracker to also report 2D pose of tags
+  - Also see their [Github](https://github.com/ros-perception/ar_track_alvar) and [ROS Wiki](http://wiki.ros.org/ar_track_alvar)
 
 ## Contact
 Curt Henrichs (cdhenrichs@wisc.edu)
