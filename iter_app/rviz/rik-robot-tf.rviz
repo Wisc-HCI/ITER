@@ -4,9 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /TF1
         - /TF1/Frames1
-        - /InteractiveMarkers1
       Splitter Ratio: 0.5
     Tree Height: 484
   - Class: rviz/Selection
@@ -64,8 +62,6 @@ Visualization Manager:
           Value: true
         ar_marker_3:
           Value: true
-        ar_marker_4:
-          Value: true
         base:
           Value: false
         base_link:
@@ -81,10 +77,6 @@ Visualization Manager:
         block_4:
           Value: true
         block_5:
-          Value: true
-        block_6:
-          Value: true
-        block_7:
           Value: true
         calibration_point_1:
           Value: false
@@ -118,8 +110,6 @@ Visualization Manager:
           Value: false
         tool0:
           Value: false
-        tool0_controller:
-          Value: false
         upper_arm_link:
           Value: false
         usb_cam:
@@ -141,8 +131,7 @@ Visualization Manager:
         world:
           base_link:
             base:
-              tool0_controller:
-                {}
+              {}
             calibration_point_1:
               calibration_point_2:
                 map:
@@ -155,8 +144,6 @@ Visualization Manager:
                       {}
                     ar_marker_3:
                       {}
-                    ar_marker_4:
-                      {}
                     block_0:
                       {}
                     block_1:
@@ -168,10 +155,6 @@ Visualization Manager:
                     block_4:
                       {}
                     block_5:
-                      {}
-                    block_6:
-                      {}
-                    block_7:
                       {}
             shoulder_link:
               upper_arm_link:
@@ -202,7 +185,7 @@ Visualization Manager:
       Marker Topic: /environment/markers
       Name: MarkerArray
       Namespaces:
-        markers: true
+        {}
       Queue Size: 100
       Value: true
     - Alpha: 1
@@ -320,13 +303,13 @@ Visualization Manager:
       Visual Enabled: true
     - Class: rviz/InteractiveMarkers
       Enable Transparency: true
-      Enabled: false
+      Enabled: true
       Name: InteractiveMarkers
       Show Axes: false
       Show Descriptions: true
       Show Visual Aids: false
       Update Topic: /interactive_markers/update
-      Value: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -352,7 +335,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 2.00583649
+      Distance: 0.773529828
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.0599999987
         Stereo Focal Distance: 1
@@ -367,10 +350,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.00999999978
-      Pitch: 0.104796693
+      Pitch: -0.54520303
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.214074016
+      Yaw: 6.20725775
     Saved: ~
 Window Geometry:
   Displays:

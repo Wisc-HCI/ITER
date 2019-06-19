@@ -8,6 +8,9 @@ def position(x,y,z):
 def orientation(x, y, z, w):
     return {'x': x, 'y': y, 'z': z, 'w': w}
 
+def pose(position,orientation):
+    return {'position': position, 'orientation': orientation}
+
 def size(x, y, z):
     return {'x': x, 'y': y, 'z': z}
 

@@ -210,7 +210,8 @@ class Environment:
             return response
         response.vision_id = 'block_{0}'.format(id)
 
-        (pos, rot) = self._tf_listener.lookupTransform(response.vision_id,request.frame_id, rospy.Time(0))
+        #response.vision_id,request.frame_id,
+        (pos, rot) = self._tf_listener.lookupTransform(request.frame_id, response.vision_id, rospy.Time(0))
         response.pose = Pose(position=Vector3(x=pos[0],y=pos[1],z=pos[2]),
                              orientation=Quaternion(x=rot[0],y=rot[1],z=rot[2],w=rot[3]))
 

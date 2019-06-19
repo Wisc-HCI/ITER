@@ -7,6 +7,7 @@
             "Currently unsupported, though intention is collision interfacing"
 '''
 
+import tf
 import rospy
 
 from enum import Enum
@@ -69,16 +70,33 @@ class PickAndPlaceVision(Primitive):
         self._release = lookup('release')(release_effort)
         self._envClient = envClient
         self._lookup = lookup
-        self._grasp_offset = grasp_offset
+        self._grasp_offset = pose_dct_to_msg(grasp_offset)
 
     def operate(self):
         status = True
 
         # find object, getid
-        print 'I am here'
         status, (obj_id, pose) = self._find_obj.operate()
-        print 'I am not here'
-        #TODO apply grasp offset to object's pose
+
+        # apply offset
+        print self._grasp_offset
+        position = self._grasp_offset.position
+        orientation = self._grasp_offset.orientation
+        offset_pos = [position.x,position.y,position.z]
+        offset_rot = [orientation.x,orientation.y,orientation.z,orientation.w]
+
+        print pose
+        position = pose.position
+        orientation = pose.orientation
+        object_pos = [position.x,position.y,position.z]
+        object_rot = [orientation.x,orientation.y,orientation.z,orientation.w]
+
+        grasp_pos = [object_pos[i] + offset_pos[i] for i in range(0,len(object_pos))]
+        grasp_rot = tf.transformations.quaternion_multiply(object_rot,offset_rot)
+
+        grasp_pose = Pose(position=Vector3(x=grasp_pos[0],y=grasp_pos[1],z=grasp_pos[2]),
+                          orientation=Quaternion(x=grasp_rot[0],y=grasp_rot[1],z=grasp_rot[2],w=grasp_rot[3]))
+        print grasp_pose
 
         # move to region
         if status:
@@ -89,7 +107,8 @@ class PickAndPlaceVision(Primitive):
 
         # get pose of object relative to base_link
         if status:
-            dPose = pose_msg_to_dct(pose)
+            #TODO safe-height movement as well?
+            dPose = pose_msg_to_dct(grasp_pose)
             self._lookup('move')(dPose['position'],dPose['orientation']).operate()
 
         # grasp
