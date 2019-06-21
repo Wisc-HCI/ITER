@@ -21,11 +21,11 @@ HOME_ORIENTATION = copy.deepcopy(DOWN_GX_ORIENTATION)
 
 WORKSPACE_POSITION = dt.position(0.1,0.375,-0.17)
 REGION_POSITION = dt.position(0,0.5,0.2)
-REGION_ORIENTATION = copy.deepcopy(DOWN_GY_ORIENTATION)
+REGION_ORIENTATION = copy.deepcopy(DOWN_GX_ORIENTATION)
 
 GRASP_EFFORT = 0.66
 RELEASE_EFFORT_REGION = 0.35
-RELEASE_EFFORT_WORKSPACE = 0.59
+RELEASE_EFFORT_WORKSPACE = 0.57
 
 GRASP_OFFSET = dt.pose(dt.position(0,0,0.16),REGION_ORIENTATION)
 
@@ -71,9 +71,54 @@ def build_house_base():
     position = copy.deepcopy(WORKSPACE_POSITION)
     position['x'] += 0.5 * BLOCK_LARGE[0] + GRASP_OFFSET['position']['x']
     position['y'] += 0.5 * BLOCK_LARGE[1] + GRASP_OFFSET['position']['y']
-    position['z'] += 0.5 * BLOCK_LARGE[2] + GRASP_OFFSET['position']['z'] + 0.005
+    position['z'] += 0.5 * BLOCK_LARGE[2] + GRASP_OFFSET['position']['z'] + 0.0005
+    task_list.append(pick_and_place_block(
+        block_type='large',
+        target_position=copy.deepcopy(position),
+        target_orientation=DOWN_GY_ORIENTATION))
+
+    position = copy.deepcopy(WORKSPACE_POSITION)
+    position['x'] += BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0] + GRASP_OFFSET['position']['x']
+    position['y'] += 0.5 * BLOCK_LARGE[1] + GRASP_OFFSET['position']['y']
+    position['z'] += 0.5 * BLOCK_LARGE[2] + GRASP_OFFSET['position']['z'] + 0.0005
+    task_list.append(pick_and_place_block(
+        block_type='large',
+        target_position=copy.deepcopy(position),
+        target_orientation=DOWN_GY_ORIENTATION))
+
+    position = copy.deepcopy(WORKSPACE_POSITION)
+    position['x'] += BLOCK_SMALL[0] + GRASP_OFFSET['position']['x']
+    position['y'] += 0.5 * BLOCK_LARGE[0] + GRASP_OFFSET['position']['y']
+    position['z'] += 1.5 * BLOCK_SMALL[2] + GRASP_OFFSET['position']['z'] + 0.0005
     task_list.append(pick_and_place_block(
         block_type='small',
+        target_position=copy.deepcopy(position),
+        target_orientation=DOWN_GY_ORIENTATION))
+
+    position = copy.deepcopy(WORKSPACE_POSITION)
+    position['x'] += BLOCK_SMALL[0] + GRASP_OFFSET['position']['x']
+    position['y'] += BLOCK_LARGE[1] - 0.5 * BLOCK_SMALL[0] + GRASP_OFFSET['position']['y']
+    position['z'] += 1.5 * BLOCK_SMALL[2] + GRASP_OFFSET['position']['z'] + 0.0005
+    task_list.append(pick_and_place_block(
+        block_type='small',
+        target_position=copy.deepcopy(position),
+        target_orientation=DOWN_GY_ORIENTATION))
+
+    position = copy.deepcopy(WORKSPACE_POSITION)
+    position['x'] += 0.5 * BLOCK_LARGE[0] + GRASP_OFFSET['position']['x']
+    position['y'] += 0.5 * BLOCK_LARGE[1] + GRASP_OFFSET['position']['y']
+    position['z'] += 2.5 * BLOCK_LARGE[2] + GRASP_OFFSET['position']['z'] + 0.0005
+    task_list.append(pick_and_place_block(
+        block_type='large',
+        target_position=copy.deepcopy(position),
+        target_orientation=DOWN_GY_ORIENTATION))
+
+    position = copy.deepcopy(WORKSPACE_POSITION)
+    position['x'] += BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0] + GRASP_OFFSET['position']['x']
+    position['y'] += 0.5 * BLOCK_LARGE[1] + GRASP_OFFSET['position']['y']
+    position['z'] += 2.5 * BLOCK_LARGE[2] + GRASP_OFFSET['position']['z'] + 0.0005
+    task_list.append(pick_and_place_block(
+        block_type='large',
         target_position=copy.deepcopy(position),
         target_orientation=DOWN_GY_ORIENTATION))
 
@@ -89,6 +134,7 @@ def static_environment():
         size=dt.size(1,0.6,0.015)))
 
     return env_list
+
 
 if __name__ == "__main__":
     task_list = []

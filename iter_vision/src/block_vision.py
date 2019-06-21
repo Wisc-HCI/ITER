@@ -57,6 +57,9 @@ MODEL_FILEPATH = os.path.join(os.path.dirname(__file__),'model/block_classifer.n
 
 AREA_FILTER = (500,4000)
 
+PROBABILITY_THRESHOLD_LARGE = 0.5
+PROBABILITY_THRESHOLD_SMALL = 0.5
+
 
 class BlockVision:
 
@@ -153,7 +156,7 @@ class BlockVision:
         # Capture contours in image
         _0, contours, _1 = cv2.findContours(filtered_img,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
-        #print '----------------'
+        print '----------------'
 
         # Iterate through contours
         poses = []
@@ -191,6 +194,7 @@ class BlockVision:
             #rotation += 90
 
             # Classify
+            print 'ID:', count
             type = self._block_classification(primary_dim,secondary_dim,rotation)
 
             # Package message
@@ -209,16 +213,12 @@ class BlockVision:
         type = BlockPose2D.UNKNOWN
         ratio = primary_axis / secondary_axis
 
-        #print '[{0}, {1}, {2}],'.format(ratio, primary_axis, primary_rotation)
+        print '[{0}, {1}, {2}],'.format(ratio, primary_axis, primary_rotation)
 
-        #label = self._classifier.predict([[ratio,primary_axis,primary_rotation]])[0]
-        #print label
         probability = self._classifier.predict_proba([[ratio,primary_axis,primary_rotation]])[0]
-        #print probability
-
-        if probability[0] >= 0.5:
+        if probability[0] >= PROBABILITY_THRESHOLD_LARGE:
             type = BlockPose2D.LARGE
-        elif probability[1] >= 0.5:
+        elif probability[1] >= PROBABILITY_THRESHOLD_SMALL:
             type = BlockPose2D.SMALL
 
         return type
