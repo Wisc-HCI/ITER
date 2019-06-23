@@ -39,7 +39,7 @@
     <node pkg="iter_app" type="runner.py" name="runner" output="screen"/>
 
     <!-- Start RAD UI -->
-    <node if="$(arg rad_ui)" name="web_server" pkg="iter_app" type="frontend_node_start.sh" args='$(find iter_app)/rad_ui' output='screen'/>
+    <node if="$(arg rad_ui)" name="web_server" pkg="rad_ui" type="web_server_start.sh" args='$(find rad_ui)/websites' output='screen'/>
 
     <!-- Start CLI -->
     <node if="$(arg use_cli)" pkg="iter_tasks" type="cli.py" name="cli" output="screen"/>
