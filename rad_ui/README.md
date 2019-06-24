@@ -20,6 +20,10 @@ First confirm backend is running, UI will attempt to connect with backend on pag
 
 Run static file server using `npm start`. Navigate browser to `http://localhost:8080/`.
 
+#TODO
+ - scaling binary
+ - rolling timeline
+
 
 ## Notes
 https://www.npmjs.com/package/timeline

@@ -1,0 +1,9 @@
+<launch>
+
+  <!-- Include Rosbridge launches -->
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+
+  <!-- Launch HTTP server -->
+  <node name="web_server" pkg="rad_ui" type="web_server_start.sh" args='$(find rad_ui)/src/websites' output='screen'/>
+
+</launch>
