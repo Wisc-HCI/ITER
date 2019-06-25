@@ -19,3 +19,4 @@ Current knowledge
 ---
 USB to Serial Adapter enumerates
 No LEDs = no power, not that comm is fine just untestable
+Tested both cables, no power on either. Both have same root plug
