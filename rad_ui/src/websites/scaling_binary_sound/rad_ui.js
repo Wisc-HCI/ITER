@@ -26,6 +26,20 @@ function updateColor(seconds) {
 
 }
 
+function updateSize(seconds) {
+
+  size = seconds
+
+  size_str = '' + size + 'em'
+  padding_str = 'calc(50% - ' + size / 2 + 'em)'
+
+  $('#container-0').css('left',padding_str)
+  $('#container-0').css('top',padding_str)
+
+  $('#dot-0').css('height',size_str)
+  $('#dot-0').css('width',size_str)
+}
+
 var playedWarning = false;
 function playWarning() {
   if (!playedWarning) {
@@ -75,6 +89,7 @@ listenerRadSignal.subscribe(function(message) {
     if (message.mode == 0) { // neglect time
       interval = message.neglect_time;
       updateColor(interval.current);
+      updateSize(interval.current);
     }
 
   }
