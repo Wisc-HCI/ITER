@@ -45,7 +45,7 @@
     </include>
 
     <!-- Launch gripper driver -->
-    <include file="$(find ur5_robotiq85_moveit_config)/launch/robotiq_85.launch">
+    <include file="$(find robot_bringup)/robotiq/robotiq_85.launch">
       <arg name="dual_gripper" value="false"/>
       <arg name="comport" value="/dev/ttyUSB0"/>
       <arg name="baud" value="115200"/>
@@ -67,6 +67,9 @@
       <param name="/use_gui" value="false"/>
       <rosparam param="/source_list">['/gripper/joint_states','/ur_joint_states']</rosparam>
     </node>
+
+    <!-- Given the published joint states, publish tf for the robot links -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
 
     <!-- RVIZ-->
     <include file="$(find ur5_robotiq85_moveit_config)/launch/moveit_rviz.launch">

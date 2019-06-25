@@ -37,7 +37,7 @@
     <node name="m1n6s200_joint_trajectory_action_server" pkg="kinova_driver" type="joint_trajectory_action_server" output="screen" respawn="false" args="m1n6s200"/>
 
     <!-- Launch gripper driver -->
-    <include file="$(find m1n6s_robotiq85_moveit_config)/launch/robotiq_85.launch">
+    <include file="$(find robot_bringup)/robotiq/robotiq_85.launch">
       <arg name="dual_gripper" value="false"/>
       <arg name="comport" value="/dev/ttyUSB0"/>
       <arg name="baud" value="115200"/>

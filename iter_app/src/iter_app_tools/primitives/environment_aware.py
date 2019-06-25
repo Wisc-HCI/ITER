@@ -196,7 +196,7 @@ class EnvironmentAwareBehaviorPrimitives(AbstractBehaviorPrimitives):
 
         name = dct['name']
         if name == PrimitiveEnum.FIND_VISION_OBJECT.value:
-            return FindVisionObject(dct['object_type'], dct['vision_params'] self._envClient)
+            return FindVisionObject(dct['object_type'], dct['vision_params'], self._envClient)
         elif name == PrimitiveEnum.CONNECT_OBJECT_TO_ROBOT.value:
             return ConnectObjectToRobot(dct['object_name'], self._envClient, self.lookup)
         elif name == PrimitiveEnum.DISCONNECT_OBJECT_FROM_ROBOT.value:
