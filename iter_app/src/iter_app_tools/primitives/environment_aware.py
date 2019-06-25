@@ -26,11 +26,17 @@ class PrimitiveEnum(Enum):
 
 class FindVisionObject(ReturnablePrimitive):
 
-    def __init__(self,object_type,envClient):
+    def __init__(self,object_type,vision_params,envClient):
         self._type = object_type
         self._envClient = envClient
+        self._visionParams = vision_params
 
     def operate(self):
+        # set vision parameters & wait
+        #TODO apply params
+        rospy.sleep(3)
+
+        # find object
         resp = self._envClient.get_vision_object(self._type,'base_link')
         return resp.status, (resp.task_id, resp.pose)
 
@@ -62,8 +68,8 @@ class DisconnectObjectFromRobot(Primitive):
 
 class PickAndPlaceVision(Primitive):
 
-    def __init__(self,object_type,path_to_region,path_to_destination,grasp_effort,release_effort,grasp_offset,envClient,lookup, **kwargs):
-        self._find_obj = FindVisionObject(object_type,envClient)
+    def __init__(self,object_type,path_to_region,path_to_destination,grasp_effort,release_effort,grasp_offset,vision_params,envClient,lookup, **kwargs):
+        self._find_obj = FindVisionObject(object_type,vision_params,envClient)
         self._path_to_region = [lookup('move')(dct['position'],dct['orientation']) for dct in path_to_region]
         self._path_to_dest = [lookup('move')(dct['position'],dct['orientation']) for dct in path_to_destination]
         self._grasp = lookup('grasp')(grasp_effort)
@@ -190,7 +196,7 @@ class EnvironmentAwareBehaviorPrimitives(AbstractBehaviorPrimitives):
 
         name = dct['name']
         if name == PrimitiveEnum.FIND_VISION_OBJECT.value:
-            return FindVisionObject(dct['object_type'], self._envClient)
+            return FindVisionObject(dct['object_type'], dct['vision_params'] self._envClient)
         elif name == PrimitiveEnum.CONNECT_OBJECT_TO_ROBOT.value:
             return ConnectObjectToRobot(dct['object_name'], self._envClient, self.lookup)
         elif name == PrimitiveEnum.DISCONNECT_OBJECT_FROM_ROBOT.value:
