@@ -4,7 +4,7 @@
   <arg name="simulated" default='true'/>
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
-  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find robot_descriptions)/urdf/kinova_mico/relaxed_ik_m1n6s_robotiq85.xacro'" />
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find robot_descriptions)/urdf/kinova/relaxed_ik_m1n6s_robotiq85.xacro'" />
 
   <!-- If simulated, we do not have a robot connected -->
   <group if="$(eval arg('simulated') == true)">

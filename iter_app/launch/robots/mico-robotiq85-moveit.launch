@@ -1,7 +1,6 @@
 <launch>
 
   <arg name="simulated" default='true'/>
-  <arg name="use_rik" default='true' />
 
   <!-- If simulated, we do not have a robot connected -->
   <group if="$(eval arg('simulated') == true)">
