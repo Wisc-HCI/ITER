@@ -40,7 +40,6 @@
     <node name="urscript_gripper_action_server" pkg="robotiq_85_driver" type="urscript_gripper_action_server.py" output="screen" respawn="false">
       <param name="speed" value="255"/>
       <param name="urscript_topic" value="/ur_driver/URScript"/>
-      <param name="run_delay" value="5"/>
     </node>
 
     <!-- Joint Publisher -->
