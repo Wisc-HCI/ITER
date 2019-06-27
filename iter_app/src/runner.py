@@ -31,7 +31,7 @@ Topics published:
     - /time_node/sync
 
 Topics subscribed:
-    - /button/state (TODO ifttt connection)
+    - /button/pressed
 rrikik
 Parameters required:
     - use_rik
