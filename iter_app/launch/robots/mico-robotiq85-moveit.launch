@@ -1,7 +1,6 @@
 <launch>
 
   <arg name="simulated" default='true'/>
-  <arg name="use_rik" default='true' />
 
   <!-- If simulated, we do not have a robot connected -->
   <group if="$(eval arg('simulated') == true)">
@@ -22,7 +21,7 @@
     </include>
 
     <!-- Launch gripper driver -->
-    <include file="$(find m1n6s_robotiq85_moveit_config)/launch/robotiq_85.launch">
+    <include file="$(find robot_bringup)/robotiq/robotiq_85.launch">
       <arg name="dual_gripper" value="false"/>
       <arg name="comport" value="/dev/ttyUSB0"/>
       <arg name="baud" value="115200"/>

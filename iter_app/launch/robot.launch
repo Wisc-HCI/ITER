@@ -5,14 +5,14 @@
   <arg name="simulated" default='true'/>
   <arg name="use_rik" default='true' />
 
-  <!-- UR3 -->
-  <group if="$(eval arg('robot') == 'ur3')">
-    <rosparam param="robot">'ur3'</rosparam>
+  <!-- UR3e -->
+  <group if="$(eval arg('robot') == 'ur3e')">
+    <rosparam param="robot">'ur3e'</rosparam>
     <rosparam param="arm_move_group">'manipulator'</rosparam>
     <rosparam param="gripper_move_group">'gripper'</rosparam>
     <rosparam param="gripper_type">'robotiq-85'</rosparam>
 
-    <include file="$(find iter_app)/launch/robots/ur3.launch">
+    <include file="$(find iter_app)/launch/robots/ur3e.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
     </include>
