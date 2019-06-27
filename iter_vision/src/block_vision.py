@@ -55,7 +55,7 @@ from iter_vision.srv import ColorSelect, ColorSelectRequest, ColorSelectResponse
 
 MODEL_FILEPATH = os.path.join(os.path.dirname(__file__),'model/block_classifer.nn')
 
-AREA_FILTER = (500,4000)
+AREA_FILTER = (450,4000)  #old 500, 4000
 
 PROBABILITY_THRESHOLD_LARGE = 0.5
 PROBABILITY_THRESHOLD_SMALL = 0.5

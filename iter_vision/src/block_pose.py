@@ -15,7 +15,9 @@ identified.
 
 Takes in rosparam for 'parent_frame_id' which defines parent to block pose transforms
 Takes in rosparam for 'rotation_constant' which is partially dependent on camera to table pose relationship
-however for a roughly top-down view it is approximately 1.
+    however for a roughly top-down view it is approximately 1.
+Takes in rosparam for 'ar_exclusion_radius' which is a circle around the ar tag where blocks
+    will be ignored. This is due to artifacts from AR tag being detected as a block.
 '''
 
 import tf
@@ -36,14 +38,15 @@ from ar_track_alvar_msgs.msg import AlvarMarker, AlvarMarkerArray
 
 
 ROTATION_CONSTANT = 1
-
+AR_RADIUS = 50
 
 class BlockPoseNode:
 
-    def __init__(self, parent_frame_id, rotation_constant,tag_id_list):
+    def __init__(self, parent_frame_id, rotation_constant,tag_id_list,ar_radius):
         self._parent_frame_id = parent_frame_id
         self._rotation_constant = rotation_constant
         self._tag_id_list = tag_id_list
+        self._ar_radius = ar_radius
 
         self.cam_pub = rospy.Subscriber("/usb_cam/camera_info",CameraInfo, self._cam_info_cb, queue_size=1)
         self.ar3_sub = rospy.Subscriber("ar_pose_marker", AlvarMarkerArray, self._ar3_cb, queue_size=5)
@@ -182,11 +185,18 @@ class BlockPoseNode:
         filtered_array = []
         for b2 in b2_array:
             p2 = geometry.Point(b2.pose.x,b2.pose.y)
-            if poly.contains(p2):
-                print b2.id
+
+            in_region = poly.contains(p2)
+
+            in_ar_circle = any([self._cartesian_distance((b2.pose.x,b2.pose.y),(a2.pose.x,a2.pose.y)) < self._ar_radius for a2 in self._ar2_markers])
+
+            if in_region and not in_ar_circle:
                 filtered_array.append(b2)
 
         return filtered_array
+
+    def _cartesian_distance(self,p1,p2):
+        return math.sqrt(pow(p1[0] - p2[0], 2) + pow(p1[1] - p2[1], 2))
 
     def _point_position_eqs(self,i,j,x=0,y=0,z=0):
         A = np.matrix([
@@ -208,7 +218,8 @@ if __name__ == "__main__":
         parent_frame_id = rospy.get_param("~parent_frame_id",'usb_cam')
         rotation_constant = rospy.get_param("~rotation_constant",ROTATION_CONSTANT)
         tag_id_list = rospy.get_param('~tag_id_list',None)
-        node = BlockPoseNode(parent_frame_id,rotation_constant,tag_id_list)
+        ar_radius = rospy.get_param('~ar_exclusion_radius',AR_RADIUS)
+        node = BlockPoseNode(parent_frame_id,rotation_constant,tag_id_list,ar_radius)
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
