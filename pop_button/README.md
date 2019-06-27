@@ -14,6 +14,12 @@ any soft-real-time control of the robot.
 rosrun pop_button pop_button_node.py
 ```
 
+or if not available use keyboard
+
+```
+rosrun pop_button fake_button_node.py
+```
+
 ## Pop resources
 https://support.logitech.com/en_us/product/pop-smart-button/faq
 
