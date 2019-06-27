@@ -53,4 +53,4 @@ def _bk3_cb(message):
 
 
 ar3_sub = rospy.Subscriber("/ar_pose_marker", AlvarMarkerArray, _ar3_cb, queue_size=5)
-pose_pub = rospy.Subscriber("/block_poses", BlockPose3DArray, _bk3_cb, queue_size=5)
+pose_pub = rospy.Subscriber("/block_pose/pose_3d", BlockPose3DArray, _bk3_cb, queue_size=5)

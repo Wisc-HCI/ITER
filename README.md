@@ -52,13 +52,22 @@ Required packages:
 Other Requirements:
 - install opencv and python wrapper (instructions for Ubuntu/Debian)
   - `sudo apt-get install libopencv-dev python-opencv`
+- install shapely for iter_vision block detection
+  - `pip install shapely`
 - (for RAD UI) install npm and run `npm install` inside iter_app/rad_ui directory
+  - note cannot use nodejs as name must be node!
 
 ## Run
-Enter following into terminal to run ITER application
+Enter following into terminal to run ITER application in simulation
 
 ```
-roslaunch iter_app main.launch robot:=ur5 simulated:=true
+roslaunch iter_app main.launch robot:=ur3e simulated:=true use_real_cam:=false
+```
+
+Enter following into terminal to run ITER application on robot
+
+```
+roslaunch iter_app main.launch robot:=ur3e simulated:=false use_real_cam:=true video_src:=/dev/video1
 ```
 
 ## Notes / Todo
