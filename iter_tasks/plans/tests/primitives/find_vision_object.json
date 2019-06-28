@@ -7,7 +7,11 @@
   "task": [
     {
       "name": "find_vision_object",
-      "object_type": "test"
+      "object_type": "1",
+      "vision_params": {
+        "min_hue": 0,
+        "max_hue": 30
+      }
     }
   ]
 }

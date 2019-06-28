@@ -81,9 +81,9 @@ class BlockVision:
     def _color_select_cb(self,response):
         status = True
 
-        if self._min_hue < ColorSelectRequest.MIN_HUE_VALUE:
+        if not (ColorSelectRequest.MIN_HUE_VALUE <= self._min_hue <= ColorSelectRequest.MAX_HUE_VALUE):
             status = False
-        elif seld._max_hue > ColorSelectRequest.MAX_HUE_VALUE:
+        elif not (ColorSelectRequest.MIN_HUE_VALUE <= self._max_hue <= ColorSelectRequest.MAX_HUE_VALUE):
             status = False
         else:
             self._min_hue = response.min_hue

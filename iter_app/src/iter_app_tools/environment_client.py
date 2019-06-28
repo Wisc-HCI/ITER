@@ -4,6 +4,7 @@
 
 import rospy
 
+from iter_app.srv import SetVisionParams, SetVisionParamsResponse
 from iter_app.srv import GetVisionObject, GetVisionObjectResponse
 from iter_app.srv import ClearTaskObjects, ClearTaskObjectsResponse
 from iter_app.srv import ConnectTaskObject, ConnectTaskObjectResponse
@@ -22,3 +23,4 @@ class EnvironmentClient:
         self.get_vision_object = rospy.ServiceProxy("/environment/get_vision_object",GetVisionObject)
         self.calibrate_robot_to_camera = rospy.ServiceProxy("/environment/calibrate_robot_to_camera",CalibrateRobotToCamera)
         self.get_state = rospy.ServiceProxy("/environment/get_state",GetEnvironmentState)
+        self.set_vision_params = rospy.ServiceProxy("/environment/set_vision_params",SetVisionParams)

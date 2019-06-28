@@ -8,6 +8,7 @@
 '''
 
 import tf
+import json
 import rospy
 
 from enum import Enum
@@ -33,12 +34,21 @@ class FindVisionObject(ReturnablePrimitive):
 
     def operate(self):
         # set vision parameters & wait
-        #TODO apply params
+        status = self._envClient.set_vision_params(json.dumps(self._visionParams))
         rospy.sleep(3)
 
         # find object
-        resp = self._envClient.get_vision_object(self._type,'base_link')
-        return resp.status, (resp.task_id, resp.pose)
+        if status:
+            resp = self._envClient.get_vision_object(self._type,'base_link')
+            status = resp.status
+            data = (resp.task_id, resp.pose)
+        else:
+            data = (None,None)
+
+        # attempt to set vision parameters to default
+        self._envClient.set_vision_params(json.dumps({'default':True}))
+
+        return status, data
 
 class ConnectObjectToRobot(Primitive):
 

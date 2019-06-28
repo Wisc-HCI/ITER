@@ -2,6 +2,7 @@
 import rospy
 
 from iter_vision.msg import BlockPose3D, BlockPose3DArray
+from iter_vision.srv import ColorSelect, ColorSelectRequest, ColorSelectResponse
 from ar_track_alvar_msgs.msg import AlvarMarker, AlvarMarkerArray
 
 
@@ -54,3 +55,15 @@ def _bk3_cb(message):
 
 ar3_sub = rospy.Subscriber("/ar_pose_marker", AlvarMarkerArray, _ar3_cb, queue_size=5)
 pose_pub = rospy.Subscriber("/block_pose/pose_3d", BlockPose3DArray, _bk3_cb, queue_size=5)
+
+color_slct_srv = rospy.ServiceProxy("/block_vision/color_select",ColorSelect)
+def set_vision_params(params):
+
+    if 'default' in params and params['default']:
+        min_hue = ColorSelectRequest.MIN_HUE_VALUE
+        max_hue = ColorSelectRequest.MAX_HUE_VALUE
+    else:
+        min_hue = params['min_hue']
+        max_hue = params['max_hue']
+
+    return color_slct_srv(min_hue,max_hue).status

@@ -16,6 +16,7 @@ MODE_MARKER = 'marker'
 
 
 import tf
+import json
 import time
 import uuid
 import rospy
@@ -27,6 +28,7 @@ from std_msgs.msg import Header, ColorRGBA
 from interactive_markers.interactive_marker_server import *
 from geometry_msgs.msg import Pose, Vector3, Quaternion, TransformStamped
 
+from iter_app.srv import SetVisionParams, SetVisionParamsResponse
 from iter_app.srv import GetVisionObject, GetVisionObjectResponse
 from iter_app.srv import ClearTaskObjects, ClearTaskObjectsResponse
 from iter_app.srv import ConnectTaskObject, ConnectTaskObjectResponse
@@ -50,23 +52,22 @@ else:
 import iter_app_tools.environment_interface.vision as vision_env
 
 
+'''
+position:
+    x: -0.0498019680381
+    y: 0.872681796551
+    z: 0.34569761157
+orientation:
+    x: -0.0167846251279
+    y: -0.976989865303
+    z: 0.2126237005
+    w: 0.000687647901941
+'''
 DEFAULT_TF = {
         'position': (-0.0498019680381, 0.872681796551, 0.34569761157),
         'orientation': (-0.0167846251279,-0.976989865303,0.2126237005,0.000687647901941)
-    }
+}
 
-'''
-position:
-  x: -0.0498019680381
-  y: 0.872681796551
-  z: 0.34569761157
-orientation:
-  x: -0.0167846251279
-  y: -0.976989865303
-  z: 0.2126237005
-  w: 0.000687647901941
-
-'''
 
 class Environment:
 
@@ -97,6 +98,7 @@ class Environment:
         self._calibrate_ar_tag_id = calibrate_ar_tag_id
         self._get_cam_pose = rospy.ServiceProxy('/robot_camera_align/get_tag_pose',GetTagPose)
 
+        self._set_vision_params_srv = rospy.Service("/environment/set_vision_params",SetVisionParams,self._set_vision_params)
         self._gen_task_objs_srv = rospy.Service("/environment/generate_task_objects",GenerateTaskObjects,self._generate_task_objs)
         self._clear_task_objs_srv = rospy.Service("/environment/clear_task_objects",ClearTaskObjects,self._clear_task_objs)
         self._connect_task_obj_srv = rospy.Service("/environment/connect_task_object",ConnectTaskObject,self._connect_task_obj)
@@ -262,6 +264,11 @@ class Environment:
             all_task_objects=task_env.get_all_task_ids(),
             all_vision_objects=vision_env.get_vision_ids(),
             all_ar_tags=vision_env.get_ar_ids())
+
+    def _set_vision_params(self, request):
+        params = json.loads(request.params)
+        status = vision_env.set_vision_params(params)
+        return SetVisionParamsResponse(status=status)
 
 
 if __name__ == "__main__":

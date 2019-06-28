@@ -69,6 +69,7 @@ add_service_files(
    GetEnvironmentState.srv
    GetVisionObject.srv
    ReleaseTaskObject.srv
+   SetVisionParams.srv
 )
 
 ## Generate actions in the 'action' folder
