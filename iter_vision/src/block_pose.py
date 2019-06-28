@@ -173,6 +173,8 @@ class BlockPoseNode:
             b3.pose = Pose(position=position,orientation=orientation)
             b3.type = b2.type
             b3.id = b2.id
+            b3.length = b2.length
+            b3.width = b2.width
             b3_array.append(b3)
         return b3_array
 

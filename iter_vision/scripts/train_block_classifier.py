@@ -45,6 +45,8 @@ features += data['small_blocks']
 labels += [[0,1] for i in range(0,len(data['small_blocks']))]
 features += data['large_blocks']
 labels += [[1,0] for i in range(0,len(data['large_blocks']))]
+features += data['counter_cases']
+labels += [[0,0] for i in range(0,len(data['counter_cases']))]
 
 train_features, test_features, train_labels, test_labels = train_test_split(features,labels,shuffle=True,test_size=0.25)
 

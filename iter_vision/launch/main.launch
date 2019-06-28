@@ -14,6 +14,8 @@
   <arg name="use_real_cam" default="true" />
   <arg name="static_cam_image" default="1-4.png" />
 
+  <arg name="capture_training_data" default="false" />
+
 
   <include file="$(find iter_vision)/launch/camera.launch">
     <arg name="video_src" value="$(arg video_src)" />
@@ -73,5 +75,7 @@
   <node name="robot_camera_align" pkg="iter_vision" type="robot_camera_align.py">
     <param name="reference_frame" value="usb_cam"/>
   </node>
+
+  <node if="$(arg capture_training_data)" name="data_sampler" pkg="iter_vision" type="data_sampler.py" output="screen"/>
 
 </launch>

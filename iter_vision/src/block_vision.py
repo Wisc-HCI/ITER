@@ -200,6 +200,8 @@ class BlockVision:
             # Package message
             block = BlockPose2D()
             block.pose = Pose2D(x=cx,y=cy,theta=rotation)
+            block.length = primary_dim
+            block.width = secondary_dim
             block.type = type
             block.id = count
             poses.append(block)
