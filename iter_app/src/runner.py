@@ -17,6 +17,7 @@ Services provided:
     - /runner/set_mode
 
 Services requested:
+    - /environment/set_vision_params
     - /environment/generate_task_objects
     - /environment/clear_task_objects
     - /environment/connect_task_object
