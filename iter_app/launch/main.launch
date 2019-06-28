@@ -2,13 +2,14 @@
 
     <!-- Global arguements -->
     <arg name="robot"/>
-    <arg name="simulated" default='true'/>
-    <arg name="use_rik" default='true' />
-    <arg name="use_cli" default='false'/>
-    <arg name="rad_ui" default='false'/>
-    <arg name="use_collision" default='false' />
-    <arg name="use_real_cam" default='false' />
-    <arg name="video_src" default='/dev/video0' />
+    <arg name="simulated" default="true"/>
+    <arg name="use_rik" default="true" />
+    <arg name="use_cli" default="false"/>
+    <arg name="rad_ui" default="false"/>
+    <arg name="use_collision" default="false" />
+    <arg name="use_real_cam" default="false" />
+    <arg name="video_src" default="/dev/video0" />
+    <arg name="use_fake_btn" default="false" />
 
     <!-- Global ROS Parameters -->
     <rosparam param="use_rik" subst_value="true">$(arg use_rik)</rosparam>
@@ -26,6 +27,10 @@
       <arg name="video_src" value="$(arg video_src)"/>
       <arg name="use_real_cam" default="$(arg use_real_cam)"/>
     </include>
+
+    <!-- Start button node -->
+    <node if="$(arg use_fake_btn)" name="button" pkg="pop_button" type="fake_button_node.py" output="screen"/>
+    <node unless="$(arg use_fake_btn)" name="button" pkg="pop_button" type="pop_button_node.py"/>
 
     <!-- Start backend -->
     <node pkg="iter_app" type="environment.py" name="environment" output="screen">

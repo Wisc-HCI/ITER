@@ -27,6 +27,7 @@ import sys
 import logging
 import struct
 import lifx
+
 if sys.version_info >= (3, 0):
     from configparser import RawConfigParser, NoOptionError, NoSectionError, ParsingError
     from urllib.request import urlopen, HTTPError, HTTPPasswordMgrWithDefaultRealm, HTTPBasicAuthHandler, build_opener, install_opener
@@ -36,6 +37,8 @@ else:
     from ConfigParser import RawConfigParser, NoOptionError, NoSectionError, ParsingError
     from urllib2 import urlopen, HTTPError, HTTPPasswordMgrWithDefaultRealm, HTTPBasicAuthHandler, build_opener, install_opener, URLError
     from httplib import BadStatusLine
+
+'''
 try:
     from argparse import ArgumentParser
 except ImportError:
@@ -45,15 +48,22 @@ except ImportError:
 
         def parse_args(self):
             return OptionParser.parse_args(self)[0]
+'''
+
+TIME_THRESHOLD = 5 #15
+
 
 class ConfigError(Exception):
     pass
 
-class OriginalMessageHandler(object):
+
+class MessageHandler(object):
     def __init__(self):
         self.power_msg = None
         self.color_msg = None
         self.last_triggered = None # The Pop sends multiple of the same message over several seconds, this removes the duplicates
+
+        self._pressed_pub = rospy.Publisher('/button/pressed',Bool,queue_size=10)
 
     def reset(self):
         self.power_msg = None
@@ -61,6 +71,8 @@ class OriginalMessageHandler(object):
         self.last_triggered = None
 
     def handle_msg(self, sender, packet):
+        send_ros_flag = False
+
         if self.last_triggered is not None and time() - self.last_triggered >= 5:
             self.reset()
 
@@ -74,14 +86,19 @@ class OriginalMessageHandler(object):
             if self.color_msg is not None and packet != self.color_msg:
                 self.reset()
             self.color_msg = packet
+            send_ros_flag = True
 
         if self.power_msg is None or self.color_msg is None:
             return
 
         if self.last_triggered is None:
             self.last_triggered = time()
-        elif time() - self.last_triggered < 15:
+        elif time() - self.last_triggered < TIME_THRESHOLD:
             return
+
+        if send_ros_flag:
+            # Don't care about light contents just want the fact that the button was pressed
+            self._pressed_pub.publish(Bool(True))
 
         urls = config.get_urls(
             power = self.power_msg.level == lifx.DevicePower.ON,
@@ -109,18 +126,6 @@ class OriginalMessageHandler(object):
                 log.error('resp %d %s' % (err.code, url), extra=dict(clientip=sender[0], clientport=sender[1]))
             except (BadStatusLine, URLError) as err: #BadStatusLine also includes RemoteDisconnected
                 log.error('%s %s' % (err, url), extra=dict(clientip=sender[0], clientport=sender[1]))
-
-class RosMessageHandler(object):
-
-    def __init__(self):
-        self._pressed_pub = rospy.Publisher('/button/pressed',Bool,queue_size=10)
-
-    def reset(self):
-        self._pressed_pub.publish(Bool(False))
-
-    def handle_msg(self, sender, packet):
-        # Don't care about light contents just want the fact that the button was pressed
-        self._pressed_pub.publish(Bool(True))
 
 
 def server_loop(address, handler):
@@ -239,21 +244,28 @@ class Config(object):
 
         return [t.format(onoff='on' if power else 'off', hue=hue, saturation=saturation, brightness=brightness, kelvin=kelvin) for t in url_templates]
 
+
+'''
 parser = ArgumentParser(description='Make a fake LIFX light to allow the Logitech pop to send web requests')
 parser.add_argument('-v', dest='verbosity', action='count', default=0, help='increase verbosity level')
 parser.add_argument('--config', dest='config', metavar='FILE', default='config.ini', help='path to the configuration INI file to use')
 args = parser.parse_args()
+'''
+
+VERBOSITY_LEVEL = 3
+CONFIG_FILE = 'config.ini'
+
 
 log = logging.Logger('')
 ch = logging.StreamHandler()
-ch.setLevel([logging.ERROR, logging.WARNING, logging.INFO, logging.DEBUG][min(args.verbosity, 3)])
+ch.setLevel([logging.ERROR, logging.WARNING, logging.INFO, logging.DEBUG][VERBOSITY_LEVEL])
 formatter = logging.Formatter('%(asctime)-15s %(clientip)s %(message)s')
 ch.setFormatter(formatter)
 log.addHandler(ch)
 
 
 try:
-    config = Config(args.config)
+    config = Config(CONFIG_FILE)
 except ConfigError as err:
     print(str(err))
     sys.exit(-2)
@@ -261,4 +273,4 @@ except ParsingError as err:
     print(str(err))
     sys.exit(-1)
 
-server_loop(config.interface, OriginalMessageHandler())
+server_loop(config.interface, MessageHandler())

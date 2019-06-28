@@ -83,18 +83,22 @@ DEFAULT_NODE_INITIALIZE_DELAY_TIME = 2
 class Runner:
 
     def __init__(self):
+        self._button_state = False
         self.time_mode = TimeModeEnum.REPLAY
 
         self.task_input_srv = rospy.Service('/runner/task_input', Task, self.run_task)
         self.mode_set_srv = rospy.Service('/runner/set/mode', ModeSet, self.mode_update)
         self.mode_get_srv = rospy.Service('/runner/get/mode', ModeGet, self.mode_get)
 
-        self.time_start_topic = rospy.Publisher('time_node/start', String, queue_size=10)
-        self.time_stop_topic = rospy.Publisher('time_node/stop', Bool, queue_size=10)
-        self.time_sync_topic = rospy.Publisher('time_node/sync', Int32, queue_size=10)
+        self.time_start_topic = rospy.Publisher('/time_node/start', String, queue_size=10)
+        self.time_stop_topic = rospy.Publisher('/time_node/stop', Bool, queue_size=10)
+        self.time_sync_topic = rospy.Publisher('/time_node/sync', Int32, queue_size=10)
+
+        self.btn_topic = rospy.Subscriber('/button/pressed',Bool,self._btn_topic_cb)
 
     def run_task(self, json_string):
         global envClient, bp
+        self._button_state = False
 
         # data retrieved from interface
         try:
@@ -218,10 +222,15 @@ class Runner:
                                  pose=pose_dct_to_msg(obj_dct))
 
     def _button_callback(self):
-        #TODO write this for real
-        str = raw_input('Press enter button to stop wait')
-        button_state = True
-        return button_state
+        state = False
+        if self._button_state:
+            state = True
+            self._button_state = False
+        return state
+
+    def _btn_topic_cb(self, message):
+        if message.data:
+            self._button_state = True
 
 
 if __name__ == '__main__':
