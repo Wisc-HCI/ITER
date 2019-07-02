@@ -160,7 +160,6 @@ class BlockVision:
 
         # Iterate through contours
         poses = []
-        count = 0
         final_img = original_img.copy()
         for cnt in contours:
 
@@ -194,7 +193,6 @@ class BlockVision:
             #rotation += 90
 
             # Classify
-            #print 'ID:', count
             type = self._block_classification(primary_dim,secondary_dim,rotation)
 
             # Package message
@@ -203,11 +201,7 @@ class BlockVision:
             block.length = primary_dim
             block.width = secondary_dim
             block.type = type
-            block.id = count
             poses.append(block)
-
-            # Update ID counter
-            count += 1
 
         return final_img, poses
 

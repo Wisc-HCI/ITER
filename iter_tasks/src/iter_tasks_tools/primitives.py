@@ -44,7 +44,7 @@ def pick_and_place_static(path_to_object, path_to_destination, object_name, gras
             'grasp_effort': grasp_effort,
             'release_effort': release_effort}
 
-def pick_and_place_vision(object_type, path_to_region, path_to_destination, grasp_effort, release_effort, grasp_offset, vision_params):
+def pick_and_place_vision(object_type, path_to_region, path_to_destination, grasp_effort, release_effort, grasp_offset, safe_height, vision_params):
     return {'name': 'pick_and_place_vision',
             'object_type': object_type,
             'path_to_region': path_to_region,
@@ -52,6 +52,7 @@ def pick_and_place_vision(object_type, path_to_region, path_to_destination, gras
             'grasp_effort': grasp_effort,
             'release_effort': release_effort,
             'grasp_offset': grasp_offset,
+            'safe_height': safe_height,
             'vision_params': vision_params}
 
 def release(effort):

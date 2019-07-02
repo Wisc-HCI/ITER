@@ -151,6 +151,7 @@ class BlockPoseNode:
     def _apply_transform(self,b2_array):
         currentTime = rospy.Time.now()
         b3_array = []
+        count = 0
 
         for b2 in b2_array:
             A, _ = self._point_position_eqs(b2.pose.x,b2.pose.y)
@@ -168,14 +169,17 @@ class BlockPoseNode:
 
             b3 = BlockPose3D()
             b3.header.stamp = currentTime
-            b3.header.frame_id = 'block_{0}'.format(b2.id)
+            b3.header.frame_id = 'block_{0}'.format(count)
             b3.parent_frame_id = self._parent_frame_id
             b3.pose = Pose(position=position,orientation=orientation)
             b3.type = b2.type
-            b3.id = b2.id
+            b3.id = count # assign a new ID here as it is officially a block
             b3.length = b2.length
             b3.width = b2.width
             b3_array.append(b3)
+
+            count += 1
+
         return b3_array
 
     def _filter_on_region(self,b2_array):

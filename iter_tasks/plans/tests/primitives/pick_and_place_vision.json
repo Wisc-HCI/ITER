@@ -56,6 +56,7 @@
       ],
       "grasp_effort": 0.5,
       "release_effort": 0.5,
+      "safe_height": 0.2,
       "vision_params": {
         "min_hue": 0,
         "max_hue": 30

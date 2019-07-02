@@ -6,9 +6,9 @@
     }, 
     {
       "position": {
-        "y": 0.35, 
+        "y": 0.25, 
         "x": 0, 
-        "z": 0.2
+        "z": 0.3
       }, 
       "name": "move", 
       "orientation": {
@@ -35,18 +35,19 @@
       "name": "release"
     }, 
     {
-      "release_effort": 0.57, 
+      "release_effort": 0.45, 
+      "safe_height": 0.1, 
+      "name": "pick_and_place_vision", 
       "vision_params": {
         "min_hue": 0, 
         "max_hue": 180
       }, 
-      "name": "pick_and_place_vision", 
       "path_to_destination": [
         {
           "position": {
-            "y": 0.5, 
-            "x": 0, 
-            "z": 0.2
+            "y": 0.35, 
+            "x": 0.21016, 
+            "z": 0.24812
           }, 
           "name": "move", 
           "orientation": {
@@ -58,23 +59,9 @@
         }, 
         {
           "position": {
-            "y": 0.39999999999999997, 
-            "x": 0.01016, 
-            "z": 0.46812
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }, 
-        {
-          "position": {
-            "y": 0.39999999999999997, 
-            "x": 0.01016, 
-            "z": 0.36812
+            "y": 0.35, 
+            "x": 0.21016, 
+            "z": 0.14812
           }, 
           "name": "move", 
           "orientation": {
@@ -89,9 +76,9 @@
       "path_to_region": [
         {
           "position": {
-            "y": 0.5, 
-            "x": 0, 
-            "z": 0.2
+            "y": 0.45, 
+            "x": -0.2, 
+            "z": 0.25
           }, 
           "name": "move", 
           "orientation": {
@@ -102,12 +89,12 @@
           }
         }
       ], 
-      "grasp_effort": 0.66, 
+      "grasp_effort": 0.57, 
       "grasp_offset": {
         "position": {
-          "y": 0, 
-          "x": 0, 
-          "z": 0.16
+          "y": 0.0375, 
+          "x": -0.03, 
+          "z": 0.175
         }, 
         "orientation": {
           "y": 0, 
@@ -118,18 +105,37 @@
       }
     }, 
     {
-      "release_effort": 0.57, 
+      "position": {
+        "y": 0.35, 
+        "x": 0.21016, 
+        "z": 0.24812
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0.5, 
+        "x": 0.5, 
+        "z": -0.5, 
+        "w": 0.5
+      }
+    }, 
+    {
+      "effort": 0.35, 
+      "name": "release"
+    }, 
+    {
+      "release_effort": 0.45, 
+      "safe_height": 0.1, 
+      "name": "pick_and_place_vision", 
       "vision_params": {
         "min_hue": 0, 
         "max_hue": 180
       }, 
-      "name": "pick_and_place_vision", 
       "path_to_destination": [
         {
           "position": {
-            "y": 0.5, 
-            "x": 0, 
-            "z": 0.2
+            "y": 0.35, 
+            "x": 0.24826, 
+            "z": 0.24812
           }, 
           "name": "move", 
           "orientation": {
@@ -141,23 +147,9 @@
         }, 
         {
           "position": {
-            "y": 0.39999999999999997, 
-            "x": 0.04826, 
-            "z": 0.46812
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }, 
-        {
-          "position": {
-            "y": 0.39999999999999997, 
-            "x": 0.04826, 
-            "z": 0.36812
+            "y": 0.35, 
+            "x": 0.24826, 
+            "z": 0.14812
           }, 
           "name": "move", 
           "orientation": {
@@ -172,9 +164,9 @@
       "path_to_region": [
         {
           "position": {
-            "y": 0.5, 
-            "x": 0, 
-            "z": 0.2
+            "y": 0.45, 
+            "x": -0.2, 
+            "z": 0.25
           }, 
           "name": "move", 
           "orientation": {
@@ -185,12 +177,12 @@
           }
         }
       ], 
-      "grasp_effort": 0.66, 
+      "grasp_effort": 0.57, 
       "grasp_offset": {
         "position": {
-          "y": 0, 
-          "x": 0, 
-          "z": 0.16
+          "y": 0.0375, 
+          "x": -0.03, 
+          "z": 0.175
         }, 
         "orientation": {
           "y": 0, 
@@ -201,18 +193,37 @@
       }
     }, 
     {
-      "release_effort": 0.57, 
+      "position": {
+        "y": 0.35, 
+        "x": 0.24826, 
+        "z": 0.24812
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0.5, 
+        "x": 0.5, 
+        "z": -0.5, 
+        "w": 0.5
+      }
+    }, 
+    {
+      "effort": 0.35, 
+      "name": "release"
+    }, 
+    {
+      "release_effort": 0.45, 
+      "safe_height": 0.1, 
+      "name": "pick_and_place_vision", 
       "vision_params": {
         "min_hue": 0, 
         "max_hue": 180
       }, 
-      "name": "pick_and_place_vision", 
       "path_to_destination": [
         {
           "position": {
-            "y": 0.5, 
-            "x": 0, 
-            "z": 0.2
+            "y": 0.31016, 
+            "x": 0.22032000000000002, 
+            "z": 0.26336000000000004
           }, 
           "name": "move", 
           "orientation": {
@@ -224,23 +235,9 @@
         }, 
         {
           "position": {
-            "y": 0.36016, 
-            "x": 0.02032, 
-            "z": 0.48336
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }, 
-        {
-          "position": {
-            "y": 0.36016, 
-            "x": 0.02032, 
-            "z": 0.38336000000000003
+            "y": 0.31016, 
+            "x": 0.22032000000000002, 
+            "z": 0.16336
           }, 
           "name": "move", 
           "orientation": {
@@ -255,9 +252,9 @@
       "path_to_region": [
         {
           "position": {
-            "y": 0.5, 
-            "x": 0, 
-            "z": 0.2
+            "y": 0.45, 
+            "x": -0.2, 
+            "z": 0.25
           }, 
           "name": "move", 
           "orientation": {
@@ -268,12 +265,12 @@
           }
         }
       ], 
-      "grasp_effort": 0.66, 
+      "grasp_effort": 0.57, 
       "grasp_offset": {
         "position": {
-          "y": 0, 
-          "x": 0, 
-          "z": 0.16
+          "y": 0.0375, 
+          "x": 0.0, 
+          "z": 0.175
         }, 
         "orientation": {
           "y": 0, 
@@ -284,18 +281,37 @@
       }
     }, 
     {
-      "release_effort": 0.57, 
+      "position": {
+        "y": 0.31016, 
+        "x": 0.22032000000000002, 
+        "z": 0.26336000000000004
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0.5, 
+        "x": 0.5, 
+        "z": -0.5, 
+        "w": 0.5
+      }
+    }, 
+    {
+      "effort": 0.35, 
+      "name": "release"
+    }, 
+    {
+      "release_effort": 0.45, 
+      "safe_height": 0.1, 
+      "name": "pick_and_place_vision", 
       "vision_params": {
         "min_hue": 0, 
         "max_hue": 180
       }, 
-      "name": "pick_and_place_vision", 
       "path_to_destination": [
         {
           "position": {
-            "y": 0.5, 
-            "x": 0, 
-            "z": 0.2
+            "y": 0.38983999999999996, 
+            "x": 0.22032000000000002, 
+            "z": 0.26336000000000004
           }, 
           "name": "move", 
           "orientation": {
@@ -307,23 +323,9 @@
         }, 
         {
           "position": {
-            "y": 0.43984, 
-            "x": 0.02032, 
-            "z": 0.48336
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }, 
-        {
-          "position": {
-            "y": 0.43984, 
-            "x": 0.02032, 
-            "z": 0.38336000000000003
+            "y": 0.38983999999999996, 
+            "x": 0.22032000000000002, 
+            "z": 0.16336
           }, 
           "name": "move", 
           "orientation": {
@@ -338,9 +340,9 @@
       "path_to_region": [
         {
           "position": {
-            "y": 0.5, 
-            "x": 0, 
-            "z": 0.2
+            "y": 0.45, 
+            "x": -0.2, 
+            "z": 0.25
           }, 
           "name": "move", 
           "orientation": {
@@ -351,12 +353,12 @@
           }
         }
       ], 
-      "grasp_effort": 0.66, 
+      "grasp_effort": 0.57, 
       "grasp_offset": {
         "position": {
-          "y": 0, 
-          "x": 0, 
-          "z": 0.16
+          "y": 0.0375, 
+          "x": 0.0, 
+          "z": 0.175
         }, 
         "orientation": {
           "y": 0, 
@@ -367,18 +369,37 @@
       }
     }, 
     {
-      "release_effort": 0.57, 
+      "position": {
+        "y": 0.38983999999999996, 
+        "x": 0.22032000000000002, 
+        "z": 0.26336000000000004
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0.5, 
+        "x": 0.5, 
+        "z": -0.5, 
+        "w": 0.5
+      }
+    }, 
+    {
+      "effort": 0.35, 
+      "name": "release"
+    }, 
+    {
+      "release_effort": 0.45, 
+      "safe_height": 0.1, 
+      "name": "pick_and_place_vision", 
       "vision_params": {
         "min_hue": 0, 
         "max_hue": 180
       }, 
-      "name": "pick_and_place_vision", 
       "path_to_destination": [
         {
           "position": {
-            "y": 0.5, 
-            "x": 0, 
-            "z": 0.2
+            "y": 0.35, 
+            "x": 0.21016, 
+            "z": 0.2786
           }, 
           "name": "move", 
           "orientation": {
@@ -390,23 +411,9 @@
         }, 
         {
           "position": {
-            "y": 0.39999999999999997, 
-            "x": 0.01016, 
-            "z": 0.49860000000000004
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }, 
-        {
-          "position": {
-            "y": 0.39999999999999997, 
-            "x": 0.01016, 
-            "z": 0.3986
+            "y": 0.35, 
+            "x": 0.21016, 
+            "z": 0.1786
           }, 
           "name": "move", 
           "orientation": {
@@ -421,9 +428,9 @@
       "path_to_region": [
         {
           "position": {
-            "y": 0.5, 
-            "x": 0, 
-            "z": 0.2
+            "y": 0.45, 
+            "x": -0.2, 
+            "z": 0.25
           }, 
           "name": "move", 
           "orientation": {
@@ -434,12 +441,12 @@
           }
         }
       ], 
-      "grasp_effort": 0.66, 
+      "grasp_effort": 0.57, 
       "grasp_offset": {
         "position": {
-          "y": 0, 
-          "x": 0, 
-          "z": 0.16
+          "y": 0.0375, 
+          "x": -0.03, 
+          "z": 0.175
         }, 
         "orientation": {
           "y": 0, 
@@ -450,18 +457,37 @@
       }
     }, 
     {
-      "release_effort": 0.57, 
+      "position": {
+        "y": 0.35, 
+        "x": 0.21016, 
+        "z": 0.2786
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0.5, 
+        "x": 0.5, 
+        "z": -0.5, 
+        "w": 0.5
+      }
+    }, 
+    {
+      "effort": 0.35, 
+      "name": "release"
+    }, 
+    {
+      "release_effort": 0.45, 
+      "safe_height": 0.1, 
+      "name": "pick_and_place_vision", 
       "vision_params": {
         "min_hue": 0, 
         "max_hue": 180
       }, 
-      "name": "pick_and_place_vision", 
       "path_to_destination": [
         {
           "position": {
-            "y": 0.5, 
-            "x": 0, 
-            "z": 0.2
+            "y": 0.35, 
+            "x": 0.24826, 
+            "z": 0.2786
           }, 
           "name": "move", 
           "orientation": {
@@ -473,23 +499,9 @@
         }, 
         {
           "position": {
-            "y": 0.39999999999999997, 
-            "x": 0.04826, 
-            "z": 0.49860000000000004
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }, 
-        {
-          "position": {
-            "y": 0.39999999999999997, 
-            "x": 0.04826, 
-            "z": 0.3986
+            "y": 0.35, 
+            "x": 0.24826, 
+            "z": 0.1786
           }, 
           "name": "move", 
           "orientation": {
@@ -504,9 +516,9 @@
       "path_to_region": [
         {
           "position": {
-            "y": 0.5, 
-            "x": 0, 
-            "z": 0.2
+            "y": 0.45, 
+            "x": -0.2, 
+            "z": 0.25
           }, 
           "name": "move", 
           "orientation": {
@@ -517,12 +529,12 @@
           }
         }
       ], 
-      "grasp_effort": 0.66, 
+      "grasp_effort": 0.57, 
       "grasp_offset": {
         "position": {
-          "y": 0, 
-          "x": 0, 
-          "z": 0.16
+          "y": 0.0375, 
+          "x": -0.03, 
+          "z": 0.175
         }, 
         "orientation": {
           "y": 0, 
@@ -531,6 +543,24 @@
           "w": 0
         }
       }
+    }, 
+    {
+      "position": {
+        "y": 0.35, 
+        "x": 0.24826, 
+        "z": 0.2786
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0.5, 
+        "x": 0.5, 
+        "z": -0.5, 
+        "w": 0.5
+      }
+    }, 
+    {
+      "effort": 0.35, 
+      "name": "release"
     }, 
     {
       "msg": "Moving to Home", 
@@ -538,9 +568,9 @@
     }, 
     {
       "position": {
-        "y": 0.35, 
+        "y": 0.25, 
         "x": 0, 
-        "z": 0.2
+        "z": 0.3
       }, 
       "name": "move", 
       "orientation": {
@@ -571,7 +601,7 @@
         "g": 1
       }, 
       "position": {
-        "y": 0.25, 
+        "y": 0.45, 
         "x": 0, 
         "z": -0.05
       }, 

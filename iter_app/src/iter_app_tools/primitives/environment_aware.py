@@ -78,7 +78,7 @@ class DisconnectObjectFromRobot(Primitive):
 
 class PickAndPlaceVision(Primitive):
 
-    def __init__(self,object_type,path_to_region,path_to_destination,grasp_effort,release_effort,grasp_offset,vision_params,envClient,lookup, **kwargs):
+    def __init__(self,object_type,path_to_region,path_to_destination,grasp_effort,release_effort,grasp_offset,safe_height,vision_params,envClient,lookup, **kwargs):
         self._find_obj = FindVisionObject(object_type,vision_params,envClient)
         self._path_to_region = [lookup('move')(dct['position'],dct['orientation']) for dct in path_to_region]
         self._path_to_dest = [lookup('move')(dct['position'],dct['orientation']) for dct in path_to_destination]
@@ -86,6 +86,7 @@ class PickAndPlaceVision(Primitive):
         self._release = lookup('release')(release_effort)
         self._envClient = envClient
         self._lookup = lookup
+        self._safe_height = safe_height
         self._grasp_offset = pose_dct_to_msg(grasp_offset)
 
     def operate(self):
@@ -108,7 +109,8 @@ class PickAndPlaceVision(Primitive):
         object_rot = [orientation.x,orientation.y,orientation.z,orientation.w]
 
         grasp_pos = [object_pos[i] + offset_pos[i] for i in range(0,len(object_pos))]
-        grasp_rot = tf.transformations.quaternion_multiply(object_rot,offset_rot)
+        #grasp_rot = tf.transformations.quaternion_multiply(object_rot,offset_rot)
+        grasp_rot = offset_rot #TODO handle actual angle later. Just need to see if the pose position is even close
 
         grasp_pose = Pose(position=Vector3(x=grasp_pos[0],y=grasp_pos[1],z=grasp_pos[2]),
                           orientation=Quaternion(x=grasp_rot[0],y=grasp_rot[1],z=grasp_rot[2],w=grasp_rot[3]))
@@ -123,8 +125,13 @@ class PickAndPlaceVision(Primitive):
 
         # get pose of object relative to base_link
         if status:
-            #TODO safe-height movement as well?
+            # safe-height movement as well?
             dPose = pose_msg_to_dct(grasp_pose)
+            dPose['position']['z'] += self._safe_height
+            self._lookup('move')(dPose['position'],dPose['orientation']).operate()
+
+            # object location movement
+            dPose['position']['z'] -= self._safe_height
             self._lookup('move')(dPose['position'],dPose['orientation']).operate()
 
         # grasp

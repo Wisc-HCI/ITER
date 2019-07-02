@@ -14,13 +14,13 @@
       <param name="pixel_format" value="mjpeg" /> <!-- yuyv -->
       <param name="camera_frame_id" value="usb_cam" />
       <param name="io_method" value="mmap" />
-      <param name="framerate" value="1" />
+      <param name="framerate" value="5" />
     </node>
   </group>
 
   <group unless="$(arg use_real_cam)">
     <node name="static_cam" pkg="iter_vision" type="static_camera.py" output="screen">
-      <param name="~publish_rate" value="1" />
+      <param name="~publish_rate" value="5" />
       <param name="~image_filepath" value="$(find iter_vision)/images/$(arg static_cam_image)"/>
       <param name="~camera_ns" value="static_cam"/>
 
