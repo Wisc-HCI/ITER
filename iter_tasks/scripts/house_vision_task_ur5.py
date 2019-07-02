@@ -19,6 +19,9 @@ DOWN_GY_ORIENTATION = dt.orientation(0.5,0.5,-0.5,0.5)
 HOME_POSITION = dt.position(0,0.35,0.2)
 HOME_ORIENTATION = copy.deepcopy(DOWN_GX_ORIENTATION)
 
+WAIT_POSITION = dt.position(0,0.35,0.5)
+WAIT_ORIENTATION = dt.orientation(0,0,0,1)
+
 WORKSPACE_POSITION = dt.position(0.1,0.375,-0.17)
 REGION_POSITION = dt.position(0,0.5,0.2)
 REGION_ORIENTATION = copy.deepcopy(DOWN_GX_ORIENTATION)
@@ -27,8 +30,8 @@ GRASP_EFFORT = 0.66
 RELEASE_EFFORT_REGION = 0.35
 RELEASE_EFFORT_WORKSPACE = 0.57
 
-GRASP_OFFSET = dt.pose(dt.position(0,0,0.16),REGION_ORIENTATION)
-
+GRASP_OFFSET = dt.pose(dt.position(0,0,0.16),
+                       copy.deepcopy(REGION_ORIENTATION))
 
 def move_home():
     task_list = []
@@ -42,7 +45,7 @@ def wait_for_human():
     task_list.append(pm.wait_button())
     return task_list
 
-def pick_and_place_block(block_type,target_position,target_orientation):
+def pick_and_place_block(block_type,target_position,target_orientation,vision_params):
 
     safe_position = copy.deepcopy(target_position)
     safe_position['z'] += SAFE_HEIGHT_OFFSET
@@ -59,13 +62,14 @@ def pick_and_place_block(block_type,target_position,target_orientation):
         ],
         grasp_effort=GRASP_EFFORT,
         release_effort=RELEASE_EFFORT_WORKSPACE,
-        grasp_offset=GRASP_OFFSET)
+        grasp_offset=GRASP_OFFSET,
+        vision_params=vision_params)
     return action
 
 def build_house_base():
     task_list = []
 
-    task_list.append(pm.logger('Building House'))
+    task_list.append(pm.logger('Building House Base'))
     task_list.append(pm.release(RELEASE_EFFORT_REGION))
 
     position = copy.deepcopy(WORKSPACE_POSITION)
@@ -75,7 +79,11 @@ def build_house_base():
     task_list.append(pick_and_place_block(
         block_type='large',
         target_position=copy.deepcopy(position),
-        target_orientation=DOWN_GY_ORIENTATION))
+        target_orientation=DOWN_GY_ORIENTATION,
+        vision_params={"vision_params": {
+                        "min_hue": 0,
+                        "max_hue": 180
+                      }}))
 
     position = copy.deepcopy(WORKSPACE_POSITION)
     position['x'] += BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0] + GRASP_OFFSET['position']['x']
@@ -84,7 +92,11 @@ def build_house_base():
     task_list.append(pick_and_place_block(
         block_type='large',
         target_position=copy.deepcopy(position),
-        target_orientation=DOWN_GY_ORIENTATION))
+        target_orientation=DOWN_GY_ORIENTATION,
+        vision_params={"vision_params": {
+                        "min_hue": 0,
+                        "max_hue": 180
+                      }}))
 
     position = copy.deepcopy(WORKSPACE_POSITION)
     position['x'] += BLOCK_SMALL[0] + GRASP_OFFSET['position']['x']
@@ -93,7 +105,11 @@ def build_house_base():
     task_list.append(pick_and_place_block(
         block_type='small',
         target_position=copy.deepcopy(position),
-        target_orientation=DOWN_GY_ORIENTATION))
+        target_orientation=DOWN_GY_ORIENTATION,
+        vision_params={"vision_params": {
+                        "min_hue": 0,
+                        "max_hue": 180
+                      }}))
 
     position = copy.deepcopy(WORKSPACE_POSITION)
     position['x'] += BLOCK_SMALL[0] + GRASP_OFFSET['position']['x']
@@ -102,7 +118,11 @@ def build_house_base():
     task_list.append(pick_and_place_block(
         block_type='small',
         target_position=copy.deepcopy(position),
-        target_orientation=DOWN_GY_ORIENTATION))
+        target_orientation=DOWN_GY_ORIENTATION,
+        vision_params={"vision_params": {
+                        "min_hue": 0,
+                        "max_hue": 180
+                      }}))
 
     position = copy.deepcopy(WORKSPACE_POSITION)
     position['x'] += 0.5 * BLOCK_LARGE[0] + GRASP_OFFSET['position']['x']
@@ -111,7 +131,11 @@ def build_house_base():
     task_list.append(pick_and_place_block(
         block_type='large',
         target_position=copy.deepcopy(position),
-        target_orientation=DOWN_GY_ORIENTATION))
+        target_orientation=DOWN_GY_ORIENTATION,
+        vision_params={"vision_params": {
+                        "min_hue": 0,
+                        "max_hue": 180
+                      }}))
 
     position = copy.deepcopy(WORKSPACE_POSITION)
     position['x'] += BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0] + GRASP_OFFSET['position']['x']
@@ -120,7 +144,11 @@ def build_house_base():
     task_list.append(pick_and_place_block(
         block_type='large',
         target_position=copy.deepcopy(position),
-        target_orientation=DOWN_GY_ORIENTATION))
+        target_orientation=DOWN_GY_ORIENTATION,
+        vision_params={"vision_params": {
+                        "min_hue": 0,
+                        "max_hue": 180
+                      }}))
 
     return task_list
 
@@ -148,15 +176,15 @@ if __name__ == "__main__":
     env_list += static_environment()
 
     plan = dt.plan(
-        title='UR5 Simple Vision Pick-And-Place Task',
+        title='UR5 House Vision Pick-And-Place Task',
         author='Curt Henrichs',
-        description='Simple vision task to prove out vision pipeline',
+        description='Build house task base',
         version='0.0.1',
         frame_id='base_link',
         environment=env_list,
         task=task_list)
 
     path_to_scripts = os.path.dirname(os.path.realpath(__file__))
-    file_path = os.path.join(path_to_scripts,'../plans/simple_vision.json')
+    file_path = os.path.join(path_to_scripts,'../plans/ur5/house_task_base.json')
     f = open(file_path,'w')
     json.dump(plan,f,indent=2)

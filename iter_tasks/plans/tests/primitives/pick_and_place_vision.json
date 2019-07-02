@@ -55,7 +55,11 @@
         }
       ],
       "grasp_effort": 0.5,
-      "release_effort": 0.5
+      "release_effort": 0.5,
+      "vision_params": {
+        "min_hue": 0,
+        "max_hue": 30
+      }
     }
   ]
 }
