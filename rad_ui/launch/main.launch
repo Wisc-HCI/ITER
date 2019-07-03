@@ -1,7 +1,13 @@
 <launch>
 
+  <arg name="rosbridge_url" default="ws://zootopia.cs.wisc.edu"/>
+  <arg name="rosbridge_port" default="9090"/>
+
   <!-- Include Rosbridge launches -->
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+
+  <!-- Update rosbridge website properties -->
+  <node name="update_properties" pkg="rad_ui"  type="update_rosbridge_server_properties.sh" args="$(find rad_ui)/src/websites/rosbridge_properties.json $(arg rosbridge_url) $(arg rosbridge_port)"
 
   <!-- Launch HTTP server -->
   <node name="web_server" pkg="rad_ui" type="web_server_start.sh" args='$(find rad_ui)/src/websites' output='screen'/>
