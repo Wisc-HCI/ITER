@@ -1,0 +1,49 @@
+<launch>
+
+    <!-- Global arguements -->
+    <arg name="robot"/>
+    <arg name="simulated" default="true"/>
+    <arg name="use_rik" default="true" />
+    <arg name="use_cli" default="false"/>
+    <arg name="rad_ui" default="false"/>
+    <arg name="use_collision" default="false" />
+    <arg name="use_real_cam" default="false" />
+    <arg name="video_src" default="/dev/video0" />
+    <arg name="use_fake_btn" default="false" />
+
+    <!-- Global ROS Parameters -->
+    <rosparam param="use_rik" subst_value="true">$(arg use_rik)</rosparam>
+    <rosparam param="use_collision" subst_value="true">$(arg use_collision)</rosparam>
+
+    <!-- Include robot launches -->
+    <include file="$(find iter_app)/launch/robot.launch">
+      <arg name="robot" value="$(arg robot)"/>
+      <arg name="simulated" value="$(arg simulated)"/>
+      <arg name="use_rik" value="$(arg use_rik)"/>
+    </include>
+
+    <!-- Include Vision System -->
+    <include file="$(find iter_vision)/launch/main.launch">
+      <arg name="video_src" value="$(arg video_src)"/>
+      <arg name="use_real_cam" default="$(arg use_real_cam)"/>
+    </include>
+
+    <!-- Start button node -->
+    <node if="$(arg use_fake_btn)" name="button" pkg="pop_button" type="fake_button_node.py" output="screen"/>
+    <node unless="$(arg use_fake_btn)" name="button" pkg="pop_button" type="pop_button_node.py"/>
+
+    <!-- Start backend -->
+    <node pkg="iter_app" type="environment.py" name="environment" output="screen">
+      <param name="mode" value="marker"/>
+      <param name="calibrate_ar_tag_id" value="4"/>
+    </node>
+    <node pkg="iter_app" type="timing.py" name="timing" output="screen"/>
+    <node pkg="iter_app" type="runner.py" name="runner" output="screen"/>
+
+    <!-- Start RAD UI -->
+    <include if="$(arg rad_ui)" file="$(find rad_ui)/launch/main.launch"/>
+
+    <!-- Start CLI -->
+    <node if="$(arg use_cli)" pkg="iter_tasks" type="cli.py" name="cli" output="screen"/>
+
+</launch>
