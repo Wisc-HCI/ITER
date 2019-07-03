@@ -21,28 +21,38 @@ Specifically, looking to pooled, sequential, and reciprocal interdependence.
 
 ## Packages
 The following packages are provided:
+- [iter](./README.md)
+  - Meta-package for ITER system
 - [iter_app](./iter_app/README.md)
   - Provides access to ITER application and core launch files
 - [iter_vision](./iter_vision/README.md)
   - Provides vision subsystem for finding blocks defined by AR boundary
+- [iter_tasks](./iter_tasks/README.md)
+  - Provides task generation tools and interfacing from plan to runner
+- [rad_ui](./rad_ui/README.md)
+  - Web interface to present signals from ITER
+- [pop_button](./pop_button/README.md)
+  - Modified IoT service for interfacing with Logi POP Smart Button
+  - See original service on [Github](https://github.com/brokeh/pophttp)
 - [ar_track_alvar](./ar_track_alvar/README.md)
-  - modified open-source alvar AR tag tracker to also report 2D pose of tags
+  - Modified open-source alvar AR tag tracker to also report 2D pose of tags
   - Also see their [Github](https://github.com/ros-perception/ar_track_alvar) and [ROS Wiki](http://wiki.ros.org/ar_track_alvar)
 
 ## Contact
 Curt Henrichs (cdhenrichs@wisc.edu)
 
-### Requirements:
-Must be installed as a ROS package in a catkin workspace
+## Requirements:
+ITER packages must be installed in your catkin workspace.
 
-Required packages:
+Additionally, requires packages:
 - [RobotWebTools/rosbridge_suite](https://github.com/RobotWebTools/rosbridge_suite)
+  - Installing through package manager functioned incorrectly for me using Kinetic on Ubuntu 16.04
   - [GT-RAIL/rosauth](https://github.com/GT-RAIL/rosauth)
+    - First try the package manager `sudo aot-get install ros-kinetic-rosauth`
 - [Wisc-HCI/robot_configurations](https://github.com/Wisc-HCI/robot_configurations)
-  - Install for UR or Kinova as needed
+  - Install for UR or Kinova as needed. Install the necessary dependencies listed
 - (optional) [uwgraphics/relaxed_ik](https://github.com/uwgraphics/relaxed_ik)
-  - See iter_app src/configs for pre-written setup files
-  - Note if using Relaxed-IK, then ignore MoveIt and robot_configurations
+  - Note if using Relaxed-IK, then you may ignore MoveIt setup
   - [Wisc-HCI/robot_behavior](https://github.com/Wisc-HCI/robot_behavior)
 - usb-cam
   - `sudo apt-get install ros-kinetic-usb-cam`
