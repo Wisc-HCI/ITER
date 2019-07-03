@@ -151,7 +151,6 @@ class BlockPoseNode:
     def _apply_transform(self,b2_array):
         currentTime = rospy.Time.now()
         b3_array = []
-        count = 0
 
         for b2 in b2_array:
             A, _ = self._point_position_eqs(b2.pose.x,b2.pose.y)
@@ -169,16 +168,14 @@ class BlockPoseNode:
 
             b3 = BlockPose3D()
             b3.header.stamp = currentTime
-            b3.header.frame_id = 'block_{0}'.format(count)
+            b3.header.frame_id = 'block_{0}'.format(b2.id)
             b3.parent_frame_id = self._parent_frame_id
             b3.pose = Pose(position=position,orientation=orientation)
             b3.type = b2.type
-            b3.id = count # assign a new ID here as it is officially a block
+            b3.id = b2.id
             b3.length = b2.length
             b3.width = b2.width
             b3_array.append(b3)
-
-            count += 1
 
         return b3_array
 
@@ -188,6 +185,7 @@ class BlockPoseNode:
         poly = geometry.MultiPoint([(a2.pose.x,a2.pose.y) for a2 in self._ar2_markers]).convex_hull
 
         # iterate over blocks selecting only those with centroid within region
+        count = 0
         filtered_array = []
         for b2 in b2_array:
             p2 = geometry.Point(b2.pose.x,b2.pose.y)
@@ -197,11 +195,15 @@ class BlockPoseNode:
             in_ar_circle = any([self._cartesian_distance((b2.pose.x,b2.pose.y),(a2.pose.x,a2.pose.y)) < self._ar_radius for a2 in self._ar2_markers])
 
             if in_region and not in_ar_circle:
+                b2.id = count
+                count += 1
+
                 filtered_array.append(b2)
 
         return filtered_array
 
-    def _cartesian_distance(self,p1,p2):
+    @staticmethod
+    def _cartesian_distance(p1,p2):
         return math.sqrt(pow(p1[0] - p2[0], 2) + pow(p1[1] - p2[1], 2))
 
     def _point_position_eqs(self,i,j,x=0,y=0,z=0):

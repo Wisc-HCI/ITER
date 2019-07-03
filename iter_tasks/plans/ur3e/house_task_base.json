@@ -73,28 +73,13 @@
         }
       ], 
       "object_type": "large", 
-      "path_to_region": [
-        {
-          "position": {
-            "y": 0.45, 
-            "x": -0.2, 
-            "z": 0.25
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }
-      ], 
-      "grasp_effort": 0.57, 
+      "path_to_region": [], 
+      "grasp_effort": 0.53, 
       "grasp_offset": {
         "position": {
-          "y": 0.0375, 
-          "x": -0.03, 
-          "z": 0.175
+          "y": 0.04, 
+          "x": -0.06, 
+          "z": 0.172
         }, 
         "orientation": {
           "y": 0, 
@@ -161,28 +146,13 @@
         }
       ], 
       "object_type": "large", 
-      "path_to_region": [
-        {
-          "position": {
-            "y": 0.45, 
-            "x": -0.2, 
-            "z": 0.25
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }
-      ], 
-      "grasp_effort": 0.57, 
+      "path_to_region": [], 
+      "grasp_effort": 0.53, 
       "grasp_offset": {
         "position": {
-          "y": 0.0375, 
-          "x": -0.03, 
-          "z": 0.175
+          "y": 0.04, 
+          "x": -0.06, 
+          "z": 0.172
         }, 
         "orientation": {
           "y": 0, 
@@ -249,28 +219,13 @@
         }
       ], 
       "object_type": "small", 
-      "path_to_region": [
-        {
-          "position": {
-            "y": 0.45, 
-            "x": -0.2, 
-            "z": 0.25
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }
-      ], 
-      "grasp_effort": 0.57, 
+      "path_to_region": [], 
+      "grasp_effort": 0.53, 
       "grasp_offset": {
         "position": {
-          "y": 0.0375, 
-          "x": 0.0, 
-          "z": 0.175
+          "y": 0.042, 
+          "x": -0.05, 
+          "z": 0.172
         }, 
         "orientation": {
           "y": 0, 
@@ -337,28 +292,13 @@
         }
       ], 
       "object_type": "small", 
-      "path_to_region": [
-        {
-          "position": {
-            "y": 0.45, 
-            "x": -0.2, 
-            "z": 0.25
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }
-      ], 
-      "grasp_effort": 0.57, 
+      "path_to_region": [], 
+      "grasp_effort": 0.53, 
       "grasp_offset": {
         "position": {
-          "y": 0.0375, 
-          "x": 0.0, 
-          "z": 0.175
+          "y": 0.042, 
+          "x": -0.05, 
+          "z": 0.172
         }, 
         "orientation": {
           "y": 0, 
@@ -425,28 +365,13 @@
         }
       ], 
       "object_type": "large", 
-      "path_to_region": [
-        {
-          "position": {
-            "y": 0.45, 
-            "x": -0.2, 
-            "z": 0.25
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }
-      ], 
-      "grasp_effort": 0.57, 
+      "path_to_region": [], 
+      "grasp_effort": 0.53, 
       "grasp_offset": {
         "position": {
-          "y": 0.0375, 
-          "x": -0.03, 
-          "z": 0.175
+          "y": 0.04, 
+          "x": -0.06, 
+          "z": 0.172
         }, 
         "orientation": {
           "y": 0, 
@@ -513,28 +438,13 @@
         }
       ], 
       "object_type": "large", 
-      "path_to_region": [
-        {
-          "position": {
-            "y": 0.45, 
-            "x": -0.2, 
-            "z": 0.25
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }
-      ], 
-      "grasp_effort": 0.57, 
+      "path_to_region": [], 
+      "grasp_effort": 0.53, 
       "grasp_offset": {
         "position": {
-          "y": 0.0375, 
-          "x": -0.03, 
-          "z": 0.175
+          "y": 0.04, 
+          "x": -0.06, 
+          "z": 0.172
         }, 
         "orientation": {
           "y": 0, 
@@ -601,7 +511,7 @@
         "g": 1
       }, 
       "position": {
-        "y": 0.45, 
+        "y": 0.35, 
         "x": 0, 
         "z": -0.05
       }, 

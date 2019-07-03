@@ -26,14 +26,14 @@ WORKSPACE_POSITION = dt.position(0.2,0.3,-0.02)
 REGION_POSITION = dt.position(-0.2,0.45,0.25)
 REGION_ORIENTATION = copy.deepcopy(DOWN_GX_ORIENTATION)
 
-GRASP_EFFORT = 0.57
+GRASP_EFFORT = 0.53 #0.57
 RELEASE_EFFORT_REGION = 0.35
 RELEASE_EFFORT_WORKSPACE = 0.45
 
-REGION_GRASP_OFFSET_LARGE = dt.pose(dt.position(-0.03,0.0375,0.175),
+REGION_GRASP_OFFSET_LARGE = dt.pose(dt.position(-0.06,0.04,0.172),
                                 copy.deepcopy(REGION_ORIENTATION))
 
-REGION_GRASP_OFFSET_SMALL = dt.pose(dt.position(0.0,0.0375,0.175),
+REGION_GRASP_OFFSET_SMALL = dt.pose(dt.position(-0.05,0.042,0.172),
                                 copy.deepcopy(REGION_ORIENTATION))
 
 WORKSPACE_GRASP_OFFSET = dt.pose(dt.position(0,0,0.16),
@@ -60,9 +60,7 @@ def pick_and_place_block(block_type,target_position,target_orientation,grasp_off
 
     task_list.append(pm.pick_and_place_vision(
         object_type=block_type,
-        path_to_region=[
-            pm.move(REGION_POSITION,DOWN_GY_ORIENTATION)
-        ],
+        path_to_region=[],
         path_to_destination=[
             pm.move(safe_position,target_orientation),
             pm.move(target_position,target_orientation)
@@ -177,7 +175,7 @@ def static_environment():
 
     env_list.append(dt.environment_object(
         name='tabletop',
-        position=dt.position(0,0.45,-0.05),
+        position=dt.position(0,0.35,-0.05),
         orientation=dt.orientation(0,0,0,1),
         size=dt.size(1,0.6,0.015)))
 

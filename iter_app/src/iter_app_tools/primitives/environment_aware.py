@@ -124,9 +124,10 @@ class PickAndPlaceVision(Primitive):
                     break
 
         # get pose of object relative to base_link
+        dPose = pose_msg_to_dct(grasp_pose)
         if status:
-            # safe-height movement as well?
-            dPose = pose_msg_to_dct(grasp_pose)
+
+            # safe-height movement
             dPose['position']['z'] += self._safe_height
             self._lookup('move')(dPose['position'],dPose['orientation']).operate()
 
@@ -138,6 +139,11 @@ class PickAndPlaceVision(Primitive):
         if status:
             status = ConnectObjectToRobot(obj_id,self._envClient,self._lookup).operate()
             status = status and self._grasp.operate()
+
+        # safe-height movement after grasp
+        if status:
+            dPose['position']['z'] += self._safe_height
+            self._lookup('move')(dPose['position'],dPose['orientation']).operate()
 
         # move to destination
         if status:
