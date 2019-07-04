@@ -54,6 +54,7 @@ Additionally, requires packages:
 - (optional) [uwgraphics/relaxed_ik](https://github.com/uwgraphics/relaxed_ik)
   - Note if using Relaxed-IK, then you may ignore MoveIt setup
   - [Wisc-HCI/robot_behavior](https://github.com/Wisc-HCI/robot_behavior)
+- [MoriKen254/timed_roslaunch](https://github.com/MoriKen254/timed_roslaunch)
 - usb-cam
   - `sudo apt-get install ros-kinetic-usb-cam`
 - MoveIt
