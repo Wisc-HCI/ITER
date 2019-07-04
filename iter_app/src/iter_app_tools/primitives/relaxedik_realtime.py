@@ -1,5 +1,5 @@
 '''
-Primitives Relaxed-IK
+Primitives Relaxed-IK (Static)
 Author: Curt Henrichs
 Date: 5-2-19
 
@@ -24,6 +24,8 @@ Primitve List:
     - get_pose
             ""
 '''
+
+#TODO need to update this with the real-time planner, currently it is not using it!
 
 import tf
 import time
@@ -90,7 +92,7 @@ class GetPose(ReturnablePrimitive):
         return True, relaxedikPlanner.get_ee_pose()
 
 
-class RelaxedIKBehaviorPrimitives(AbstractBehaviorPrimitives):
+class RelaxedIKStaticBehaviorPrimitives(AbstractBehaviorPrimitives):
 
     def __init__(self, parent=None):
         super(RelaxedIKBehaviorPrimitives,self).__init__(parent)

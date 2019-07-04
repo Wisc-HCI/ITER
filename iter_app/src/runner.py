@@ -36,6 +36,7 @@ Topics subscribed:
 rrikik
 Parameters required:
     - use_rik
+    - use_rik_static
     - ~start_delay_time
 
 '''
@@ -62,9 +63,14 @@ envClient = EnvironmentClient()
 from iter_app_tools.primitives.default import DefaultBehaviorPrimitives
 
 use_rik = rospy.get_param('use_rik',False)
+use_static = rospy.get_param('use_rik_static',False)
 if use_rik:
-    from iter_app_tools.primitives.relaxedik import RelaxedIKBehaviorPrimitives as PhysicalBehaviorPrimitives
-    from iter_app_tools.primitives.relaxedik import initialize_robot
+    if use_static:
+        from iter_app_tools.primitives.relaxedik_static import RelaxedIKStaticBehaviorPrimitives as PhysicalBehaviorPrimitives
+        from iter_app_tools.primitives.relaxedik_static import initialize_robot
+    else:
+        from iter_app_tools.primitives.relaxedik_realtime import RelaxedIKRealTimeBehaviorPrimitives as PhysicalBehaviorPrimitives
+        from iter_app_tools.primitives.relaxedik_realtime import initialize_robot
 else:
     from iter_app_tools.primitives.moveit import MoveItBehaviorPrimitives as PhysicalBehaviorPrimitives
     from iter_app_tools.primitives.moveit import initialize_robot
