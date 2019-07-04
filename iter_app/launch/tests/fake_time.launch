@@ -4,6 +4,9 @@
     <param name="fake_time" value="true" />
   </node>
 
-  <include file="$(find rad_ui)/launch/main.launch"/>
+  <include file="$(find rad_ui)/launch/main.launch">
+    <arg name="rosbridge_host" value="localhost"/>
+    <arg name="rosbridge_port" value="9090"/>
+  </include>
 
 </launch>

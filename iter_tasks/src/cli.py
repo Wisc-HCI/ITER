@@ -26,12 +26,13 @@ will record the time per primitive in plan. Replay will use pre-recorded time to
 output timing estimates to the RAD display.
 '''
 
-import time
 import json
 import rospy
 
 from iter_app_tools.time_mode_enum import TimeModeEnum
 from iter_app.srv import Task, TaskResponse, ModeGet, ModeSet, ModeGetResponse, ModeSetResponse
+
+rospy.init_node('cli_node')
 
 print 'Waiting for runner'
 rospy.wait_for_service('/runner/task_input')
@@ -43,8 +44,6 @@ mode_get_srv = rospy.ServiceProxy('/runner/get/mode',ModeGet)
 
 
 def set_mode(mode):
-    msg = ModeSet()
-    msg.mode = mode
     mode_set_srv(mode)
 
 def get_mode():
@@ -84,43 +83,43 @@ def load_task(task_file_name):
     print response.msg
     return response.end_status
 
-if __name__ == "__main__":
-    time.sleep(2) # wait for other things to launch / setup
+# wait for other things to launch / setup
+rospy.sleep(2)
 
-    # Print initial prompt
-    print('Interdependence Task Experiment Runner')
+# Print initial prompt
+print('Interdependence Task Experiment Runner')
 
-    while True:
+while True:
 
-        # Get user command and parse
-        inStr = raw_input('ITER: ')
-        args = inStr.split()
+    # Get user command and parse
+    inStr = raw_input('ITER: ')
+    args = inStr.split()
 
-        if len(args) < 1:
-            print '[-] Error must supply command'
-        elif args[0].lower() == 'task':
-            if len(args) < 2:
-                print '[-] Error must supply filepath arguement'
-            else:
-                try:
-                    print 'End status: ', load_task(args[1])
-                except Exception, e:
-                    print '[-] Error:', e
-        elif args[0].lower() == 'get_mode':
-            print 'Current mode: ', get_mode()
-        elif args[0].lower() == 'set_mode':
-            if len(args) < 2:
-                print '[-] Error must supply mode to set'
-            elif TimeModeEnum.from_str(args[1]) == None:
-                print '[-] Error invalid mode suplied'
-            else:
-                print 'Set mode to: ', args[1]
-                set_mode(args[1])
-        elif args[0].lower() == 'help':
-            print 'The following commands may be used'
-            print '* help'
-            print '* task <your_task_file_path>'
-            print '* get_mode'
-            print '* set_mode <new_mode>'
+    if len(args) < 1:
+        print '[-] Error must supply command'
+    elif args[0].lower() == 'task':
+        if len(args) < 2:
+            print '[-] Error must supply filepath arguement'
         else:
-            print '[-] Error invalid command supplied'
+            try:
+                print 'End status: ', load_task(args[1])
+            except Exception, e:
+                print '[-] Error:', e
+    elif args[0].lower() == 'get_mode':
+        print 'Current mode: ', get_mode()
+    elif args[0].lower() == 'set_mode':
+        if len(args) < 2:
+            print '[-] Error must supply mode to set'
+        elif TimeModeEnum.from_str(args[1]) == None:
+            print '[-] Error invalid mode suplied'
+        else:
+            print 'Set mode to: ', args[1]
+            set_mode(args[1])
+    elif args[0].lower() == 'help':
+        print 'The following commands may be used'
+        print '* help'
+        print '* task <your_task_file_path>'
+        print '* get_mode'
+        print '* set_mode <new_mode>'
+    else:
+        print '[-] Error invalid command supplied'

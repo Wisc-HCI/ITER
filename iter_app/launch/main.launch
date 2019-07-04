@@ -10,6 +10,9 @@
     <arg name="use_real_cam" default="false" />
     <arg name="video_src" default="/dev/video0" />
     <arg name="use_fake_btn" default="false" />
+    <!--<arg name="rosbridge_host" default="zootopia.cs.wisc.edu"/>-->
+    <arg name="rosbridge_host" default="localhost"/>
+    <arg name="rosbridge_port" default="9090"/>
 
     <!-- Global ROS Parameters -->
     <rosparam param="use_rik" subst_value="true">$(arg use_rik)</rosparam>
@@ -41,7 +44,10 @@
     <node pkg="iter_app" type="runner.py" name="runner" output="screen"/>
 
     <!-- Start RAD UI -->
-    <include if="$(arg rad_ui)" file="$(find rad_ui)/launch/main.launch"/>
+    <include if="$(arg rad_ui)" file="$(find rad_ui)/launch/main.launch">
+      <arg name="rosbridge_host" value="$(arg rosbridge_host)"/>
+      <arg name="rosbridge_port" value="$(arg rosbridge_port)"/>
+    </include>
 
     <!-- Start CLI -->
     <node if="$(arg use_cli)" pkg="iter_tasks" type="cli.py" name="cli" output="screen"/>
