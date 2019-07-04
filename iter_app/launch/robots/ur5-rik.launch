@@ -3,6 +3,8 @@
 
   <arg name="simulated" default='true'/>
   <arg name="limited" default='false' />
+  <arg name="use_rik_julia" default="false"/>
+  <arg name="use_rik_static" default="false"/>
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find robot_descriptions)/urdf/universal_robots/relaxed_ik_ur5_robotiq_85.xacro'" />
@@ -57,8 +59,24 @@
   </group>
 
   <!-- Setup robot configuration for Relaxed Ik -->
-  <param name="path_to_relaxed_ik_src" value="$(find relaxed_ik)/src"/>
-  <param name="info_file_name" value="info_ur5.yaml"/>
+  <param name="use_rik_static" value="$(arg use_rik_static)"/>
+
+  <group if="$(arg use_rik_static)">
+    <param name="path_to_relaxed_ik_src" value="$(find relaxed_ik)/src"/>
+    <param name="info_file_name" value="info_ur5.yaml"/>
+  </group>
+
+  <group unless="$(arg use_rik_static)">
+    <include file="$(find relaxed_ik)/launch/load_info_file.launch">
+      <arg name="info_file_name" value="info_ur5.yaml"/>
+    </include>
+    <include file="$(find timed_roslaunch)/launch/timed_roslaunch">
+      <arg name="time" value="1"/>
+      <arg name="pkg" value="relaxed_ik"/>
+      <arg if="$(arg use_rik_julia)" name="file" value="relaxed_ik_julia.launch"/>
+      <arg unless="$(arg use_rik_julia)" name="file" value="relaxed_ik_python.launch"/>
+    </include>
+  </group>
 
   <!-- RVIZ -->
   <node type="rviz" name="rviz" pkg="rviz" args="-d $(find iter_app)/rviz/rik-robot-tf.rviz"/>

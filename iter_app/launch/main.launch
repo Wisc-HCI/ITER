@@ -4,6 +4,8 @@
     <arg name="robot"/>
     <arg name="simulated" default="true"/>
     <arg name="use_rik" default="true" />
+    <arg name="use_rik_julia" default="false"/>
+    <arg name="use_rik_static" default="false"/>
     <arg name="use_cli" default="false"/>
     <arg name="rad_ui" default="false"/>
     <arg name="use_collision" default="false" />
@@ -23,6 +25,8 @@
       <arg name="robot" value="$(arg robot)"/>
       <arg name="simulated" value="$(arg simulated)"/>
       <arg name="use_rik" value="$(arg use_rik)"/>
+      <arg name="use_rik_julia" value="$(arg use_rik_julia)"/>
+      <arg name="use_rik_static" value="$(arg use_rik_static)"/>
     </include>
 
     <!-- Include Vision System -->

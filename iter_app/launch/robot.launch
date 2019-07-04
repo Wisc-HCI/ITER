@@ -4,6 +4,8 @@
   <arg name="robot"/>
   <arg name="simulated" default='true'/>
   <arg name="use_rik" default='true' />
+  <arg name="use_rik_julia" default="false"/>
+  <arg name="use_rik_static" default="false"/>
 
   <!-- UR3e -->
   <group if="$(eval arg('robot') == 'ur3e')">
@@ -15,6 +17,8 @@
     <include file="$(find iter_app)/launch/robots/ur3e.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
+      <arg name="use_rik_julia" value="$(arg use_rik_julia)"/>
+      <arg name="use_rik_static" value="$(arg use_rik_static)"/>
     </include>
   </group>
 
@@ -28,6 +32,8 @@
     <include file="$(find iter_app)/launch/robots/ur5.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
+      <arg name="use_rik_julia" value="$(arg use_rik_julia)"/>
+      <arg name="use_rik_static" value="$(arg use_rik_static)"/>
     </include>
   </group>
 
@@ -41,6 +47,8 @@
     <include file="$(find iter_app)/launch/robots/mico-3.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
+      <arg name="use_rik_julia" value="$(arg use_rik_julia)"/>
+      <arg name="use_rik_static" value="$(arg use_rik_static)"/>
     </include>
   </group>
 
@@ -54,6 +62,8 @@
     <include file="$(find iter_app)/launch/robots/mico-2.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
+      <arg name="use_rik_julia" value="$(arg use_rik_julia)"/>
+      <arg name="use_rik_static" value="$(arg use_rik_static)"/>
     </include>
   </group>
 
@@ -67,6 +77,8 @@
     <include file="$(find iter_app)/launch/robots/mico-robotiq85.launch">
       <arg name="simulated" value="$(arg simulated )"/>
       <arg name="use_rik" value="$(arg use_rik)" />
+      <arg name="use_rik_julia" value="$(arg use_rik_julia)"/>
+      <arg name="use_rik_static" value="$(arg use_rik_static)"/>
     </include>
   </group>
 
