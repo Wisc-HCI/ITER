@@ -1,4 +1,4 @@
 {
-  "url": "ws://localhost",
-  "port": "9090"
+	"host": "localhost",
+	"port": "9090"
 }
