@@ -79,7 +79,7 @@
 
   <group if="$(eval arg('simulated') == false)">
 
-    <node name="ur_servoing" pkg="robot_behavior" type="ur_servoing.py">
+    <node name="ur_servoing" pkg="robot_behavior" type="ur_js_servoing.py">
       <param name="joint_state_topic" value="/real_time/joint_states"/>
       <param name="joint_ordering" value="['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']"/>
     </node>
