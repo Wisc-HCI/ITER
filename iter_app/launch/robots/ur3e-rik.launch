@@ -12,19 +12,6 @@
   <!-- If simulated, we do not have a robot connected -->
   <group if="$(eval arg('simulated') == true)">
     <param name="robot_connected" value="false" />
-
-    <node name="virtual_robot_controller" pkg="robot_behavior" type="virtual_robot_controller.py">
-      <param name="~gripper_joint" value="robotiq_85_left_knuckle_joint" />
-    </node>
-
-    <!-- We do not have a robot connected, so publish fake joint states -->
-    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-      <param name="/use_gui" value="false"/>
-      <rosparam param="/source_list">[/virtual_controller/joint_states]</rosparam>
-    </node>
-
-    <!-- Given the published joint states, publish tf for the robot links -->
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
   </group>
 
   <!-- Else, we launch physical robot -->
@@ -42,37 +29,70 @@
       <param name="speed" value="255"/>
       <param name="urscript_topic" value="/ur_driver/URScript"/>
     </node>
-
-    <!-- Joint Publisher -->
-    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-      <param name="/use_gui" value="false"/>
-      <rosparam param="/source_list">['/gripper/joint_states','/ur/joint_states']</rosparam>
-    </node>
-
-    <!-- Given the published joint states, publish tf for the robot links -->
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
-
   </group>
 
   <!-- Setup robot configuration for Relaxed Ik -->
   <param name="use_rik_static" value="$(arg use_rik_static)"/>
-
-  <group if="$(arg use_rik_static)">
-    <<param name="path_to_relaxed_ik_src" value="$(find relaxed_ik)/src"/>
-    <param name="info_file_name" value="info_ur3e.yaml"/>
-  </group>
+  <param name="path_to_relaxed_ik_src" value="$(find relaxed_ik)/src"/>
+  <param name="info_file_name" value="info_ur3e.yaml"/>
 
   <group unless="$(arg use_rik_static)">
     <include file="$(find relaxed_ik)/launch/load_info_file.launch">
       <arg name="info_file_name" value="info_ur3e.yaml"/>
     </include>
-    <include file="$(find timed_roslaunch)/launch/timed_roslaunch">
+    <include file="$(find timed_roslaunch)/launch/timed_roslaunch.launch">
       <arg name="time" value="1"/>
       <arg name="pkg" value="relaxed_ik"/>
       <arg if="$(arg use_rik_julia)" name="file" value="relaxed_ik_julia.launch"/>
       <arg unless="$(arg use_rik_julia)" name="file" value="relaxed_ik_python.launch"/>
     </include>
+    <node name="ur_servoing" pkg="robot_behavior" type="ur_servoing.py">
+      <param name="joint_state_topic" value="/real_time/joint_state"/>
+      <param name="joint_ordering" value="['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']"/>
+    </node>
   </group>
+
+  <!-- Handle Joint-space -->
+  <group if="$(eval arg('simulated') == true)">
+    <param name="robot_connected" value="false" />
+
+    <node name="virtual_robot_controller" pkg="robot_behavior" type="virtual_robot_controller.py">
+      <param name="~gripper_joint" value="robotiq_85_left_knuckle_joint" />
+    </node>
+
+    <!-- We do not have a robot connected, so publish fake joint states -->
+    <group if="$(arg use_rik_static)">
+      <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <param name="/use_gui" value="false"/>
+        <rosparam param="/source_list">[/virtual_controller/joint_states]</rosparam>
+      </node>
+    </group>
+    <group unless="$(arg use_rik_static)">
+      <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+        <param name="/use_gui" value="false"/>
+        <rosparam param="/source_list">[/virtual_controller/joint_states, /real_time/joint_states]</rosparam>
+      </node>
+    </group>
+
+  </group>
+
+  <group if="$(eval arg('simulated') == false)">
+
+    <node name="ur_servoing" pkg="robot_behavior" type="ur_servoing.py">
+      <param name="joint_state_topic" value="/real_time/joint_states"/>
+      <param name="joint_ordering" value="['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']"/>
+    </node>
+
+    <!-- Joint Publisher -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+      <param name="/use_gui" value="false"/>
+      <rosparam param="/source_list">['/gripper/joint_state','/ur/joint_states']</rosparam>
+    </node>
+
+  </group>
+
+  <!-- Given the published joint states, publish tf for the robot links -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
 
   <!-- RVIZ -->
   <node type="rviz" name="rviz" pkg="rviz" args="-d $(find iter_app)/rviz/rik-robot-tf.rviz"/>

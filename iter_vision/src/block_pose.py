@@ -48,14 +48,6 @@ class BlockPoseNode:
         self._tag_id_list = tag_id_list
         self._ar_radius = ar_radius
 
-        self.cam_pub = rospy.Subscriber("/usb_cam/camera_info",CameraInfo, self._cam_info_cb, queue_size=1)
-        self.ar3_sub = rospy.Subscriber("ar_pose_marker", AlvarMarkerArray, self._ar3_cb, queue_size=5)
-        self.ar2_sub = rospy.Subscriber("cam_pose_marker", AlvarMarker2DArray, self._ar2_cb, queue_size=5)
-        self.bp_sub = rospy.Subscriber("/block_vision/poses", BlockPose2DArray, self._bp_cb, queue_size=5)
-        self.bp2_pub = rospy.Publisher("/block_pose/pose_2d", BlockPose2DArray, queue_size=10)
-        self.bp3_pub = rospy.Publisher("/block_pose/pose_3d", BlockPose3DArray, queue_size=10)
-        self.tf_br = tf.TransformBroadcaster()
-
         self._ar3_markers = []
         self._ar2_markers = []
         self._new_ar_flag = True
@@ -64,6 +56,14 @@ class BlockPoseNode:
         self._image_orienation = 0
         self._img_height = 0
         self._img_width = 0
+
+        self.cam_pub = rospy.Subscriber("/usb_cam/camera_info",CameraInfo, self._cam_info_cb, queue_size=1)
+        self.ar3_sub = rospy.Subscriber("ar_pose_marker", AlvarMarkerArray, self._ar3_cb, queue_size=5)
+        self.ar2_sub = rospy.Subscriber("cam_pose_marker", AlvarMarker2DArray, self._ar2_cb, queue_size=5)
+        self.bp_sub = rospy.Subscriber("/block_vision/poses", BlockPose2DArray, self._bp_cb, queue_size=5)
+        self.bp2_pub = rospy.Publisher("/block_pose/pose_2d", BlockPose2DArray, queue_size=10)
+        self.bp3_pub = rospy.Publisher("/block_pose/pose_3d", BlockPose3DArray, queue_size=10)
+        self.tf_br = tf.TransformBroadcaster()
 
     def _cam_info_cb(self, message):
         self._img_height = message.height

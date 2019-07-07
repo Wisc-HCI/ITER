@@ -1,5 +1,5 @@
 '''
-Primitives Relaxed-IK (Static)
+Primitives Relaxed-IK (Realtime)
 Author: Curt Henrichs
 Date: 5-2-19
 
@@ -38,15 +38,13 @@ from abc import ABCMeta, abstractmethod
 from geometry_msgs.msg import Pose, Point, Quaternion
 from iter_app_tools.primitives.abstract import AbstractBehaviorPrimitives, Primitive, ReturnablePrimitive
 
-from behavior_execution.planners.static_relaxedik import StaticRelaxedIKPlanner
+from behavior_execution.planners.realtime_relaxedik import RealTimeRelaxedIKPlanner
 from behavior_execution.planners.gripper_command import GripperCommandPlanner
 
 
 pathToRikSrc = rospy.get_param('path_to_relaxed_ik_src')
 infoFileName = rospy.get_param('info_file_name')
-joint_time_factor = rospy.get_param('joint_time_factor',1)
-
-relaxedikPlanner = StaticRelaxedIKPlanner('follow_joint_trajectory',pathToRikSrc,infoFileName,joint_time_factor)
+relaxedikPlanner = RealTimeRelaxedIKPlanner(pathToRikSrc,infoFileName)
 gripperPlanner = GripperCommandPlanner('gripper_command')
 
 
