@@ -82,7 +82,11 @@ class Move(Primitive):
         self._pose = pose_dct_to_msg({'position':position,'orientation':orientation})
 
     def operate(self):
-        return relaxedikPlanner.set_ee_pose(self._pose,validate=False)
+        status = relaxedikPlanner.set_ee_pose(self._pose,validate=False)
+        if status:
+            delay = relaxedikPlanner.tof_ee_pose(relaxedikPlanner.get_ee_pose(),self._pose)
+            rospy.sleep(delay)
+        return status
 
 class GetPose(ReturnablePrimitive):
 
@@ -90,10 +94,10 @@ class GetPose(ReturnablePrimitive):
         return True, relaxedikPlanner.get_ee_pose()
 
 
-class RelaxedIKStaticBehaviorPrimitives(AbstractBehaviorPrimitives):
+class RelaxedIKRealTimeBehaviorPrimitives(AbstractBehaviorPrimitives):
 
     def __init__(self, parent=None):
-        super(RelaxedIKBehaviorPrimitives,self).__init__(parent)
+        super(RelaxedIKRealTimeBehaviorPrimitives,self).__init__(parent)
 
     def instantiate_from_dict(self, dct, **kwargs):
 

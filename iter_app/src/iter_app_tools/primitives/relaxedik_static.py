@@ -93,7 +93,7 @@ class GetPose(ReturnablePrimitive):
 class RelaxedIKStaticBehaviorPrimitives(AbstractBehaviorPrimitives):
 
     def __init__(self, parent=None):
-        super(RelaxedIKBehaviorPrimitives,self).__init__(parent)
+        super(RelaxedIKStaticBehaviorPrimitives,self).__init__(parent)
 
     def instantiate_from_dict(self, dct, **kwargs):
 
