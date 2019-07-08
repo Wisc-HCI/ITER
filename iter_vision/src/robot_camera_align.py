@@ -24,12 +24,18 @@ Parameters:
 '''
 
 import tf
+import time
 import math
 import rospy
 import numpy as np
 
 from geometry_msgs.msg import Pose, Vector3, Quaternion
 from iter_vision.srv import GetTagPose, GetTagPoseResponse
+from averaging_quaternions.averageQuaternions import averageQuaternions
+
+
+CALIBRATION_DURATION = 5
+
 
 class RobotCameraAlignment:
 
@@ -52,14 +58,36 @@ class RobotCameraAlignment:
         return status, translation, rotation
 
     def _tf_pose_cb(self, request):
-        status, pos, rot = self._tf_lookup(request.tag_frame_id)
+        pos_list = []
+        q_list = []
 
+        # Sample AR tag pose
+        start_time = time.time()
+        while time.time() - start_time < CALIBRATION_DURATION
+            status, pos, rot = self._tf_lookup(request.tag_frame_id)
+            if status:
+                pos_list.append(pos)
+                q = [rot[3],rot[0],rot[1],rot[2]]
+                q_list.append(q)
+
+        if len(pos_list) < 1 or len(rot_list) < 1:
+            return GetTagPoseResponse(pose=Pose(),status=False)
+
+        # Average calibrated tag pose
+        pl = len(pos_list)
+        px = sum([p[0] for p in pos_list]) / pl
+        py = sum([p[1] for p in pos_list]) / pl
+        pz = sum([p[2] for p in pos_list]) / pl
+        pos = (px,py,pz)
+
+        q = averageQuaternions(q_list)
+        rot = [q[1],q[2],q[3],q[0]]
+
+        # Generate tag pose
         pose = Pose()
-        if status:
-            pose.position = Vector3(x=pos[0],y=pos[1],z=pos[2])
-            pose.orientation = Quaternion(x=rot[0],y=rot[1],z=rot[2],w=rot[3])
-
-        return GetTagPoseResponse(pose=pose,status=status)
+        pose.position = Vector3(x=pos[0],y=pos[1],z=pos[2])
+        pose.orientation = Quaternion(x=rot[0],y=rot[1],z=rot[2],w=rot[3])
+        return GetTagPoseResponse(pose=pose,status=True)
 
 
 if __name__ == "__main__":

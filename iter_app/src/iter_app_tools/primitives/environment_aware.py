@@ -191,16 +191,18 @@ class CalibrateRobotToCamera(Primitive):
         status = True
 
         # place robot into camera field of view
+        print 'positioning...'
         for m in self._path:
             status = m.operate()
             if not status:
                 break
 
         # give some time for vision system to process
-        print 'calibrating...'
+        print 'waiting...'
         rospy.sleep(15)
 
         # run calibration routine
+        print 'calibrating...'
         if status:
             status, ee_pose = self._get_pose.operate()
             status = status and self._envClient.calibrate_robot_to_camera(self._tag_id,ee_pose,self._transform).status
