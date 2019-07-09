@@ -29,11 +29,12 @@ def get_block(type):
     if type != None: # attempt block match
         for bid in blocks.keys():
             if blocks[bid][1] == type:
-                return bid
+                return bid, blocks[bid]
     elif len(blocks.keys()) > 0: # get first block found
-        return blocks.keys()[0]
+        bid = blocks.keys()[0]
+        return bid, blocks[bid]
 
-    return None # No block with type found
+    return None, None # No block with type found
 
 def get_arg_tag(id):
     return ar_tags[id] if id in ar_tags else None
