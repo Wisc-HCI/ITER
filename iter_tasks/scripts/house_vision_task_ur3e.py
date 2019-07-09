@@ -30,10 +30,10 @@ GRASP_EFFORT = 0.59 #0.57
 RELEASE_EFFORT_REGION = 0.1
 RELEASE_EFFORT_WORKSPACE = 0.45
 
-REGION_GRASP_OFFSET_LARGE = dt.pose(dt.position(-0.045,0,0.172),
+REGION_GRASP_OFFSET_LARGE = dt.pose(dt.position(0,0,0.18),
                                 copy.deepcopy(REGION_ORIENTATION))
 
-REGION_GRASP_OFFSET_SMALL = dt.pose(dt.position(-0.0475,0,0.172),
+REGION_GRASP_OFFSET_SMALL = dt.pose(dt.position(0,0,0.18),
                                 copy.deepcopy(REGION_ORIENTATION))
 
 WORKSPACE_GRASP_OFFSET = dt.pose(dt.position(0,0,0.16),
