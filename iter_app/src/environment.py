@@ -26,7 +26,7 @@ from visualization_msgs.msg import *
 from iter_app.msg import EnvironmentObject
 from std_msgs.msg import Header, ColorRGBA
 from interactive_markers.interactive_marker_server import *
-from geometry_msgs.msg import Pose, Vector3, Quaternion, TransformStamped
+from geometry_msgs.msg import Pose, Vector3, Quaternion, TransformStamped, PoseStamped
 
 from iter_app.srv import SetVisionParams, SetVisionParamsResponse
 from iter_app.srv import GetVisionObject, GetVisionObjectResponse
@@ -227,7 +227,7 @@ class Environment:
         elif request.type == 'unknown':
             type = vision_env.BLOCK_UNKNOWN
 
-        id = vision_env.get_block(type)
+        id, pose = vision_env.get_block(type)
 
         response = GetVisionObjectResponse()
         response.status = not id == None
@@ -235,10 +235,7 @@ class Environment:
             return response
         response.vision_id = 'block_{0}'.format(id)
 
-        #response.vision_id,request.frame_id,
-        (pos, rot) = self._tf_listener.lookupTransform(request.frame_id, response.vision_id, rospy.Time(0))
-        response.pose = Pose(position=Vector3(x=pos[0],y=pos[1],z=pos[2]),
-                             orientation=Quaternion(x=rot[0],y=rot[1],z=rot[2],w=rot[3]))
+        response.pose = self._tf_listener.transformPose(request.frame_id,PoseStamped(pose=pose,header=Header(frame_id='/map')))
 
         response.task_id = response.vision_id + '_' + str(uuid.uuid1().hex)
 
