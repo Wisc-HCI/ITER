@@ -89,15 +89,11 @@ class Move(Primitive):
 
     def operate(self):
         current_pose = relaxedikPlanner.get_ee_pose()
-        path = relaxedikPlanner.real_time_path(current_pose,self._pose)
-
-        status = True
-        for pose in path:
-            status = relaxedikPlanner.real_time_update(pose)
-            if not status:
-                break
+        delay = relaxedikPlanner.tof_ee_pose(current_pose,self._pose)
+        status = relaxedikPlanner.real_time_update(self._pose)
 
         if status:
+            rospy.sleep(delay)
             while not relaxedikPlanner.real_time_in_steady_state():
                 rospy.sleep(0.01)
 

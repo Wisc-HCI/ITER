@@ -26,8 +26,8 @@ WORKSPACE_POSITION = dt.position(0.2,0.3,-0.02)
 REGION_POSITION = dt.position(-0.2,0.45,0.25)
 REGION_ORIENTATION = copy.deepcopy(DOWN_GX_ORIENTATION)
 
-GRASP_EFFORT = 0.6 #0.57
-RELEASE_EFFORT_REGION = 0.35
+GRASP_EFFORT = 0.59 #0.57
+RELEASE_EFFORT_REGION = 0.1
 RELEASE_EFFORT_WORKSPACE = 0.45
 
 REGION_GRASP_OFFSET_LARGE = dt.pose(dt.position(-0.045,0,0.172),
@@ -116,7 +116,7 @@ def build_house_base():
     task_list += pick_and_place_block(
         block_type='small',
         target_position=copy.deepcopy(position),
-        target_orientation=DOWN_GY_ORIENTATION,
+        target_orientation=DOWN_GX_ORIENTATION,
         grasp_offset=REGION_GRASP_OFFSET_SMALL,
         vision_params={
                         "min_hue": 0,
@@ -130,7 +130,7 @@ def build_house_base():
     task_list += pick_and_place_block(
         block_type='small',
         target_position=copy.deepcopy(position),
-        target_orientation=DOWN_GY_ORIENTATION,
+        target_orientation=DOWN_GX_ORIENTATION,
         grasp_offset=REGION_GRASP_OFFSET_SMALL,
         vision_params={
                         "min_hue": 0,

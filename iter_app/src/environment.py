@@ -228,6 +228,7 @@ class Environment:
             type = vision_env.BLOCK_UNKNOWN
 
         id, pose = vision_env.get_block(type)
+        print '\n\n', pose, '\n\n'
 
         response = GetVisionObjectResponse()
         response.status = not id == None
@@ -235,7 +236,7 @@ class Environment:
             return response
         response.vision_id = 'block_{0}'.format(id)
 
-        response.pose = self._tf_listener.transformPose(request.frame_id,PoseStamped(pose=pose,header=Header(frame_id='/map')))
+        response.pose = self._tf_listener.transformPose(request.frame_id,PoseStamped(pose=pose,header=Header(frame_id='/map'))).pose
 
         response.task_id = response.vision_id + '_' + str(uuid.uuid1().hex)
 
@@ -255,6 +256,7 @@ class Environment:
         # pre-process poses into tfs
         eePos, eeRot = self._pose_msg_to_tf(request.ee_pose)
         gtaPos, gtaRot = self._pose_msg_to_tf(request.tag_grip_tf)
+        print '\n\n\n', gtaPos, '\n\n', gtaRot, '\n\n\n'
 
         # find calibration tag
         tagId = request.ar_tag_id if request.ar_tag_id != "" else self._calibrate_ar_tag_id

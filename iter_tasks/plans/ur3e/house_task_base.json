@@ -31,7 +31,7 @@
       "name": "logger"
     }, 
     {
-      "effort": 0.35, 
+      "effort": 0.1, 
       "name": "release"
     }, 
     {
@@ -74,7 +74,7 @@
       ], 
       "object_type": "large", 
       "path_to_region": [], 
-      "grasp_effort": 0.6, 
+      "grasp_effort": 0.59, 
       "grasp_offset": {
         "position": {
           "y": 0, 
@@ -104,7 +104,7 @@
       }
     }, 
     {
-      "effort": 0.35, 
+      "effort": 0.1, 
       "name": "release"
     }, 
     {
@@ -147,7 +147,7 @@
       ], 
       "object_type": "large", 
       "path_to_region": [], 
-      "grasp_effort": 0.6, 
+      "grasp_effort": 0.59, 
       "grasp_offset": {
         "position": {
           "y": 0, 
@@ -177,7 +177,7 @@
       }
     }, 
     {
-      "effort": 0.35, 
+      "effort": 0.1, 
       "name": "release"
     }, 
     {
@@ -197,10 +197,10 @@
           }, 
           "name": "move", 
           "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
+            "y": 0, 
+            "x": 0.707, 
+            "z": -0.707, 
+            "w": 0
           }
         }, 
         {
@@ -211,16 +211,16 @@
           }, 
           "name": "move", 
           "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
+            "y": 0, 
+            "x": 0.707, 
+            "z": -0.707, 
+            "w": 0
           }
         }
       ], 
       "object_type": "small", 
       "path_to_region": [], 
-      "grasp_effort": 0.6, 
+      "grasp_effort": 0.59, 
       "grasp_offset": {
         "position": {
           "y": 0, 
@@ -243,14 +243,14 @@
       }, 
       "name": "move", 
       "orientation": {
-        "y": 0.5, 
-        "x": 0.5, 
-        "z": -0.5, 
-        "w": 0.5
+        "y": 0, 
+        "x": 0.707, 
+        "z": -0.707, 
+        "w": 0
       }
     }, 
     {
-      "effort": 0.35, 
+      "effort": 0.1, 
       "name": "release"
     }, 
     {
@@ -270,10 +270,10 @@
           }, 
           "name": "move", 
           "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
+            "y": 0, 
+            "x": 0.707, 
+            "z": -0.707, 
+            "w": 0
           }
         }, 
         {
@@ -284,16 +284,16 @@
           }, 
           "name": "move", 
           "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
+            "y": 0, 
+            "x": 0.707, 
+            "z": -0.707, 
+            "w": 0
           }
         }
       ], 
       "object_type": "small", 
       "path_to_region": [], 
-      "grasp_effort": 0.6, 
+      "grasp_effort": 0.59, 
       "grasp_offset": {
         "position": {
           "y": 0, 
@@ -316,14 +316,14 @@
       }, 
       "name": "move", 
       "orientation": {
-        "y": 0.5, 
-        "x": 0.5, 
-        "z": -0.5, 
-        "w": 0.5
+        "y": 0, 
+        "x": 0.707, 
+        "z": -0.707, 
+        "w": 0
       }
     }, 
     {
-      "effort": 0.35, 
+      "effort": 0.1, 
       "name": "release"
     }, 
     {
@@ -366,7 +366,7 @@
       ], 
       "object_type": "large", 
       "path_to_region": [], 
-      "grasp_effort": 0.6, 
+      "grasp_effort": 0.59, 
       "grasp_offset": {
         "position": {
           "y": 0, 
@@ -396,7 +396,7 @@
       }
     }, 
     {
-      "effort": 0.35, 
+      "effort": 0.1, 
       "name": "release"
     }, 
     {
@@ -439,7 +439,7 @@
       ], 
       "object_type": "large", 
       "path_to_region": [], 
-      "grasp_effort": 0.6, 
+      "grasp_effort": 0.59, 
       "grasp_offset": {
         "position": {
           "y": 0, 
@@ -469,7 +469,7 @@
       }
     }, 
     {
-      "effort": 0.35, 
+      "effort": 0.1, 
       "name": "release"
     }, 
     {

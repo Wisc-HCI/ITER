@@ -29,10 +29,10 @@ def get_block(type):
     if type != None: # attempt block match
         for bid in blocks.keys():
             if blocks[bid][1] == type:
-                return bid, blocks[bid]
+                return bid, blocks[bid][0]
     elif len(blocks.keys()) > 0: # get first block found
         bid = blocks.keys()[0]
-        return bid, blocks[bid]
+        return bid, blocks[bid][0]
 
     return None, None # No block with type found
 
