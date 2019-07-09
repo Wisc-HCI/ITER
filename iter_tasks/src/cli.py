@@ -20,12 +20,15 @@ Commands include:
     - set_mode <mode>
             "Sets the current mode"
             ['capture','replay']
+    - quit
+            "Closes application"
 
 Note: the modes 'capture' and 'replay' are used for the RAD subsystem. Capture
 will record the time per primitive in plan. Replay will use pre-recorded time to
 output timing estimates to the RAD display.
 '''
 
+import sys
 import json
 import rospy
 
@@ -89,7 +92,8 @@ rospy.sleep(2)
 # Print initial prompt
 print('Interdependence Task Experiment Runner')
 
-while True:
+running = True
+while running:
 
     # Get user command and parse
     inStr = raw_input('ITER: ')
@@ -118,8 +122,12 @@ while True:
     elif args[0].lower() == 'help':
         print 'The following commands may be used'
         print '* help'
+        print '* quit'
         print '* task <your_task_file_path>'
         print '* get_mode'
         print '* set_mode <new_mode>'
+    elif args[0].lower() == 'quit':
+        print 'Exiting command line interface.'
+        running = False
     else:
         print '[-] Error invalid command supplied'

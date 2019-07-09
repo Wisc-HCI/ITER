@@ -74,11 +74,11 @@
       ], 
       "object_type": "large", 
       "path_to_region": [], 
-      "grasp_effort": 0.53, 
+      "grasp_effort": 0.6, 
       "grasp_offset": {
         "position": {
-          "y": 0.04, 
-          "x": -0.06, 
+          "y": 0, 
+          "x": -0.045, 
           "z": 0.172
         }, 
         "orientation": {
@@ -147,11 +147,11 @@
       ], 
       "object_type": "large", 
       "path_to_region": [], 
-      "grasp_effort": 0.53, 
+      "grasp_effort": 0.6, 
       "grasp_offset": {
         "position": {
-          "y": 0.04, 
-          "x": -0.06, 
+          "y": 0, 
+          "x": -0.045, 
           "z": 0.172
         }, 
         "orientation": {
@@ -220,11 +220,11 @@
       ], 
       "object_type": "small", 
       "path_to_region": [], 
-      "grasp_effort": 0.53, 
+      "grasp_effort": 0.6, 
       "grasp_offset": {
         "position": {
-          "y": 0.042, 
-          "x": -0.05, 
+          "y": 0, 
+          "x": -0.0475, 
           "z": 0.172
         }, 
         "orientation": {
@@ -293,11 +293,11 @@
       ], 
       "object_type": "small", 
       "path_to_region": [], 
-      "grasp_effort": 0.53, 
+      "grasp_effort": 0.6, 
       "grasp_offset": {
         "position": {
-          "y": 0.042, 
-          "x": -0.05, 
+          "y": 0, 
+          "x": -0.0475, 
           "z": 0.172
         }, 
         "orientation": {
@@ -366,11 +366,11 @@
       ], 
       "object_type": "large", 
       "path_to_region": [], 
-      "grasp_effort": 0.53, 
+      "grasp_effort": 0.6, 
       "grasp_offset": {
         "position": {
-          "y": 0.04, 
-          "x": -0.06, 
+          "y": 0, 
+          "x": -0.045, 
           "z": 0.172
         }, 
         "orientation": {
@@ -439,11 +439,11 @@
       ], 
       "object_type": "large", 
       "path_to_region": [], 
-      "grasp_effort": 0.53, 
+      "grasp_effort": 0.6, 
       "grasp_offset": {
         "position": {
-          "y": 0.04, 
-          "x": -0.06, 
+          "y": 0, 
+          "x": -0.045, 
           "z": 0.172
         }, 
         "orientation": {

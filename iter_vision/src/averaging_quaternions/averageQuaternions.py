@@ -21,7 +21,7 @@
 # Comparison between different methods of averaging:
 #
 # Claus Gramkow. "On Averaging Rotations"
-# Journal of Mathematical Imaging and Vision 15: 7–16, 2001, Kluwer Academic Publishers.
+# Journal of Mathematical Imaging and Vision 15: 7-16, 2001, Kluwer Academic Publishers.
 # https://pdfs.semanticscholar.org/ebef/1acdcc428e3ccada1a047f11f02895be148d.pdf
 #
 # Side note: In computer graphics, averaging or blending of two quaternions is often done through

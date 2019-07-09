@@ -64,7 +64,7 @@ orientation:
     z: 0.2126237005
     w: 0.000687647901941
 
---- UR3e ---
+--- UR3e (old) ---
 position:
   x: -2.79396772385e-09
   y: 0.000169443315826
@@ -74,10 +74,21 @@ orientation:
   y: 0.000727943726815
   z: -0.0395599603653
   w: -0.0144719388336
+
+--- UR3e (new) ---
+position:
+  x: 0.0198472309858
+  y: -6.72191381454e-05
+  z: -0.0454975217581
+orientation:
+  x: 0.999995172024
+  y: 0.0
+  z: 0.0
+  w: 0.0031111817807
 '''
 DEFAULT_TF = {
-        'position': (-0.000279492494883, -0.000972088193521, -0.0540001615882),
-        'orientation': (-0.999764561653,0.000229449724429,-0.0170231070369,0.013475377112)
+        'position': (0.0198472309858, -6.72191381454e-05, -0.0454975217581),
+        'orientation': (0.999995172024,0.0,0.0,0.0031111817807)
 }
 
 
@@ -267,6 +278,7 @@ class Environment:
         self._calibration_marker.pose=Pose(
             position=Vector3(x=gtaPos[0],y=gtaPos[1],z=gtaPos[2]),
             orientation=Quaternion(x=gtaRot[0],y=gtaRot[1],z=gtaRot[2],w=gtaRot[3]))
+        self._interactive_marker_server.applyChanges()
 
         return CalibrateRobotToCameraResponse(status=True)
 

@@ -63,7 +63,7 @@ class RobotCameraAlignment:
 
         # Sample AR tag pose
         start_time = time.time()
-        while time.time() - start_time < CALIBRATION_DURATION
+        while (time.time() - start_time) <= CALIBRATION_DURATION:
             status, pos, rot = self._tf_lookup(request.tag_frame_id)
             if status:
                 pos_list.append(pos)

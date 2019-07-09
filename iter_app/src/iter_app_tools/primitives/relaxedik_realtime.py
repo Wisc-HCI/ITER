@@ -65,7 +65,10 @@ class Grasp(Primitive):
         self._plan = gripperPlanner.plan_gripper_state(effort)
 
     def operate(self):
-        return gripperPlanner.execute_gripper_state(self._plan)
+        relaxedikPlanner.real_time_pause_output(True)
+        status = gripperPlanner.execute_gripper_state(self._plan)
+        relaxedikPlanner.real_time_pause_output(False)
+        return status
 
 class Release(Primitive):
 
@@ -73,7 +76,10 @@ class Release(Primitive):
         self._plan = gripperPlanner.plan_gripper_state(effort)
 
     def operate(self):
-        return gripperPlanner.execute_gripper_state(self._plan)
+        relaxedikPlanner.real_time_pause_output(True)
+        status = gripperPlanner.execute_gripper_state(self._plan)
+        relaxedikPlanner.real_time_pause_output(False)
+        return status
 
 class Move(Primitive):
 
@@ -82,10 +88,19 @@ class Move(Primitive):
         self._pose = pose_dct_to_msg({'position':position,'orientation':orientation})
 
     def operate(self):
-        status = relaxedikPlanner.set_ee_pose(self._pose,validate=False)
+        current_pose = relaxedikPlanner.get_ee_pose()
+        path = relaxedikPlanner.real_time_path(current_pose,self._pose)
+
+        status = True
+        for pose in path:
+            status = relaxedikPlanner.real_time_update(pose)
+            if not status:
+                break
+
         if status:
-            delay = relaxedikPlanner.tof_ee_pose(relaxedikPlanner.get_ee_pose(),self._pose)
-            rospy.sleep(delay)
+            while not relaxedikPlanner.real_time_in_steady_state():
+                rospy.sleep(0.01)
+
         return status
 
 class GetPose(ReturnablePrimitive):
