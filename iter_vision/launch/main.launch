@@ -8,7 +8,7 @@
   <arg name="use_real_cam" default="true" />
   <arg name="static_cam_image" default="1-4.png" />
 
-  <arg name="marker_size" default="4.35" /> <!-- 4.5, 4.35 > 4.25, 4.225 > 4 -->
+  <arg name="marker_size" default="4.4" /> <!-- 4.5, 4.35 > 4.25, 4.225 > 4 -->
   <arg name="max_new_marker_error" default="0.05" />
   <arg name="max_track_error" default="0.05" />
   <arg name="output_frame" default="/map" />

@@ -110,6 +110,8 @@ class PickAndPlaceVision(Primitive):
         object_rot = [orientation.x,orientation.y,orientation.z,orientation.w]
 
         grasp_pos = [object_pos[i] + offset_pos[i] for i in range(0,len(object_pos))]
+        #grasp_pos[2] = offset_pos[2] # fixed-z-offset?
+
         #grasp_rot = tf.transformations.quaternion_multiply(object_rot,offset_rot)
         grasp_rot = offset_rot #TODO handle actual angle later. Just need to see if the pose position is even close
 
