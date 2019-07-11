@@ -1,0 +1,187 @@
+{
+  "title": "Move robot to ar tags with offsets",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [],
+  "task": [
+    {
+      "name": "move",
+      "position": {
+        "y": 0.25,
+        "x": 0,
+        "z": 0.3
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0.707,
+        "z": -0.707,
+        "w": 0
+      }
+    },
+    {
+      "name": "grasp",
+      "effort": 0.85
+    },
+    {
+      "name": "grasp",
+      "effort": 0.85
+    },
+    {
+      "name": "wait",
+      "condition": "button"
+    },
+    {
+      "name": "move_ar_tag_pose",
+      "tag_id": "0",
+      "offset": {
+        "position": {
+          "x": -0.015,
+          "y": -0.022,
+          "z": 0.1725
+        },
+        "orientation": {
+          "y": 0,
+          "x": 0.707,
+          "z": -0.707,
+          "w": 0
+        }
+      }
+    },
+    {
+      "name": "wait",
+      "condition": "button"
+    },
+    {
+      "name": "move",
+      "position": {
+        "y": 0.25,
+        "x": 0,
+        "z": 0.3
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0.707,
+        "z": -0.707,
+        "w": 0
+      }
+    },
+    {
+      "name": "wait",
+      "condition": "button"
+    },
+    {
+      "name": "move_ar_tag_pose",
+      "tag_id": "1",
+      "offset": {
+        "position": {
+          "x": -0.0075,
+          "y": 0.01,
+          "z": 0.188
+        },
+        "orientation": {
+          "y": 0,
+          "x": 0.707,
+          "z": -0.707,
+          "w": 0
+        }
+      }
+    },
+    {
+      "name": "wait",
+      "condition": "button"
+    },
+    {
+      "name": "move",
+      "position": {
+        "y": 0.25,
+        "x": 0,
+        "z": 0.3
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0.707,
+        "z": -0.707,
+        "w": 0
+      }
+    },
+    {
+      "name": "wait",
+      "condition": "button"
+    },
+    {
+      "name": "move_ar_tag_pose",
+      "tag_id": "2",
+      "offset": {
+        "position": {
+          "x": 0.0025,
+          "y": 0.0025,
+          "z": 0.1875
+        },
+        "orientation": {
+          "y": 0,
+          "x": 0.707,
+          "z": -0.707,
+          "w": 0
+        }
+      }
+    },
+    {
+      "name": "wait",
+      "condition": "button"
+    },
+    {
+      "name": "move",
+      "position": {
+        "y": 0.25,
+        "x": 0,
+        "z": 0.3
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0.707,
+        "z": -0.707,
+        "w": 0
+      }
+    },
+    {
+      "name": "wait",
+      "condition": "button"
+    },
+    {
+      "name": "move_ar_tag_pose",
+      "tag_id": "3",
+      "offset": {
+        "position": {
+          "x": -0.0025,
+          "y": 0.01,
+          "z": 0.1825
+        },
+        "orientation": {
+          "y": 0,
+          "x": 0.707,
+          "z": -0.707,
+          "w": 0
+        }
+      }
+    },
+    {
+      "name": "wait",
+      "condition": "button"
+    },
+    {
+      "name": "move",
+      "position": {
+        "y": 0.25,
+        "x": 0,
+        "z": 0.3
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0.707,
+        "z": -0.707,
+        "w": 0
+      }
+    }
+  ]
+}

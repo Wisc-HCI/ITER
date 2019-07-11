@@ -28,6 +28,7 @@ from std_msgs.msg import Header, ColorRGBA
 from interactive_markers.interactive_marker_server import *
 from geometry_msgs.msg import Pose, Vector3, Quaternion, TransformStamped, PoseStamped
 
+from iter_app.srv import GetARTagPose, GetARTagPoseResponse
 from iter_app.srv import SetVisionParams, SetVisionParamsResponse
 from iter_app.srv import GetVisionObject, GetVisionObjectResponse
 from iter_app.srv import ClearTaskObjects, ClearTaskObjectsResponse
@@ -129,6 +130,7 @@ class Environment:
         self._get_vision_obj_srv = rospy.Service("/environment/get_vision_object",GetVisionObject,self._get_vision_obj)
         self._cal_bot_to_cam_srv = rospy.Service("/environment/calibrate_robot_to_camera",CalibrateRobotToCamera,self._cal_bot_to_cam)
         self._get_state_srv = rospy.Service("/environment/get_state",GetEnvironmentState,self._get_state)
+        self._get_ar_tag_pose = rospy.Service("/environment/get_ar_tag_pose",GetARTagPose,self._get_ar_tag_pose)
 
         # manual calibration marker
         self._interactive_marker_server = InteractiveMarkerServer("interactive_markers")
@@ -292,6 +294,23 @@ class Environment:
         params = json.loads(request.params)
         status = vision_env.set_vision_params(params)
         return SetVisionParamsResponse(status=status)
+
+    def _get_ar_tag_pose(self, request):
+        p_raw = vision_env.get_ar_tag(request.tag_id)
+        status = p_raw != None
+
+        pose = Pose()
+        if status:
+            p_tf = self._tf_listener.transformPose(request.frame_id,PoseStamped(pose=p_raw,header=Header(frame_id='/map'))).pose
+            pose.position.x = p_tf.position.x + request.offset.position.x
+            pose.position.y = p_tf.position.y + request.offset.position.y
+            pose.position.z = p_tf.position.z + request.offset.position.z
+            pose.orientation = request.offset.orientation
+
+        response = GetARTagPoseResponse()
+        response.status = status
+        response.pose = pose
+        return response
 
 
 if __name__ == "__main__":

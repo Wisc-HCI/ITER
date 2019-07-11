@@ -4,14 +4,16 @@
 
 import rospy
 
-from iter_app.srv import SetVisionParams, SetVisionParamsResponse
-from iter_app.srv import GetVisionObject, GetVisionObjectResponse
-from iter_app.srv import ClearTaskObjects, ClearTaskObjectsResponse
-from iter_app.srv import ConnectTaskObject, ConnectTaskObjectResponse
-from iter_app.srv import ReleaseTaskObject, ReleaseTaskObjectResponse
-from iter_app.srv import GenerateTaskObjects, GenerateTaskObjectsResponse
-from iter_app.srv import GetEnvironmentState, GetEnvironmentStateResponse
-from iter_app.srv import CalibrateRobotToCamera, CalibrateRobotToCameraResponse
+from iter_app.srv import GetARTagPose
+from iter_app.srv import SetVisionParams
+from iter_app.srv import GetVisionObject
+from iter_app.srv import ClearTaskObjects
+from iter_app.srv import ConnectTaskObject
+from iter_app.srv import ReleaseTaskObject
+from iter_app.srv import GenerateTaskObjects
+from iter_app.srv import GetEnvironmentState
+from iter_app.srv import CalibrateRobotToCamera
+
 
 class EnvironmentClient:
 
@@ -24,3 +26,4 @@ class EnvironmentClient:
         self.calibrate_robot_to_camera = rospy.ServiceProxy("/environment/calibrate_robot_to_camera",CalibrateRobotToCamera)
         self.get_state = rospy.ServiceProxy("/environment/get_state",GetEnvironmentState)
         self.set_vision_params = rospy.ServiceProxy("/environment/set_vision_params",SetVisionParams)
+        self.get_ar_tag_pose = rospy.ServiceProxy("/environment/get_ar_tag_pose",GetARTagPose)

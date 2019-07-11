@@ -40,6 +40,7 @@ from ar_track_alvar_msgs.msg import AlvarMarker, AlvarMarkerArray
 ROTATION_CONSTANT = 1
 AR_RADIUS = 50
 
+
 class BlockPoseNode:
 
     def __init__(self, parent_frame_id, rotation_constant,tag_id_list,ar_radius):
@@ -105,6 +106,56 @@ class BlockPoseNode:
         self.bp2_pub.publish(BlockPose2DArray(header=Header(),blocks=b2_array))
 
     def _calculate_new_transform(self):
+
+        # Find input matrix X and output matrix Y
+        rotations = []
+        count = 0
+        X = None
+        Y = None
+
+        for m3 in self._ar3_markers:
+            for m2 in self._ar2_markers:
+
+                # if match and either in tag list or if not using tag list
+                processTag = (m3.id == m2.id) and (self._tag_id_list is None or str(m2.id) in self._tag_id_list)
+                if processTag:
+                    m2pos = np.matrix([[m2.pose.x],[m2.pose.y],[0],[1]])
+                    _p = m3.pose.pose.position
+                    m3pos = np.matrix([[_p.x],[_p.y],[_p.z],[1]])
+
+                    if count == 0:
+                        X = m2pos
+                        Y = m3pos
+                    else:
+                        X = np.append(X,m2pos,axis=1)
+                        Y = np.append(Y,m3pos,axis=1)
+
+                    r2 = m2.pose.theta
+                    r3 = [m3.pose.pose.orientation.x,m3.pose.pose.orientation.y,m3.pose.pose.orientation.z,m3.pose.pose.orientation.w]
+                    rotations.append([r2,r3])
+
+                    count += 1
+
+        # At least minimum number of eqs for computing psuedo-inverse
+        if count >= 4:
+
+            # calculate position transform
+            invX = np.linalg.pinv(X)
+            self._computed_position_transform = Y * invX
+
+            # calculate orientation transform
+            median = np.median([r[0] for r in rotations])
+            r2 = rotations[0][0]
+            r3 = rotations[0][1]
+            for r in rotations:
+                if abs(median - r[0]) < abs(median - r2):
+                    r2 = r[0]
+                    r3 = r[1]
+            self._image_orienation = (2 * math.pi - r2 / 180.0 * math.pi)
+            self._plane_orientation = r3
+
+    '''
+    def _calculate_new_transform(self):
         # Find A input matrix and Y output matrix
         # Also compute the standard cam to plane orientation
         rotations = []
@@ -147,18 +198,24 @@ class BlockPoseNode:
                     r3 = r[1]
             self._image_orienation = (2 * math.pi - r2 / 180.0 * math.pi)
             self._plane_orientation = r3
+    '''
 
     def _apply_transform(self,b2_array):
         currentTime = rospy.Time.now()
         b3_array = []
 
         for b2 in b2_array:
+            '''
             A, _ = self._point_position_eqs(b2.pose.x,b2.pose.y)
             projection = A * self._computed_position_transform
+            '''
 
-            position = Vector3(x=projection[0,0],
-                               y=projection[1,0],
-                               z=projection[2,0])
+            x = np.matrix([[b2.pose.x],[b2.pose.y],[0],[1]])
+            projection = self._computed_position_transform * x
+
+            position = Vector3(x=projection[0,0]/projection[3,0],
+                               y=projection[1,0]/projection[3,0],
+                               z=projection[2,0]/projection[3,0])
 
             raw_angle = (2 * math.pi - b2.pose.theta / 180.0 * math.pi)
             rz = self._rotation_constant * raw_angle - self._image_orienation

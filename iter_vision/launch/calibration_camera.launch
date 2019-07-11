@@ -7,7 +7,7 @@
 
   <arg name="video_src" default="/dev/video0" />
 
-  <arg name="launch_calibrator" default:="true"/>
+  <arg name="launch_calibrator" default="true"/>
   <arg name="size" default="8x6"/>
   <arg name="square" default="0.025"/>
 

@@ -1,6 +1,6 @@
 <launch>
 
-  <arg name="marker_size" default="4.24" /> <!-- 4.5, 4.35 > 4.25, 4.225 > 4 -->
+  <arg name="marker_size" default="4.35" /> <!-- 4.5, 4.35 > 4.25, 4.24   4.225 > 4 -->
   <arg name="max_new_marker_error" default="0.05" />
   <arg name="max_track_error" default="0.05" />
   <arg name="output_frame" default="/map" />

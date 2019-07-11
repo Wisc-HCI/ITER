@@ -23,6 +23,7 @@ class PrimitiveEnum(Enum):
     PICK_AND_PLACE_VISION = 'pick_and_place_vision'
     PICK_AND_PLACE_STATIC = 'pick_and_place_static'
     CALIBRATE_ROBOT_TO_CAMERA = 'calibrate_robot_to_camera'
+    MOVE_AR_TAG_POSE = 'move_ar_tag_pose'
 
 
 class FindVisionObject(ReturnablePrimitive):
@@ -210,6 +211,25 @@ class CalibrateRobotToCamera(Primitive):
         print status
         return status
 
+class MoveARTagPose(Primitive):
+
+    def __init__(self, envClient, lookup, tag_id, offset, **kwargs):
+        self._envClient = envClient
+        self._lookup = lookup
+        self._tag_id = tag_id
+        self._offset = pose_dct_to_msg(offset)
+
+    def operate(self):
+
+        resp = self._envClient.get_ar_tag_pose(self._tag_id, 'base_link', self._offset)
+        status = resp.status
+
+        if status:
+            pdct = pose_msg_to_dct(resp.pose)
+            move = self._lookup('move')(pdct['position'],pdct['orientation'])
+            status = move.operate()
+
+        return status
 
 class EnvironmentAwareBehaviorPrimitives(AbstractBehaviorPrimitives):
 
@@ -232,6 +252,8 @@ class EnvironmentAwareBehaviorPrimitives(AbstractBehaviorPrimitives):
             return PickAndPlaceStatic(envClient=self._envClient, lookup=self.lookup, **dct)
         elif name == PrimitiveEnum.CALIBRATE_ROBOT_TO_CAMERA.value:
             return CalibrateRobotToCamera(envClient=self._envClient, lookup=self.lookup, **dct)
+        elif name == PrimitiveEnum.MOVE_AR_TAG_POSE.value:
+            return MoveARTagPose(envClient=self._envClient, lookup=self.lookup, **dct)
         elif self.parent != None:
             return self.parent.instantiate_from_dict(dct,**kwargs)
         else:
@@ -250,6 +272,8 @@ class EnvironmentAwareBehaviorPrimitives(AbstractBehaviorPrimitives):
             return PickAndPlaceStatic
         elif primitive_type == PrimitiveEnum.CALIBRATE_ROBOT_TO_CAMERA.value:
             return CalibrateRobotToCamera
+        elif primitive_type == PrimitiveEnum.MOVE_AR_TAG_POSE.value:
+            return MoveARTagPose
         elif self.parent != None:
             return self.parent.lookup(primitive_type)
         else:

@@ -70,6 +70,7 @@ add_service_files(
    GetVisionObject.srv
    ReleaseTaskObject.srv
    SetVisionParams.srv
+   GetARTagPose.srv
 )
 
 ## Generate actions in the 'action' folder

@@ -36,7 +36,7 @@ def get_block(type):
 
     return None, None # No block with type found
 
-def get_arg_tag(id):
+def get_ar_tag(id):
     return ar_tags[id] if id in ar_tags else None
 
 def _ar3_cb(message):
