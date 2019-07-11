@@ -1,21 +1,29 @@
 <launch>
 
-  <arg name="marker_size" default="4.35" /> <!-- 4.5, 4.35 > 4.25, 4.24   4.225 > 4 -->
-  <arg name="max_new_marker_error" default="0.05" />
-  <arg name="max_track_error" default="0.05" />
-  <arg name="output_frame" default="/map" />
-
-  <arg name="flag_image_view_initial" default="false" />
-  <arg name="flag_image_view_blocks" default="false" />
-  <arg name="flag_image_view_blocks_filter" default="true" />
-  <arg name="flag_image_view_2d_points" default="true" />
+<!--=========================================================================-->
+<!--  Arguements                                                             -->
+<!--=========================================================================-->
 
   <arg name="video_src" default="/dev/video0" />
   <arg name="use_real_cam" default="true" />
   <arg name="static_cam_image" default="1-4.png" />
 
+  <arg name="marker_size" default="4.35" /> <!-- 4.5, 4.35 > 4.25, 4.225 > 4 -->
+  <arg name="max_new_marker_error" default="0.05" />
+  <arg name="max_track_error" default="0.05" />
+  <arg name="output_frame" default="/map" />
+
+  <arg name="flag_image_view_initial" default="false" />
+  <arg name="flag_image_view_rectified" default="false" />
+  <arg name="flag_image_view_blocks" default="false" />
+  <arg name="flag_image_view_blocks_filter" default="false" />
+  <arg name="flag_image_view_2d_points" default="true" />
+
   <arg name="capture_training_data" default="false" />
 
+<!--=========================================================================-->
+<!--  Camera Setup                                                           -->
+<!--=========================================================================-->
 
   <include file="$(find iter_vision)/launch/camera.launch">
     <arg name="video_src" value="$(arg video_src)" />
@@ -29,8 +37,27 @@
     <param name="~image_transport" value="compressed" />
   </node>
 
+<!--=========================================================================-->
+<!--  Rectification                                                          -->
+<!--=========================================================================-->
+
+  <node name="image_rectification" pkg="image_proc" type="image_proc">
+    <remap from="image_raw" to="/usb_cam/image_raw"/>
+    <remap from="camera_info" to="/usb_cam/camera_info"/>
+  </node>
+
+  <node if="$(arg flag_image_view_rectified)" name="image_view_rectified" pkg="image_view" type="image_view" respawn="false" output="screen">
+    <remap from="image" to="/image_rect_color" />
+    <param name="autosize" value="true" />
+    <param name="~image_transport" value="compressed" />
+  </node>
+
+<!--=========================================================================-->
+<!--  Block Vision System                                                       -->
+<!--=========================================================================-->
+
   <node name="block_vision" pkg="iter_vision" type="block_vision.py" output="screen">
-    <remap from="camera/image/compressed" to="usb_cam/image_raw/compressed"/>
+    <remap from="camera/image/compressed" to="/image_rect_color/compressed"/>
   </node>
 
   <node if="$(arg flag_image_view_blocks)" name="image_view_block_detect" pkg="image_view" type="image_view" respawn="false" output="screen">
