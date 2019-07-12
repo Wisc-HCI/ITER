@@ -30,7 +30,7 @@ class AR2DDraw:
         self.img_sub = rospy.Subscriber("image/compressed", CompressedImage, self._image_cb, queue_size=1)
         self.img_pub = rospy.Publisher("plot_2d_points/image/compressed", CompressedImage, queue_size=1)
         self.art_sub = rospy.Subscriber("cam_pose_marker", AlvarMarker2DArray, self._art_cb, queue_size=5)
-        self.blk_sub = rospy.Subscriber("/block_pose/pose_2d", BlockPose2DArray, self._blk_cb, queue_size=5)
+        self.blk_sub = rospy.Subscriber("block_pose/pose_2d", BlockPose2DArray, self._blk_cb, queue_size=5)
 
         self._markers = []
         self._blocks = []

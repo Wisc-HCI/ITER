@@ -1,0 +1,27 @@
+<launch>
+
+  <include ns="cam_1" file="$(find iter_vision)/launch/main.launch">
+    <arg name="video_src" value="/dev/video1"/>
+    <arg name="use_real_cam" value="true"/>
+    <arg name="output_tf_frame" value="/map_1"/>
+
+    <arg name="flag_image_view_initial" default="false" />
+    <arg name="flag_image_view_rectified" default="false" />
+    <arg name="flag_image_view_blocks" default="false" />
+    <arg name="flag_image_view_blocks_filter" default="false" />
+    <arg name="flag_image_view_2d_points" value="true" />
+  </include>
+
+  <include ns="cam_2" file="$(find iter_vision)/launch/main.launch">
+    <arg name="video_src" value="/dev/video2"/>
+    <arg name="use_real_cam" value="true"/>
+    <arg name="output_tf_frame" default="/map_2"/>
+
+    <arg name="flag_image_view_initial" default="false" />
+    <arg name="flag_image_view_rectified" default="false" />
+    <arg name="flag_image_view_blocks" default="false" />
+    <arg name="flag_image_view_blocks_filter" default="false" />
+    <arg name="flag_image_view_2d_points" value="true" />
+  </include>
+
+</launch>

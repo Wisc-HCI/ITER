@@ -43,7 +43,7 @@ class RobotCameraAlignment:
         self._reference_frame = reference_frame
         self._etr = Pose(position=Vector3(x=0,y=0,z=0),orientation=Quaternion(x=0,y=0,z=0,w=1))
 
-        self._get_tag_pose_srv = rospy.Service('/robot_camera_align/get_tag_pose',GetTagPose, self._tf_pose_cb)
+        self._get_tag_pose_srv = rospy.Service('robot_camera_align/get_tag_pose',GetTagPose, self._tf_pose_cb)
 
         self._tf_listener = tf.TransformListener()
 

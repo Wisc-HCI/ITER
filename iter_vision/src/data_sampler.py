@@ -29,5 +29,5 @@ def print_cb(message):
 
 if __name__ == "__main__":
     rospy.init_node('data_sampler')
-    bp2_sub = rospy.Subscriber("/block_pose/pose_2d", BlockPose2DArray, print_cb)
+    bp2_sub = rospy.Subscriber("block_pose/pose_2d", BlockPose2DArray, print_cb)
     rospy.spin()

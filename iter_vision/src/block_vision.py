@@ -71,12 +71,12 @@ class BlockVision:
         self._classifier = pickle.load(fin)
         fin.close()
 
-        self.pose_pub = rospy.Publisher("/block_vision/poses",BlockPose2DArray, queue_size=1)
-        self.img_sub = rospy.Subscriber("/camera/image/compressed",CompressedImage,self._image_cb, queue_size=1)
-        self.img_c_pub = rospy.Publisher("/block_vision/image/compressed",CompressedImage, queue_size=1)
-        self.img_f_pub = rospy.Publisher("/block_vision/filtered/compressed",CompressedImage, queue_size=1)
+        self.pose_pub = rospy.Publisher("block_vision/poses",BlockPose2DArray, queue_size=1)
+        self.img_sub = rospy.Subscriber("camera/image/compressed",CompressedImage,self._image_cb, queue_size=1)
+        self.img_c_pub = rospy.Publisher("block_vision/image/compressed",CompressedImage, queue_size=1)
+        self.img_f_pub = rospy.Publisher("block_vision/filtered/compressed",CompressedImage, queue_size=1)
 
-        self.color_select_srv = rospy.Service("/block_vision/color_select",ColorSelect,self._color_select_cb)
+        self.color_select_srv = rospy.Service("block_vision/color_select",ColorSelect,self._color_select_cb)
 
     def _color_select_cb(self,response):
         status = True

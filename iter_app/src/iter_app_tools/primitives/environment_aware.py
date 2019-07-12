@@ -1,6 +1,5 @@
 '''
-
-
+Environment Aware Primitive
     - connect-object-to-robot
             "Currently unsupported, though intention is collision interfacing"
     - disconnect-object-from-robot
