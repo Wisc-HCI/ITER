@@ -11,7 +11,6 @@ This node is used to verify correct identification of tags and to provide
 insight into the 2D to 3D matching algorithm which will be used for blocks.
 '''
 
-import tf
 import sys
 import cv2
 import rospy

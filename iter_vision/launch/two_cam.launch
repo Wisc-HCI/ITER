@@ -1,9 +1,14 @@
 <launch>
 
+  <arg name="video_src_0" default="/dev/video1"/>
+  <arg name="video_src_1" default="/dev/video2"/>
+
   <include ns="cam_1" file="$(find iter_vision)/launch/main.launch">
-    <arg name="video_src" value="/dev/video1"/>
+    <arg name="video_src" value="$(arg video_src_0)"/>
     <arg name="use_real_cam" value="true"/>
-    <arg name="output_tf_frame" value="/map_1"/>
+    <arg name="output_tf_frame" value="map"/>
+    <arg name="use_tf_bridge" value="true"/>
+    <arg name="tf_ns" value="cam_1_"/>
 
     <arg name="flag_image_view_initial" default="false" />
     <arg name="flag_image_view_rectified" default="false" />
@@ -13,9 +18,11 @@
   </include>
 
   <include ns="cam_2" file="$(find iter_vision)/launch/main.launch">
-    <arg name="video_src" value="/dev/video2"/>
+    <arg name="video_src" value="$(arg video_src_1)"/>
     <arg name="use_real_cam" value="true"/>
-    <arg name="output_tf_frame" default="/map_2"/>
+    <arg name="output_tf_frame" default="map"/>
+    <arg name="use_tf_bridge" value="true"/>
+    <arg name="tf_ns" value="cam_2_"/>
 
     <arg name="flag_image_view_initial" default="false" />
     <arg name="flag_image_view_rectified" default="false" />
@@ -23,5 +30,13 @@
     <arg name="flag_image_view_blocks_filter" default="false" />
     <arg name="flag_image_view_2d_points" value="true" />
   </include>
+
+  <node name="two_camera_agreement" pkg="iter_vision" type="two_camera_agreement.py">
+    <!--TODO-->
+  </node>
+
+  <node name="robot_camera_align" pkg="iter_vision" type="robot_camera_align.py">
+    <param name="reference_frame" value="map"/>
+  </node>
 
 </launch>

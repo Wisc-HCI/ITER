@@ -41,11 +41,8 @@ class RobotCameraAlignment:
 
     def __init__(self,reference_frame):
         self._reference_frame = reference_frame
-        self._etr = Pose(position=Vector3(x=0,y=0,z=0),orientation=Quaternion(x=0,y=0,z=0,w=1))
-
-        self._get_tag_pose_srv = rospy.Service('robot_camera_align/get_tag_pose',GetTagPose, self._tf_pose_cb)
-
         self._tf_listener = tf.TransformListener()
+        self._get_tag_pose_srv = rospy.Service('robot_camera_align/get_tag_pose',GetTagPose, self._tf_pose_cb)
 
     def _tf_lookup(self,tag_id):
         status = True
@@ -93,7 +90,7 @@ class RobotCameraAlignment:
 if __name__ == "__main__":
     try:
         rospy.init_node("robot_cam_align", anonymous=True)
-        reference_frame = rospy.get_param('reference_frame','usb_cam')
+        reference_frame = rospy.get_param('reference_frame','map')
         node = RobotCameraAlignment(reference_frame)
         rospy.spin()
     except rospy.ROSInterruptException:

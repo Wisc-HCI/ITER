@@ -4,10 +4,13 @@
 <!--  Arguements                                                             -->
 <!--=========================================================================-->
 
+  <arg name="tf_ns" default=""/>
+  <arg name="use_tf_bridge" default="false"/>
+
   <arg name="video_src" default="/dev/video0" />
   <arg name="use_real_cam" default="true" />
   <arg name="static_cam_image" default="1-4.png" />
-  <arg name="output_tf_frame" default="/map"/>
+  <arg name="output_tf_frame" default="map"/>
 
   <arg name="flag_image_view_initial" default="false" />
   <arg name="flag_image_view_rectified" default="false" />
@@ -40,5 +43,9 @@
     <arg name="flag_image_view_2d_points" value="$(arg flag_image_view_2d_points)" />
     <arg name="capture_training_data" value="$(arg capture_training_data)" />
   </include>
+
+  <node if="$(arg use_tf_bridge)" name="tf_bridge" pkg="iter_vision" type="tf_bridge.py">
+    <param name="tf_ns" value="$(arg tf_ns)"/>
+  </node>
 
 </launch>
