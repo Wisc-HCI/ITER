@@ -23,6 +23,7 @@ class PrimitiveEnum(Enum):
     PICK_AND_PLACE_STATIC = 'pick_and_place_static'
     CALIBRATE_ROBOT_TO_CAMERA = 'calibrate_robot_to_camera'
     MOVE_AR_TAG_POSE = 'move_ar_tag_pose'
+    CALIBRATE_VISION_POSE = 'calibrate_vision_pose'
 
 
 class FindVisionObject(ReturnablePrimitive):
@@ -109,7 +110,7 @@ class PickAndPlaceVision(Primitive):
         object_rot = [orientation.x,orientation.y,orientation.z,orientation.w]
 
         grasp_pos = [object_pos[i] + offset_pos[i] for i in range(0,len(object_pos))]
-        #grasp_pos[2] = offset_pos[2] # fixed-z-offset?
+        #grasp_pos[2] = offset_pos[2] # fixed-z-offset? TODO actual height measure later
 
         #grasp_rot = tf.transformations.quaternion_multiply(object_rot,offset_rot)
         grasp_rot = offset_rot #TODO handle actual angle later. Just need to see if the pose position is even close
@@ -232,6 +233,95 @@ class MoveARTagPose(Primitive):
 
         return status
 
+class CalibrateVisionPose(Primitive):
+
+    def __init__(self, envClient, lookup, step, object_type, vision_params, grasp_offset, safe_height, home_pose, **kwargs):
+        self._step = step
+        self._safe_height = safe_height
+        self._lookup = lookup
+
+        self._block_prompt = lookup('prompt')('Ready for block trial?')
+        self._loop_prompt = lookup('prompt')('Run again?')
+        self._get_obj = lookup('find_vision_object')(object_type,vision_params,envClient)
+        self._jog_pose = lookup('jog_pose')(lookup,self._step,self._step)
+        self._get_pose = lookup('get_pose')()
+        self._grasp_offset = pose_dct_to_msg(grasp_offset)
+        self._move_home = lookup('move')(home_pose['position'],home_pose['orientation'])
+
+    def operate(self):
+        pose_pairs = []
+
+        # collect calibration points
+        running = True
+        while running:
+
+            # prompt user to place block
+            status, response = self._block_prompt.operate()
+            if not status:
+                running = False
+
+            # attempt to find vision object
+            _s, (obj_id, v_pose) = self._get_obj.operate()
+            if not _s:
+                print 'Could not find vision object'
+            else:
+                # apply offset
+                print self._grasp_offset
+                position = self._grasp_offset.position
+                orientation = self._grasp_offset.orientation
+                offset_pos = [position.x,position.y,position.z]
+                offset_rot = [orientation.x,orientation.y,orientation.z,orientation.w]
+
+                print v_pose
+                position = v_pose.position
+                orientation = v_pose.orientation
+                object_pos = [position.x,position.y,position.z]
+                object_rot = [orientation.x,orientation.y,orientation.z,orientation.w]
+
+                grasp_pos = [object_pos[i] + offset_pos[i] for i in range(0,len(object_pos))]
+                grasp_pos[2] = offset_pos[2] # fixed-z-offset? TODO actual height measure later
+
+                #grasp_rot = tf.transformations.quaternion_multiply(object_rot,offset_rot)
+                grasp_rot = offset_rot #TODO handle actual angle later. Just need to see if the pose position is even close
+
+                grasp_pose = Pose(position=Vector3(x=grasp_pos[0],y=grasp_pos[1],z=grasp_pos[2]),
+                                  orientation=Quaternion(x=grasp_rot[0],y=grasp_rot[1],z=grasp_rot[2],w=grasp_rot[3]))
+                print grasp_pose
+
+                # move toward vision object
+                dPose = pose_msg_to_dct(grasp_pose)
+                dPose['position']['z'] += self._safe_height
+                self._lookup('move')(dPose['position'],dPose['orientation']).operate()
+                dPose['position']['z'] -= self._safe_height
+                self._lookup('move')(dPose['position'],dPose['orientation']).operate()
+
+                # allow user jog pose
+                self._jog_pose.operate()
+                _s, j_pose = self._get_pose.operate() # note, removing grasp offset to find block location
+                j_pose.position.x -= self._grasp_offset.position.x
+                j_pose.position.y -= self._grasp_offset.position.y
+                j_pose.position.z -= self._grasp_offset.position.z
+
+                # save pose pair
+                pose_pairs.append([v_pose,j_pose])
+
+            # prompt run again?
+            status, response = self._loop_prompt.operate()
+            response.lower()
+            if not status:
+                running = False
+            elif response == 'n' or response == 'no':
+                running = False
+
+            # regardless, return to home position
+            self._move_home.operate()
+
+        # provide pose pairs to iter_vision calibration service
+        print pose_pairs
+
+        return status
+
+
 class EnvironmentAwareBehaviorPrimitives(AbstractBehaviorPrimitives):
 
     def __init__(self, envClient, parent=None):
@@ -255,6 +345,8 @@ class EnvironmentAwareBehaviorPrimitives(AbstractBehaviorPrimitives):
             return CalibrateRobotToCamera(envClient=self._envClient, lookup=self.lookup, **dct)
         elif name == PrimitiveEnum.MOVE_AR_TAG_POSE.value:
             return MoveARTagPose(envClient=self._envClient, lookup=self.lookup, **dct)
+        elif name == PrimitiveEnum.CALIBRATE_VISION_POSE.value:
+            return CalibrateVisionPose(envClient=self._envClient, lookup=self.lookup, **dct)
         elif self.parent != None:
             return self.parent.instantiate_from_dict(dct,**kwargs)
         else:
@@ -275,6 +367,8 @@ class EnvironmentAwareBehaviorPrimitives(AbstractBehaviorPrimitives):
             return CalibrateRobotToCamera
         elif primitive_type == PrimitiveEnum.MOVE_AR_TAG_POSE.value:
             return MoveARTagPose
+        elif primitive_type == PrimitiveEnum.CALIBRATE_VISION_POSE.value:
+            return CalibrateVisionPose
         elif self.parent != None:
             return self.parent.lookup(primitive_type)
         else:

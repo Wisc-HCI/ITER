@@ -22,18 +22,18 @@ HOME_ORIENTATION = copy.deepcopy(DOWN_GX_ORIENTATION)
 WAIT_POSITION = dt.position(0,0.25,0.3)
 WAIT_ORIENTATION = dt.orientation(0,0,0,1)
 
-WORKSPACE_POSITION = dt.position(0.2,0.3,-0.02)
+WORKSPACE_POSITION = dt.position(0.2,0.25,-0.02)
 REGION_POSITION = dt.position(-0.2,0.45,0.25)
 REGION_ORIENTATION = copy.deepcopy(DOWN_GX_ORIENTATION)
 
 GRASP_EFFORT = 0.59 #0.57
-RELEASE_EFFORT_REGION = 0.2
+RELEASE_EFFORT_REGION = 0.25
 RELEASE_EFFORT_WORKSPACE = 0.45
 
-REGION_GRASP_OFFSET_LARGE = dt.pose(dt.position(-0.04,0,0.174),
+REGION_GRASP_OFFSET_LARGE = dt.pose(dt.position(-0.04, 0, 0.14),
                                 copy.deepcopy(REGION_ORIENTATION))
 
-REGION_GRASP_OFFSET_SMALL = dt.pose(dt.position(-0.045,0,0.174),
+REGION_GRASP_OFFSET_SMALL = dt.pose(dt.position(-0.045, 0, 0.14),
                                 copy.deepcopy(REGION_ORIENTATION))
 
 WORKSPACE_GRASP_OFFSET = dt.pose(dt.position(0,0,0.1575),
@@ -209,9 +209,9 @@ if __name__ == "__main__":
     task_list = []
     task_list += move_home()
     task_list += wait_for_human()
-    task_list += build_house_base(WORKSPACE_POSITION)
-    WORKSPACE_POSITION['y'] += 0.15
-    task_list += build_house_base(WORKSPACE_POSITION)
+    task_list += build_house(WORKSPACE_POSITION)
+    WORKSPACE_POSITION['y'] += 0.05
+    task_list += build_house(WORKSPACE_POSITION)
     task_list += move_home()
     task_list += wait_for_human()
 
@@ -219,9 +219,9 @@ if __name__ == "__main__":
     env_list += static_environment()
 
     plan = dt.plan(
-        title='UR3e House Vision Pick-And-Place Task',
+        title='UR3e House Full Task',
         author='Curt Henrichs',
-        description='Build house task base',
+        description='Build house task',
         version='0.0.1',
         frame_id='base_link',
         environment=env_list,

@@ -50,7 +50,8 @@
     <!-- Include Vision System -->
     <include file="$(find iter_vision)/launch/main.launch">
       <arg name="video_src" value="$(arg video_src)"/>
-      <arg name="use_real_cam" default="$(arg use_real_cam)"/>
+      <arg name="use_real_cam" value="$(arg use_real_cam)"/>
+      <arg name="flag_image_view_2d_points" value="true" />
     </include>
 
     <!-- Start button node -->

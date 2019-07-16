@@ -25,8 +25,6 @@ Primitve List:
             ""
 '''
 
-#TODO need to update this with the real-time planner, currently it is not using it!
-
 import tf
 import time
 import rospy

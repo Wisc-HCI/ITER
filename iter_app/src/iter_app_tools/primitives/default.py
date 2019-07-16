@@ -8,11 +8,13 @@
 import time
 
 from enum import Enum
-from iter_app_tools.primitives.abstract import Primitive, AbstractBehaviorPrimitives
+from iter_app_tools.primitives.abstract import Primitive, ReturnablePrimitive, AbstractBehaviorPrimitives
+
 
 class PrimitiveEnum(Enum):
     WAIT = 'wait'
     LOGGER = 'logger'
+    PROMPT = 'prompt'
 
 class ButtonConditionEnum(Enum):
     TIME = 'time'
@@ -80,6 +82,18 @@ class DebugLogger(Primitive):
         print 'Logger Message: ', self._msg
         return True
 
+class Prompt(ReturnablePrimitive):
+
+    def __init__(self, msg):
+        self._msg = msg
+
+    def operate(self):
+        try:
+            response = raw_input(self._msg)
+            return True, response
+        except:
+            return False, ''
+
 
 class DefaultBehaviorPrimitives(AbstractBehaviorPrimitives):
 
@@ -92,8 +106,11 @@ class DefaultBehaviorPrimitives(AbstractBehaviorPrimitives):
             return Wait(button_cb=button_callback, **dct)
         elif name == PrimitiveEnum.LOGGER.value:
             return DebugLogger(dct['msg'])
+        elif name == PrimitiveEnum.PROMPT.value:
+            return Prompt(dct['msg'])
         elif self.parent != None:
-            kwargs['button_callback'] = button_callback
+            if not 'button_callback' in kwargs.keys():
+                kwargs['button_callback'] = button_callback
             return self.parent.instantiate_from_dict(dct,**kwargs)
         else:
             raise Exception('Invalid behavior primitive supplied')
@@ -103,6 +120,8 @@ class DefaultBehaviorPrimitives(AbstractBehaviorPrimitives):
             return Wait
         elif primitive_type == PrimitiveEnum.LOGGER.value:
             return DebugLogger
+        elif primitive_type == PrimitiveEnum.PROMPT.value:
+            return Prompt
         elif self.parent != None:
             return self.parent.lookup(primitive_type)
         else:

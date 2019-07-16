@@ -41,7 +41,6 @@ Parameters required:
 
 '''
 
-
 import sys
 import time
 import json
@@ -75,12 +74,14 @@ else:
     from iter_app_tools.primitives.moveit import MoveItBehaviorPrimitives as PhysicalBehaviorPrimitives
     from iter_app_tools.primitives.moveit import initialize_robot
 
+from iter_app_tools.primitives.general_movement import GeneralMovementBehaviorPrimitives
 from iter_app_tools.primitives.environment_aware import EnvironmentAwareBehaviorPrimitives
 
 
 bp = EnvironmentAwareBehaviorPrimitives(envClient=envClient,
+     parent=GeneralMovementBehaviorPrimitives(
      parent=PhysicalBehaviorPrimitives(
-     parent=DefaultBehaviorPrimitives()))
+     parent=DefaultBehaviorPrimitives())))
 
 
 DEFAULT_NODE_START_DELAY_TIME = 5
