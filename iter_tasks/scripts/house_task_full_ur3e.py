@@ -228,7 +228,7 @@ if __name__ == "__main__":
         task=task_list)
 
     path_to_scripts = os.path.dirname(os.path.realpath(__file__))
-    file_path = os.path.join(path_to_scripts,'../plans/ur3e/house_task_base.json')
+    file_path = os.path.join(path_to_scripts,'../plans/ur3e/house_task_full.json')
     f = open(file_path,'w')
     json.dump(plan,f,indent=2)
 
