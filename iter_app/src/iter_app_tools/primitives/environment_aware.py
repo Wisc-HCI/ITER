@@ -8,6 +8,7 @@ Environment Aware Primitive
 
 import tf
 import json
+import yaml
 import rospy
 
 from enum import Enum
@@ -249,7 +250,8 @@ class CalibrateVisionPose(Primitive):
         self._move_home = lookup('move')(home_pose['position'],home_pose['orientation'])
 
     def operate(self):
-        pose_pairs = []
+        pre_poses = []
+        post_poses = []
 
         # collect calibration points
         running = True
@@ -303,7 +305,8 @@ class CalibrateVisionPose(Primitive):
                 j_pose.position.z -= self._grasp_offset.position.z
 
                 # save pose pair
-                pose_pairs.append([v_pose,j_pose])
+                pre_poses.append(v_pose)
+                post_poses.append(j_pose)
 
             # prompt run again?
             status, response = self._loop_prompt.operate()
@@ -316,9 +319,21 @@ class CalibrateVisionPose(Primitive):
             # regardless, return to home position
             self._move_home.operate()
 
-        # provide pose pairs to iter_vision calibration service
-        print pose_pairs
+        # provide pose pairs for calibration in YAML form
+        data = {'initial': [],'offset': []}
+        for pose in pre_poses:
+            pos = pose.position
+            rot = pose.orientation
+            data['initial'].append({'position':{'x':pos.x,'y':pos.y,'z':pos.z},
+                                    'orientation':{'x':rot.x,'y':rot.y,'z':rot.z,'w':rot.w}})
+        for pose in post_poses:
+            pos = pose.position
+            rot = pose.orientation
+            data['offset'].append({'position':{'x':pos.x,'y':pos.y,'z':pos.z},
+                                   'orientation':{'x':rot.x,'y':rot.y,'z':rot.z,'w':rot.w}})
+        _y = yaml.dump(data, default_flow_style=False)
 
+        print '\n\n', _y, '\n\n'
         return status
 
 
