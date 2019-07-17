@@ -62,6 +62,7 @@ add_service_files(
   FILES
   ColorSelect.srv
   GetTagPose.srv
+  CalibrateRegion.srv
 )
 
 ## Generate actions in the 'action' folder

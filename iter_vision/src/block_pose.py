@@ -35,7 +35,7 @@ from iter_vision.msg import BlockPose3D, BlockPose3DArray
 from geometry_msgs.msg import PoseArray, Pose, Pose2D, Vector3, Quaternion
 from ar_track_alvar_msgs.msg import AlvarMarker2D, AlvarMarker2DArray
 from ar_track_alvar_msgs.msg import AlvarMarker, AlvarMarkerArray
-
+from iter_vision.srv import CalibrateRegion, CalibrateRegionResponse
 
 ROTATION_CONSTANT = 1
 AR_RADIUS = 50
@@ -65,6 +65,8 @@ class BlockPoseNode:
         self.bp2_pub = rospy.Publisher("block_pose/pose_2d", BlockPose2DArray, queue_size=10)
         self.bp3_pub = rospy.Publisher("block_pose/pose_3d", BlockPose3DArray, queue_size=10)
         self.tf_br = tf.TransformBroadcaster()
+
+        self.cal_region_srv = rospy.Service("block_pose/calibrate_region",CalibrateRegion,self._calibrate_region_cb)
 
     def _cam_info_cb(self, message):
         self._img_height = message.height
@@ -276,6 +278,8 @@ class BlockPoseNode:
         ])
         return A, Y
 
+    def _calibrate_region_cb(self, request):
+        pass
 
 if __name__ == "__main__":
     try:
