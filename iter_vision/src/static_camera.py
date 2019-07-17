@@ -33,7 +33,7 @@ from sensor_msgs.msg import CameraInfo, CompressedImage
 sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
 
 
-CALIBRATION_FILEPATH = os.path.join(os.path.dirname(__file__),'config/camera-calibration.yaml')
+CALIBRATION_FILEPATH = os.path.join(os.path.dirname(__file__),'config/camera_calibration.yaml')
 
 
 class StaticImageCam:
