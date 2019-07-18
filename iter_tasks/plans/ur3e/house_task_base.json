@@ -77,8 +77,8 @@
       "grasp_effort": 0.59, 
       "grasp_offset": {
         "position": {
-          "y": 0.01, 
-          "x": -0.0625, 
+          "y": 0, 
+          "x": 0, 
           "z": 0.145
         }, 
         "orientation": {
@@ -150,8 +150,8 @@
       "grasp_effort": 0.59, 
       "grasp_offset": {
         "position": {
-          "y": 0.01, 
-          "x": -0.0625, 
+          "y": 0, 
+          "x": 0, 
           "z": 0.145
         }, 
         "orientation": {
@@ -223,9 +223,9 @@
       "grasp_effort": 0.59, 
       "grasp_offset": {
         "position": {
-          "y": 0.03, 
-          "x": -0.05, 
-          "z": 0.15
+          "y": 0, 
+          "x": 0, 
+          "z": 0.145
         }, 
         "orientation": {
           "y": 0, 
@@ -296,9 +296,9 @@
       "grasp_effort": 0.59, 
       "grasp_offset": {
         "position": {
-          "y": 0.03, 
-          "x": -0.05, 
-          "z": 0.15
+          "y": 0, 
+          "x": 0, 
+          "z": 0.145
         }, 
         "orientation": {
           "y": 0, 
@@ -369,8 +369,8 @@
       "grasp_effort": 0.59, 
       "grasp_offset": {
         "position": {
-          "y": 0.01, 
-          "x": -0.0625, 
+          "y": 0, 
+          "x": 0, 
           "z": 0.145
         }, 
         "orientation": {
@@ -442,8 +442,8 @@
       "grasp_effort": 0.59, 
       "grasp_offset": {
         "position": {
-          "y": 0.01, 
-          "x": -0.0625, 
+          "y": 0, 
+          "x": 0, 
           "z": 0.145
         }, 
         "orientation": {

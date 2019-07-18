@@ -20,6 +20,7 @@ import json
 import time
 import uuid
 import rospy
+import numpy as np
 
 from tf.transformations import *
 from visualization_msgs.msg import *
@@ -55,9 +56,13 @@ else:
 import iter_app_tools.environment_interface.vision as vision_env
 
 
+CALIBRATION_FILEPATH = os.path.join(os.path.dirname(__file__),'config/vision_pose_calibration.yaml')
+
+
 class Environment:
 
     def __init__(self,calibrate_ar_tag_id):
+        self._load_calibration_file()
 
         self._tf_listener = tf.TransformListener()
         self._tf_broadcaster = tf.TransformBroadcaster()
@@ -80,6 +85,19 @@ class Environment:
         self._calibration_marker = self._create_manual_calibration_marker((0,0,0),(0,0,0,1))
         self._interactive_marker_server.insert(self._calibration_marker,self._process_cam_marker_feedback)
         self._interactive_marker_server.applyChanges()
+
+    def _load_calibration_file(self):
+        fin = open(CALIBRATION_FILEPATH,'r')
+        pose_data = yaml.safe_load(fin)
+        fin.close()
+
+        if len(pose_data['initial']) == len(pose_data['offset']) and len(pose_data['offset']) >= 4:
+            X = np.matrix([[p['position']['x'],p['position']['y'],p['position']['z'],1] for p in pose_data['initial']])
+            Y = np.matrix([[p['position']['x'],p['position']['y'],p['position']['z'],1] for p in pose_data['offset']])
+            invX = np.linalg.pinv(X)
+            self._pose_transform_matrix = Y * invX
+        else:
+            self._pose_transform_matrix = np.matrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
 
     def _create_manual_calibration_marker(self,pos,rot):
         interactive_marker = InteractiveMarker()
@@ -117,10 +135,11 @@ class Environment:
         return interactive_marker
 
     def _process_cam_marker_feedback(self, feedback):
+        tfs = []
         print feedback.pose
         pos, rot = self._pose_msg_to_tf(feedback.pose)
-        self._calibration_tfs['c1_to_c2']['position'] = pos
-        self._calibration_tfs['c1_to_c2']['rotation'] = rot
+        tfs.append(CalibrationTf(child_frame='calibration_point_2',parent_frame='calibration_point_1',position=pos,rotation=rot))
+        self._set_tfs(tfs)
 
     def _pose_msg_to_tf(self,msg):
         pos = (msg.position.x,msg.position.y,msg.position.z)
@@ -172,8 +191,15 @@ class Environment:
 
         response.pose = self._tf_listener.transformPose(request.frame_id,PoseStamped(pose=pose,header=Header(frame_id='/map'))).pose
 
-        response.task_id = response.vision_id + '_' + str(uuid.uuid1().hex)
+        if not request.disable_calibrated_offset:
+            position = response.pose.position
+            X = np.matrix([[position.x,position.y,position.z,1]])
+            Y = self._pose_transform_matrix * X
+            response.pose.position = Vector3(x=Y[0,0]/Y[3,0],
+                                             y=Y[1,0]/Y[3,0],
+                                             z=Y[2,0]/Y[3,0])
 
+        response.task_id = response.vision_id + '_' + str(uuid.uuid1().hex)
         response.status = task_env.generate_dynamic_environment([EnvironmentObject(
             representation=EnvironmentObject.REPRESENTATION_BOX,
             id=response.task_id,
@@ -207,9 +233,9 @@ class Environment:
         # update calibration points
         if status:
             tfs = []
-            tfs.append(CalibrationTfs(child_frame='calibration_point_1',parent_frame='base_link',position=eePos,rotation=eeRot))
-            tfs.append(CalibrationTfs(child_frame='calibration_point_2',parent_frame='calibration_point_1',position=gtaPos,rotation=gtaRot))
-            tfs.append(CalibrationTfs(child_frame='map',parent_frame='calibration_point_2',position=tagPos,rotation=tagRot))
+            tfs.append(CalibrationTf(child_frame='calibration_point_1',parent_frame='base_link',position=eePos,rotation=eeRot))
+            tfs.append(CalibrationTf(child_frame='calibration_point_2',parent_frame='calibration_point_1',position=gtaPos,rotation=gtaRot))
+            tfs.append(CalibrationTf(child_frame='map',parent_frame='calibration_point_2',position=tagPos,rotation=tagRot))
             status = self._set_tfs(tfs).status
 
         # update interactive marker

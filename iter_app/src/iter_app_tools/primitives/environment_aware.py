@@ -29,10 +29,11 @@ class PrimitiveEnum(Enum):
 
 class FindVisionObject(ReturnablePrimitive):
 
-    def __init__(self,object_type,vision_params,envClient):
+    def __init__(self,object_type,vision_params,envClient,disable_offset=False):
         self._type = object_type
         self._envClient = envClient
         self._visionParams = vision_params
+        self._disable_offset = disable_offset
 
     def operate(self):
         # set vision parameters & wait
@@ -41,11 +42,11 @@ class FindVisionObject(ReturnablePrimitive):
 
         # find object
         if status:
-            resp = self._envClient.get_vision_object(self._type,'base_link')
+            resp = self._envClient.get_vision_object(self._type,'base_link',self._disable_offset)
             status = resp.status
             data = (resp.task_id, resp.pose)
         else:
-            data = (None,None)
+            data = ('',None)
 
         # attempt to set vision parameters to default
         self._envClient.set_vision_params(json.dumps({'default':True}))
@@ -81,7 +82,7 @@ class DisconnectObjectFromRobot(Primitive):
 class PickAndPlaceVision(Primitive):
 
     def __init__(self,object_type,path_to_region,path_to_destination,grasp_effort,release_effort,grasp_offset,safe_height,vision_params,envClient,lookup, **kwargs):
-        self._find_obj = FindVisionObject(object_type,vision_params,envClient)
+        self._find_obj = lookup('find_vision_object')(object_type,vision_params,envClient)
         self._path_to_region = [lookup('move')(dct['position'],dct['orientation']) for dct in path_to_region]
         self._path_to_dest = [lookup('move')(dct['position'],dct['orientation']) for dct in path_to_destination]
         self._grasp = lookup('grasp')(grasp_effort)
@@ -243,8 +244,8 @@ class CalibrateVisionPose(Primitive):
 
         self._block_prompt = lookup('prompt')('Ready for block trial?')
         self._loop_prompt = lookup('prompt')('Run again?')
-        self._get_obj = lookup('find_vision_object')(object_type,vision_params,envClient)
-        self._jog_pose = lookup('jog_pose')(lookup,self._step,self._step)
+        self._get_obj = lookup('find_vision_object')(object_type,vision_params,envClient,True)
+        self._jog = lookup('jog')(lookup, self._step, self._step, 0.02)
         self._get_pose = lookup('get_pose')()
         self._grasp_offset = pose_dct_to_msg(grasp_offset)
         self._move_home = lookup('move')(home_pose['position'],home_pose['orientation'])
@@ -261,12 +262,14 @@ class CalibrateVisionPose(Primitive):
             status, response = self._block_prompt.operate()
             if not status:
                 running = False
+            print 'starting'
 
             # attempt to find vision object
             _s, (obj_id, v_pose) = self._get_obj.operate()
             if not _s:
                 print 'Could not find vision object'
             else:
+                print 'calculating pose'
                 # apply offset
                 print self._grasp_offset
                 position = self._grasp_offset.position
@@ -291,6 +294,7 @@ class CalibrateVisionPose(Primitive):
                 print grasp_pose
 
                 # move toward vision object
+                print 'moving toward object'
                 dPose = pose_msg_to_dct(grasp_pose)
                 dPose['position']['z'] += self._safe_height
                 self._lookup('move')(dPose['position'],dPose['orientation']).operate()
@@ -298,13 +302,15 @@ class CalibrateVisionPose(Primitive):
                 self._lookup('move')(dPose['position'],dPose['orientation']).operate()
 
                 # allow user jog pose
-                self._jog_pose.operate()
+                print "Jog robot"
+                self._jog.operate()
                 _s, j_pose = self._get_pose.operate() # note, removing grasp offset to find block location
                 j_pose.position.x -= self._grasp_offset.position.x
                 j_pose.position.y -= self._grasp_offset.position.y
                 j_pose.position.z -= self._grasp_offset.position.z
 
                 # save pose pair
+                print 'Saving pose info'
                 pre_poses.append(v_pose)
                 post_poses.append(j_pose)
 
@@ -315,6 +321,7 @@ class CalibrateVisionPose(Primitive):
                 running = False
             elif response == 'n' or response == 'no':
                 running = False
+            print '\n\nOK!\n'
 
             # regardless, return to home position
             self._move_home.operate()
@@ -329,8 +336,9 @@ class CalibrateVisionPose(Primitive):
         for pose in post_poses:
             pos = pose.position
             rot = pose.orientation
-            data['offset'].append({'position':{'x':pos.x,'y':pos.y,'z':pos.z},
-                                   'orientation':{'x':rot.x,'y':rot.y,'z':rot.z,'w':rot.w}})
+            print pos.x
+            data['offset'].append({'position':{'x':pos.x.item(),'y':pos.y.item(),'z':pos.z.item()},
+                                   'orientation':{'x':rot.x.item(),'y':rot.y.item(),'z':rot.z.item(),'w':rot.w.item()}})
         _y = yaml.dump(data, default_flow_style=False)
 
         print '\n\n', _y, '\n\n'
@@ -347,7 +355,7 @@ class EnvironmentAwareBehaviorPrimitives(AbstractBehaviorPrimitives):
 
         name = dct['name']
         if name == PrimitiveEnum.FIND_VISION_OBJECT.value:
-            return FindVisionObject(dct['object_type'], dct['vision_params'], self._envClient)
+            return FindVisionObject(envClient=self._envClient, **dct)
         elif name == PrimitiveEnum.CONNECT_OBJECT_TO_ROBOT.value:
             return ConnectObjectToRobot(dct['object_name'], self._envClient, self.lookup)
         elif name == PrimitiveEnum.DISCONNECT_OBJECT_FROM_ROBOT.value:

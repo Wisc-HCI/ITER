@@ -2,6 +2,6 @@ string tag_frame_id
 float32 duration
 float32 DEFAULT_DURATION = 5
 ---
-float32 position
-float32 rotation
+float32[] position
+float32[] rotation
 bool status
