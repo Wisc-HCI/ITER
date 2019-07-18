@@ -55,6 +55,7 @@ add_message_files(
   BlockPose2DArray.msg
   BlockPose3D.msg
   BlockPose3DArray.msg
+  CalibrationTf.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -62,6 +63,7 @@ add_service_files(
   FILES
   ColorSelect.srv
   GetTagPose.srv
+  SetCalibrationTfs.srv
 )
 
 ## Generate actions in the 'action' folder

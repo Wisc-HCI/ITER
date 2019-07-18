@@ -23,6 +23,7 @@ import rospy
 
 from tf.transformations import *
 from visualization_msgs.msg import *
+from iter_vision.msg import CalibrationTf
 from iter_app.msg import EnvironmentObject
 from std_msgs.msg import Header, ColorRGBA
 from interactive_markers.interactive_marker_server import *
@@ -39,6 +40,7 @@ from iter_app.srv import GetEnvironmentState, GetEnvironmentStateResponse
 from iter_app.srv import CalibrateRobotToCamera, CalibrateRobotToCameraResponse
 
 from iter_vision.srv import GetTagPose, GetTagPoseRequest
+from iter_vision.srv import SetCalibrationTfs, SetCalibrationTfsRequest
 
 rospy.init_node('environment')
 
@@ -53,74 +55,15 @@ else:
 import iter_app_tools.environment_interface.vision as vision_env
 
 
-'''
---- UR5 ---
-position:
-    x: -0.0498019680381
-    y: 0.872681796551
-    z: 0.34569761157
-orientation:
-    x: -0.0167846251279
-    y: -0.976989865303
-    z: 0.2126237005
-    w: 0.000687647901941
-
---- UR3e (old) ---
-position:
-  x: -2.79396772385e-09
-  y: 0.000169443315826
-  z: -0.043278709054
-orientation:
-  x: -0.99911236763
-  y: 0.000727943726815
-  z: -0.0395599603653
-  w: -0.0144719388336
-
---- UR3e (new) ---
-position:
-  x: 0.0198472309858
-  y: -6.72191381454e-05
-  z: -0.0454975217581
-orientation:
-  x: 0.999995172024
-  y: 0.0
-  z: 0.0
-  w: 0.0031111817807
-'''
-DEFAULT_TF = {
-        'position': (0.0198472309858, -6.72191381454e-05, -0.0454975217581),
-        'orientation': (0.999995172024,0.0,0.0,0.0031111817807)
-}
-
-
 class Environment:
 
     def __init__(self,calibrate_ar_tag_id):
-        self._calibration_tfs = {
-            'bl_to_c1': {
-                'parent': 'base_link',
-                'child': 'calibration_point_1',
-                'position': (0,0,0),
-                'rotation': (0,0,0,1)
-            },
-            'c1_to_c2': {
-                'parent': 'calibration_point_1',
-                'child': 'calibration_point_2',
-                'position': (0,0,0),
-                'rotation': (0,0,0,1)
-            },
-            'c2_to_mp': {
-                'parent': 'calibration_point_2',
-                'child': 'map',
-                'position': (0,0,0),
-                'rotation': (0,0,0,1)
-            }
-        }
 
         self._tf_listener = tf.TransformListener()
         self._tf_broadcaster = tf.TransformBroadcaster()
         self._calibrate_ar_tag_id = calibrate_ar_tag_id
         self._get_cam_pose = rospy.ServiceProxy('/robot_camera_align/get_tag_pose',GetTagPose)
+        self._set_tfs = rospy.ServiceProxy('/robot_camera_align/set_tfs',SetCalibrationTfs)
 
         self._set_vision_params_srv = rospy.Service("/environment/set_vision_params",SetVisionParams,self._set_vision_params)
         self._gen_task_objs_srv = rospy.Service("/environment/generate_task_objects",GenerateTaskObjects,self._generate_task_objs)
@@ -134,8 +77,7 @@ class Environment:
 
         # manual calibration marker
         self._interactive_marker_server = InteractiveMarkerServer("interactive_markers")
-        self._calibration_marker = self._create_manual_calibration_marker(self._calibration_tfs['c1_to_c2']['position'],
-                                                                          self._calibration_tfs['c1_to_c2']['rotation'])
+        self._calibration_marker = self._create_manual_calibration_marker((0,0,0),(0,0,0,1))
         self._interactive_marker_server.insert(self._calibration_marker,self._process_cam_marker_feedback)
         self._interactive_marker_server.applyChanges()
 
@@ -179,16 +121,6 @@ class Environment:
         pos, rot = self._pose_msg_to_tf(feedback.pose)
         self._calibration_tfs['c1_to_c2']['position'] = pos
         self._calibration_tfs['c1_to_c2']['rotation'] = rot
-
-    def spin(self):
-        while not rospy.is_shutdown():
-            self._refresh_tfs()
-            rospy.sleep(0.5)
-
-    def _refresh_tfs(self):
-        for key in self._calibration_tfs.keys():
-            point = self._calibration_tfs[key]
-            self._tf_broadcaster.sendTransform(point['position'],point['rotation'],rospy.Time.now(),point['child'],point['parent'])
 
     def _pose_msg_to_tf(self,msg):
         pos = (msg.position.x,msg.position.y,msg.position.z)
@@ -263,25 +195,31 @@ class Environment:
         # find calibration tag
         tagId = request.ar_tag_id if request.ar_tag_id != "" else self._calibrate_ar_tag_id
 
+        status = True
         try:
-            (tagPos, tagRot) = self._tf_listener.lookupTransform('ar_marker_{}'.format(tagId),'map',rospy.Time(0))
+            resp = self._get_cam_pose(tag_frame_id='ar_marker_{}'.format(tagId),duration=GetTagPoseRequest.DEFAULT_DURATION)
+            status = resp.status
+            tagPos = resp.position
+            tagRot = resp.rotation
         except Exception, e:
             return CalibrateRobotToCameraResponse(status=False)
 
         # update calibration points
-        self._calibration_tfs['bl_to_c1']['position'] = eePos
-        self._calibration_tfs['bl_to_c1']['rotation'] = eeRot
-        self._calibration_tfs['c1_to_c2']['position'] = gtaPos
-        self._calibration_tfs['c1_to_c2']['rotation'] = gtaRot
-        self._calibration_tfs['c2_to_mp']['position'] = tagPos
-        self._calibration_tfs['c2_to_mp']['rotation'] = tagRot
+        if status:
+            tfs = []
+            tfs.append(CalibrationTfs(child_frame='calibration_point_1',parent_frame='base_link',position=eePos,rotation=eeRot))
+            tfs.append(CalibrationTfs(child_frame='calibration_point_2',parent_frame='calibration_point_1',position=gtaPos,rotation=gtaRot))
+            tfs.append(CalibrationTfs(child_frame='map',parent_frame='calibration_point_2',position=tagPos,rotation=tagRot))
+            status = self._set_tfs(tfs).status
 
-        self._calibration_marker.pose=Pose(
-            position=Vector3(x=gtaPos[0],y=gtaPos[1],z=gtaPos[2]),
-            orientation=Quaternion(x=gtaRot[0],y=gtaRot[1],z=gtaRot[2],w=gtaRot[3]))
-        self._interactive_marker_server.applyChanges()
+        # update interactive marker
+        if status:
+            self._calibration_marker.pose=Pose(
+                position=Vector3(x=gtaPos[0],y=gtaPos[1],z=gtaPos[2]),
+                orientation=Quaternion(x=gtaRot[0],y=gtaRot[1],z=gtaRot[2],w=gtaRot[3]))
+            self._interactive_marker_server.applyChanges()
 
-        return CalibrateRobotToCameraResponse(status=True)
+        return CalibrateRobotToCameraResponse(status=status)
 
     def _get_state(self, request):
         return GetEnvironmentState(
@@ -316,4 +254,4 @@ class Environment:
 if __name__ == "__main__":
     calibrate_tag = rospy.get_param('~calibrate_ar_tag_id',None)
     env = Environment(calibrate_tag)
-    env.spin()
+    rospy.spin()
