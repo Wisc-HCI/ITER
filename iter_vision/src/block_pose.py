@@ -20,7 +20,9 @@ Takes in rosparam for 'ar_exclusion_radius' which is a circle around the ar tag 
     will be ignored. This is due to artifacts from AR tag being detected as a block.
 '''
 
+import os
 import tf
+import yaml
 import math
 import rospy
 import random
@@ -74,9 +76,9 @@ class BlockPoseNode:
         pose_data = yaml.safe_load(fin)
         fin.close()
 
-        if len(pose_data.initial) == len(pose_data.offset) and len(pose_data.initial) > 4:
-            X = np.matrix([[p.position.x,p.position.y,p.position.z,1] for p in pose_data.initial])
-            Y = np.matrix([[p.position.x,p.position.y,p.position.z,1] for p in pose_data.offset])
+        if len(pose_data['initial']) == len(pose_data['offset']) and len(pose_data['offset']) >= 4:
+            X = np.matrix([[p['position']['x'],p['position']['y'],p['position']['z'],1] for p in pose_data['initial']])
+            Y = np.matrix([[p['position']['x'],p['position']['y'],p['position']['z'],1] for p in pose_data['offset']])
             invX = np.linalg.pinv(X)
             self._pose_transform_matrix = Y * invX
         else:

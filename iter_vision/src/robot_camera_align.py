@@ -25,6 +25,7 @@ Parameters:
 
 import os
 import tf
+import yaml
 import time
 import math
 import rospy
@@ -44,7 +45,7 @@ class RobotCameraAlignment:
 
     def __init__(self,reference_frame):
         self._load_calibration_file()
-        
+
         self._reference_frame = reference_frame
         self._tf_listener = tf.TransformListener()
         self._tf_broadcaster = tf.TransformBroadcaster()
@@ -66,7 +67,6 @@ class RobotCameraAlignment:
         return msg
 
     def _store_calibration_file(self):
-        self._tfs
         tf_data = [self._unpack_tf(self._tfs[key]) for key in self._tfs.keys()]
         fout = open(CALIBRATION_FILEPATH,'w+')
         yaml.dump(tf_data, fout, default_flow_style=False)
