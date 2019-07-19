@@ -20,9 +20,7 @@ Takes in rosparam for 'ar_exclusion_radius' which is a circle around the ar tag 
     will be ignored. This is due to artifacts from AR tag being detected as a block.
 '''
 
-import os
 import tf
-import yaml
 import math
 import rospy
 import random

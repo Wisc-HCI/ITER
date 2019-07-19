@@ -15,7 +15,9 @@ MODE_COLLISION_MOVEIT = 'collision_moveit'
 MODE_MARKER = 'marker'
 
 
+import os
 import tf
+import yaml
 import json
 import time
 import uuid
@@ -91,9 +93,30 @@ class Environment:
         pose_data = yaml.safe_load(fin)
         fin.close()
 
+
+
         if len(pose_data['initial']) == len(pose_data['offset']) and len(pose_data['offset']) >= 4:
-            X = np.matrix([[p['position']['x'],p['position']['y'],p['position']['z'],1] for p in pose_data['initial']])
-            Y = np.matrix([[p['position']['x'],p['position']['y'],p['position']['z'],1] for p in pose_data['offset']])
+
+            count = 0
+            X = None
+            for p in pose_data['initial']:
+                if count == 0:
+                    X = np.matrix([[p['position']['x']],[p['position']['y']],[p['position']['z']],[1]])
+                else:
+                    _x = np.matrix([[p['position']['x']],[p['position']['y']],[p['position']['z']],[1]])
+                    X = np.append(X,_x,axis=1)
+                count += 1
+
+            count = 0
+            Y = None
+            for p in pose_data['offset']:
+                if count == 0:
+                    Y = np.matrix([[p['position']['x']],[p['position']['y']],[p['position']['z']],[1]])
+                else:
+                    _y = np.matrix([[p['position']['x']],[p['position']['y']],[p['position']['z']],[1]])
+                    Y = np.append(Y,_y,axis=1)
+                count += 1
+
             invX = np.linalg.pinv(X)
             self._pose_transform_matrix = Y * invX
         else:
@@ -193,7 +216,7 @@ class Environment:
 
         if not request.disable_calibrated_offset:
             position = response.pose.position
-            X = np.matrix([[position.x,position.y,position.z,1]])
+            X = np.matrix([[position.x],[position.y],[position.z],[1]])
             Y = self._pose_transform_matrix * X
             response.pose.position = Vector3(x=Y[0,0]/Y[3,0],
                                              y=Y[1,0]/Y[3,0],
