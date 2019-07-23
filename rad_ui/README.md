@@ -38,3 +38,23 @@ https://www.npmjs.com/package/preact-timeline
 
 
 https://www.npmjs.com/package/nervo   +   https://nervo-js.org/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://www.npmjs.com/package/jquery-inline-svg
