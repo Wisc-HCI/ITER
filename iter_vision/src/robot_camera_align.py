@@ -76,15 +76,15 @@ class RobotCameraAlignment:
         dct = {
             'child_frame': msg.child_frame,
             'parent_frame': msg.parent_frame,
-            'position': msg.position,
-            'rotation': msg.rotation
+            'position': list(msg.position),
+            'rotation': list(msg.rotation)
         }
         return dct
 
     def _tf_lookup(self,tag_id):
         status = True
         try:
-            (translation,rotation) = self._tf_listener.lookupTransform(self._reference_frame,tag_id, rospy.Time(0))
+            (translation,rotation) = self._tf_listener.lookupTransform(tag_id, self._reference_frame, rospy.Time(0))
         except (tf.lookupException, tf.ConnectivityException, tf.ExtrapolationException):
             status = False
             translation = None
@@ -101,10 +101,10 @@ class RobotCameraAlignment:
             status, pos, rot = self._tf_lookup(request.tag_frame_id)
             if status:
                 pos_list.append(pos)
-                q = [rot[3],rot[0],rot[1],rot[2]]
+                q = [rot[3],rot[0],rot[1],rot[2]] #w,x,y,z
                 q_list.append(q)
 
-        if len(pos_list) < 1 or len(rot_list) < 1:
+        if len(pos_list) < 1 or len(q_list) < 1:
             return GetTagPoseResponse(position=[0,0,0],rotation=[0,0,0,1],status=False)
 
         # Average calibrated tag pose
@@ -114,8 +114,10 @@ class RobotCameraAlignment:
         pz = sum([p[2] for p in pos_list]) / pl
         pos = (px,py,pz)
 
-        q = averageQuaternions(q_list)
+        q = averageQuaternions(np.matrix(q_list)).tolist()
         rot = [q[1],q[2],q[3],q[0]]
+        #q = q_list[len(q_list)-1]
+        #rot = [q[1],q[2],q[3],q[0]] #x,y,z,w
 
         # Generate tag pose
         return GetTagPoseResponse(position=pos,rotation=rot,status=True)

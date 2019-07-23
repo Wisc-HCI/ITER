@@ -20,9 +20,7 @@ Takes in rosparam for 'ar_exclusion_radius' which is a circle around the ar tag 
     will be ignored. This is due to artifacts from AR tag being detected as a block.
 '''
 
-import os
 import tf
-import yaml
 import math
 import rospy
 import random
@@ -39,7 +37,6 @@ from ar_track_alvar_msgs.msg import AlvarMarker2D, AlvarMarker2DArray
 from ar_track_alvar_msgs.msg import AlvarMarker, AlvarMarkerArray
 
 
-CALIBRATION_FILEPATH = os.path.join(os.path.dirname(__file__),'config/block_pose_calibration.yaml')
 ROTATION_CONSTANT = 1
 AR_RADIUS = 50
 
@@ -47,7 +44,6 @@ AR_RADIUS = 50
 class BlockPoseNode:
 
     def __init__(self, parent_frame_id, rotation_constant,tag_id_list,ar_radius):
-        self._load_calibration_file()
 
         self._parent_frame_id = parent_frame_id
         self._rotation_constant = rotation_constant
@@ -70,19 +66,6 @@ class BlockPoseNode:
         self.bp2_pub = rospy.Publisher("block_pose/pose_2d", BlockPose2DArray, queue_size=10)
         self.bp3_pub = rospy.Publisher("block_pose/pose_3d", BlockPose3DArray, queue_size=10)
         self.tf_br = tf.TransformBroadcaster()
-
-    def _load_calibration_file(self):
-        fin = open(CALIBRATION_FILEPATH,'r')
-        pose_data = yaml.safe_load(fin)
-        fin.close()
-
-        if len(pose_data['initial']) == len(pose_data['offset']) and len(pose_data['offset']) >= 4:
-            X = np.matrix([[p['position']['x'],p['position']['y'],p['position']['z'],1] for p in pose_data['initial']])
-            Y = np.matrix([[p['position']['x'],p['position']['y'],p['position']['z'],1] for p in pose_data['offset']])
-            invX = np.linalg.pinv(X)
-            self._pose_transform_matrix = Y * invX
-        else:
-            self._pose_transform_matrix = np.matrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
 
     def _cam_info_cb(self, message):
         self._img_height = message.height
@@ -229,7 +212,7 @@ class BlockPoseNode:
             '''
 
             x = np.matrix([[b2.pose.x],[b2.pose.y],[0],[1]])
-            projection = self._pose_transform_matrix * self._computed_position_transform * x
+            projection = self._computed_position_transform * x
 
             position = Vector3(x=projection[0,0]/projection[3,0],
                                y=projection[1,0]/projection[3,0],
