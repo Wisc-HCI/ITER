@@ -7,7 +7,7 @@
   "task": [
     {
       "name": "calibrate_vision_pose",
-      "step": 0.001,
+      "step": 0.005,
       "object_type": "2",
       "vision_params": {
         "min_hue": 0,

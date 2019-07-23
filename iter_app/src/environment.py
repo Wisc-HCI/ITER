@@ -24,6 +24,8 @@ import uuid
 import rospy
 import numpy as np
 
+from sklearn.neighbors import KNeighborsRegressor
+
 from tf.transformations import *
 from visualization_msgs.msg import *
 from iter_vision.msg import CalibrationTf
@@ -93,34 +95,54 @@ class Environment:
         pose_data = yaml.safe_load(fin)
         fin.close()
 
+        # select mode
+        #self._calibration_mode = 'linalg'
+        #self._calibration_mode = 'knn-pose'
+        self._calibration_mode = 'knn-offset'
+        #self._calibration_mode = 'neural-offset'
 
+        # format data
+        count = 0
+        X = None
+        for p in pose_data['initial']:
+            if count == 0:
+                X = np.matrix([[p['position']['x']],[p['position']['y']],[p['position']['z']],[1]])
+            else:
+                _x = np.matrix([[p['position']['x']],[p['position']['y']],[p['position']['z']],[1]])
+                X = np.append(X,_x,axis=1)
+            count += 1
 
-        if len(pose_data['initial']) == len(pose_data['offset']) and len(pose_data['offset']) >= 4:
+        count = 0
+        Y = None
+        for p in pose_data['offset']:
+            if count == 0:
+                Y = np.matrix([[p['position']['x']],[p['position']['y']],[p['position']['z']],[1]])
+            else:
+                _y = np.matrix([[p['position']['x']],[p['position']['y']],[p['position']['z']],[1]])
+                Y = np.append(Y,_y,axis=1)
+            count += 1
 
-            count = 0
-            X = None
-            for p in pose_data['initial']:
-                if count == 0:
-                    X = np.matrix([[p['position']['x']],[p['position']['y']],[p['position']['z']],[1]])
-                else:
-                    _x = np.matrix([[p['position']['x']],[p['position']['y']],[p['position']['z']],[1]])
-                    X = np.append(X,_x,axis=1)
-                count += 1
-
-            count = 0
-            Y = None
-            for p in pose_data['offset']:
-                if count == 0:
-                    Y = np.matrix([[p['position']['x']],[p['position']['y']],[p['position']['z']],[1]])
-                else:
-                    _y = np.matrix([[p['position']['x']],[p['position']['y']],[p['position']['z']],[1]])
-                    Y = np.append(Y,_y,axis=1)
-                count += 1
-
-            invX = np.linalg.pinv(X)
-            self._pose_transform_matrix = Y * invX
-        else:
-            self._pose_transform_matrix = np.matrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
+        # generate model based on mode
+        if self._calibration_mode == 'linalg':
+            print 'Linear Algebra'
+            if len(pose_data['initial']) == len(pose_data['offset']) and len(pose_data['offset']) >= 4:
+                print 'Solving'
+                invX = np.linalg.pinv(X)
+                self._pose_transform_matrix = Y * invX
+            else:
+                print 'Default'
+                self._pose_transform_matrix = np.matrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
+        elif self._calibration_mode == 'knn-pose':
+            print 'KNN Pose'
+            self._model = KNeighborsRegressor(n_neighbors=3, weights='distance')
+            self._model.fit(X.transpose(),Y.transpose())
+        elif self._calibration_mode == 'knn-offset':
+            print 'KNN Offset'
+            O = np.subtract(Y,X)
+            self._model = KNeighborsRegressor(n_neighbors=2, weights='distance')
+            self._model.fit(X.transpose(),O.transpose())
+        elif self._calibration_mode == 'neural-offset':
+            pass
 
     def _create_manual_calibration_marker(self,pos,rot):
         interactive_marker = InteractiveMarker()
@@ -215,12 +237,7 @@ class Environment:
         response.pose = self._tf_listener.transformPose(request.frame_id,PoseStamped(pose=pose,header=Header(frame_id='/map'))).pose
 
         if not request.disable_calibrated_offset:
-            position = response.pose.position
-            X = np.matrix([[position.x],[position.y],[position.z],[1]])
-            Y = self._pose_transform_matrix * X
-            response.pose.position = Vector3(x=Y[0,0]/Y[3,0],
-                                             y=Y[1,0]/Y[3,0],
-                                             z=Y[2,0]/Y[3,0])
+            response.pose.position = self._calibration_offset(response.pose.position)
 
         response.task_id = response.vision_id + '_' + str(uuid.uuid1().hex)
         response.status = task_env.generate_dynamic_environment([EnvironmentObject(
@@ -298,6 +315,25 @@ class Environment:
         response.status = status
         response.pose = pose
         return response
+
+    def _calibration_offset(self, position):
+
+        if self._calibration_mode == 'linalg':
+            X = np.matrix([[position.x],[position.y],[position.z],[1]])
+            Y = self._pose_transform_matrix * X
+            return Vector3(x=Y[0,0]/Y[3,0],
+                           y=Y[1,0]/Y[3,0],
+                           z=Y[2,0]/Y[3,0])
+        elif self._calibration_mode == 'knn-pose':
+            X = np.matrix([[position.x,position.y,position.z,1]])
+            Y = self._model.predict(X)
+            return Vector3(x=Y[0,0],y=Y[0,1],z=Y[0,2])
+        elif self._calibration_mode == 'knn-offset':
+            X = np.matrix([[position.x,position.y,position.z,1]])
+            Y = self._model.predict(X)
+            return Vector3(x=X[0,0]+Y[0,0],y=X[0,1]+Y[0,1],z=X[0,2]+Y[0,2])
+        elif self._calibration_mode == 'neural-offset':
+            return Vector3()
 
 
 if __name__ == "__main__":
