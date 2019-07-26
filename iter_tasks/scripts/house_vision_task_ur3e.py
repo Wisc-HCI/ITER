@@ -36,7 +36,7 @@ REGION_GRASP_OFFSET_LARGE = dt.pose(dt.position(0, 0, 0.14), #-0.015,0.04,0.14  
 REGION_GRASP_OFFSET_SMALL = dt.pose(dt.position(0, 0, 0.14), # -0.015,0.04,0.14 #-0.005, 0.04, 0.1735
                                 copy.deepcopy(REGION_ORIENTATION))
 
-WORKSPACE_GRASP_OFFSET = dt.pose(dt.position(0,0,0.17),
+WORKSPACE_GRASP_OFFSET = dt.pose(dt.position(0,0,0.1675),
                                 copy.deepcopy(REGION_ORIENTATION))
 
 

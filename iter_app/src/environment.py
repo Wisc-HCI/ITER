@@ -25,6 +25,7 @@ import rospy
 import numpy as np
 
 from sklearn.neighbors import KNeighborsRegressor
+from sklearn.neural_network import MLPRegressor
 
 from tf.transformations import *
 from visualization_msgs.msg import *
@@ -142,7 +143,10 @@ class Environment:
             self._model = KNeighborsRegressor(n_neighbors=2, weights='distance')
             self._model.fit(X.transpose(),O.transpose())
         elif self._calibration_mode == 'neural-offset':
-            pass
+            print 'Neural Offset'
+            O = np.subtract(Y,X)
+            self._model = MLPRegressor(hidden_layer_sizes=(10,10),activation='relu',solver='adam',learning_rate='adaptive', learning_rate_init=0.01, alpha=0.01, verbose=True)
+            self._model.fit(X.transpose(),O.transpose())
 
     def _create_manual_calibration_marker(self,pos,rot):
         interactive_marker = InteractiveMarker()
@@ -333,7 +337,9 @@ class Environment:
             Y = self._model.predict(X)
             return Vector3(x=X[0,0]+Y[0,0],y=X[0,1]+Y[0,1],z=X[0,2]+Y[0,2])
         elif self._calibration_mode == 'neural-offset':
-            return Vector3()
+            X = np.matrix([[position.x,position.y,position.z,1]])
+            Y = self._model.predict(X)
+            return Vector3(x=X[0,0]+Y[0,0],y=X[0,1]+Y[0,1],z=X[0,2]+Y[0,2])
 
 
 if __name__ == "__main__":

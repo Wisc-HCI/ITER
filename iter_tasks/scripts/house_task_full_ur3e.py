@@ -8,6 +8,8 @@ import iter_tasks_tools.data_types as dt
 import iter_tasks_tools.primitives as pm
 
 
+task_case = "pooled"
+
 SAFE_HEIGHT_OFFSET = 0.1
 
 BLOCK_SMALL = (0.02032,0.05842,0.01524)
@@ -38,6 +40,11 @@ REGION_GRASP_OFFSET_SMALL = dt.pose(dt.position(0, 0, 0.145),
 
 WORKSPACE_GRASP_OFFSET = dt.pose(dt.position(0,0,0.17),
                                 copy.deepcopy(REGION_ORIENTATION))
+
+build_house_1 = True
+house_1_allocation = {"robot_base":True,"robot_mid_1":True,"robot_mid_2":True,"robot_roof":True}
+build_house_2 = True
+house_2_allocation = {"robot_base":True,"robot_mid_1":True,"robot_mid_2":True,"robot_roof":True}
 
 
 def move_home():
@@ -188,6 +195,9 @@ def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid
                             "min_hue": 0,
                             "max_hue": 180
                           })
+
+        # TODO angle roof pieces
+
     else:
         task_list += wait_for_human()
 
@@ -206,12 +216,18 @@ def static_environment():
 
 
 if __name__ == "__main__":
+
     task_list = []
     task_list += move_home()
     task_list += wait_for_human()
-    task_list += build_house(WORKSPACE_POSITION)
-    WORKSPACE_POSITION['y'] += 0.05
-    task_list += build_house(WORKSPACE_POSITION)
+
+    if build_house_1:
+        task_list += build_house(WORKSPACE_POSITION,**house_1_allocation)
+
+    if build_house_2:
+        WORKSPACE_POSITION['y'] += 0.05
+        task_list += build_house(WORKSPACE_POSITION,**house_2_allocation)
+
     task_list += move_home()
     task_list += wait_for_human()
 
@@ -228,7 +244,7 @@ if __name__ == "__main__":
         task=task_list)
 
     path_to_scripts = os.path.dirname(os.path.realpath(__file__))
-    file_path = os.path.join(path_to_scripts,'../plans/ur3e/house_task_full.json')
+    file_path = os.path.join(path_to_scripts,'../plans/ur3e/' + task_case + '.json')
     f = open(file_path,'w')
     json.dump(plan,f,indent=2)
 
