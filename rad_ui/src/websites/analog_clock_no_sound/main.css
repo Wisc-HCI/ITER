@@ -5,7 +5,7 @@ html, body {
   overflow:hidden
 }
 
-svg {
+#drawing {
   position:fixed;
   top:0;
   left:0;

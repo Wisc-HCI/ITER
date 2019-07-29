@@ -42,7 +42,7 @@ from behavior_execution.planners.gripper_command import GripperCommandPlanner
 
 pathToRikSrc = rospy.get_param('path_to_relaxed_ik_src')
 infoFileName = rospy.get_param('info_file_name')
-relaxedikPlanner = RealTimeRelaxedIKPlanner(pathToRikSrc,infoFileName)
+relaxedikPlanner = RealTimeRelaxedIKPlanner(pathToRikSrc,infoFileName,execute_timestep=0.01)
 gripperPlanner = GripperCommandPlanner('gripper_command')
 
 
@@ -86,14 +86,12 @@ class Move(Primitive):
         self._pose = pose_dct_to_msg({'position':position,'orientation':orientation})
 
     def operate(self):
-        current_pose = relaxedikPlanner.get_ee_pose()
-        delay = relaxedikPlanner.tof_ee_pose(current_pose,self._pose)
-        status = relaxedikPlanner.real_time_update(self._pose)
 
-        if status:
-            rospy.sleep(delay)
-            while not relaxedikPlanner.real_time_in_steady_state():
-                rospy.sleep(0.01)
+        plan = relaxedikPlanner.plan_ee_pose(self._pose)
+        status = relaxedikPlanner.execute_ee_pose(plan)
+
+        while not relaxedikPlanner.real_time_in_steady_state():
+            rospy.sleep(0.01)
 
         return status
 
