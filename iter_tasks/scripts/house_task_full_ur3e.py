@@ -32,20 +32,17 @@ GRASP_EFFORT = 0.59 #0.57
 RELEASE_EFFORT_REGION = 0.25
 RELEASE_EFFORT_WORKSPACE = 0.45
 
-REGION_GRASP_OFFSET_LARGE = dt.pose(dt.position(0, 0, 0.145),
+REGION_GRASP_OFFSET_LARGE = dt.pose(dt.position(0, 0, 0.14),
                                 copy.deepcopy(REGION_ORIENTATION))
 
-REGION_GRASP_OFFSET_SMALL = dt.pose(dt.position(0, 0, 0.145),
+REGION_GRASP_OFFSET_SMALL = dt.pose(dt.position(0, 0, 0.14),
                                 copy.deepcopy(REGION_ORIENTATION))
 
-WORKSPACE_GRASP_OFFSET = dt.pose(dt.position(0,0,0.17),
+WORKSPACE_GRASP_OFFSET = dt.pose(dt.position(0,0,0.1675),
                                 copy.deepcopy(REGION_ORIENTATION))
 
 build_house_1 = True
 house_1_allocation = {"robot_base":True,"robot_mid_1":True,"robot_mid_2":True,"robot_roof":True}
-build_house_2 = True
-house_2_allocation = {"robot_base":True,"robot_mid_1":True,"robot_mid_2":True,"robot_roof":True}
-
 
 def move_home():
     task_list = []
@@ -182,10 +179,11 @@ def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid
         task_list += wait_for_human()
 
     if robot_roof:
+        # base
         position = copy.deepcopy(workplace_position)
         position['x'] += BLOCK_SMALL[0] + WORKSPACE_GRASP_OFFSET['position']['x']
         position['y'] += 0.5 * BLOCK_LARGE[1] - 0.5 * BLOCK_SMALL[0] + WORKSPACE_GRASP_OFFSET['position']['y']
-        position['z'] += 1.5 * BLOCK_SMALL[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
+        position['z'] += 3.5 * BLOCK_SMALL[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
             block_type='small',
             target_position=copy.deepcopy(position),
@@ -196,7 +194,62 @@ def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid
                             "max_hue": 180
                           })
 
-        # TODO angle roof pieces
+        # angles
+        position = copy.deepcopy(workplace_position)
+        position['x'] += BLOCK_SMALL[1] + WORKSPACE_GRASP_OFFSET['position']['x']
+        position['y'] += 0.33 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
+        position['z'] += 4 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
+        task_list += pick_and_place_block(
+            block_type='small',
+            target_position=copy.deepcopy(position),
+            target_orientation=DOWN_GY_ORIENTATION,
+            grasp_offset=REGION_GRASP_OFFSET_SMALL,
+            vision_params={
+                            "min_hue": 0,
+                            "max_hue": 180
+                          })
+
+        position = copy.deepcopy(workplace_position)
+        position['x'] += BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0] + WORKSPACE_GRASP_OFFSET['position']['x']
+        position['y'] += 0.33 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
+        position['z'] += 4 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
+        task_list += pick_and_place_block(
+            block_type='small',
+            target_position=copy.deepcopy(position),
+            target_orientation=DOWN_GY_ORIENTATION,
+            grasp_offset=REGION_GRASP_OFFSET_SMALL,
+            vision_params={
+                            "min_hue": 0,
+                            "max_hue": 180
+                          })
+
+        position = copy.deepcopy(workplace_position)
+        position['x'] += BLOCK_SMALL[1] + WORKSPACE_GRASP_OFFSET['position']['x']
+        position['y'] += 0.66 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
+        position['z'] += 4 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
+        task_list += pick_and_place_block(
+            block_type='small',
+            target_position=copy.deepcopy(position),
+            target_orientation=DOWN_GY_ORIENTATION,
+            grasp_offset=REGION_GRASP_OFFSET_SMALL,
+            vision_params={
+                            "min_hue": 0,
+                            "max_hue": 180
+                          })
+
+        position = copy.deepcopy(workplace_position)
+        position['x'] += BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0] + WORKSPACE_GRASP_OFFSET['position']['x']
+        position['y'] += 0.66 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
+        position['z'] += 4 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
+        task_list += pick_and_place_block(
+            block_type='small',
+            target_position=copy.deepcopy(position),
+            target_orientation=DOWN_GY_ORIENTATION,
+            grasp_offset=REGION_GRASP_OFFSET_SMALL,
+            vision_params={
+                            "min_hue": 0,
+                            "max_hue": 180
+                          })
 
     else:
         task_list += wait_for_human()
@@ -223,10 +276,6 @@ if __name__ == "__main__":
 
     if build_house_1:
         task_list += build_house(WORKSPACE_POSITION,**house_1_allocation)
-
-    if build_house_2:
-        WORKSPACE_POSITION['y'] += 0.05
-        task_list += build_house(WORKSPACE_POSITION,**house_2_allocation)
 
     task_list += move_home()
     task_list += wait_for_human()
