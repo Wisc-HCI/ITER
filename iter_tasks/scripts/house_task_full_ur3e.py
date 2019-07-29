@@ -42,7 +42,7 @@ WORKSPACE_GRASP_OFFSET = dt.pose(dt.position(0,0,0.1675),
                                 copy.deepcopy(REGION_ORIENTATION))
 
 build_house_1 = True
-house_1_allocation = {"robot_base":True,"robot_mid_1":True,"robot_mid_2":True,"robot_roof":True}
+house_1_allocation = {"robot_base":False,"robot_mid_1":False,"robot_mid_2":False,"robot_roof":True}
 
 def move_home():
     task_list = []
@@ -182,7 +182,7 @@ def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid
         # base
         position = copy.deepcopy(workplace_position)
         position['x'] += BLOCK_SMALL[0] + WORKSPACE_GRASP_OFFSET['position']['x']
-        position['y'] += 0.5 * BLOCK_LARGE[1] - 0.5 * BLOCK_SMALL[0] + WORKSPACE_GRASP_OFFSET['position']['y']
+        position['y'] += 0.5 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 3.5 * BLOCK_SMALL[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
             block_type='small',
@@ -196,8 +196,8 @@ def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid
 
         # angles
         position = copy.deepcopy(workplace_position)
-        position['x'] += BLOCK_SMALL[1] + WORKSPACE_GRASP_OFFSET['position']['x']
-        position['y'] += 0.33 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
+        position['x'] += 0.5 * BLOCK_LARGE[0] + WORKSPACE_GRASP_OFFSET['position']['x']
+        position['y'] += 0.2 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 4 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
             block_type='small',
@@ -211,7 +211,7 @@ def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid
 
         position = copy.deepcopy(workplace_position)
         position['x'] += BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0] + WORKSPACE_GRASP_OFFSET['position']['x']
-        position['y'] += 0.33 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
+        position['y'] += 0.2 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 4 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
             block_type='small',
@@ -224,8 +224,8 @@ def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid
                           })
 
         position = copy.deepcopy(workplace_position)
-        position['x'] += BLOCK_SMALL[1] + WORKSPACE_GRASP_OFFSET['position']['x']
-        position['y'] += 0.66 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
+        position['x'] += 0.5 * BLOCK_LARGE[0] + WORKSPACE_GRASP_OFFSET['position']['x']
+        position['y'] += 0.8 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 4 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
             block_type='small',
@@ -239,7 +239,7 @@ def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid
 
         position = copy.deepcopy(workplace_position)
         position['x'] += BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0] + WORKSPACE_GRASP_OFFSET['position']['x']
-        position['y'] += 0.66 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
+        position['y'] += 0.8 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 4 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
             block_type='small',

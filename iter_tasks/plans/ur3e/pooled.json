@@ -35,442 +35,28 @@
       "name": "release"
     }, 
     {
-      "release_effort": 0.45, 
-      "safe_height": 0.1, 
-      "name": "pick_and_place_vision", 
-      "vision_params": {
-        "min_hue": 0, 
-        "max_hue": 180
-      }, 
-      "path_to_destination": [
-        {
-          "position": {
-            "y": 0.3, 
-            "x": 0.21016, 
-            "z": 0.25562
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }, 
-        {
-          "position": {
-            "y": 0.3, 
-            "x": 0.21016, 
-            "z": 0.15562
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }
-      ], 
-      "object_type": "large", 
-      "path_to_region": [], 
-      "grasp_effort": 0.59, 
-      "grasp_offset": {
-        "position": {
-          "y": 0, 
-          "x": 0, 
-          "z": 0.14
-        }, 
-        "orientation": {
-          "y": 0, 
-          "x": 0.707, 
-          "z": -0.707, 
-          "w": 0
-        }
-      }
+      "msg": "Waiting for Human", 
+      "name": "logger"
     }, 
     {
-      "position": {
-        "y": 0.3, 
-        "x": 0.21016, 
-        "z": 0.25562
-      }, 
-      "name": "move", 
-      "orientation": {
-        "y": 0.5, 
-        "x": 0.5, 
-        "z": -0.5, 
-        "w": 0.5
-      }
+      "name": "wait", 
+      "condition": "button"
     }, 
     {
-      "effort": 0.25, 
-      "name": "release"
+      "msg": "Waiting for Human", 
+      "name": "logger"
     }, 
     {
-      "release_effort": 0.45, 
-      "safe_height": 0.1, 
-      "name": "pick_and_place_vision", 
-      "vision_params": {
-        "min_hue": 0, 
-        "max_hue": 180
-      }, 
-      "path_to_destination": [
-        {
-          "position": {
-            "y": 0.3, 
-            "x": 0.24826, 
-            "z": 0.25562
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }, 
-        {
-          "position": {
-            "y": 0.3, 
-            "x": 0.24826, 
-            "z": 0.15562
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }
-      ], 
-      "object_type": "large", 
-      "path_to_region": [], 
-      "grasp_effort": 0.59, 
-      "grasp_offset": {
-        "position": {
-          "y": 0, 
-          "x": 0, 
-          "z": 0.14
-        }, 
-        "orientation": {
-          "y": 0, 
-          "x": 0.707, 
-          "z": -0.707, 
-          "w": 0
-        }
-      }
+      "name": "wait", 
+      "condition": "button"
     }, 
     {
-      "position": {
-        "y": 0.3, 
-        "x": 0.24826, 
-        "z": 0.25562
-      }, 
-      "name": "move", 
-      "orientation": {
-        "y": 0.5, 
-        "x": 0.5, 
-        "z": -0.5, 
-        "w": 0.5
-      }
+      "msg": "Waiting for Human", 
+      "name": "logger"
     }, 
     {
-      "effort": 0.25, 
-      "name": "release"
-    }, 
-    {
-      "release_effort": 0.45, 
-      "safe_height": 0.1, 
-      "name": "pick_and_place_vision", 
-      "vision_params": {
-        "min_hue": 0, 
-        "max_hue": 180
-      }, 
-      "path_to_destination": [
-        {
-          "position": {
-            "y": 0.26016, 
-            "x": 0.22032000000000002, 
-            "z": 0.27086
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0, 
-            "x": 0.707, 
-            "z": -0.707, 
-            "w": 0
-          }
-        }, 
-        {
-          "position": {
-            "y": 0.26016, 
-            "x": 0.22032000000000002, 
-            "z": 0.17086
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0, 
-            "x": 0.707, 
-            "z": -0.707, 
-            "w": 0
-          }
-        }
-      ], 
-      "object_type": "small", 
-      "path_to_region": [], 
-      "grasp_effort": 0.59, 
-      "grasp_offset": {
-        "position": {
-          "y": 0, 
-          "x": 0, 
-          "z": 0.14
-        }, 
-        "orientation": {
-          "y": 0, 
-          "x": 0.707, 
-          "z": -0.707, 
-          "w": 0
-        }
-      }
-    }, 
-    {
-      "position": {
-        "y": 0.26016, 
-        "x": 0.22032000000000002, 
-        "z": 0.27086
-      }, 
-      "name": "move", 
-      "orientation": {
-        "y": 0, 
-        "x": 0.707, 
-        "z": -0.707, 
-        "w": 0
-      }
-    }, 
-    {
-      "effort": 0.25, 
-      "name": "release"
-    }, 
-    {
-      "release_effort": 0.45, 
-      "safe_height": 0.1, 
-      "name": "pick_and_place_vision", 
-      "vision_params": {
-        "min_hue": 0, 
-        "max_hue": 180
-      }, 
-      "path_to_destination": [
-        {
-          "position": {
-            "y": 0.33984000000000003, 
-            "x": 0.22032000000000002, 
-            "z": 0.27086
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0, 
-            "x": 0.707, 
-            "z": -0.707, 
-            "w": 0
-          }
-        }, 
-        {
-          "position": {
-            "y": 0.33984000000000003, 
-            "x": 0.22032000000000002, 
-            "z": 0.17086
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0, 
-            "x": 0.707, 
-            "z": -0.707, 
-            "w": 0
-          }
-        }
-      ], 
-      "object_type": "small", 
-      "path_to_region": [], 
-      "grasp_effort": 0.59, 
-      "grasp_offset": {
-        "position": {
-          "y": 0, 
-          "x": 0, 
-          "z": 0.14
-        }, 
-        "orientation": {
-          "y": 0, 
-          "x": 0.707, 
-          "z": -0.707, 
-          "w": 0
-        }
-      }
-    }, 
-    {
-      "position": {
-        "y": 0.33984000000000003, 
-        "x": 0.22032000000000002, 
-        "z": 0.27086
-      }, 
-      "name": "move", 
-      "orientation": {
-        "y": 0, 
-        "x": 0.707, 
-        "z": -0.707, 
-        "w": 0
-      }
-    }, 
-    {
-      "effort": 0.25, 
-      "name": "release"
-    }, 
-    {
-      "release_effort": 0.45, 
-      "safe_height": 0.1, 
-      "name": "pick_and_place_vision", 
-      "vision_params": {
-        "min_hue": 0, 
-        "max_hue": 180
-      }, 
-      "path_to_destination": [
-        {
-          "position": {
-            "y": 0.3, 
-            "x": 0.21016, 
-            "z": 0.2861
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }, 
-        {
-          "position": {
-            "y": 0.3, 
-            "x": 0.21016, 
-            "z": 0.18610000000000002
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }
-      ], 
-      "object_type": "large", 
-      "path_to_region": [], 
-      "grasp_effort": 0.59, 
-      "grasp_offset": {
-        "position": {
-          "y": 0, 
-          "x": 0, 
-          "z": 0.14
-        }, 
-        "orientation": {
-          "y": 0, 
-          "x": 0.707, 
-          "z": -0.707, 
-          "w": 0
-        }
-      }
-    }, 
-    {
-      "position": {
-        "y": 0.3, 
-        "x": 0.21016, 
-        "z": 0.2861
-      }, 
-      "name": "move", 
-      "orientation": {
-        "y": 0.5, 
-        "x": 0.5, 
-        "z": -0.5, 
-        "w": 0.5
-      }
-    }, 
-    {
-      "effort": 0.25, 
-      "name": "release"
-    }, 
-    {
-      "release_effort": 0.45, 
-      "safe_height": 0.1, 
-      "name": "pick_and_place_vision", 
-      "vision_params": {
-        "min_hue": 0, 
-        "max_hue": 180
-      }, 
-      "path_to_destination": [
-        {
-          "position": {
-            "y": 0.3, 
-            "x": 0.24826, 
-            "z": 0.2861
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }, 
-        {
-          "position": {
-            "y": 0.3, 
-            "x": 0.24826, 
-            "z": 0.18610000000000002
-          }, 
-          "name": "move", 
-          "orientation": {
-            "y": 0.5, 
-            "x": 0.5, 
-            "z": -0.5, 
-            "w": 0.5
-          }
-        }
-      ], 
-      "object_type": "large", 
-      "path_to_region": [], 
-      "grasp_effort": 0.59, 
-      "grasp_offset": {
-        "position": {
-          "y": 0, 
-          "x": 0, 
-          "z": 0.14
-        }, 
-        "orientation": {
-          "y": 0, 
-          "x": 0.707, 
-          "z": -0.707, 
-          "w": 0
-        }
-      }
-    }, 
-    {
-      "position": {
-        "y": 0.3, 
-        "x": 0.24826, 
-        "z": 0.2861
-      }, 
-      "name": "move", 
-      "orientation": {
-        "y": 0.5, 
-        "x": 0.5, 
-        "z": -0.5, 
-        "w": 0.5
-      }
-    }, 
-    {
-      "effort": 0.25, 
-      "name": "release"
+      "name": "wait", 
+      "condition": "button"
     }, 
     {
       "release_effort": 0.45, 
@@ -556,8 +142,8 @@
       "path_to_destination": [
         {
           "position": {
-            "y": 0.28300000000000003, 
-            "x": 0.25842, 
+            "y": 0.275, 
+            "x": 0.21016, 
             "z": 0.30896
           }, 
           "name": "move", 
@@ -570,8 +156,8 @@
         }, 
         {
           "position": {
-            "y": 0.28300000000000003, 
-            "x": 0.25842, 
+            "y": 0.275, 
+            "x": 0.21016, 
             "z": 0.20896
           }, 
           "name": "move", 
@@ -602,8 +188,8 @@
     }, 
     {
       "position": {
-        "y": 0.28300000000000003, 
-        "x": 0.25842, 
+        "y": 0.275, 
+        "x": 0.21016, 
         "z": 0.30896
       }, 
       "name": "move", 
@@ -629,7 +215,7 @@
       "path_to_destination": [
         {
           "position": {
-            "y": 0.28300000000000003, 
+            "y": 0.275, 
             "x": 0.24826, 
             "z": 0.30896
           }, 
@@ -643,7 +229,7 @@
         }, 
         {
           "position": {
-            "y": 0.28300000000000003, 
+            "y": 0.275, 
             "x": 0.24826, 
             "z": 0.20896
           }, 
@@ -675,7 +261,7 @@
     }, 
     {
       "position": {
-        "y": 0.28300000000000003, 
+        "y": 0.275, 
         "x": 0.24826, 
         "z": 0.30896
       }, 
@@ -702,8 +288,8 @@
       "path_to_destination": [
         {
           "position": {
-            "y": 0.316, 
-            "x": 0.25842, 
+            "y": 0.325, 
+            "x": 0.21016, 
             "z": 0.30896
           }, 
           "name": "move", 
@@ -716,8 +302,8 @@
         }, 
         {
           "position": {
-            "y": 0.316, 
-            "x": 0.25842, 
+            "y": 0.325, 
+            "x": 0.21016, 
             "z": 0.20896
           }, 
           "name": "move", 
@@ -748,8 +334,8 @@
     }, 
     {
       "position": {
-        "y": 0.316, 
-        "x": 0.25842, 
+        "y": 0.325, 
+        "x": 0.21016, 
         "z": 0.30896
       }, 
       "name": "move", 
@@ -775,7 +361,7 @@
       "path_to_destination": [
         {
           "position": {
-            "y": 0.316, 
+            "y": 0.325, 
             "x": 0.24826, 
             "z": 0.30896
           }, 
@@ -789,7 +375,7 @@
         }, 
         {
           "position": {
-            "y": 0.316, 
+            "y": 0.325, 
             "x": 0.24826, 
             "z": 0.20896
           }, 
@@ -821,7 +407,7 @@
     }, 
     {
       "position": {
-        "y": 0.316, 
+        "y": 0.325, 
         "x": 0.24826, 
         "z": 0.30896
       }, 
