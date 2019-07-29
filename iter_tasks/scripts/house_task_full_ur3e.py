@@ -182,7 +182,7 @@ def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid
         # base
         position = copy.deepcopy(workplace_position)
         position['x'] += BLOCK_SMALL[0] + WORKSPACE_GRASP_OFFSET['position']['x']
-        position['y'] += 0.5 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
+        position['y'] += 0.5 * BLOCK_LARGE[1] + 0.5 * BLOCK_SMALL[0] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 3.5 * BLOCK_SMALL[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
             block_type='small',
