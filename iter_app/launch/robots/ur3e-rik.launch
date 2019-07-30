@@ -51,7 +51,7 @@
       <param name="joint_state_topic" value="/real_time/joint_states"/>
       <rosparam param="joint_ordering">['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']</rosparam>
       <param name="servoj_timestep" value="0.2"/> <!-- 0.25-->
-      <param name="servoj_gain" value="125"/> <!-- 150 -->
+      <param name="servoj_gain" value="100"/> <!-- 150 -->
     </node>
   </group>
 

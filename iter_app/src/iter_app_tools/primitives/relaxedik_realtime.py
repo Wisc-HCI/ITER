@@ -42,7 +42,7 @@ from behavior_execution.planners.gripper_command import GripperCommandPlanner
 
 pathToRikSrc = rospy.get_param('path_to_relaxed_ik_src')
 infoFileName = rospy.get_param('info_file_name')
-relaxedikPlanner = RealTimeRelaxedIKPlanner(pathToRikSrc,infoFileName,execute_timestep=0.25)
+relaxedikPlanner = RealTimeRelaxedIKPlanner(pathToRikSrc,infoFileName,execute_timestep=0.005)
 gripperPlanner = GripperCommandPlanner('gripper_command')
 
 

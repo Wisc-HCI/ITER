@@ -9,6 +9,10 @@ import iter_tasks_tools.primitives as pm
 
 
 task_case = "pooled"
+build_house_1 = True
+house_1_allocation = {"robot_base":True,"robot_mid_1":True,"robot_mid_2":True,"robot_roof":True}
+build_house_2 = False
+house_2_allocation = {"robot_base":False,"robot_mid_1":False,"robot_mid_2":False,"robot_roof":False}
 
 SAFE_HEIGHT_OFFSET = 0.1
 
@@ -32,17 +36,16 @@ GRASP_EFFORT = 0.59 #0.57
 RELEASE_EFFORT_REGION = 0.25
 RELEASE_EFFORT_WORKSPACE = 0.45
 
-REGION_GRASP_OFFSET_LARGE = dt.pose(dt.position(0, 0, 0.14),
+REGION_GRASP_OFFSET_LARGE = dt.pose(dt.position(0.005, 0.005, 0.135),
                                 copy.deepcopy(REGION_ORIENTATION))
 
-REGION_GRASP_OFFSET_SMALL = dt.pose(dt.position(0, 0, 0.14),
+REGION_GRASP_OFFSET_SMALL = dt.pose(dt.position(0.005, 0.005, 0.135),
                                 copy.deepcopy(REGION_ORIENTATION))
 
 WORKSPACE_GRASP_OFFSET = dt.pose(dt.position(0,0,0.1675),
                                 copy.deepcopy(REGION_ORIENTATION))
 
-build_house_1 = True
-house_1_allocation = {"robot_base":False,"robot_mid_1":False,"robot_mid_2":False,"robot_roof":True}
+
 
 def move_home():
     task_list = []
@@ -182,7 +185,7 @@ def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid
         # base
         position = copy.deepcopy(workplace_position)
         position['x'] += BLOCK_SMALL[0] + WORKSPACE_GRASP_OFFSET['position']['x']
-        position['y'] += 0.5 * BLOCK_LARGE[1] + 0.5 * BLOCK_SMALL[0] + WORKSPACE_GRASP_OFFSET['position']['y']
+        position['y'] += 0.5 * BLOCK_LARGE[1] + 0.1 * BLOCK_SMALL[0] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 3.5 * BLOCK_SMALL[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
             block_type='small',
@@ -276,6 +279,11 @@ if __name__ == "__main__":
 
     if build_house_1:
         task_list += build_house(WORKSPACE_POSITION,**house_1_allocation)
+
+    if build_house_2:
+        task_list += move_home()
+        task_list += wait_for_human()
+        task_list += build_house(WORKSPACE_POSITION,**house_2_allocation)
 
     task_list += move_home()
     task_list += wait_for_human()
