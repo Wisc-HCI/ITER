@@ -10,10 +10,6 @@
     <arg name="simulated" default="true"/>
     <arg name="use_fake_btn" default="true" />
 
-    <!-- Vision arguements -->
-    <arg name="use_real_cam" default="false" />
-    <arg name="video_src" default="/dev/video0" />
-
     <!-- Relaxed-IK / MoveIt arguements -->
     <arg name="use_rik" default="true" />
     <arg name="use_rik_julia" default="false"/>
@@ -45,13 +41,6 @@
       <arg name="use_rik" value="$(arg use_rik)"/>
       <arg name="use_rik_julia" value="$(arg use_rik_julia)"/>
       <arg name="use_rik_static" value="$(arg use_rik_static)"/>
-    </include>
-
-    <!-- Include Vision System -->
-    <include file="$(find iter_vision)/launch/main.launch">
-      <arg name="video_src" value="$(arg video_src)"/>
-      <arg name="use_real_cam" value="$(arg use_real_cam)"/>
-      <arg name="flag_image_view_2d_points" value="true" />
     </include>
 
     <!-- Start button node -->
