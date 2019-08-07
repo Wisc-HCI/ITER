@@ -1,0 +1,124 @@
+ Program
+   BeforeStart
+     Gripper Reset and Activate
+     Wait: 2.0
+     Gripper Move50% (1)
+   Robot Program
+     MoveJ
+       Waypoint_12
+     next≔"large_1"
+     Loop 11 times
+       'Block selection'
+       If next ≟ "large_1"
+         Large_1
+           Patterns
+             Line_Pattern_1
+               StartItem_1
+               EndItem_1
+           Layers
+           At Each Item
+             Generated Movements
+               MoveJ
+                 Approach_1
+               MoveL
+                 ToolActionPoi_1
+               Tool action
+                 Gripper Close (1)
+               MoveL
+                 Exit_1
+       ElseIf next ≟ "small_1"
+         Small_1
+           Patterns
+             Line_Pattern_2
+               StartItem_2
+               EndItem_2
+           Layers
+           At Each Item
+             Generated Movements
+               MoveJ
+                 Approach
+               MoveL
+                 ToolActionPoint
+               Tool action
+                 Gripper Close (1)
+               MoveL
+                 Exit
+       Else
+         Small_2
+           Patterns
+             Line_Pattern_3
+               StartItem_3
+               EndItem_3
+           Layers
+           At Each Item
+             Generated Movements
+               MoveJ
+                 Approach_2
+               MoveL
+                 ToolActionPoi_2
+               Tool action
+                 Gripper Close (1)
+               MoveL
+                 Exit_2
+       'Build Movement based on loop count'
+       Switch Loop_1
+         Case 0
+           MoveJ
+             Waypoint_14
+             Waypoint_1
+           next≔"large_1"
+         Case 1
+           MoveJ
+             Waypoint_15
+             Waypoint_2
+           next≔"small_1"
+         Case 2
+           MoveJ
+             Waypoint_16
+             Waypoint_3
+           next≔"small_1"
+         Case 3
+           MoveJ
+             Waypoint_17
+             Waypoint_4
+           next≔"large_1"
+         Case 4
+           MoveJ
+             Waypoint_14
+             Waypoint_5
+           next≔"large_1"
+         Case 5
+           MoveJ
+             Waypoint_15
+             Waypoint_6
+           next≔"small_1"
+         Case 6
+           MoveJ
+             Waypoint_18
+             Waypoint_7
+           next≔"small_1"
+         Case 7
+           MoveJ
+             Waypoint_19
+             Waypoint_8
+           next≔"small_2"
+         Case 8
+           MoveJ
+             Waypoint_20
+             Waypoint_9
+           next≔"small_2"
+         Case 9
+           MoveJ
+             Waypoint_21
+             Waypoint_10
+           next≔"small_2"
+         Case 10
+           MoveJ
+             Waypoint_22
+             Waypoint_11
+           next≔""
+       Gripper Move50% (1)
+       MoveL
+         Waypoint_13
+     MoveJ
+       Waypoint_12

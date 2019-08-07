@@ -1,0 +1,2257 @@
+def static_blocks():
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_payload(0.9,[0.0,0.0,0.0584])
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_input_actions_to_default()
+  set_gravity([0.0, 0.0, 9.82])
+  set_safety_mode_transition_hardness(1)
+  global Pallet_2_cnt=1
+  global Pallet_1_cnt_1=1
+  global Pallet_1_cnt=2
+  global Pallet_3_cnt=1
+  global Pallet_2_cnt1=1
+  global referencePoin_1=p[0.1056163557787996,-0.22408868434532814,0.14993887416970492,2.221562169964429,-2.213091059646726,-0.006958397983839509]
+  global referencePoin_2=p[0.019209197040686226,-0.22408778823346523,0.14993631601265903,2.2215783830809466,-2.2130707224040935,-0.00695544516733001]
+  global referencePoint=p[0.21685728432356258,-0.22821119853974992,0.14994124023278832,2.2215687084092397,-2.213073349109255,-0.006932833517487174]
+  global separatorPoin_1=p[0.0,0.0,0.0,0.0,0.0,0.0]
+  global separatorPoin_2=p[0.0,0.0,0.0,0.0,0.0,0.0]
+  global separatorPoint=p[0.0,0.0,0.0,0.0,0.0,0.0]
+  rtde_set_watchdog("speed_slider_mask", 10.0, "ignore")
+  # begin: URCap Installation Node
+  #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+  #   Type: Vacuum
+  #################################################
+  # Vacuum Grip Check
+  #################################################
+  
+  vacuumGripCheckThread1 = 0
+  vacuumGripCheckThread2 = 0
+  vacuumGripCheckThread3 = 0
+  vacuumGripCheckThread4 = 0
+  vacuumGripCheckThread1Running = False
+  vacuumGripCheckThread2Running = False
+  vacuumGripCheckThread3Running = False
+  vacuumGripCheckThread4Running = False
+  vacuumGripCheckSocketId = "1"
+  vacuumGripCheckThreadStarted = False
+  
+  thread vacuumGripCheck():
+    gripper_socket = vacuumGripCheckSocketId
+    vacuumGripCheckThreadStarted = True
+  
+    while (True):
+      objectDetectedDebounceCtr = 0
+  
+      while (objectDetectedDebounceCtr < 3):
+        if(rq_is_vacuum_obj_detected(gripper_socket="1")):
+          objectDetectedDebounceCtr = objectDetectedDebounceCtr + 1
+        else:
+          objectDetectedDebounceCtr = 0
+        end
+        sleep(0.1)
+      end
+  
+      objectNotDetectedDebounceCtr = 0
+  
+      while objectNotDetectedDebounceCtr < 3:
+        if (not rq_is_vacuum_obj_detected(gripper_socket="1")):
+          objectNotDetectedDebounceCtr = objectNotDetectedDebounceCtr + 1
+        else:
+          objectNotDetectedDebounceCtr = 0
+        end
+        sleep(0.1)
+      end
+  
+      socket_open("127.0.0.1",29999,"dashboardServerSocket")
+      socket_send_line("pause","dashboardServerSocket")
+      socket_send_string("popup Vacuum grip check has detected an object drop.", "dashboardServerSocket")
+      socket_send_byte(10, "dashboardServerSocket")
+      socket_close("dashboardServerSocket")
+    end
+  end
+  
+  def startVacuumGripCheckThread(gripperId="1"):
+    enter_critical
+    vacuumGripCheckSocketId = gripperId
+    threadHandle = run vacuumGripCheck()
+    waitForVacuumGripCheckThreadStarted()
+    exit_critical
+    return threadHandle
+  end
+  
+  def stopVacuumGripCheckThread(threadHandle):
+    kill threadHandle
+  end
+  
+  def waitForVacuumGripCheckThreadStarted():
+    while (not(vacuumGripCheckThreadStarted)):
+      sync()
+    end
+    vacuumGripCheckThreadStarted = False
+  end
+  #################################################
+  # End - Vacuum Grip Check
+  #################################################
+  
+  #################################################
+  # Stops the pump on a distance travelled
+  #################################################
+  global stopPumpDistance = 100
+  global stopPumpSocketId = "0"
+  global stopPumpThreadStarted = [False, False, False, False]
+  global stopPumpThreadHandles = [0, 0, 0, 0]
+  
+  thread stopPumpOnDistanceTravelled():
+    distance = stopPumpDistance
+    socketId = stopPumpSocketId
+    stopPumpThreadStarted[socket_id_index(socketId)] = True
+  
+    measuredDistance = waitForDistanceTravelled(distance)
+  
+    rq_stop(socketId)
+  
+    stopPumpThreadStarted[socket_id_index(socketId)] = False
+  end
+  
+  def waitForDistanceTravelled(distance):
+    startingPose = get_actual_tcp_pose()
+    measuredDistance = 0
+    while (measuredDistance < distance):
+      sleep(0.1)
+      measuredDistance = point_dist(get_actual_tcp_pose(), startingPose)
+    end
+  
+    return measuredDistance
+  end
+  
+  def startStopPumpOnDistanceTravelledThread(distance, gripper_socket="1"):
+    if (stopPumpThreadStarted[socket_id_index(gripper_socket)]):
+      return 0
+    end
+  
+    enter_critical
+    global stopPumpDistance = distance
+    global stopPumpSocketId = gripper_socket
+    stopPumpThreadHandles[socket_id_index(gripper_socket)] = run stopPumpOnDistanceTravelled()
+    waitForStopPumpOnDistanceTravelledThreadStarted(gripper_socket)
+    exit_critical
+    return stopPumpThreadHandles[socket_id_index(gripper_socket)]
+  end
+  
+  def waitForStopPumpOnDistanceTravelledThreadStarted(gripper_socket="1"):
+    while (not(stopPumpThreadStarted[socket_id_index(gripper_socket)])):
+      sync()
+    end
+  end
+  
+  def stopStopPumpOnDistanceTravelledThread(gripper_socket="1"):
+    handle = stopPumpThreadHandles[socket_id_index(gripper_socket)]
+    threadIsRunning = stopPumpThreadStarted[socket_id_index(gripper_socket)]
+    if (threadIsRunning):
+      kill handle
+      clear_socket_buffer(gripper_socket, 0.01)
+      stopPumpThreadHandles[socket_id_index(gripper_socket)] = 0
+    end
+  end
+  #################################################
+  # End - Stops the pump on a distance travelled
+  #################################################
+  
+  #################################################
+  # Vacuum general functions
+  #################################################
+  def rq_wait_for_vacuum_object_detected(gripper_socket="1"):
+      while (not rq_is_vacuum_obj_detected(gripper_socket)):
+          if (rq_is_vacuum_timeout(gripper_socket)):
+              return False
+          end
+      end
+      return True
+  end
+  
+  def rq_wait_for_vacuum_object_secured(gripper_socket="1"):
+      while (not rq_is_vacuum_obj_secured(gripper_socket)):
+          if (rq_is_vacuum_timeout(gripper_socket)):
+              return False
+          end
+      end
+      return True
+  end
+  
+  def rq_wait_for_vacuum_object_not_detected(gripper_socket="1"):
+      while (rq_is_vacuum_obj_detected(gripper_socket)):
+          sleep(0.01)
+          sync()
+      end
+  end
+  
+  def rq_is_vacuum_obj_detected(gripper_socket="1"):
+      gOBJ = rq_get_var(OBJ, 1, gripper_socket)
+  
+      if(is_vacuum_OBJ_object_detected(gOBJ)):
+          rq_obj_detect = 1
+          return True
+      else:
+          rq_obj_detect = 0
+          return False
+      end
+  end
+  
+  def rq_is_vacuum_obj_secured(gripper_socket="1"):
+      gOBJ = rq_get_var(OBJ, 1, gripper_socket)
+      return is_vacuum_OBJ_object_secured(gOBJ)
+  end
+  
+  def rq_is_vacuum_timeout(gripper_socket="1"):
+    return is_FLT(6, rq_get_var(FLT, 2, gripper_socket))
+  end
+  
+  # Returns True if list_of_byte is [1, '1'] or [1, '2']
+  def is_vacuum_OBJ_object_detected(list_of_bytes):
+  
+      # list length is not 1
+      if (list_of_bytes[0] != 1):
+          return False
+      end
+  
+      # byte is '1'?
+      if (list_of_bytes[1] == 49):
+          return True
+      end
+  
+      # byte is '2'?
+      if (list_of_bytes[1] == 50):
+          return True
+      end
+  
+      return False
+  
+  end
+  
+  def is_vacuum_OBJ_object_secured(list_of_bytes):
+  
+      # list length is not 1
+      if (list_of_bytes[0] != 1):
+          return False
+      end
+  
+      # byte is '2'?
+      if (list_of_bytes[1] == 50):
+          return True
+      end
+  
+      return False
+  
+  end
+  
+  def rq_set_pressure_timeout_minimum_vacuum(pressure, timeout, minimum, gripper_socket="1"):
+      enter_critical
+      rq_send_pos_spd_for(pressure, timeout, minimum, gripper_socket)
+      ack = socket_read_byte_list(3, gripper_socket)
+      exit_critical
+  
+      sync()
+  
+      while(is_not_ack(ack)):
+          enter_critical
+          rq_send_pos_spd_for(pressure, timeout, minimum, gripper_socket)
+          ack = socket_read_byte_list(3, gripper_socket)
+          exit_critical
+  
+          sync()
+      end
+  end
+  
+  def is_FLT(fault_number, list_of_bytes):
+      zero_ascii = 48
+      if (list_of_bytes[0] != 2):
+          return False
+      end
+  
+      if (list_of_bytes[1] != zero_ascii):
+          return False
+      end
+  
+      if (list_of_bytes[2] != zero_ascii + fault_number):
+          return False
+      end
+  
+      return True
+  end
+  
+  def is_FLT_vacuum_timeout(list_of_bytes):
+    return is_FLT(6, list_of_bytes)
+  end
+  
+  def is_continuous_grip(maximum_vacuum):
+    return maximum_vacuum == 0
+  end
+  
+  def socket_id_index(socket_id):
+    if (socket_id == "1"):
+      return 0
+    elif (socket_id == "2"):
+      return 1
+    elif (socket_id == "3"):
+      return 2
+    elif (socket_id == "4"):
+      return 3
+    else:
+      return -1
+    end
+  end
+  
+  def rq_vacuum_release(advanced_mode=False, shutoff_distance_cm=5, wait_for_object_released=True, gripper_socket="1"):
+    local shutoff_distance = scale(shutoff_distance_cm, [0, 99], [0.00, 0.99])
+    local pressure = 255
+    local minimum = 0
+    local timeout = 255
+    rq_vacuum_release_raw(advanced_mode, pressure, minimum, timeout, shutoff_distance, wait_for_object_released, gripper_socket)
+  end
+  
+  def rq_vacuum_release_raw(advanced_mode, pressure, minimum, timeout, shutoff_distance, wait_for_object_released, gripper_socket):
+    rq_reset_fault_and_activate(gripper_socket)
+    rq_set_pressure_timeout_minimum_vacuum(pressure, timeout, minimum, gripper_socket)
+  
+    if advanced_mode:
+      rq_set_gripper_mode(1, gripper_socket)
+    else:
+      rq_set_gripper_mode(0, gripper_socket)
+    end
+  
+    rq_set_GTO_and_wait(1, gripper_socket)
+  
+    if wait_for_object_released:
+      rq_wait_for_vacuum_object_not_detected(gripper_socket)
+    end
+  
+    if advanced_mode:
+      startStopPumpOnDistanceTravelledThread(shutoff_distance, gripper_socket)
+    end
+  end
+  
+  def rq_vacuum_grip(advanced_mode=False, maximum_vacuum=60, minimum_vacuum=40, timeout_ms=3000, wait_for_object_detected=True, gripper_socket="1"):
+    local pressure = scale(maximum_vacuum, [0, 100], [100, 0])
+    local minimum = scale(minimum_vacuum, [0, 100], [100, 0])
+    local timeout = scale(timeout_ms, [0, 25500], [0, 255])
+    rq_vacuum_grip_raw(advanced_mode, pressure, minimum, timeout, wait_for_object_detected, gripper_socket)
+  end
+  
+  def rq_vacuum_grip_raw(advanced_mode, pressure, minimum, timeout, wait_for_object_detected, gripper_socket):
+    stopStopPumpOnDistanceTravelledThread(gripper_socket)
+    rq_reset_fault_and_activate(gripper_socket)
+  
+    rq_set_pressure_timeout_minimum_vacuum(pressure, timeout, minimum, gripper_socket)
+  
+    if advanced_mode:
+      rq_set_gripper_mode(1, gripper_socket)
+    else:
+      rq_set_gripper_mode(0, gripper_socket)
+    end
+  
+    rq_set_GTO_and_wait(1, gripper_socket)
+  
+    if wait_for_object_detected:
+      if (advanced_mode and not is_continuous_grip(pressure)):
+        rq_wait_for_vacuum_object_secured(gripper_socket)
+      else:
+        rq_wait_for_vacuum_object_detected(gripper_socket)
+      end
+    end
+  end
+  
+  def rq_reset_fault_and_activate(gripper_socket):
+      gFLT = rq_get_var(FLT, 2, gripper_socket)
+  
+      if (not is_FLT_no_fault(gFLT) or not rq_is_gripper_activated(gripper_socket)):
+          rq_set_GTO_and_wait(0, gripper_socket)
+          rq_set_var(ACT, 1, gripper_socket)
+      end
+  end
+  #################################################
+  # End - Vacuum general functions
+  #################################################
+  vacuumGripCheckWarningTitle = "Vacuum grip check"
+  vacuumGripCheckWarningMessage = "Vacuum gripper object lost"
+  vacuumGripTimeoutTitle = "Vacuum gripper fault"
+  vacuumGripTimeoutMessage = "Grip has timed out"
+  # end: URCap Installation Node
+  # begin: URCap Installation Node
+  #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+  #   Type: Gripper
+  #aliases for the gripper variable names
+  ACT = 1
+  GTO = 2
+  ATR = 3
+  ARD = 4
+  FOR = 5
+  SPE = 6
+  OBJ = 7
+  STA = 8
+  FLT = 9
+  POS = 10
+  PRE = 11
+  LBP = 12
+  LRD = 13
+  LBL = 14
+  LGN = 15
+  MSC = 16
+  MOD = 17
+  
+  gripper_1_connected = False
+  gripper_2_connected = False
+  gripper_3_connected = False
+  gripper_4_connected = False
+  
+  gripper_1_socket_open = False
+  gripper_2_socket_open = False
+  gripper_3_socket_open = False
+  gripper_4_socket_open = False
+  
+  def rq_init_comm_if_connected(gripper_sid=9, gripper_socket="1"):
+      if(not is_gripper_socket_open(gripper_socket)):
+        open_gripper_socket(gripper_socket)
+      end
+  
+      is_gripper_connected = rq_is_gripper_connected(gripper_sid, gripper_socket)
+      if(is_gripper_connected):
+          rq_set_gripper_connected(gripper_socket)
+      end
+  
+      return is_gripper_connected
+  end
+  
+  def open_gripper_socket(gripper_socket):
+    is_open = socket_open("127.0.0.1",63352, gripper_socket)
+    set_gripper_socket_open(gripper_socket, is_open)
+  end
+  
+  def is_gripper_socket_open(gripper_socket):
+    if(gripper_socket == "1"):
+      return gripper_1_socket_open
+    elif(gripper_socket == "2"):
+      return gripper_2_socket_open
+    elif(gripper_socket == "3"):
+      return gripper_3_socket_open
+    elif(gripper_socket == "4"):
+      return gripper_4_socket_open
+    else:
+      return False
+    end
+  end
+  
+  def set_gripper_socket_open(gripper_socket, is_open):
+    if(gripper_socket == "1"):
+      gripper_1_socket_open = is_open
+    elif(gripper_socket == "2"):
+      gripper_2_socket_open = is_open
+    elif(gripper_socket == "3"):
+      gripper_3_socket_open = is_open
+    elif(gripper_socket == "4"):
+      gripper_4_socket_open = is_open
+    else:
+    end
+  end
+  
+  def rq_is_gripper_connected(gripper_sid=9, gripper_socket="1"):
+      socket_set_var("SID", gripper_sid,  gripper_socket)
+      ack = socket_read_byte_list(3, gripper_socket, 0.1)
+      return is_ack(ack)
+  end
+  
+  def rq_set_gripper_connected(gripper_id="1"):
+      if(gripper_id == "1"):
+          gripper_1_connected = True
+      end
+  
+      if (gripper_id == "2"):
+          gripper_2_connected = True
+      end
+  
+      if (gripper_id == "3"):
+          gripper_3_connected = True
+      end
+  
+      if (gripper_id == "4"):
+          gripper_4_connected = True
+      end
+  end
+  
+  def rq_wait_for_gripper_connected():
+      gripper_socket = "gripper_conn_socket"
+      socket_open("127.0.0.1",63352, gripper_socket)
+  
+      retryCtr = 1
+      sid_list = rq_get_sid(gripper_socket)
+      gripper_is_connected = rq_is_any_gripper_connected(sid_list)
+  
+      while(not gripper_is_connected and retryCtr < 2000):
+          retryCtr = retryCtr + 1
+          sid_list = rq_get_sid(gripper_socket)
+          gripper_is_connected = rq_is_any_gripper_connected(sid_list)
+      end
+  
+      socket_close(gripper_socket)
+  end
+  
+  def rq_is_any_gripper_connected(sid_list):
+      is_gripper_1_connected = rq_is_gripper1_in_sid_list(sid_list)
+      is_gripper_2_connected = rq_is_gripper2_in_sid_list(sid_list)
+      is_gripper_3_connected = rq_is_gripper3_in_sid_list(sid_list)
+      is_gripper_4_connected = rq_is_gripper4_in_sid_list(sid_list)
+  
+      if(is_gripper_1_connected or is_gripper_2_connected or is_gripper_3_connected or is_gripper_4_connected):
+          return True
+      else:
+          return False
+      end
+  end
+  
+  def rq_is_gripper_in_sid_list(gripper_sid, sid_list):
+      sid_list_length = sid_list[0]
+      sid_list_empty_length = 2
+  
+      if (sid_list_length <= sid_list_empty_length):
+          return False
+      end
+  
+      sid1 = sid_list[2]
+      sid2 = sid_list[5]
+      sid3 = sid_list[8]
+      sid4 = sid_list[11]
+  
+      if(sid1 == gripper_sid or sid2 == gripper_sid or sid3 == gripper_sid or sid4 == gripper_sid):
+          return True
+      else:
+          return False
+      end
+  end
+  
+  def rq_is_gripper1_in_sid_list(sid_list):
+      gripper_1_sid_ascii = 57
+      return rq_is_gripper_in_sid_list(gripper_1_sid_ascii, sid_list)
+  end
+  
+  def rq_is_gripper2_in_sid_list(sid_list):
+      gripper_2_sid_ascii = 50
+      return rq_is_gripper_in_sid_list(gripper_2_sid_ascii, sid_list)
+  end
+  
+  def rq_is_gripper3_in_sid_list(sid_list):
+      gripper_3_sid_ascii = 51
+      return rq_is_gripper_in_sid_list(gripper_3_sid_ascii, sid_list)
+  end
+  
+  def rq_is_gripper4_in_sid_list(sid_list):
+      gripper_4_sid_ascii = 52
+      return rq_is_gripper_in_sid_list(gripper_4_sid_ascii, sid_list)
+  end
+  
+  def rq_set_sid(gripper_sid=9, gripper_socket="1"):
+      socket_set_var("SID", gripper_sid,  gripper_socket)
+      sync()
+      ack = socket_read_byte_list(3, gripper_socket)
+      return is_ack(ack)
+  end
+  
+  def rq_get_sid(gripper_socket="1"):
+      socket_send_string("GET SID", gripper_socket)
+      sync()
+      sid_list = socket_read_byte_list(17, gripper_socket)
+      sync()
+      return sid_list
+  end
+  
+  def rq_activate(gripper_socket="1"):
+      rq_gripper_act = 0
+  
+      if (not rq_is_gripper_activated(gripper_socket)):
+         rq_reset(gripper_socket)
+  
+         while(socket_get_var("ACT",gripper_socket) == 1):
+            sleep(0.1)
+            rq_reset(gripper_socket)
+         end
+      end
+  
+      rq_set_var(ACT,1, gripper_socket)
+  end
+  
+  def rq_activate_and_wait(gripper_socket="1"):
+      rq_activate(gripper_socket)
+      sleep(1.0)
+  
+      while(not rq_is_gripper_activated(gripper_socket)):
+          # wait for activation completed
+      end
+      sleep(0.5)
+  end
+  
+  def rq_activate_all_grippers(reset=False):
+      if(gripper_1_connected):
+          rq_reset_and_activate("1", reset)
+      end
+  
+      if(gripper_2_connected):
+          rq_reset_and_activate("2", reset)
+      end
+  
+      if(gripper_3_connected):
+          rq_reset_and_activate("3", reset)
+      end
+  
+      if(gripper_4_connected):
+          rq_reset_and_activate("4", reset)
+      end
+  
+      sleep(0.2)
+  end
+  
+  def rq_reset_and_activate(gripper_socket="1", reset=False):
+      if(reset):
+          rq_reset(gripper_socket)
+          sleep(0.5)
+          rq_activate_and_wait(gripper_socket)
+      elif(not rq_is_gripper_activated(gripper_socket)):
+          rq_activate_and_wait(gripper_socket)
+      end
+  end
+  
+  def rq_scan_block():
+      gripper_socket = "scn_block_socket"
+      socket_open("127.0.0.1", 63352, gripper_socket)
+      socket_set_var("SCN_BLOCK", 1, gripper_socket)
+      sync()
+      ack_test = socket_read_byte_list(3, gripper_socket)
+  
+      retry_counter = 0
+  
+      while(not is_ack(ack_test) and retry_counter < 5):
+          socket_set_var("SCN_BLOCK", 1, gripper_socket)
+          sync()
+          ack_test = socket_read_byte_list(3, gripper_socket)
+          retry_counter = retry_counter + 1
+      end
+  
+      socket_close("scn_block_socket")
+  end
+  
+  def rq_reset(gripper_socket="1"):
+      rq_gripper_act = 0
+      rq_obj_detect = 0
+      rq_mov_complete = 0
+  
+      rq_set_var(ACT,0, gripper_socket)
+      rq_set_var(ATR,0, gripper_socket)
+  end
+  
+  def rq_auto_release_open_and_wait(gripper_socket="1"):
+      rq_set_var(ARD,0, gripper_socket)
+      rq_set_var(ACT,1, gripper_socket)
+      rq_set_var(ATR,0, gripper_socket)
+      sleep(0.1)
+      rq_set_var(ATR,1, gripper_socket)
+  
+      rq_wait_autorelease_completed(gripper_socket)
+  end
+  
+  def rq_auto_release_close_and_wait(gripper_socket="1"):
+      rq_set_var(ARD,1, gripper_socket)
+      rq_set_var(ACT,1, gripper_socket)
+      rq_set_var(ATR,0, gripper_socket)
+      sleep(0.1)
+      rq_set_var(ATR,1, gripper_socket)
+  
+      rq_wait_autorelease_completed(gripper_socket)
+  end
+  
+  def rq_wait_autorelease_completed(gripper_socket="1"):
+      retryCounter = 1
+      gFLT = rq_get_var(FLT, 2, gripper_socket)
+  
+      while(not is_FLT_autorelease_in_progress(gFLT) and retryCounter <= 20):
+          retryCounter = retryCounter + 1
+          gFLT = rq_get_var(FLT, 2, gripper_socket)
+          sleep(0.1)
+      end
+  
+      retryCounter = 1
+      gFLT = rq_get_var(FLT, 2, gripper_socket)
+  
+      while(not is_FLT_autorelease_completed(gFLT) and retryCounter <= 100):
+          retryCounter = retryCounter + 1
+          gFLT = rq_get_var(FLT, 2, gripper_socket)
+          sleep(0.1)
+      end
+  end
+  
+  def rq_set_force(force, gripper_socket="1"):
+      force = floor(scale(force, [0, 255], [0.0, 255.0]))
+      rq_set_var(FOR, force, gripper_socket)
+  end
+  
+  def rq_set_speed(speed, gripper_socket="1"):
+      speed = floor(scale(speed, [0, 255], [0.0, 255.0]))
+      rq_set_var(SPE, speed, gripper_socket)
+  end
+  
+  def rq_open(gripper_socket="1"):
+      rq_move(0, gripper_socket)
+  end
+  
+  def rq_close(gripper_socket="1"):
+      rq_move(255, gripper_socket)
+  end
+  
+  def rq_open_and_wait(gripper_socket="1"):
+      rq_move_and_wait(0, gripper_socket)
+  end
+  
+  def rq_close_and_wait(gripper_socket="1"):
+      rq_move_and_wait(255, gripper_socket)
+  end
+  
+  def rq_move(pos, gripper_socket="1"):
+      rq_mov_complete = 0
+      rq_obj_detect = 0
+  
+      rq_set_pos(pos, gripper_socket)
+      rq_go_to(gripper_socket)
+  end
+  
+  def rq_move_and_wait(pos, gripper_socket="1"):
+      rq_move(pos, gripper_socket)
+  
+      while (not rq_is_motion_complete(gripper_socket)):
+          # wait for motion completed
+          sleep(0.01)
+          sync()
+      end
+  
+      # following code used for compatibility with previous versions
+      rq_is_object_detected(gripper_socket)
+  
+      if (rq_obj_detect != 1):
+          rq_mov_complete = 1
+      end
+  end
+  
+  def rq_wait_for_pos_request(pos, gripper_socket="1"):
+      gPRE = rq_get_var(PRE, 3, gripper_socket)
+      pre = (gPRE[1] - 48)*100 + (gPRE[2] -48)*10 + gPRE[3] - 48
+  
+      while (pre != pos):
+          rq_set_var(POS, pos, gripper_socket)
+          gPRE = rq_get_var(PRE, 3, gripper_socket)
+          pre = (gPRE[1] - 48)*100 + (gPRE[2] -48)*10 + gPRE[3] - 48
+          sync()
+      end
+  end
+  
+  def rq_wait_for_pos(pos, gripper_socket="1"):
+      rq_wait_for_pos_request(pos, gripper_socket)
+  
+      # Wait for the gripper motion to complete
+      while (not rq_is_motion_complete(gripper_socket)):
+          # wait for motion completed
+          sleep(0.01)
+          sync()
+          rq_go_to(gripper_socket)
+      end
+  
+      # following code used for compatibility with previous versions
+      rq_is_object_detected(gripper_socket)
+  
+      if (rq_obj_detect != 1):
+          rq_mov_complete = 1
+      end
+  end
+  
+  def rq_wait(gripper_socket="1"):
+      # Wait for the gripper motion to complete
+      while (not rq_is_motion_complete(gripper_socket)):
+          # wait for motion completed
+          sleep(0.01)
+          sync()
+      end
+  
+      # following code used for compatibility with previous versions
+      rq_is_object_detected(gripper_socket)
+  
+      if (rq_obj_detect != 1):
+          rq_mov_complete = 1
+      end
+  end
+  
+  def rq_wait_for_object_detected(gripper_socket="1"):
+      # Wait the object detection
+      while (not rq_is_object_detected(gripper_socket)):
+          # wait for motion completed
+          sleep(0.01)
+          sync()
+      end
+  end
+  
+  # set the position
+  def rq_set_pos(pos, gripper_socket="1"):
+      pos = floor(scale(pos, [0, 255], [0.0, 255.0]))
+      rq_set_var(POS, pos, gripper_socket)
+      rq_wait_for_pos_request(pos, gripper_socket)
+  end
+  
+  # set the position, speed and force
+  def rq_set_pos_spd_for(pos, speed, force, gripper_socket="1"):
+      enter_critical
+      rq_send_pos_spd_for(pos, speed, force, gripper_socket)
+      ack = socket_read_byte_list(3, gripper_socket)
+      exit_critical
+  
+      sync()
+  
+      while(is_not_ack(ack)):
+          enter_critical
+          rq_send_pos_spd_for(pos, speed, force, gripper_socket)
+          ack = socket_read_byte_list(3, gripper_socket)
+          exit_critical
+  
+          sync()
+      end
+  
+      rq_wait_for_pos_request(pos, gripper_socket)
+  end
+  
+  def rq_set_gripper_max_current_mA(current_mA, gripper_socket="1"):
+      current = floor(current_mA / 10)
+      rq_set_var(MSC, current, gripper_socket)
+      sleep(1.5)
+  end
+  
+  def rq_set_gripper_mode(mode, gripper_socket="1"):
+      rq_set_var(MOD, mode, gripper_socket)
+  end
+  
+  def rq_set_gripper_max_cur(current_mA, gripper_socket="1"):
+      rq_set_gripper_max_current_mA(current_mA, gripper_socket)
+  end
+  
+  def rq_get_gripper_max_current_mA(gripper_socket="1"):
+      socket_send_string("GET MSC",gripper_socket)
+      sync()
+      var_value = socket_read_byte_list(3, gripper_socket)
+  
+      current = rq_list_of_bytes_to_value(var_value)
+  
+      if(current == -1):
+          current_mA = current
+      else:
+          current_mA = current * 10
+      end
+  
+      return current_mA
+  end
+  
+  def rq_get_gripper_max_cur(gripper_socket="1"):
+      return rq_get_gripper_max_current_mA(gripper_socket)
+  end
+  
+  def rq_list_of_bytes_to_value(list_of_bytes):
+      value = -1
+  
+      # response list length
+      if (list_of_bytes[0] == 1):
+          value = list_of_bytes[1] - 48
+      elif (list_of_bytes[0] == 2):
+          value = (list_of_bytes[1] - 48) * 10 + (list_of_bytes[2] - 48)
+      elif (list_of_bytes[0] == 3):
+          value = (list_of_bytes[1] - 48) * 100 + (list_of_bytes[2] - 48) * 10 + (list_of_bytes[3] - 48)
+      end
+  
+      return value
+  end
+  
+  # send the position, speed and force
+  def rq_send_pos_spd_for(pos, speed, force, gripper_socket="1"):
+      pos = floor(scale(pos, [0, 255], [0.0, 255.0]))
+      speed = floor(scale(speed, [0, 255], [0.0, 255.0]))
+      force = floor(scale(force, [0, 255], [0.0, 255.0]))
+  
+      socket_send_string("SET POS", gripper_socket)
+      socket_send_byte(32, gripper_socket)
+      socket_send_string(pos, gripper_socket)
+      socket_send_byte(32, gripper_socket)
+      socket_send_string("SPE", gripper_socket)
+      socket_send_byte(32, gripper_socket)
+      socket_send_string(speed, gripper_socket)
+      socket_send_byte(32, gripper_socket)
+      socket_send_string("FOR", gripper_socket)
+      socket_send_byte(32, gripper_socket)
+      socket_send_string(force, gripper_socket)
+      socket_send_byte(10, gripper_socket)
+  end
+  
+  def rq_is_motion_complete(gripper_socket="1"):
+      rq_mov_complete = 0
+  
+      gOBJ = rq_get_var(OBJ, 1, gripper_socket)
+      sleep(0.01)
+  
+      if (is_OBJ_gripper_at_position(gOBJ)):
+          rq_mov_complete = 1
+          return True
+      end
+  
+      if (is_OBJ_object_detected(gOBJ)):
+          rq_mov_complete = 1
+          return True
+      end
+  
+      return False
+  
+  end
+  
+  def rq_is_gripper_activated(gripper_socket="1"):
+      gSTA = rq_get_var(STA, 1, gripper_socket)
+  
+      if(is_STA_gripper_activated(gSTA)):
+          rq_gripper_act = 1
+          return True
+      else:
+          rq_gripper_act = 0
+          return False
+      end
+  end
+  
+  def rq_is_object_detected(gripper_socket="1"):
+      gOBJ = rq_get_var(OBJ, 1, gripper_socket)
+  
+      if(is_OBJ_object_detected(gOBJ)):
+          rq_obj_detect = 1
+          return True
+      else:
+          rq_obj_detect = 0
+          return False
+      end
+  end
+  
+  def rq_current_pos(gripper_socket="1"):
+      enter_critical
+      rq_pos = socket_get_var("POS",gripper_socket)
+      exit_critical
+      sync()
+      return rq_pos
+  end
+  
+  def rq_motor_current(gripper_socket="1"):
+      enter_critical
+      rq_current = socket_get_var("COU",gripper_socket)
+      exit_critical
+      sync()
+      return rq_current * 10
+  end
+  
+  def rq_print_connected_grippers():
+      if(gripper_1_connected):
+          textmsg("Gripper 1 : ", "connected and socket open.")
+      end
+  
+      if (gripper_2_connected):
+          textmsg("Gripper 2 : ", "connected and socket open.")
+      end
+  
+      if (gripper_3_connected):
+          textmsg("Gripper 3 : ", "connected and socket open.")
+      end
+  
+      if (gripper_4_connected):
+          textmsg("Gripper 4 : ", "connected and socket open.")
+      end
+  end
+  
+  def rq_print_gripper_fault_code(gripper_socket="1"):
+      gFLT = rq_get_var(FLT, 2, gripper_socket)
+  
+      if(is_FLT_no_fault(gFLT)):
+          textmsg("Gripper Fault : ", "No Fault (0x00)")
+      elif (is_FLT_action_delayed(gFLT)):
+          textmsg("Gripper Fault : ", "Priority Fault: Action delayed, initialization must be completed prior to action (0x05)")
+      elif (is_FLT_not_activated(gFLT)):
+          textmsg("Gripper Fault : ", "Priority Fault: The activation must be set prior to action (0x07)")
+      elif (is_FLT_autorelease_in_progress(gFLT)):
+          textmsg("Gripper Fault : ", "Minor Fault: Automatic release in progress (0x0B)")
+      elif (is_FLT_overcurrent(gFLT)):
+          textmsg("Gripper Fault : ", "Minor Fault: Overcurrent protection triggered (0x0E)")
+      elif (is_FLT_autorelease_completed(gFLT)):
+          textmsg("Gripper Fault : ", "Major Fault: Automatic release completed (0x0F)")
+      else:
+          textmsg("Gripper Fault : ", "Unknown Fault")
+      end
+  end
+  
+  def rq_print_gripper_num_cycles(gripper_socket="1"):
+      socket_send_string("GET NCY",gripper_socket)
+      sync()
+      string_from_server = socket_read_string(gripper_socket)
+      sync()
+  
+      if(string_from_server == "0"):
+          textmsg("Gripper Cycle Number : ", "Number of cycles is unreachable.")
+      else:
+          textmsg("Gripper Cycle Number : ", string_from_server)
+      end
+  end
+  
+  def rq_print_gripper_driver_state(gripper_socket="1"):
+      socket_send_string("GET DST",gripper_socket)
+      sync()
+      string_from_server = socket_read_string(gripper_socket)
+      sync()
+  
+      if(string_from_server == "0"):
+          textmsg("Gripper Driver State : ", "RQ_STATE_INIT")
+      elif(string_from_server == "1"):
+          textmsg("Gripper Driver State : ", "RQ_STATE_LISTEN")
+      elif(string_from_server == "2"):
+          textmsg("Gripper Driver State : ", "RQ_STATE_READ_INFO")
+      elif(string_from_server == "3"):
+          textmsg("Gripper Driver State : ", "RQ_STATE_ACTIVATION")
+      else:
+          textmsg("Gripper Driver State : ", "RQ_STATE_RUN")
+      end
+  end
+  
+  def rq_print_gripper_serial_number(gripper_socket="1"):
+      socket_send_string("GET SNU",gripper_socket)
+      sync()
+      string_from_server = socket_read_string(gripper_socket)
+      sync()
+      textmsg("Gripper Serial Number : ", string_from_server)
+  end
+  
+  def rq_print_gripper_firmware_version(gripper_socket="1"):
+      socket_send_string("GET FWV",gripper_socket)
+      sync()
+      string_from_server = socket_read_string(gripper_socket)
+      sync()
+      textmsg("Gripper Firmware Version : ", string_from_server)
+  end
+  
+  def rq_print_gripper_driver_version(gripper_socket="1"):
+      socket_send_string("GET VER",gripper_socket)
+      sync()
+      string_from_server = socket_read_string(gripper_socket)
+      sync()
+      textmsg("Gripper Driver Version : ", string_from_server)
+  end
+  
+  def rq_print_gripper_probleme_connection(gripper_socket="1"):
+      socket_send_string("GET PCO",gripper_socket)
+      sync()
+      string_from_server = socket_read_string(gripper_socket)
+      sync()
+      if (string_from_server == "0"):
+          textmsg("Gripper Connection State : ", "No connection problem detected")
+      else:
+          textmsg("Gripper Connection State : ", "Connection problem detected")
+      end
+  end
+  
+  # Returns True if list_of_bytes is [3, 'a', 'c', 'k']
+  def is_ack(list_of_bytes):
+  
+      # list length is not 3
+      if (list_of_bytes[0] != 3):
+          return False
+      end
+  
+      # first byte not is 'a'?
+      if (list_of_bytes[1] != 97):
+          return False
+      end
+  
+      # first byte not is 'c'?
+      if (list_of_bytes[2] != 99):
+          return False
+      end
+  
+      # first byte not is 'k'?
+      if (list_of_bytes[3] != 107):
+          return False
+      end
+  
+      return True
+  end
+  
+  # Returns True if list_of_bytes is not [3, 'a', 'c', 'k']
+  def is_not_ack(list_of_bytes):
+      if (is_ack(list_of_bytes)):
+          return False
+      else:
+          return True
+      end
+  end
+  
+  def is_STA_gripper_activated (list_of_bytes):
+  
+      # list length is not 1
+      if (list_of_bytes[0] != 1):
+          return False
+      end
+  
+      # byte is '3'?
+      if (list_of_bytes[1] == 51):
+          return True
+      end
+  
+      return False
+  end
+  
+  # Returns True if list_of_byte is [1, '1'] or [1, '2']
+  # Used to test OBJ = 0x1 or OBJ = 0x2
+  def is_OBJ_object_detected (list_of_bytes):
+  
+      # list length is not 1
+      if (list_of_bytes[0] != 1):
+          return False
+      end
+  
+      # byte is '2'?
+      if (list_of_bytes[1] == 50):
+          return True
+      end
+  
+      # byte is '1'?
+      if (list_of_bytes[1]  == 49):
+          return True
+      end
+  
+      return False
+  
+  end
+  
+  # Returns True if list_of_byte is [1, '3']
+  # Used to test OBJ = 0x3
+  def is_OBJ_gripper_at_position (list_of_bytes):
+  
+      # list length is not 1
+      if (list_of_bytes[0] != 1):
+          return False
+      end
+  
+      # byte is '3'?
+      if (list_of_bytes[1] == 51):
+          return True
+      end
+  
+      return False
+  end
+  
+  def is_not_OBJ_gripper_at_position (list_of_bytes):
+  
+      if (is_OBJ_gripper_at_position(list_of_bytes)):
+          return False
+      else:
+          return True
+      end
+  end
+  
+  #### GTO Section ####
+  def rq_stop(gripper_socket="1"):
+      rq_set_var(GTO, 0, gripper_socket)
+  end
+  
+  def rq_set_GTO_and_wait(value, gripper_socket="1"):
+      rq_set_var(GTO ,value, gripper_socket)
+      while(not is_GTO(value, rq_get_var(GTO, 1, gripper_socket))):
+        sync()
+      end
+  end
+  
+  def rq_go_to(gripper_socket="1"):
+      rq_set_var(GTO, 1, gripper_socket)
+  end
+  
+  
+  def is_GTO(goto_value, list_of_bytes):
+      zero_ascii = 48
+      if (list_of_bytes[0] != 1):
+          return False
+      end
+  
+      if (list_of_bytes[1] == zero_ascii + goto_value):
+          return True
+      else:
+          return False
+      end
+  end
+  #### GTO Section ####
+  
+  def is_FLT_no_fault(list_of_bytes):
+  
+      # list length is not 2
+      if (list_of_bytes[0] != 2):
+          return False
+      end
+  
+      # first byte is '0'?
+      if (list_of_bytes[1] != 48):
+          return False
+      end
+  
+      # second byte is '0'?
+      if (list_of_bytes[2] != 48):
+          return False
+      end
+  
+      return True
+  
+  end
+  
+  def is_FLT_action_delayed(list_of_bytes):
+  
+      # list length is not 2
+      if (list_of_bytes[0] != 2):
+          return False
+      end
+  
+      # first byte is '0'?
+      if (list_of_bytes[1] != 48):
+          return False
+      end
+  
+      # second byte is '5'?
+      if (list_of_bytes[2] != 53):
+          return False
+      end
+  
+      return True
+  end
+  
+  def is_FLT_not_activated(list_of_bytes):
+  
+      # list length is not 2
+      if (list_of_bytes[0] != 2):
+          return False
+      end
+  
+      # first byte is '0'?
+      if (list_of_bytes[1] != 48):
+          return False
+      end
+  
+      # second byte is '7'?
+      if (list_of_bytes[2] != 55):
+          return False
+      end
+  
+      return True
+  end
+  
+  def is_FLT_autorelease_in_progress(list_of_bytes):
+  
+      # list length is not 2
+      if (list_of_bytes[0] != 2):
+          return False
+      end
+  
+      # first byte is '1'?
+      if (list_of_bytes[1] != 49):
+          return False
+      end
+  
+      # second byte is '1'?
+      if (list_of_bytes[2] != 49):
+          return False
+      end
+  
+      return True
+  
+  end
+  
+  def is_FLT_overcurrent(list_of_bytes):
+  
+      # list length is not 2
+      if (list_of_bytes[0] != 2):
+          return False
+      end
+  
+      # first byte is '1'?
+      if (list_of_bytes[1] != 49):
+          return False
+      end
+  
+      # second byte is '4'?
+      if (list_of_bytes[2] != 52):
+          return False
+      end
+  
+      return True
+  
+  end
+  
+  def is_FLT_autorelease_completed(list_of_bytes):
+  
+      # list length is not 2
+      if (list_of_bytes[0] != 2):
+          return False
+      end
+  
+      # first byte is '1'?
+      if (list_of_bytes[1] != 49):
+          return False
+      end
+  
+      # second byte is '5'?
+      if (list_of_bytes[2] != 53):
+          return False
+      end
+  
+      return True
+  
+  end
+  
+  def rq_set_var(var_name, var_value, gripper_socket="1"):
+  
+      var_name_string = ""
+  
+      if (var_name == ACT):
+          var_name_string = "ACT"
+      elif (var_name == GTO):
+          var_name_string = "GTO"
+      elif (var_name == ATR):
+          var_name_string = "ATR"
+      elif (var_name == ARD):
+          var_name_string = "ARD"
+      elif (var_name == FOR):
+          var_name_string = "FOR"
+      elif (var_name == SPE):
+          var_name_string = "SPE"
+      elif (var_name == POS):
+          var_name_string = "POS"
+      elif (var_name == LBP):
+          var_name_string = "LBP"
+      elif (var_name == LRD):
+          var_name_string = "LRD"
+      elif (var_name == LBL):
+          var_name_string = "LBL"
+      elif (var_name == LGN):
+          var_name_string = "LGN"
+      elif (var_name == MSC):
+          var_name_string = "MSC"
+      elif (var_name == MOD):
+          var_name_string = "MOD"
+      end
+  
+      enter_critical
+      socket_set_var(var_name_string, var_value, gripper_socket)
+      ack = socket_read_byte_list(3, gripper_socket)
+      exit_critical
+  
+      sync()
+  
+      while(is_not_ack(ack)):
+          enter_critical
+          socket_set_var(var_name_string , var_value, gripper_socket)
+          sync()
+          ack = socket_read_byte_list(3, gripper_socket)
+          exit_critical
+  
+          sync()
+      end
+  end
+  
+  
+  def rq_get_var(var_name, nbr_bytes, gripper_socket="1"):
+      enter_critical
+  
+      if (var_name == FLT):
+          socket_send_string("GET FLT", gripper_socket)
+      elif (var_name == OBJ):
+          socket_send_string("GET OBJ", gripper_socket)
+      elif (var_name == STA):
+          socket_send_string("GET STA", gripper_socket)
+      elif (var_name == PRE):
+          socket_send_string("GET PRE", gripper_socket)
+      elif (var_name == GTO):
+          socket_send_string("GET GTO", gripper_socket)
+      else:
+      end
+  
+      var_value = socket_read_byte_list(nbr_bytes, gripper_socket)
+  
+      exit_critical
+  
+      sync()
+  
+      return var_value
+  end
+  
+  def rq_is_object_validated(gripper_selected, gripper_socket="1"):
+      if(gripper_selected):
+          if(rq_is_object_detected(gripper_socket)):
+              return True
+          else:
+              return False
+          end
+      else:
+          return True
+      end
+  end
+  
+  ############################################
+  # normalized functions (maps 0-100 to 0-255)
+  ############################################
+  def rq_set_force_norm(force_norm, gripper_socket="1"):
+      force_gripper = norm_to_gripper(force_norm)
+      rq_set_force(force_gripper, gripper_socket)
+  end
+  
+  def rq_set_speed_norm(speed_norm, gripper_socket="1"):
+      speed_gripper = norm_to_gripper(speed_norm)
+      rq_set_speed(speed_gripper, gripper_socket)
+  end
+  
+  def rq_move_norm(pos_norm, gripper_socket="1"):
+      pos_gripper = norm_to_gripper(pos_norm)
+      rq_move(pos_gripper, gripper_socket)
+  end
+  
+  def rq_move_and_wait_norm(pos_norm, gripper_socket="1"):
+      pos_gripper = norm_to_gripper(pos_norm)
+      rq_move_and_wait(pos_gripper, gripper_socket)
+  end
+  
+  def rq_set_pos_norm(pos_norm, gripper_socket="1"):
+      pos_gripper = norm_to_gripper(pos_norm)
+      rq_set_pos(pos_gripper, gripper_socket)
+  end
+  
+  def rq_current_pos_norm(gripper_socket="1"):
+      pos_gripper = rq_current_pos(gripper_socket)
+      pos_norm = gripper_to_norm(pos_gripper)
+      return pos_norm
+  end
+  
+  def gripper_to_norm(value_gripper):
+      value_norm = (value_gripper / 255) * 100
+      return floor(value_norm)
+  end
+  
+  def norm_to_gripper(value_norm):
+      value_gripper = (value_norm / 100) * 255
+      return ceil(value_gripper)
+  end
+  
+  def rq_get_position():
+      return rq_current_pos_norm()
+  end
+  
+  def rq_gripper_led_on(gripper_socket="1"):
+      rq_set_var(LBP,0, gripper_socket)
+  end
+  
+  def rq_gripper_led_off(gripper_socket="1"):
+      rq_set_var(LBP,1, gripper_socket)
+      rq_set_var(LRD,0, gripper_socket)
+      rq_set_var(LBL,0, gripper_socket)
+      rq_set_var(LGN,0, gripper_socket)
+  end
+  
+  def rq_gripper_led_force_red(gripper_socket="1"):
+      rq_set_var(LBP,1, gripper_socket)
+      rq_set_var(LRD,1, gripper_socket)
+      rq_set_var(LBL,0, gripper_socket)
+      rq_set_var(LGN,0, gripper_socket)
+  end
+  
+  def rq_gripper_led_force_blue(gripper_socket="1"):
+      rq_set_var(LBP,1, gripper_socket)
+      rq_set_var(LRD,0, gripper_socket)
+      rq_set_var(LBL,1, gripper_socket)
+      rq_set_var(LGN,0, gripper_socket)
+  end
+  
+  def rq_gripper_led_force_green(gripper_socket="1"):
+      rq_set_var(LBP,1, gripper_socket)
+      rq_set_var(LRD,0, gripper_socket)
+      rq_set_var(LBL,0, gripper_socket)
+      rq_set_var(LGN,1, gripper_socket)
+  end
+  
+  def rq_gripper_led_force_purple(gripper_socket="1"):
+      rq_set_var(LBP,1, gripper_socket)
+      rq_set_var(LRD,1, gripper_socket)
+      rq_set_var(LBL,1, gripper_socket)
+      rq_set_var(LGN,0, gripper_socket)
+  end
+  
+  ############################################
+  # mm/inches functions
+  ############################################
+  gripper_closed_norm = [100, 100, 100, 100]
+  gripper_open_norm = [0, 0, 0, 0]
+  gripper_closed_mm = [0, 0, 0, 0]
+  gripper_open_mm = [50, 50, 50, 50]
+  
+  def rq_current_pos_mm(gripper_socket=1):
+      pos_gripper = rq_current_pos(gripper_socket)
+      pos_mm = gripper_to_mm(pos_gripper, gripper_socket)
+      return round_value_2_dec(pos_mm)
+  end
+  
+  def rq_current_pos_inches(gripper_socket=1):
+      pos_gripper = rq_current_pos(gripper_socket)
+      pos_mm = gripper_to_mm(pos_gripper, gripper_socket)
+      pos_in = pos_mm / 25.4
+      return round_value_2_dec(pos_in)
+  end
+  
+  def rq_move_mm(pos_mm, gripper_socket=1):
+      pos_gripper = mm_to_gripper(pos_mm, gripper_socket)
+      rq_move(pos_gripper, gripper_socket)
+  end
+  
+  def rq_move_and_wait_mm(pos_mm, gripper_socket=1):
+      pos_gripper = mm_to_gripper(pos_mm, gripper_socket)
+      rq_move_and_wait(pos_gripper, gripper_socket)
+  end
+  
+  def rq_move_inches(pos_in, gripper_socket=1):
+      pos_mm = pos_in * 25.4
+      rq_move_mm(pos_mm, gripper_socket)
+  end
+  
+  def rq_move_and_wait_inches(pos_in, gripper_socket=1):
+      pos_mm = pos_in * 25.4
+      rq_move_and_wait_mm(pos_mm, gripper_socket)
+  end
+  
+  def get_closed_norm(gripper_socket):
+      return gripper_closed_norm[gripper_socket - 1]
+  end
+  
+  def get_open_norm(gripper_socket):
+      return gripper_open_norm[gripper_socket - 1]
+  end
+  
+  def get_closed_mm(gripper_socket):
+      return gripper_closed_mm[gripper_socket - 1]
+  end
+  
+  def get_open_mm(gripper_socket):
+      return gripper_open_mm[gripper_socket - 1]
+  end
+  
+  def set_closed_norm(closed_norm, gripper_socket):
+      gripper_closed_norm[gripper_socket - 1] = closed_norm
+  end
+  
+  def set_open_norm(open_norm, gripper_socket):
+      gripper_open_norm[gripper_socket - 1] = open_norm
+  end
+  
+  def set_closed_mm(closed_mm, gripper_socket):
+      gripper_closed_mm[gripper_socket - 1] = closed_mm
+  end
+  
+  def set_open_mm(open_mm, gripper_socket):
+      gripper_open_mm[gripper_socket - 1] = open_mm
+  end
+  
+  def gripper_to_mm(value_gripper, gripper_socket):
+      closed_norm = get_closed_norm(gripper_socket)
+      open_norm = get_open_norm(gripper_socket)
+      closed_mm = get_closed_mm(gripper_socket)
+      open_mm = get_open_mm(gripper_socket)
+  
+      value_norm = (value_gripper / 255) * 100
+  
+      slope = (closed_mm - open_mm) / (closed_norm - open_norm)
+      value_mm = slope * (value_norm - closed_norm) + closed_mm
+  
+      if (value_mm > open_mm):
+          value_mm_limited = open_mm
+      elif (value_mm < closed_mm):
+          value_mm_limited = closed_mm
+      else:
+          value_mm_limited = value_mm
+      end
+  
+      return value_mm_limited
+  end
+  
+  def mm_to_gripper(value_mm, gripper_socket):
+      closed_norm = get_closed_norm(gripper_socket)
+      open_norm = get_open_norm(gripper_socket)
+      closed_mm = get_closed_mm(gripper_socket)
+      open_mm = get_open_mm(gripper_socket)
+  
+      slope = (closed_norm - open_norm) / (closed_mm - open_mm)
+      value_norm = (value_mm - closed_mm) * slope + closed_norm
+  
+      value_gripper = value_norm * 255 / 100
+  
+      if (value_gripper > 255):
+          value_gripper_limited = 255
+      elif (value_gripper < 0):
+          value_gripper_limited = 0
+      else:
+          value_gripper_limited = round_value(value_gripper)
+      end
+  
+      return value_gripper_limited
+  end
+  
+  def round_value(value):
+      value_mod = value % 1
+  
+      if(value_mod < 0.5):
+          return floor(value)
+      else:
+          return ceil(value)
+      end
+  end
+  
+  def round_value_2_dec(value):
+      value_x_100 = value * 100
+      value_x_100_rounded = round_value(value_x_100)
+      return value_x_100_rounded / 100
+  end
+  
+  def clear_socket_buffer(gripper_socket="1", read_timeout = 0.1):
+    byte_in_buffer = socket_read_byte_list(1, gripper_socket, read_timeout)
+  
+    while(byte_in_buffer[0] >= 1):
+        byte_in_buffer = socket_read_byte_list(1, gripper_socket, read_timeout)
+    end
+  end
+  
+  def scale(value, rawRange, scaledRange):
+      def computeSlope(inputRange, outputRange):
+          outputRangeDelta = outputRange[1] - outputRange[0]
+          inputRangeDelta = inputRange[1] - inputRange[0]
+  
+          if (inputRangeDelta == 0):
+              return 0
+          else:
+              return outputRangeDelta / inputRangeDelta
+          end
+      end
+  
+      def computeIntercept(slope, inputRange, outputRange):
+          return outputRange[0] - (slope * inputRange[0])
+      end
+  
+      def clipScaledValue(outputScaledValue, outputRange):
+          if (outputRange[0] < outputRange[1]):
+              return clipWhenLowerLimitIsLessThanHigher(outputScaledValue, outputRange)
+          else:
+              return clipWhenLowerLimitIsGreaterThanHigherLimit(outputScaledValue, outputRange)
+          end
+      end
+  
+      def clipWhenLowerLimitIsGreaterThanHigherLimit(outputScaledValue, outputRange):
+          if (outputScaledValue < outputRange[1]):
+              return outputRange[1]
+          elif (outputScaledValue > outputRange[0]):
+              return outputRange[0]
+          else:
+              return outputScaledValue
+          end
+      end
+  
+      def clipWhenLowerLimitIsLessThanHigher(outputScaledValue, outputRange):
+          if (outputScaledValue < outputRange[0]):
+              return outputRange[0]
+          elif (outputScaledValue > outputRange[1]):
+              return outputRange[1]
+          else:
+              return outputScaledValue
+          end
+      end
+  
+      slope = computeSlope(rawRange, scaledRange)
+      intercept = computeIntercept(slope, rawRange, scaledRange)
+      scaledValue = slope * value + intercept
+      return clipScaledValue(scaledValue, scaledRange)
+  end
+  
+  def limit(value, range):
+      return scale(value, range, range)
+  end
+  
+  
+  rq_obj_detect = 0
+  set_tool_voltage(24)
+  set_tool_communication(True, 115200, 0, 1, 1.5, 3.5)
+  rq_wait_for_gripper_connected()
+  rq_init_comm_if_connected(9, "1")
+  rq_init_comm_if_connected(2, "2")
+  rq_init_comm_if_connected(3, "3")
+  rq_init_comm_if_connected(4, "4")
+  rq_print_connected_grippers()
+  connectivity_checked = [-1,-1,-1,-1]
+  status_checked = [-1,-1,-1,-1]
+  current_speed = [-1,-1,-1,-1]
+  current_force = [-1,-1,-1,-1]
+  set_closed_norm(100.0, 1)
+  set_open_norm(0.0, 1)
+  set_closed_mm(0.0, 1)
+  set_open_mm(50.0, 1)
+  set_closed_norm(100.0, 2)
+  set_open_norm(0.0, 2)
+  set_closed_mm(0.0, 2)
+  set_open_mm(50.0, 2)
+  set_closed_norm(100.0, 3)
+  set_open_norm(0.0, 3)
+  set_closed_mm(0.0, 3)
+  set_open_mm(50.0, 3)
+  set_closed_norm(100.0, 4)
+  set_open_norm(0.0, 4)
+  set_closed_mm(0.0, 4)
+  set_open_mm(50.0, 4)
+  rq_set_gripper_max_cur(600, "1")
+  # end: URCap Installation Node
+  global Pallet_1_cnt1=1
+  global Pallet_1_cnt2=1
+  global Pallet_1_lct=1
+  global Pallet_1_lct_1=1
+  global Pallet_1_lno=1
+  global Pallet_1_lno_1=1
+  global Pallet_1_sep= False 
+  global Pallet_1_sep_1= False 
+  global Pallet_1_tct=1
+  global Pallet_1_tct_1=1
+  global Pallet_3_cnt1=1
+  global Pallet_3_lct=1
+  global Pallet_3_lno=1
+  global Pallet_3_sep= False 
+  global Pallet_3_tct=1
+  global Waypoint_12_p=p[-.121283080667, -.195081112611, .269514429875, -2.166993277596, 2.241498279613, -.007577542130]
+  global Waypoint_12_q=[-1.537612263356344, -1.119328336124756, -2.0675101280212402, -1.5367449086955567, 1.5992608070373535, -1.4992216269122522]
+  global Approach_1_p=p[.216866363980, -.228209748828, .168786880172, 2.221592767591, -2.213037268014, -.006935194474]
+  global Approach_1_q=[-0.38616925874347885, -1.7127424679136034, -2.0996336937233195, -0.9052627843039547, 1.5715193748319685, -0.38184482254307994]
+  global ToolActionPoi_1_p=p[.216857284324, -.228211198540, .149941240233, 2.221568708429, -2.213073349120, -.006932833424]
+  global ToolActionPoi_1_q=[-0.38628894490162935, -1.7722360096065746, -2.142061710561382, -0.8033397952385917, 1.5709195137014218, -0.381485764215614]
+  global Exit_1_p=p[.216846643059, -.228215686768, .180576000735, 2.221586879231, -2.213012858588, -.006959823914]
+  global Exit_1_q=[-0.386133496303934, -1.6798044646588632, -2.0697169296737554, -0.9681385332976209, 1.5718436251977943, -0.38213187916459823]
+  global Approach_p=p[.105621594386, -.224086839026, .168075977295, 2.221588433934, -2.213047047837, -.006997865515]
+  global Approach_q=[-0.5789721646881478, -1.398850755033262, -2.4119973183449517, -0.9060176175270032, 1.5712437627479456, -0.573992077503636]
+  global ToolActionPoint_p=p[.105616355779, -.224088684345, .149938874170, 2.221562169877, -2.213091059746, -.006958397993]
+  global ToolActionPoint_q=[-0.5791524092719804, -1.4752338690403537, -2.4654211998774516, -0.7761882106946949, 1.5704154968333097, -0.5735133329553737]
+  global Exit_p=p[.105626010163, -.224087124102, .176770234430, 2.221597534885, -2.213048395518, -.006929767377]
+  global Exit_q=[-0.5788758438057862, -1.3676994604488506, -2.3842558861108376, -0.9648645678769379, 1.5715794566185943, -0.5742195288849246]
+  global Approach_2_p=p[.019212718130, -.224089495392, .169579039734, 2.221608372406, -2.213034231037, -.006951990072]
+  global Approach_2_q=[-0.8693869747908245, -1.2503755848359361, -2.5014510155659724, -0.9634140295398073, 1.5705595016382752, -0.8645761646924708]
+  global ToolActionPoi_2_p=p[.019209197041, -.224087788233, .149936316013, 2.221578383081, -2.213070722404, -.006955445167]
+  global ToolActionPoi_2_q=[-0.8696273008954414, -1.339015797980693, -2.5672841071956305, -0.8089493078336787, 1.5695996284537403, -0.863966290160727]
+  global Exit_2_p=p[.019211139295, -.224087302052, .183921622296, 2.221578381148, -2.213070741886, -.006955443496]
+  global Exit_2_q=[-0.869204714029431, -1.2003965896526916, -2.4494897775597235, -1.0653538456879392, 1.571094799652358, -0.8649804746126888]
+  global Waypoint_14_p=p[-.221701681811, -.306123020961, .268895076676, 3.070968104807, -.005675251712, -.003601092666]
+  global Waypoint_14_q=[-1.8515403906451624, -1.7935472927489222, -1.5154767036437988, -1.3336313527873536, 1.5932374000549316, -3.413165871297018]
+  global Waypoint_1_p=p[-.221710565792, -.306113094311, .150839728437, 3.071018906397, -.005751687251, -.003570843932]
+  global Waypoint_1_q=[-1.8524254004107874, -1.9975115261473597, -1.845649242401123, -0.7995155614665528, 1.5912461280822754, -3.4110410849200647]
+  global Waypoint_15_p=p[-.260028889199, -.307245110444, .243484556207, 3.070997513373, -.005818736630, -.003539594403]
+  global Waypoint_15_q=[-1.9505398909198206, -1.9209791622557582, -1.4668498039245605, -1.2568586629680176, 1.599597454071045, -3.511667076741354]
+  global Waypoint_2_p=p[-.260023115818, -.307259986735, .150833796922, 3.071018420406, -.005769027388, -.003609555022]
+  global Waypoint_2_q=[-1.9510915915118616, -2.083689352075094, -1.7015395164489746, -0.8594263356975098, 1.5980610847473145, -3.510105911885397]
+  global Waypoint_16_p=p[-.243935290224, -.354167791885, .243603077995, 2.153342718148, -2.281403845303, .071082263650]
+  global Waypoint_16_q=[-1.8752182165728968, -2.053342481652731, -1.2538399696350098, -1.3786495488933106, 1.613527774810791, -1.8131116072284144]
+  global Waypoint_3_p=p[-.243952789864, -.354156026691, .169839156957, 2.153315024238, -2.281477885759, .071000272231]
+  global Waypoint_3_q=[-1.8758185545550745, -2.1496359310545863, -1.4642720222473145, -1.0719288152507325, 1.6127476692199707, -1.8117802778827112]
+  global Waypoint_17_p=p[-.237255908380, -.273961500647, .238186833183, 2.153307239670, -2.281424411604, .070995488208]
+  global Waypoint_17_q=[-1.9292076269732874, -1.7713524303831996, -1.6721930503845215, -1.2442968648723145, 1.6150755882263184, -1.865269962941305]
+  global Waypoint_4_p=p[-.237256476330, -.273956398705, .169840003300, 2.153323511412, -2.281439631204, .070953702149]
+  global Waypoint_4_q=[-1.92971116701235, -1.8975063763060511, -1.862745761871338, -0.9275720876506348, 1.6138396263122559, -1.8639758268939417]
+  global Waypoint_5_p=p[-.223117630939, -.306108108285, .182707227328, 3.071045119763, -.005723684036, -.003551795687]
+  global Waypoint_5_q=[-1.8561437765704554, -1.921723028222555, -1.7773756980895996, -0.9436772626689454, 1.5922656059265137, -3.415398422871725]
+  global Waypoint_6_p=p[-.260028721526, -.307259078706, .185017139580, 3.071031589781, -.005795886896, -.003623844019]
+  global Waypoint_6_q=[-1.9509475866900843, -2.0078398189940394, -1.6340546607971191, -1.002779797916748, 1.5987210273742676, -3.5105980078326624]
+  global Waypoint_18_p=p[-.242146172610, -.321908931477, .237970822828, -2.108117907700, 2.285285835915, -.029601102133]
+  global Waypoint_18_q=[-1.895137135182516, -1.9523326359190882, -1.4128594398498535, -1.3651469510844727, 1.6082005500793457, -1.8104365507708948]
+  global Waypoint_7_p=p[-.242148660796, -.321900499524, .197926957456, -2.108116922201, 2.285283455789, -.029575794924]
+  global Waypoint_7_q=[-1.8954857031451624, -2.002275129357809, -1.536583423614502, -1.191465215092041, 1.6077923774719238, -1.8096688429461878]
+  global Waypoint_19_p=p[-.220731267738, -.282828067495, .248801899051, 3.116330283883, -.088643838545, -.011955338618]
+  global Waypoint_19_q=[-1.8633554617511194, -1.737763067285055, -1.6616787910461426, -1.2866934102824708, 1.575059413909912, -3.3718412558185022]
+  global Waypoint_8_p=p[-.220728959025, -.282825717764, .213757592394, 3.116312253989, -.088633109026, -.011980592034]
+  global Waypoint_8_q=[-1.8636677900897425, -1.785708566705221, -1.777076244354248, -1.1233289998820801, 1.5745792388916016, -3.3711212317096155]
+  global Waypoint_20_p=p[-.260990726192, -.282899490055, .253767550098, 3.116148267535, -.088539428938, -.012015167318]
+  global Waypoint_20_q=[-1.9723637739764612, -1.8449584446349085, -1.5029339790344238, -1.3380687993815918, 1.5776867866516113, -3.481547180806295]
+  global Waypoint_9_p=p[-.261455070954, -.282840966082, .213803738768, 3.116144935837, -.088513657225, -.012046049037]
+  global Waypoint_9_q=[-1.9739707151996058, -1.8934208355345667, -1.6335511207580566, -1.1589782995036622, 1.5772671699523926, -3.4820144812213343]
+  global Waypoint_21_p=p[-.263496188865, -.341337100025, .242415593525, 3.116180493885, -.088620131297, -.011813253244]
+  global Waypoint_21_q=[-1.9219964186297815, -2.054755826989645, -1.2569022178649902, -1.374333218937256, 1.5762228965759277, -3.432049576436178]
+  global Waypoint_10_p=p[-.263488624654, -.341336240312, .213775883002, 3.116190869106, -.088550865127, -.011815387305]
+  global Waypoint_10_q=[-1.922236744557516, -2.0823360882201136, -1.3519291877746582, -1.251732663517334, 1.5760068893432617, -3.431521240864889]
+  global Waypoint_22_p=p[-.222892008244, -.343040720167, .243422903135, 3.116208335134, -.088588319173, -.012051735156]
+  global Waypoint_22_q=[-1.8233817259417933, -1.956940313378805, -1.3979706764221191, -1.3311613363078614, 1.573667049407959, -3.3328664938556116]
+  global Waypoint_11_p=p[-.222546556258, -.343002325619, .213786558996, 3.116200159263, -.088607556908, -.012104909324]
+  global Waypoint_11_q=[-1.8227956930743616, -1.9893018207945765, -1.4951510429382324, -1.2016075414470215, 1.573331356048584, -3.331425491963522]
+  global Waypoint_13_p=p[-.239189178219, -.274296753254, .306068090989, -2.150255728013, 2.257739278163, .006269270102]
+  global Waypoint_13_q=[-1.9245055357562464, -1.7523547611632289, -1.3532252311706543, -1.6287647686400355, 1.5832667350769043, -1.8728678862201136]
+  $ 1 "BeforeStart"
+  # begin: URCap Program Node
+  #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+  #   Type: Gripper Activate
+  $ 2 "Gripper Reset and Activate"
+  
+  rq_init_comm_if_connected(9, "1")
+  rq_init_comm_if_connected(2, "2")
+  rq_init_comm_if_connected(3, "3")
+  rq_init_comm_if_connected(4, "4")
+  
+  reset_and_activate = True
+  
+  rq_activate_all_grippers(True)
+  
+  clear_socket_buffer("1")
+  clear_socket_buffer("2")
+  clear_socket_buffer("3")
+  clear_socket_buffer("4")
+  # end: URCap Program Node
+  $ 3 "Wait: 2.0"
+  sleep(2.0)
+  # begin: URCap Program Node
+  #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+  #   Type: Gripper
+  $ 4 "Gripper Move50% (1)"
+  gripper_1_used = True
+  if (connectivity_checked[0] != 1):
+    if not(rq_set_sid(9, "1")):
+      popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+    end
+    connectivity_checked[0] = 1
+  end
+  if (status_checked[0] != 1):
+    if not(rq_is_gripper_activated("1")):
+      popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+    end
+    status_checked[0] = 1
+  end
+  rq_set_pos_spd_for(128, 255, 255, "1")
+  rq_go_to("1")
+  rq_wait("1")
+  gripper_1_selected = True
+  gripper_2_selected = False
+  gripper_3_selected = False
+  gripper_4_selected = False
+  gripper_1_used = False
+  gripper_2_used = False
+  gripper_3_used = False
+  gripper_4_used = False
+  # end: URCap Program Node
+  $ 5 "Robot Program"
+  $ 6 "MoveJ"
+  $ 7 "Waypoint_12"
+  movej(get_inverse_kin(Waypoint_12_p, qnear=Waypoint_12_q), a=1.3962634015954636, v=1.0471975511965976)
+  $ 8 "next≔'large_1'"
+  global next="large_1"
+  $ 9 "Loop 11 times"
+  Loop_1 = 0
+  while (Loop_1 < 11):
+    $ 10 "'Block selection'"
+    # 'Block selection'
+    $ 11 "If next ≟ 'large_1'"
+    if (next  ==  "large_1"):
+      $ 12 "Large_1"
+      def Large_1_trans(pose):
+      return p[pose[0], pose[1], pose[2], 0, 0, 0]
+    end
+    def Large_1_rot(pose):
+    return p[0, 0, 0, pose[3], pose[4], pose[5]]
+  end
+  def Large_1_compute_pallet_waypoint(T_base_feature_taught, T_feature_referencePoint_taught, T_referencePoint_approach_taught, T_base_feature, T_base_referencePoint):
+  local trans_referencePoint_approach_in_feature_taught = pose_sub(Large_1_trans(pose_trans(T_feature_referencePoint_taught, T_referencePoint_approach_taught)), Large_1_trans(T_feature_referencePoint_taught))
+  local rot_referencePoint_approach_in_feature_taught = pose_trans(Large_1_rot(T_feature_referencePoint_taught), pose_trans(Large_1_rot(T_referencePoint_approach_taught), pose_inv(Large_1_rot(T_feature_referencePoint_taught))))
+  T_feature_referencePoint = pose_trans(pose_inv(T_base_feature), T_base_referencePoint)
+  rot_referencePoint_approach = pose_trans(pose_inv(Large_1_rot(T_feature_referencePoint)), pose_trans(rot_referencePoint_approach_in_feature_taught, Large_1_rot(T_feature_referencePoint)))
+  T_feature_approach = pose_trans(trans_referencePoint_approach_in_feature_taught, pose_trans(T_feature_referencePoint, rot_referencePoint_approach))
+  T_base_approach = pose_trans(T_base_feature, T_feature_approach)
+  return T_base_approach
+  end
+  Pallet_1_tct = 4
+  if (Pallet_1_cnt1 > 4 or Pallet_1_cnt1 < 1):
+    Pallet_1_cnt1 = 1
+  end
+  $ 13 "Patterns"
+  $ 14 "Line_Pattern_1"
+  $ 17 "Layers"
+  if (Pallet_1_cnt1 < 5):
+    Pallet_1_lno = 1
+    Pallet_1_lct = Pallet_1_cnt1
+    global StartItem_1=pose_trans(p[0.0,0.0,0.0,0.0,0.0,0.0], pose_trans(p[-.000000000000, -.000000000000, -.000000000000, .000000000000, .000000000000, .000000000000], p[.216857284324, -.228211198540, .149941240233, 2.221568708409, -2.213073349109, -.006932833517]))
+    global EndItem_1=pose_trans(p[0.0,0.0,0.0,0.0,0.0,0.0], pose_trans(p[-.000000000000, -.000000000000, -.000000000000, .000000000000, .000000000000, .000000000000], p[.216867261673, -.442093912713, .151746448985, 2.221666369712, -2.212960336601, -.006911398228]))
+    referencePoint = interpolate_pose(StartItem_1, EndItem_1, (Pallet_1_lct - 1)/3)
+    direction = p[0,0,1,0,0,0]
+    referencePoint = pose_add (referencePoint,p[0.0*direction[0],0.0*direction[1],0.0*direction[2],0,0,0])
+  end
+  Approach_1_p = Large_1_compute_pallet_waypoint(p[0.0,0.0,0.0,0.0,0.0,0.0], pose_trans(pose_inv(p[0.0,0.0,0.0,0.0,0.0,0.0]), p[0.21685728432356258,-0.22821119853974992,0.14994124023278832,2.2215687084092934,-2.2130733491093086,-0.0069328335174699005]), p[1.6873476817114152E-5,1.2734651279527887E-4,-0.018845204360730644,-7.018742499699979E-6,4.961012620236915E-6,-2.71187350365815E-5], p[0.0,0.0,0.0,0.0,0.0,0.0], referencePoint)
+  Approach_1_p = pose_trans(p[0.21685728432356258,-0.22821119853974992,0.14994124023278832,2.2215687084092126,-2.213073349109228,-0.006932833517500899], pose_trans(pose_inv(referencePoint), Approach_1_p))
+  ToolActionPoi_1_p = Large_1_compute_pallet_waypoint(p[0.0,0.0,0.0,0.0,0.0,0.0], pose_trans(pose_inv(p[0.0,0.0,0.0,0.0,0.0,0.0]), p[0.21685728432356258,-0.22821119853974992,0.14994124023278832,2.2215687084092934,-2.2130733491093086,-0.0069328335174699005]), p[-2.7755575615628914E-17,0.0,-2.7755575615628914E-17,0.0,0.0,0.0], p[0.0,0.0,0.0,0.0,0.0,0.0], referencePoint)
+  ToolActionPoi_1_p = pose_trans(p[0.21685728432356258,-0.22821119853974992,0.14994124023278832,2.2215687084092126,-2.213073349109228,-0.006932833517500899], pose_trans(pose_inv(referencePoint), ToolActionPoi_1_p))
+  Exit_1_p = Large_1_compute_pallet_waypoint(p[0.0,0.0,0.0,0.0,0.0,0.0], pose_trans(pose_inv(p[0.0,0.0,0.0,0.0,0.0,0.0]), p[0.21685728432356258,-0.22821119853974992,0.14994124023278832,2.2215687084092934,-2.2130733491093086,-0.0069328335174699005]), p[3.4176249281314686E-5,2.3243584159310382E-4,-0.030633861819267194,-3.324364250806069E-5,8.904472074483655E-6,-3.549651220163098E-5], p[0.0,0.0,0.0,0.0,0.0,0.0], referencePoint)
+  Exit_1_p = pose_trans(p[0.21685728432356258,-0.22821119853974992,0.14994124023278832,2.2215687084092126,-2.213073349109228,-0.006932833517500899], pose_trans(pose_inv(referencePoint), Exit_1_p))
+  $ 18 "At Each Item"
+  $ 19 "Generated Movements"
+  $ 20 "MoveJ"
+  $ 21 "Approach_1"
+  movej(get_inverse_kin(pose_trans(referencePoint, pose_trans(p[-.229186537418, .214890994059, .151278551568, -2.221568708409, 2.213073349109, .006932833517], Approach_1_p)), qnear=Approach_1_q), a=1.3962634015954636, v=1.0471975511965976)
+  $ 22 "MoveL"
+  $ 23 "ToolActionPoi_1"
+  movel(pose_trans(referencePoint, pose_trans(p[-.229186537418, .214890994059, .151278551568, -2.221568708409, 2.213073349109, .006932833517], ToolActionPoi_1_p)), a=1.2, v=0.25)
+  $ 24 "Tool action"
+  # begin: URCap Program Node
+  #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+  #   Type: Gripper
+  $ 25 "Gripper Close (1)"
+  gripper_1_used = True
+  if (connectivity_checked[0] != 1):
+    if not(rq_set_sid(9, "1")):
+      popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+    end
+    connectivity_checked[0] = 1
+  end
+  if (status_checked[0] != 1):
+    if not(rq_is_gripper_activated("1")):
+      popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+    end
+    status_checked[0] = 1
+  end
+  rq_set_pos_spd_for(255, 255, 255, "1")
+  rq_go_to("1")
+  rq_wait("1")
+  gripper_1_selected = True
+  gripper_2_selected = False
+  gripper_3_selected = False
+  gripper_4_selected = False
+  gripper_1_used = False
+  gripper_2_used = False
+  gripper_3_used = False
+  gripper_4_used = False
+  # end: URCap Program Node
+  $ 26 "MoveL"
+  $ 27 "Exit_1"
+  movel(pose_trans(referencePoint, pose_trans(p[-.229186537418, .214890994059, .151278551568, -2.221568708409, 2.213073349109, .006932833517], Exit_1_p)), a=1.2, v=0.25, r=0.015)
+  Pallet_1_sep = False
+  if (Pallet_1_cnt1 >= 4):
+    Pallet_1_cnt1 = 1
+  else:
+    Pallet_1_cnt1 = Pallet_1_cnt1 + 1
+  end
+  else:
+    $ 28 "ElseIf next ≟ 'small_1'"
+    if (next  ==  "small_1"):
+      $ 29 "Small_1"
+      def Small_1_trans(pose):
+      return p[pose[0], pose[1], pose[2], 0, 0, 0]
+    end
+    def Small_1_rot(pose):
+    return p[0, 0, 0, pose[3], pose[4], pose[5]]
+  end
+  def Small_1_compute_pallet_waypoint(T_base_feature_taught, T_feature_referencePoint_taught, T_referencePoint_approach_taught, T_base_feature, T_base_referencePoint):
+  local trans_referencePoint_approach_in_feature_taught = pose_sub(Small_1_trans(pose_trans(T_feature_referencePoint_taught, T_referencePoint_approach_taught)), Small_1_trans(T_feature_referencePoint_taught))
+  local rot_referencePoint_approach_in_feature_taught = pose_trans(Small_1_rot(T_feature_referencePoint_taught), pose_trans(Small_1_rot(T_referencePoint_approach_taught), pose_inv(Small_1_rot(T_feature_referencePoint_taught))))
+  T_feature_referencePoint = pose_trans(pose_inv(T_base_feature), T_base_referencePoint)
+  rot_referencePoint_approach = pose_trans(pose_inv(Small_1_rot(T_feature_referencePoint)), pose_trans(rot_referencePoint_approach_in_feature_taught, Small_1_rot(T_feature_referencePoint)))
+  T_feature_approach = pose_trans(trans_referencePoint_approach_in_feature_taught, pose_trans(T_feature_referencePoint, rot_referencePoint_approach))
+  T_base_approach = pose_trans(T_base_feature, T_feature_approach)
+  return T_base_approach
+  end
+  Pallet_1_tct_1 = 4
+  if (Pallet_1_cnt2 > 4 or Pallet_1_cnt2 < 1):
+    Pallet_1_cnt2 = 1
+  end
+  $ 30 "Patterns"
+  $ 31 "Line_Pattern_2"
+  $ 34 "Layers"
+  if (Pallet_1_cnt2 < 5):
+    Pallet_1_lno_1 = 1
+    Pallet_1_lct_1 = Pallet_1_cnt2
+    global StartItem_2=pose_trans(p[0.0,0.0,0.0,0.0,0.0,0.0], pose_trans(p[-.000000000000, -.000000000000, -.000000000000, .000000000000, .000000000000, .000000000000], p[.105616355779, -.224088684345, .149938874170, 2.221562169964, -2.213091059647, -.006958397984]))
+    global EndItem_2=pose_trans(p[0.0,0.0,0.0,0.0,0.0,0.0], pose_trans(p[-.000000000000, -.000000000000, -.000000000000, .000000000000, .000000000000, .000000000000], p[.099654963387, -.442105298104, .151759398266, 2.221570974376, -2.213005561904, -.006861286209]))
+    referencePoin_1 = interpolate_pose(StartItem_2, EndItem_2, (Pallet_1_lct_1 - 1)/3)
+    direction = p[0,0,1,0,0,0]
+    referencePoin_1 = pose_add (referencePoin_1,p[0.0*direction[0],0.0*direction[1],0.0*direction[2],0,0,0])
+  end
+  Approach_p = Small_1_compute_pallet_waypoint(p[0.0,0.0,0.0,0.0,0.0,0.0], pose_trans(pose_inv(p[0.0,0.0,0.0,0.0,0.0,0.0]), p[0.1056163557787996,-0.22408868434532814,0.14993887416970492,2.2215621699643475,-2.2130910596466458,-0.0069583979837966065]), p[1.5465430793809576E-5,1.2616320174828333E-4,-0.018136658575836767,-2.652384439301831E-5,-9.003229493394527E-6,-3.1754468031514885E-5], p[0.0,0.0,0.0,0.0,0.0,0.0], referencePoin_1)
+  Approach_p = pose_trans(p[0.1056163557787996,-0.22408868434532814,0.14993887416970492,2.2215621699644017,-2.213091059646699,-0.0069583979838339265], pose_trans(pose_inv(referencePoin_1), Approach_p))
+  ToolActionPoint_p = Small_1_compute_pallet_waypoint(p[0.0,0.0,0.0,0.0,0.0,0.0], pose_trans(pose_inv(p[0.0,0.0,0.0,0.0,0.0,0.0]), p[0.1056163557787996,-0.22408868434532814,0.14993887416970492,2.2215621699643475,-2.2130910596466458,-0.0069583979837966065]), p[0.0,0.0,0.0,0.0,0.0,0.0], p[0.0,0.0,0.0,0.0,0.0,0.0], referencePoin_1)
+  ToolActionPoint_p = pose_trans(p[0.1056163557787996,-0.22408868434532814,0.14993887416970492,2.2215621699644017,-2.213091059646699,-0.0069583979838339265], pose_trans(pose_inv(referencePoin_1), ToolActionPoint_p))
+  Exit_p = Small_1_compute_pallet_waypoint(p[0.0,0.0,0.0,0.0,0.0,0.0], pose_trans(pose_inv(p[0.0,0.0,0.0,0.0,0.0,0.0]), p[0.1056163557787996,-0.22408868434532814,0.14993887416970492,2.2215621699643475,-2.2130910596466458,-0.0069583979837966065]), p[2.4055914441101223E-5,1.847411258001641E-4,-0.026830715255136695,9.272712380332875E-6,1.667165530513353E-5,-3.51319871659374E-5], p[0.0,0.0,0.0,0.0,0.0,0.0], referencePoin_1)
+  Exit_p = pose_trans(p[0.1056163557787996,-0.22408868434532814,0.14993887416970492,2.2215621699644017,-2.213091059646699,-0.0069583979838339265], pose_trans(pose_inv(referencePoin_1), Exit_p))
+  $ 35 "At Each Item"
+  $ 36 "Generated Movements"
+  $ 37 "MoveJ"
+  $ 38 "Approach"
+  movej(get_inverse_kin(pose_trans(referencePoin_1, pose_trans(p[-.224633747460, .103671150260, .150479869592, -2.221562169964, 2.213091059647, .006958397984], Approach_p)), qnear=Approach_q), a=1.3962634015954636, v=1.0471975511965976)
+  $ 39 "MoveL"
+  $ 40 "ToolActionPoint"
+  movel(pose_trans(referencePoin_1, pose_trans(p[-.224633747460, .103671150260, .150479869592, -2.221562169964, 2.213091059647, .006958397984], ToolActionPoint_p)), a=1.2, v=0.25)
+  $ 41 "Tool action"
+  # begin: URCap Program Node
+  #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+  #   Type: Gripper
+  $ 42 "Gripper Close (1)"
+  gripper_1_used = True
+  if (connectivity_checked[0] != 1):
+    if not(rq_set_sid(9, "1")):
+      popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+    end
+    connectivity_checked[0] = 1
+  end
+  if (status_checked[0] != 1):
+    if not(rq_is_gripper_activated("1")):
+      popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+    end
+    status_checked[0] = 1
+  end
+  rq_set_pos_spd_for(255, 255, 255, "1")
+  rq_go_to("1")
+  rq_wait("1")
+  gripper_1_selected = True
+  gripper_2_selected = False
+  gripper_3_selected = False
+  gripper_4_selected = False
+  gripper_1_used = False
+  gripper_2_used = False
+  gripper_3_used = False
+  gripper_4_used = False
+  # end: URCap Program Node
+  $ 43 "MoveL"
+  $ 44 "Exit"
+  movel(pose_trans(referencePoin_1, pose_trans(p[-.224633747460, .103671150260, .150479869592, -2.221562169964, 2.213091059647, .006958397984], Exit_p)), a=1.2, v=0.25, r=0.015)
+  Pallet_1_sep_1 = False
+  if (Pallet_1_cnt2 >= 4):
+    Pallet_1_cnt2 = 1
+  else:
+    Pallet_1_cnt2 = Pallet_1_cnt2 + 1
+  end
+  else:
+    $ 45 "Else"
+    $ 46 "Small_2"
+    def Small_2_trans(pose):
+    return p[pose[0], pose[1], pose[2], 0, 0, 0]
+  end
+  def Small_2_rot(pose):
+  return p[0, 0, 0, pose[3], pose[4], pose[5]]
+  end
+  def Small_2_compute_pallet_waypoint(T_base_feature_taught, T_feature_referencePoint_taught, T_referencePoint_approach_taught, T_base_feature, T_base_referencePoint):
+  local trans_referencePoint_approach_in_feature_taught = pose_sub(Small_2_trans(pose_trans(T_feature_referencePoint_taught, T_referencePoint_approach_taught)), Small_2_trans(T_feature_referencePoint_taught))
+  local rot_referencePoint_approach_in_feature_taught = pose_trans(Small_2_rot(T_feature_referencePoint_taught), pose_trans(Small_2_rot(T_referencePoint_approach_taught), pose_inv(Small_2_rot(T_feature_referencePoint_taught))))
+  T_feature_referencePoint = pose_trans(pose_inv(T_base_feature), T_base_referencePoint)
+  rot_referencePoint_approach = pose_trans(pose_inv(Small_2_rot(T_feature_referencePoint)), pose_trans(rot_referencePoint_approach_in_feature_taught, Small_2_rot(T_feature_referencePoint)))
+  T_feature_approach = pose_trans(trans_referencePoint_approach_in_feature_taught, pose_trans(T_feature_referencePoint, rot_referencePoint_approach))
+  T_base_approach = pose_trans(T_base_feature, T_feature_approach)
+  return T_base_approach
+  end
+  Pallet_3_tct = 4
+  if (Pallet_3_cnt1 > 4 or Pallet_3_cnt1 < 1):
+    Pallet_3_cnt1 = 1
+  end
+  $ 47 "Patterns"
+  $ 48 "Line_Pattern_3"
+  $ 51 "Layers"
+  if (Pallet_3_cnt1 < 5):
+    Pallet_3_lno = 1
+    Pallet_3_lct = Pallet_3_cnt1
+    global StartItem_3=pose_trans(p[0.0,0.0,0.0,0.0,0.0,0.0], pose_trans(p[-.000000000000, -.000000000000, -.000000000000, .000000000000, .000000000000, .000000000000], p[.019209197041, -.224087788233, .149936316013, 2.221578383081, -2.213070722404, -.006955445167]))
+    global EndItem_3=pose_trans(p[0.0,0.0,0.0,0.0,0.0,0.0], pose_trans(p[-.000000000000, -.000000000000, -.000000000000, .000000000000, .000000000000, .000000000000], p[.008556796992, -.435195716382, .151767459618, 2.221577264983, -2.213074470184, -.006872881606]))
+    referencePoin_2 = interpolate_pose(StartItem_3, EndItem_3, (Pallet_3_lct - 1)/3)
+    direction = p[0,0,1,0,0,0]
+    referencePoin_2 = pose_add (referencePoin_2,p[0.0*direction[0],0.0*direction[1],0.0*direction[2],0,0,0])
+  end
+  Approach_2_p = Small_2_compute_pallet_waypoint(p[0.0,0.0,0.0,0.0,0.0,0.0], pose_trans(pose_inv(p[0.0,0.0,0.0,0.0,0.0,0.0]), p[0.019209197040686226,-0.22408778823346523,0.14993631601265903,2.221578383080892,-2.21307072240404,-0.00695544516736121]), p[2.0511539421119718E-5,1.3881700330715258E-4,-0.019642222878674565,-1.6334496983262438E-6,4.851578490945094E-6,-2.997114671610795E-5], p[0.0,0.0,0.0,0.0,0.0,0.0], referencePoin_2)
+  Approach_2_p = pose_trans(p[0.019209197040686226,-0.22408778823346523,0.14993631601265903,2.2215783830809466,-2.213070722404094,-0.006955445167316337], pose_trans(pose_inv(referencePoin_2), Approach_2_p))
+  ToolActionPoi_2_p = Small_2_compute_pallet_waypoint(p[0.0,0.0,0.0,0.0,0.0,0.0], pose_trans(pose_inv(p[0.0,0.0,0.0,0.0,0.0,0.0]), p[0.019209197040686226,-0.22408778823346523,0.14993631601265903,2.221578383080892,-2.21307072240404,-0.00695544516736121]), p[2.7755575615628914E-17,0.0,-2.7755575615628914E-17,0.0,0.0,0.0], p[0.0,0.0,0.0,0.0,0.0,0.0], referencePoin_2)
+  ToolActionPoi_2_p = pose_trans(p[0.019209197040686226,-0.22408778823346523,0.14993631601265903,2.2215783830809466,-2.213070722404094,-0.006955445167316337], pose_trans(pose_inv(referencePoin_2), ToolActionPoi_2_p))
+  Exit_2_p = Small_2_compute_pallet_waypoint(p[0.0,0.0,0.0,0.0,0.0,0.0], pose_trans(pose_inv(p[0.0,0.0,0.0,0.0,0.0,0.0]), p[0.019209197040686226,-0.22408778823346523,0.14993631601265903,2.221578383080892,-2.21307072240404,-0.00695544516736121]), p[3.203273666457784E-5,2.443139166417446E-4,-0.03398441307121791,9.528324314451995E-9,-8.002096513030648E-9,9.64866781530004E-9], p[0.0,0.0,0.0,0.0,0.0,0.0], referencePoin_2)
+  Exit_2_p = pose_trans(p[0.019209197040686226,-0.22408778823346523,0.14993631601265903,2.2215783830809466,-2.213070722404094,-0.006955445167316337], pose_trans(pose_inv(referencePoin_2), Exit_2_p))
+  $ 52 "At Each Item"
+  $ 53 "Generated Movements"
+  $ 54 "MoveJ"
+  $ 55 "Approach_2"
+  movej(get_inverse_kin(pose_trans(referencePoin_2, pose_trans(p[-.224303237325, .017263110275, .149850831478, -2.221578383081, 2.213070722404, .006955445167], Approach_2_p)), qnear=Approach_2_q), a=1.3962634015954636, v=1.0471975511965976)
+  $ 56 "MoveL"
+  $ 57 "ToolActionPoi_2"
+  movel(pose_trans(referencePoin_2, pose_trans(p[-.224303237325, .017263110275, .149850831478, -2.221578383081, 2.213070722404, .006955445167], ToolActionPoi_2_p)), a=1.2, v=0.25)
+  $ 58 "Tool action"
+  # begin: URCap Program Node
+  #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+  #   Type: Gripper
+  $ 59 "Gripper Close (1)"
+  gripper_1_used = True
+  if (connectivity_checked[0] != 1):
+    if not(rq_set_sid(9, "1")):
+      popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+    end
+    connectivity_checked[0] = 1
+  end
+  if (status_checked[0] != 1):
+    if not(rq_is_gripper_activated("1")):
+      popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+    end
+    status_checked[0] = 1
+  end
+  rq_set_pos_spd_for(255, 255, 255, "1")
+  rq_go_to("1")
+  rq_wait("1")
+  gripper_1_selected = True
+  gripper_2_selected = False
+  gripper_3_selected = False
+  gripper_4_selected = False
+  gripper_1_used = False
+  gripper_2_used = False
+  gripper_3_used = False
+  gripper_4_used = False
+  # end: URCap Program Node
+  $ 60 "MoveL"
+  $ 61 "Exit_2"
+  movel(pose_trans(referencePoin_2, pose_trans(p[-.224303237325, .017263110275, .149850831478, -2.221578383081, 2.213070722404, .006955445167], Exit_2_p)), a=1.2, v=0.25, r=0.015)
+  Pallet_3_sep = False
+  if (Pallet_3_cnt1 >= 4):
+    Pallet_3_cnt1 = 1
+  else:
+    Pallet_3_cnt1 = Pallet_3_cnt1 + 1
+  end
+  end
+  end
+  $ 62 "'Build Movement based on loop count'"
+  # 'Build Movement based on loop count'
+  $ 63 "Switch Loop_1"
+  switch_1 = Loop_1
+  if (0 == switch_1):
+    $ 65 "MoveJ"
+    $ 66 "Waypoint_14"
+    movej(get_inverse_kin(Waypoint_14_p, qnear=Waypoint_14_q), a=1.3962634015954636, v=1.3962634015954636, r=0.025)
+    $ 67 "Waypoint_1"
+    movej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.3962634015954636, v=1.3962634015954636)
+    $ 68 "next≔'large_1'"
+    global next="large_1"
+  elif (1 == switch_1):
+    $ 70 "MoveJ"
+    $ 71 "Waypoint_15"
+    movej(get_inverse_kin(Waypoint_15_p, qnear=Waypoint_15_q), a=1.3962634015954636, v=1.3962634015954636, r=0.025)
+    $ 72 "Waypoint_2"
+    movej(get_inverse_kin(Waypoint_2_p, qnear=Waypoint_2_q), a=1.3962634015954636, v=1.3962634015954636)
+    $ 73 "next≔'small_1'"
+    global next="small_1"
+  elif (2 == switch_1):
+    $ 75 "MoveJ"
+    $ 76 "Waypoint_16"
+    movej(get_inverse_kin(Waypoint_16_p, qnear=Waypoint_16_q), a=1.3962634015954636, v=1.3962634015954636, r=0.025)
+    $ 77 "Waypoint_3"
+    movej(get_inverse_kin(Waypoint_3_p, qnear=Waypoint_3_q), a=1.3962634015954636, v=1.3962634015954636)
+    $ 78 "next≔'small_1'"
+    global next="small_1"
+  elif (3 == switch_1):
+    $ 80 "MoveJ"
+    $ 81 "Waypoint_17"
+    movej(get_inverse_kin(Waypoint_17_p, qnear=Waypoint_17_q), a=1.3962634015954636, v=1.3962634015954636, r=0.025)
+    $ 82 "Waypoint_4"
+    movej(get_inverse_kin(Waypoint_4_p, qnear=Waypoint_4_q), a=1.3962634015954636, v=1.3962634015954636)
+    $ 83 "next≔'large_1'"
+    global next="large_1"
+  elif (4 == switch_1):
+    $ 85 "MoveJ"
+    $ 86 "Waypoint_14"
+    movej(get_inverse_kin(Waypoint_14_p, qnear=Waypoint_14_q), a=1.3962634015954636, v=1.3962634015954636, r=0.025)
+    $ 87 "Waypoint_5"
+    movej(get_inverse_kin(Waypoint_5_p, qnear=Waypoint_5_q), a=1.3962634015954636, v=1.3962634015954636)
+    $ 88 "next≔'large_1'"
+    global next="large_1"
+  elif (5 == switch_1):
+    $ 90 "MoveJ"
+    $ 91 "Waypoint_15"
+    movej(get_inverse_kin(Waypoint_15_p, qnear=Waypoint_15_q), a=1.3962634015954636, v=1.3962634015954636, r=0.025)
+    $ 92 "Waypoint_6"
+    movej(get_inverse_kin(Waypoint_6_p, qnear=Waypoint_6_q), a=1.3962634015954636, v=1.3962634015954636)
+    $ 93 "next≔'small_1'"
+    global next="small_1"
+  elif (6 == switch_1):
+    $ 95 "MoveJ"
+    $ 96 "Waypoint_18"
+    movej(get_inverse_kin(Waypoint_18_p, qnear=Waypoint_18_q), a=1.3962634015954636, v=1.3962634015954636, r=0.025)
+    $ 97 "Waypoint_7"
+    movej(get_inverse_kin(Waypoint_7_p, qnear=Waypoint_7_q), a=1.3962634015954636, v=1.3962634015954636)
+    $ 98 "next≔'small_1'"
+    global next="small_1"
+  elif (7 == switch_1):
+    $ 100 "MoveJ"
+    $ 101 "Waypoint_19"
+    movej(get_inverse_kin(Waypoint_19_p, qnear=Waypoint_19_q), a=1.3962634015954636, v=1.3962634015954636, r=0.025)
+    $ 102 "Waypoint_8"
+    movej(get_inverse_kin(Waypoint_8_p, qnear=Waypoint_8_q), a=1.3962634015954636, v=1.3962634015954636)
+    $ 103 "next≔'small_2'"
+    global next="small_2"
+  elif (8 == switch_1):
+    $ 105 "MoveJ"
+    $ 106 "Waypoint_20"
+    movej(get_inverse_kin(Waypoint_20_p, qnear=Waypoint_20_q), a=1.3962634015954636, v=1.3962634015954636, r=0.025)
+    $ 107 "Waypoint_9"
+    movej(get_inverse_kin(Waypoint_9_p, qnear=Waypoint_9_q), a=1.3962634015954636, v=1.3962634015954636)
+    $ 108 "next≔'small_2'"
+    global next="small_2"
+  elif (9 == switch_1):
+    $ 110 "MoveJ"
+    $ 111 "Waypoint_21"
+    movej(get_inverse_kin(Waypoint_21_p, qnear=Waypoint_21_q), a=1.3962634015954636, v=1.3962634015954636, r=0.025)
+    $ 112 "Waypoint_10"
+    movej(get_inverse_kin(Waypoint_10_p, qnear=Waypoint_10_q), a=1.3962634015954636, v=1.3962634015954636)
+    $ 113 "next≔'small_2'"
+    global next="small_2"
+  elif (10 == switch_1):
+    $ 115 "MoveJ"
+    $ 116 "Waypoint_22"
+    movej(get_inverse_kin(Waypoint_22_p, qnear=Waypoint_22_q), a=1.3962634015954636, v=1.3962634015954636, r=0.025)
+    $ 117 "Waypoint_11"
+    movej(get_inverse_kin(Waypoint_11_p, qnear=Waypoint_11_q), a=1.3962634015954636, v=1.3962634015954636)
+    $ 118 "next≔''"
+    global next=""
+  end
+  # begin: URCap Program Node
+  #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+  #   Type: Gripper
+  $ 119 "Gripper Move50% (1)"
+  gripper_1_used = True
+  if (connectivity_checked[0] != 1):
+    if not(rq_set_sid(9, "1")):
+      popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+    end
+    connectivity_checked[0] = 1
+  end
+  if (status_checked[0] != 1):
+    if not(rq_is_gripper_activated("1")):
+      popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+    end
+    status_checked[0] = 1
+  end
+  rq_set_pos_spd_for(128, 255, 255, "1")
+  rq_go_to("1")
+  rq_wait("1")
+  gripper_1_selected = True
+  gripper_2_selected = False
+  gripper_3_selected = False
+  gripper_4_selected = False
+  gripper_1_used = False
+  gripper_2_used = False
+  gripper_3_used = False
+  gripper_4_used = False
+  # end: URCap Program Node
+  $ 120 "MoveL"
+  $ 121 "Waypoint_13"
+  movel(Waypoint_13_p, a=1.2, v=0.4, r=0.05)
+  Loop_1 = Loop_1 + 1
+  end
+  $ 122 "MoveJ"
+  $ 123 "Waypoint_12"
+  movej(get_inverse_kin(Waypoint_12_p, qnear=Waypoint_12_q), a=1.3962634015954636, v=1.0471975511965976)
+end
