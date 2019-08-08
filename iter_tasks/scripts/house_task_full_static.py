@@ -16,7 +16,7 @@ house_1_allocation = {"robot_base":True,"robot_mid_1":True,"robot_mid_2":True,"r
 build_house_2 = False
 house_2_allocation = {"robot_base":False,"robot_mid_1":False,"robot_mid_2":False,"robot_roof":False}
 
-AFE_HEIGHT_OFFSET = 0.1
+SAFE_HEIGHT_OFFSET = 0.1
 
 BLOCK_SMALL = (0.02032,0.05842,0.01524)
 BLOCK_LARGE = (0.02032,0.10,0.01524)
@@ -76,16 +76,16 @@ def pick_and_place_block(queue, target_position, target_orientation):
             pm.move(safe_target_position,target_orientation),
             pm.move(target_position,target_orientation)
         ],
-        object_name=obj_count,
+        object_name='{0}'.format(obj_count),
         grasp_effort=GRASP_EFFORT,
         release_effort=RELEASE_EFFORT_WORKSPACE))
 
-    obj_count += 1
     dynamic_env_objs.append(dt.environment_object(
-        name='{}'.format(obj_count),
+        name='{0}'.format(obj_count),
         position=object_pose['position'],
         orientation=object_pose['orientation'],
-        size=dt.size(0.05,0.05,0.05)))
+        size=dt.size(0.01,0.01,0.01)))
+    obj_count += 1
 
     task_list.append(pm.move(safe_target_position,target_orientation))
     task_list.append(pm.release(RELEASE_EFFORT_REGION))
@@ -228,20 +228,20 @@ def static_environment():
 if __name__ == "__main__":
 
     large_set = Queue(
-        start_pose=dt.position(0,0,0),
-        end_pose=dt.position(0,0,0),
+        start_pose=dt.pose(dt.position(-0.216850,0.188210,0.17),DOWN_GX_ORIENTATION),
+        end_pose=dt.pose(dt.position(-0.216880,0.402100,0.17),DOWN_GX_ORIENTATION),
         num_items = 4,
         orientation = DOWN_GX_ORIENTATION)
 
     small_set = QueueSet([
         Queue(
-            start_pose=dt.position(0,0,0),
-            end_pose=dt.position(0,0,0),
+            start_pose=dt.pose(dt.position(-0.105610,0.184090,0.17),DOWN_GX_ORIENTATION),
+            end_pose=dt.pose(dt.position(-0.099660,0.402100,0.17),DOWN_GX_ORIENTATION),
             num_items = 4,
             orientation = DOWN_GX_ORIENTATION),
         Queue(
-            start_pose=dt.position(0,0,0),
-            end_pose=dt.position(0,0,0),
+            start_pose=dt.pose(dt.position(-0.019210,0.184090,0.17),DOWN_GX_ORIENTATION),
+            end_pose=dt.pose(dt.position(-0.008560,0.395190,0.17),DOWN_GX_ORIENTATION),
             num_items = 4,
             orientation = DOWN_GX_ORIENTATION)
     ])

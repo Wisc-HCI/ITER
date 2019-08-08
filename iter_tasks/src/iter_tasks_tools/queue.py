@@ -1,3 +1,7 @@
+import copy
+
+import iter_tasks_tools.data_types as dt
+
 from abc import ABCMeta, abstractmethod
 
 
@@ -21,26 +25,26 @@ class Queue(AbstractQueue):
         self._end_pose = end_pose
         self._orientation = orientation
         self._num_items = num_items
-        self._count = 0
+        self._count = 0.0
 
     def next(self):
-        if self._count >= 1:
+        if self._count >= self._num_items:
             return None
 
         dx = self._end_pose['position']['x'] - self._start_pose['position']['x']
         dy = self._end_pose['position']['y'] - self._start_pose['position']['y']
         dz = self._end_pose['position']['z'] - self._start_pose['position']['z']
 
-        x = dx * self._count + self._start_pose['position']['x']
-        y = dy * self._count + self._start_pose['position']['y']
-        z = dz * self._count + self._start_pose['position']['z']
+        x = dx * (self._count / (self._num_items - 1)) + self._start_pose['position']['x']
+        y = dy * (self._count / (self._num_items - 1)) + self._start_pose['position']['y']
+        z = dz * (self._count / (self._num_items - 1)) + self._start_pose['position']['z']
 
-        self._count += 1 / self._num_items
+        self._count += 1.0
 
         return dt.pose(dt.position(x,y,z),copy.deepcopy(self._orientation))
 
     def has_next(self):
-        return self._count >= 1
+        return self._count < self._num_items
 
 
 class QueueSet(AbstractQueue):
