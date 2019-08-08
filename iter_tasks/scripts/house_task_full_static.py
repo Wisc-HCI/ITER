@@ -36,13 +36,11 @@ GRASP_EFFORT = 0.59 #0.57
 RELEASE_EFFORT_REGION = 0.25
 RELEASE_EFFORT_WORKSPACE = 0.45
 
-REGION_GRASP_OFFSET = dt.pose(dt.position(0, 0, 0.135),
-                              copy.deepcopy(DOWN_GX_ORIENTATION))
-
 WORKSPACE_GRASP_OFFSET = dt.pose(dt.position(0,0,0.1675),
                                  copy.deepcopy(DOWN_GX_ORIENTATION))
 
 obj_count = 0
+dynamic_env_objs = []
 
 
 def move_home():
@@ -58,9 +56,7 @@ def wait_for_human():
     return task_list
 
 def pick_and_place_block(queue, target_position, target_orientation):
-    global obj_count
-
-    #TODO grasp_offset
+    global obj_count, dynamic_env_objs
 
     task_list = []
 
@@ -85,6 +81,11 @@ def pick_and_place_block(queue, target_position, target_orientation):
         release_effort=RELEASE_EFFORT_WORKSPACE))
 
     obj_count += 1
+    dynamic_env_objs.append(dt.environment_object(
+        name='{}'.format(obj_count),
+        position=object_pose['position'],
+        orientation=object_pose['orientation'],
+        size=dt.size(0.05,0.05,0.05)))
 
     task_list.append(pm.move(safe_target_position,target_orientation))
     task_list.append(pm.release(RELEASE_EFFORT_REGION))
@@ -226,23 +227,43 @@ def static_environment():
 
 if __name__ == "__main__":
 
+    large_set = Queue(
+        start_pose=dt.position(0,0,0),
+        end_pose=dt.position(0,0,0),
+        num_items = 4,
+        orientation = DOWN_GX_ORIENTATION)
+
+    small_set = QueueSet([
+        Queue(
+            start_pose=dt.position(0,0,0),
+            end_pose=dt.position(0,0,0),
+            num_items = 4,
+            orientation = DOWN_GX_ORIENTATION),
+        Queue(
+            start_pose=dt.position(0,0,0),
+            end_pose=dt.position(0,0,0),
+            num_items = 4,
+            orientation = DOWN_GX_ORIENTATION)
+    ])
+
     task_list = []
     task_list += move_home()
     task_list += wait_for_human()
 
     if build_house_1:
-        task_list += build_house(WORKSPACE_POSITION,**house_1_allocation)
+        task_list += build_house(WORKSPACE_POSITION,large_set,small_set,**house_1_allocation)
 
     if build_house_2:
         task_list += move_home()
         task_list += wait_for_human()
-        task_list += build_house(WORKSPACE_POSITION,**house_2_allocation)
+        task_list += build_house(WORKSPACE_POSITION,large_set,small_set,**house_2_allocation)
 
     task_list += move_home()
     task_list += wait_for_human()
 
     env_list = []
     env_list += static_environment()
+    env_list += dynamic_env_objs
 
     plan = dt.plan(
         title='UR3e House Full Task - Static',
