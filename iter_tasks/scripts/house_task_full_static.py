@@ -7,6 +7,9 @@ import copy
 import iter_tasks_tools.data_types as dt
 import iter_tasks_tools.primitives as pm
 
+from iter_tasks_tools.queue import Queue, QueueSet
+
+
 task_case = "pooled_static"
 build_house_1 = True
 house_1_allocation = {"robot_base":True,"robot_mid_1":True,"robot_mid_2":True,"robot_roof":True}
@@ -33,35 +36,13 @@ GRASP_EFFORT = 0.59 #0.57
 RELEASE_EFFORT_REGION = 0.25
 RELEASE_EFFORT_WORKSPACE = 0.45
 
-REGION_GRASP_OFFSET = dt.pose(dt.position(0.005, 0.005, 0.135),
-                                copy.deepcopy(DOWN_GX_ORIENTATION))
+REGION_GRASP_OFFSET = dt.pose(dt.position(0, 0, 0.135),
+                              copy.deepcopy(DOWN_GX_ORIENTATION))
 
 WORKSPACE_GRASP_OFFSET = dt.pose(dt.position(0,0,0.1675),
-                                copy.deepcopy(DOWN_GX_ORIENTATION))
+                                 copy.deepcopy(DOWN_GX_ORIENTATION))
 
 obj_count = 0
-
-
-class Queue:
-
-    def __init__(self, start_pose, end_pose, num_items):
-        self._start_pose = start_pose
-        self._end_pose = end_pose
-        self._num_items = num_items
-        self._count = 0
-
-    def get(self):
-        dx = self._end_pose['position']['x'] - self._start_pose['position']['x']
-        dy = self._end_pose['position']['y'] - self._start_pose['position']['y']
-        dz = self._end_pose['position']['z'] - self._start_pose['position']['z']
-
-        x = dx * self._count + self._start_pose['position']['x']
-        y = dy * self._count + self._start_pose['position']['y']
-        z = dz * self._count + self._start_pose['position']['z']
-
-        self._count += 1 / self._num_items
-
-        return dt.pose(dt.position(),copy.deepcopy(DOWN_GX_ORIENTATION))
 
 
 def move_home():
@@ -76,15 +57,17 @@ def wait_for_human():
     task_list.append(pm.wait_button())
     return task_list
 
-def pick_and_place_block(queue, target_position,target_orientation):
+def pick_and_place_block(queue, target_position, target_orientation):
     global obj_count
+
+    #TODO grasp_offset
 
     task_list = []
 
     safe_target_position = copy.deepcopy(target_position)
     safe_target_position['z'] += SAFE_HEIGHT_OFFSET
 
-    object_pose = queue.get()
+    object_pose = queue.next()
     safe_object_position = copy.deepcopy(object_pose['position'])
     safe_object_position['z'] += SAFE_HEIGHT_OFFSET
 
@@ -107,7 +90,7 @@ def pick_and_place_block(queue, target_position,target_orientation):
     task_list.append(pm.release(RELEASE_EFFORT_REGION))
     return task_list
 
-def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid_2=True, robot_roof=True):
+def build_house(workplace_position, large_set, small_set, robot_base=True, robot_mid_1=True, robot_mid_2=True, robot_roof=True):
     task_list = []
 
     task_list.append(pm.logger('Building House Base'))
@@ -119,18 +102,18 @@ def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid
         position['y'] += 0.5 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 0.5 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
+            queue=large_set,
             target_position=copy.deepcopy(position),
-            target_orientation=DOWN_GY_ORIENTATION,
-            grasp_offset=REGION_GRASP_OFFSET)
+            target_orientation=DOWN_GY_ORIENTATION)
 
         position = copy.deepcopy(workplace_position)
         position['x'] += BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0] + WORKSPACE_GRASP_OFFSET['position']['x']
         position['y'] += 0.5 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 0.5 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
+            queue=large_set,
             target_position=copy.deepcopy(position),
-            target_orientation=DOWN_GY_ORIENTATION,
-            grasp_offset=REGION_GRASP_OFFSET)
+            target_orientation=DOWN_GY_ORIENTATION)
     else:
         task_list += wait_for_human()
 
@@ -140,18 +123,18 @@ def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid
         position['y'] += 0.5 * BLOCK_LARGE[0] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 1.5 * BLOCK_SMALL[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
+            queue=small_set,
             target_position=copy.deepcopy(position),
-            target_orientation=DOWN_GX_ORIENTATION,
-            grasp_offset=REGION_GRASP_OFFSET)
+            target_orientation=DOWN_GX_ORIENTATION)
 
         position = copy.deepcopy(workplace_position)
         position['x'] += BLOCK_SMALL[0] + WORKSPACE_GRASP_OFFSET['position']['x']
         position['y'] += BLOCK_LARGE[1] - 0.5 * BLOCK_SMALL[0] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 1.5 * BLOCK_SMALL[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
+            queue=small_set,
             target_position=copy.deepcopy(position),
-            target_orientation=DOWN_GX_ORIENTATION,
-            grasp_offset=REGION_GRASP_OFFSET)
+            target_orientation=DOWN_GX_ORIENTATION)
     else:
         task_list += wait_for_human()
 
@@ -161,18 +144,18 @@ def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid
         position['y'] += 0.5 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 2.5 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
+            queue=large_set,
             target_position=copy.deepcopy(position),
-            target_orientation=DOWN_GY_ORIENTATION,
-            grasp_offset=REGION_GRASP_OFFSET)
+            target_orientation=DOWN_GY_ORIENTATION)
 
         position = copy.deepcopy(workplace_position)
         position['x'] += BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0] + WORKSPACE_GRASP_OFFSET['position']['x']
         position['y'] += 0.5 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 2.5 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
+            queue=large_set,
             target_position=copy.deepcopy(position),
-            target_orientation=DOWN_GY_ORIENTATION,
-            grasp_offset=REGION_GRASP_OFFSET)
+            target_orientation=DOWN_GY_ORIENTATION)
     else:
         task_list += wait_for_human()
 
@@ -183,9 +166,9 @@ def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid
         position['y'] += 0.5 * BLOCK_LARGE[1] + 0.1 * BLOCK_SMALL[0] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 3.5 * BLOCK_SMALL[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
+            queue=small_set,
             target_position=copy.deepcopy(position),
-            target_orientation=DOWN_GX_ORIENTATION,
-            grasp_offset=REGION_GRASP_OFFSET)
+            target_orientation=DOWN_GX_ORIENTATION)
 
         # angles
         position = copy.deepcopy(workplace_position)
@@ -193,36 +176,36 @@ def build_house(workplace_position, robot_base=True, robot_mid_1=True, robot_mid
         position['y'] += 0.2 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 4 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
+            queue=small_set,
             target_position=copy.deepcopy(position),
-            target_orientation=DOWN_GY_ORIENTATION,
-            grasp_offset=REGION_GRASP_OFFSET)
+            target_orientation=DOWN_GY_ORIENTATION)
 
         position = copy.deepcopy(workplace_position)
         position['x'] += BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0] + WORKSPACE_GRASP_OFFSET['position']['x']
         position['y'] += 0.2 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 4 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
+            queue=small_set,
             target_position=copy.deepcopy(position),
-            target_orientation=DOWN_GY_ORIENTATION,
-            grasp_offset=REGION_GRASP_OFFSET)
+            target_orientation=DOWN_GY_ORIENTATION)
 
         position = copy.deepcopy(workplace_position)
         position['x'] += 0.5 * BLOCK_LARGE[0] + WORKSPACE_GRASP_OFFSET['position']['x']
         position['y'] += 0.8 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 4 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
+            queue=small_set,
             target_position=copy.deepcopy(position),
-            target_orientation=DOWN_GY_ORIENTATION,
-            grasp_offset=REGION_GRASP_OFFSET)
+            target_orientation=DOWN_GY_ORIENTATION)
 
         position = copy.deepcopy(workplace_position)
         position['x'] += BLOCK_SMALL[1] - 0.5 * BLOCK_LARGE[0] + WORKSPACE_GRASP_OFFSET['position']['x']
         position['y'] += 0.8 * BLOCK_LARGE[1] + WORKSPACE_GRASP_OFFSET['position']['y']
         position['z'] += 4 * BLOCK_LARGE[2] + WORKSPACE_GRASP_OFFSET['position']['z'] + 0.0005
         task_list += pick_and_place_block(
+            queue=small_set,
             target_position=copy.deepcopy(position),
-            target_orientation=DOWN_GY_ORIENTATION,
-            grasp_offset=REGION_GRASP_OFFSET)
+            target_orientation=DOWN_GY_ORIENTATION)
 
     else:
         task_list += wait_for_human()
