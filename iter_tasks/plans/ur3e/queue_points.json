@@ -1,0 +1,131 @@
+{
+  "title": "Move robot to home position",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [],
+  "task": [
+    {
+      "name": "move",
+      "position": {
+        "y": 0.25,
+        "x": 0,
+        "z": 0.3
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0.707,
+        "z": -0.707,
+        "w": 0
+      }
+    },
+    {
+      "name": "wait",
+      "condition": "button"
+    },
+    {
+      "name": "move",
+      "position": {
+        "x": -0.216850,
+        "y": 0.188210,
+        "z": 0.17
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0.707,
+        "z": -0.707,
+        "w": 0
+      }
+    },
+    {
+      "name": "wait",
+      "condition": "button"
+    },
+    {
+      "name": "move",
+      "position": {
+        "x": -0.226880,
+        "y": 0.417100,
+        "z": 0.17
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0.707,
+        "z": -0.707,
+        "w": 0
+      }
+    },
+    {
+      "name": "wait",
+      "condition": "button"
+    },
+    {
+      "name": "move",
+      "position": {
+        "x": -0.108110,
+        "y": 0.181590,
+        "z": 0.17
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0.707,
+        "z": -0.707,
+        "w": 0
+      }
+    },
+    {
+      "name": "wait",
+      "condition": "button"
+    },
+    {
+      "name": "move",
+      "position": {
+        "x": -0.119660,
+        "y": 0.417100,
+        "z": 0.17
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0.707,
+        "z": -0.707,
+        "w": 0
+      }
+    },
+    {
+      "name": "wait",
+      "condition": "button"
+    },
+    {
+      "name": "move",
+      "position": {
+        "x": -0.032210,
+        "y": 0.176590,
+        "z": 0.17
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0.707,
+        "z": -0.707,
+        "w": 0
+      }
+    },
+    {
+      "name": "wait",
+      "condition": "button"
+    },
+    {
+      "name": "move",
+      "position": {
+        "x": -0.026560,
+        "y": 0.413190,
+        "z": 0.17
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0.707,
+        "z": -0.707,
+        "w": 0
+      }
+    }
+  ]
+}

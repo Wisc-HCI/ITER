@@ -73,6 +73,7 @@ def pick_and_place_block(queue, target_position, target_orientation):
             pm.move(object_pose['position'],object_pose['orientation'])
         ],
         path_to_destination=[
+            pm.move(safe_object_position,object_pose['orientation']),
             pm.move(safe_target_position,target_orientation),
             pm.move(target_position,target_orientation)
         ],
@@ -228,21 +229,21 @@ def static_environment():
 if __name__ == "__main__":
 
     large_set = Queue(
-        start_pose=dt.pose(dt.position(-0.216850,0.188210,0.17),DOWN_GX_ORIENTATION),
-        end_pose=dt.pose(dt.position(-0.216880,0.402100,0.17),DOWN_GX_ORIENTATION),
+        start_pose=dt.pose(dt.position(-0.216850,0.188210,0.145),DOWN_GX_ORIENTATION),
+        end_pose=dt.pose(dt.position(-0.226880,0.417100,0.155),DOWN_GX_ORIENTATION),
         num_items = 4,
         orientation = DOWN_GX_ORIENTATION)
 
     small_set = QueueSet([
         Queue(
-            start_pose=dt.pose(dt.position(-0.105610,0.184090,0.17),DOWN_GX_ORIENTATION),
-            end_pose=dt.pose(dt.position(-0.099660,0.402100,0.17),DOWN_GX_ORIENTATION),
+            start_pose=dt.pose(dt.position(-0.108110,0.181590,0.145),DOWN_GX_ORIENTATION),
+            end_pose=dt.pose(dt.position(-0.119660,0.417100,0.155),DOWN_GX_ORIENTATION),
             num_items = 4,
             orientation = DOWN_GX_ORIENTATION),
         Queue(
-            start_pose=dt.pose(dt.position(-0.019210,0.184090,0.17),DOWN_GX_ORIENTATION),
-            end_pose=dt.pose(dt.position(-0.008560,0.395190,0.17),DOWN_GX_ORIENTATION),
-            num_items = 4,
+            start_pose=dt.pose(dt.position(-0.032210,0.221590,0.145),DOWN_GX_ORIENTATION),
+            end_pose=dt.pose(dt.position(-0.119660,0.413190,0.155),DOWN_GX_ORIENTATION),
+            num_items = 3,
             orientation = DOWN_GX_ORIENTATION)
     ])
 
