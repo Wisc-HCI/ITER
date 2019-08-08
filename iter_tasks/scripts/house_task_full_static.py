@@ -236,13 +236,13 @@ if __name__ == "__main__":
 
     small_set = QueueSet([
         Queue(
-            start_pose=dt.pose(dt.position(-0.108110,0.181590,0.145),DOWN_GX_ORIENTATION),
+            start_pose=dt.pose(dt.position(-0.108110,0.181590,0.14),DOWN_GX_ORIENTATION),
             end_pose=dt.pose(dt.position(-0.119660,0.417100,0.155),DOWN_GX_ORIENTATION),
             num_items = 4,
             orientation = DOWN_GX_ORIENTATION),
         Queue(
-            start_pose=dt.pose(dt.position(-0.032210,0.221590,0.145),DOWN_GX_ORIENTATION),
-            end_pose=dt.pose(dt.position(-0.119660,0.413190,0.155),DOWN_GX_ORIENTATION),
+            start_pose=dt.pose(dt.position(-0.032210,0.251590,0.145),DOWN_GX_ORIENTATION),
+            end_pose=dt.pose(dt.position(-0.029660,0.41700,0.155),DOWN_GX_ORIENTATION),
             num_items = 3,
             orientation = DOWN_GX_ORIENTATION)
     ])
