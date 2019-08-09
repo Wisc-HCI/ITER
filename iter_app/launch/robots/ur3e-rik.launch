@@ -61,6 +61,15 @@
       <rosparam param="joint_ordering">['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']</rosparam>
     </node>
 
+    <!--
+    <node unless="$(arg simulated)" name="ur_vt_servoing" pkg="robot_behavior" type="ur_js_vt_servoing.py">
+      <param name="joint_state_topic" value="/real_time/joint_states"/>
+      <rosparam param="joint_ordering">['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']</rosparam>
+      <param name="time_scalar" value="0.1"/>
+      <param name="gain" value="100"/>
+    </node>
+    -->
+
   </group>
 
   <!-- Handle Joint-space -->
