@@ -11,9 +11,8 @@
     <arg name="use_fake_btn" default="true" />
 
     <!-- Relaxed-IK / MoveIt arguements -->
-    <arg name="use_rik" default="true" />
-    <arg name="use_rik_julia" default="false"/>
-    <arg name="use_rik_static" default="false"/>
+    <arg name="planner" default="rik_python"/>
+    <arg name="use_static" default="false"/>
     <arg name="use_collision" default="false" />
 
     <!-- RAD UI arguements -->
@@ -27,7 +26,7 @@
 <!--=========================================================================-->
 
     <!-- Global ROS Parameters -->
-    <rosparam param="use_rik" subst_value="true">$(arg use_rik)</rosparam>
+    <rosparam param="planner" subst_value="true">$(arg planner)</rosparam>
     <rosparam param="use_collision" subst_value="true">$(arg use_collision)</rosparam>
 
 <!--=========================================================================-->
@@ -38,9 +37,8 @@
     <include file="$(find iter_app)/launch/robot.launch">
       <arg name="robot" value="$(arg robot)"/>
       <arg name="simulated" value="$(arg simulated)"/>
-      <arg name="use_rik" value="$(arg use_rik)"/>
-      <arg name="use_rik_julia" value="$(arg use_rik_julia)"/>
-      <arg name="use_rik_static" value="$(arg use_rik_static)"/>
+      <arg name="planner" value="$(arg planner)"/>
+      <arg name="use_static" value="$(arg use_static)"/>
     </include>
 
     <!-- Start button node -->

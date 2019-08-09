@@ -61,18 +61,23 @@ envClient = EnvironmentClient()
 
 from iter_app_tools.primitives.default import DefaultBehaviorPrimitives
 
-use_rik = rospy.get_param('use_rik',False)
-use_static = rospy.get_param('use_rik_static',False)
-if use_rik:
+planner = rospy.get_param('planner','moveit')
+use_static = rospy.get_param('use_static',False)
+if planner == 'rik_python' or planner == 'rik_julia':
     if use_static:
         from iter_app_tools.primitives.relaxedik_static import RelaxedIKStaticBehaviorPrimitives as PhysicalBehaviorPrimitives
         from iter_app_tools.primitives.relaxedik_static import initialize_robot
     else:
         from iter_app_tools.primitives.relaxedik_realtime import RelaxedIKRealTimeBehaviorPrimitives as PhysicalBehaviorPrimitives
         from iter_app_tools.primitives.relaxedik_realtime import initialize_robot
-else:
+elif planner == 'ur':
+    from iter_app_tools.primitives.ur_direct import URDirectBehaviorPrimitives as PhysicalBehaviorPrimitives
+    from iter_app_tools.primitives.ur_direct import initialize_robot
+elif planner == 'moveit':
     from iter_app_tools.primitives.moveit import MoveItBehaviorPrimitives as PhysicalBehaviorPrimitives
     from iter_app_tools.primitives.moveit import initialize_robot
+else:
+    raise Exception('Invalid planner selected')
 
 from iter_app_tools.primitives.general_movement import GeneralMovementBehaviorPrimitives
 from iter_app_tools.primitives.environment_aware import EnvironmentAwareBehaviorPrimitives
