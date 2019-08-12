@@ -8,20 +8,21 @@
     {
       "name": "move",
       "position": {
-        "x": 0,
-        "y": 0.25,
-        "z": 0.3
+        "x": 0.000810,
+        "y": 0.252270,
+        "z": 0.303830
       },
       "orientation": {
-        "y": 0,
         "x": 0.707,
+        "y": 0,
         "z": -0.707,
         "w": 0
       }
     },
     {
-      "effort": 0.25,
-      "name": "release"
+      "name": "wait",
+      "condition": "time",
+      "value": 10
     }
   ]
 }
