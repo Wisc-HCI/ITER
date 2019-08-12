@@ -1,32 +1,14 @@
 '''
-Primitives Relaxed-IK (Realtime)
+Primitives UR Direct
 Author: Curt Henrichs
-Date: 5-2-19
+Date: 8-9-19
 
-Task primitives for runner implemented in Relaxed-IK.
+Task primitives for runner implemented using direct UR control
 
-While MoveIt provides many nice features to get started in developing primitives,
-it is lacking in several aspects. Namely, repeatability of a task plan with same
-joint paths. Relaxed-IK attempts to solve this problem by treating the pose goal
-as an optimization problem where trade-offs in accuracy and joint travel are
-weighed.
-
-Using Wisconsin HCI's robot behavior package (developed for Authr), relaxed-ik was
-successfuly integrated for all moveit supported primitives for the runner.
-
-Primitve List:
-    - grasp
-            "Move the gripper to state specfied as target"
-    - release
-            "move the gripper, (identical to grasp)"
-    - move
-            "Commands robot to move end-effector to provided pose goal"
-    - get_pose
-            ""
+This interface circumvents IK solvers on ROS machine, instead utilizing internal
+UR controller's solver.
 '''
 
-import tf
-import time
 import rospy
 
 from enum import Enum
@@ -35,18 +17,16 @@ from iter_app_tools.pose_conversion import *
 from geometry_msgs.msg import Pose, Point, Quaternion
 from iter_app_tools.primitives.abstract import AbstractBehaviorPrimitives, Primitive, ReturnablePrimitive
 
-from behavior_execution.planners.realtime_relaxedik import RealTimeRelaxedIKPlanner
+from behavior_execution.planners.ur_direct import URDirectPlanner
 from behavior_execution.planners.gripper_command import GripperCommandPlanner
 
 
-pathToRikSrc = rospy.get_param('path_to_relaxed_ik_src')
-infoFileName = rospy.get_param('info_file_name')
-relaxedikPlanner = RealTimeRelaxedIKPlanner(pathToRikSrc,infoFileName,execute_timestep=0.005,plan_pose_step=0.01)
+urDirectPlanner = URDirectPlanner([ "shoulder_pan_joint", "shoulder_lift_joint", "elbow_joint", "wrist_1_joint", "wrist_2_joint", "wrist_3_joint" ])
 gripperPlanner = GripperCommandPlanner('gripper_command')
 
 
 def initialize_robot():
-    relaxedikPlanner.initialize()
+    pass
 
 
 class PrimitiveEnum(Enum):
@@ -62,10 +42,7 @@ class Grasp(Primitive):
         self._plan = gripperPlanner.plan_gripper_state(effort)
 
     def operate(self):
-        relaxedikPlanner.real_time_pause_output(True)
-        status = gripperPlanner.execute_gripper_state(self._plan)
-        relaxedikPlanner.real_time_pause_output(False)
-        return status
+        return gripperPlanner.execute_gripper_state(self._plan)
 
 class Release(Primitive):
 
@@ -73,32 +50,28 @@ class Release(Primitive):
         self._plan = gripperPlanner.plan_gripper_state(effort)
 
     def operate(self):
-        relaxedikPlanner.real_time_pause_output(True)
-        status = gripperPlanner.execute_gripper_state(self._plan)
-        relaxedikPlanner.real_time_pause_output(False)
-        return status
+        return gripperPlanner.execute_gripper_state(self._plan)
 
 class Move(Primitive):
 
-    def __init__(self, position, orientation):
+    def __init__(self, position, orientation, motion_type='joint'):
         # Convert from dictionary to Pose
+        self._type = motion_type
         self._pose = pose_dct_to_msg({'position':position,'orientation':orientation})
 
     def operate(self):
-        plan = relaxedikPlanner.plan_ee_pose(self._pose)
-        status = relaxedikPlanner.execute_ee_pose(plan)
-        return status
+        return urDirectPlanner.set_ee_pose(self._pose,self._type)
 
 class GetPose(ReturnablePrimitive):
 
     def operate(self):
-        return True, relaxedikPlanner.get_ee_pose()
+        return True, urDirectPlanner.get_ee_pose()
 
 
-class RelaxedIKRealTimeBehaviorPrimitives(AbstractBehaviorPrimitives):
+class URDirectBehaviorPrimitives(AbstractBehaviorPrimitives):
 
     def __init__(self, parent=None):
-        super(RelaxedIKRealTimeBehaviorPrimitives,self).__init__(parent)
+        super(URDirectBehaviorPrimitives,self).__init__(parent)
 
     def instantiate_from_dict(self, dct, **kwargs):
 

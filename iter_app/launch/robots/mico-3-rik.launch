@@ -2,8 +2,8 @@
   <param name="robot_type" value="m1n6s300" />
 
   <arg name="simulated" default='true'/>
-  <arg name="use_rik_julia" default="false"/>
-  <arg name="use_rik_static" default="false"/>
+  <arg name="planner" default="rik_python"/>
+  <arg name="use_static" default="false"/>
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find robot_descriptions)/urdf/kinova_mico/relaxed_ik_m1n6s300.xacro'" />
@@ -46,19 +46,19 @@
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
 
   <!-- Setup robot configuration for Relaxed Ik -->
-  <param name="use_rik_static" value="$(arg use_rik_static)"/>
+  <param name="use_static" value="$(arg use_static)"/>
   <param name="path_to_relaxed_ik_src" value="$(find relaxed_ik)/src"/>
   <param name="info_file_name" value="info_mico.yaml"/>
-  
-  <group unless="$(arg use_rik_static)">
+
+  <group unless="$(arg use_static)">
     <include file="$(find relaxed_ik)/launch/load_info_file.launch">
       <arg name="info_file_name" value="info_mico.yaml"/>
     </include>
     <include file="$(find timed_roslaunch)/launch/timed_roslaunch.launch">
       <arg name="time" value="1"/>
       <arg name="pkg" value="relaxed_ik"/>
-      <arg if="$(arg use_rik_julia)" name="file" value="relaxed_ik_julia.launch"/>
-      <arg unless="$(arg use_rik_julia)" name="file" value="relaxed_ik_python.launch"/>
+      <arg if="$(eval arg('planner') == 'rik_julia')" name="file" value="relaxed_ik_julia.launch"/>
+      <arg if="$(eval arg('planner') == 'rik_python')" name="file" value="relaxed_ik_python.launch"/>
     </include>
   </group>
 

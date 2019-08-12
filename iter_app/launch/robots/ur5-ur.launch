@@ -3,8 +3,7 @@
 
   <arg name="simulated" default='true'/>
   <arg name="limited" default='false' />
-  <arg name="planner" default="rik_python"/>
-  <arg name="use_static" default="false"/>
+  <arg name="planner" default="ur"/>
 
   <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
   <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find robot_descriptions)/urdf/universal_robots/relaxed_ik_ur5_robotiq_85.xacro'" />
@@ -36,34 +35,6 @@
 
   </group>
 
-  <!-- Setup robot configuration for Relaxed Ik -->
-  <param name="use_static" value="$(arg use_static)"/>
-  <param name="path_to_relaxed_ik_src" value="$(find relaxed_ik)/src"/>
-  <param name="info_file_name" value="info_ur5.yaml"/>
-
-  <group unless="$(arg use_static)">
-    <include file="$(find relaxed_ik)/launch/load_info_file.launch">
-      <arg name="info_file_name" value="info_ur5.yaml"/>
-    </include>
-    <include file="$(find timed_roslaunch)/launch/timed_roslaunch.launch">
-      <arg name="time" value="1"/>
-      <arg name="pkg" value="relaxed_ik"/>
-      <arg if="$(eval arg('planner') == 'rik_julia')" name="file" value="relaxed_ik_julia.launch"/>
-      <arg if="$(eval arg('planner') == 'rik_python')" name="file" value="relaxed_ik_python.launch"/>
-    </include>
-
-    <node unless="$(arg simulated)" name="ur_servoing" pkg="robot_behavior" type="ur_js_servoing.py">
-      <param name="joint_state_topic" value="/real_time/joint_states"/>
-      <rosparam param="joint_ordering">['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']</rosparam>
-      <param name="servoj_timestep" value="0.5"/>
-      <param name="servoj_gain" value="200"/>
-    </node>
-
-    <node unless="$(arg simulated)" name="joint_initialize" pkg="iter_app" type="initialize_joints.py">
-      <param name="robot" value="ur5"/>
-    </node>
-  </group>
-
   <!-- Handle Joint-space -->
   <group if="$(eval arg('simulated') == true)">
     <param name="robot_connected" value="false" />
@@ -73,19 +44,10 @@
     </node>
 
     <!-- We do not have a robot connected, so publish fake joint states -->
-    <group if="$(arg use_static)">
-      <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-        <param name="/use_gui" value="false"/>
-        <rosparam param="/source_list">[/virtual_controller/joint_states]</rosparam>
-      </node>
-    </group>
-    <group unless="$(arg use_static)">
-      <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
-        <param name="/use_gui" value="false"/>
-        <rosparam param="/source_list">[/virtual_controller/joint_states, /real_time/joint_states]</rosparam>
-      </node>
-    </group>
-
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+      <param name="/use_gui" value="false"/>
+      <rosparam param="/source_list">[/virtual_controller/joint_states]</rosparam>
+    </node>
   </group>
 
   <group if="$(eval arg('simulated') == false)">
