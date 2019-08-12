@@ -36,6 +36,10 @@
   <param name="path_to_relaxed_ik_src" value="$(find relaxed_ik)/src"/>
   <param name="info_file_name" value="info_ur3e.yaml"/>
 
+  <group if="$(arg use_static)">
+    <node unless="$(arg simulated)" name="ur_movej" pkg="robot_behavior" type="ur_fjt_movej.py"/>
+  </group>
+
   <group unless="$(arg use_static)">
     <include file="$(find relaxed_ik)/launch/load_info_file.launch">
       <arg name="info_file_name" value="info_ur3e.yaml"/>
@@ -53,13 +57,6 @@
       <rosparam param="joint_ordering">['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']</rosparam>
       <param name="servoj_timestep" value="0.05"/>
       <param name="servoj_gain" value="200"/>
-    </node>
-    -->
-
-    <!--
-    <node unless="$(arg simulated)" name="ur_movej" pkg="robot_behavior" type="ur_js_movej.py">
-      <param name="joint_state_topic" value="/real_time/joint_states"/>
-      <rosparam param="joint_ordering">['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']</rosparam>
     </node>
     -->
 
