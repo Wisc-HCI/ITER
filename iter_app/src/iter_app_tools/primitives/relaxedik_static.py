@@ -44,7 +44,7 @@ pathToRikSrc = rospy.get_param('path_to_relaxed_ik_src')
 infoFileName = rospy.get_param('info_file_name')
 joint_time_factor = rospy.get_param('joint_time_factor',1)
 
-relaxedikPlanner = StaticRelaxedIKPlanner('follow_joint_trajectory',pathToRikSrc,infoFileName,joint_time_factor)
+relaxedikPlanner = StaticRelaxedIKPlanner('ur_movej_follow_joint_trajectory',pathToRikSrc,infoFileName,joint_time_factor)
 gripperPlanner = GripperCommandPlanner('gripper_command')
 
 

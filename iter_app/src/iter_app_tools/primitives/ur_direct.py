@@ -54,13 +54,15 @@ class Release(Primitive):
 
 class Move(Primitive):
 
-    def __init__(self, position, orientation, motion_type='joint'):
+    def __init__(self, position, orientation, options, **kwargs):
         # Convert from dictionary to Pose
-        self._type = motion_type
+        self._options = options
+        if not 'motion_type' in self._options.keys():
+            self.options['motion_type'] = 'joint'
         self._pose = pose_dct_to_msg({'position':position,'orientation':orientation})
 
     def operate(self):
-        return urDirectPlanner.set_ee_pose(self._pose,self._type)
+        return urDirectPlanner.set_ee_pose(self._pose, **self._options)
 
 class GetPose(ReturnablePrimitive):
 
@@ -81,7 +83,7 @@ class URDirectBehaviorPrimitives(AbstractBehaviorPrimitives):
         elif name == PrimitiveEnum.RELEASE.value:
             return Release(dct['effort'])
         elif name == PrimitiveEnum.MOVE.value:
-            return Move(dct['position'],dct['orientation'])
+            return Move(**kwargs)
         elif name == PrimitiveEnum.GET_POSE.value:
             return GetPose()
         elif self.parent != None:

@@ -41,7 +41,7 @@ from behavior_execution.planners.gripper_command import GripperCommandPlanner
 
 pathToRikSrc = rospy.get_param('path_to_relaxed_ik_src')
 infoFileName = rospy.get_param('info_file_name')
-relaxedikPlanner = RealTimeRelaxedIKPlanner(pathToRikSrc,infoFileName,execute_timestep=0.005,plan_pose_step=0.01)
+relaxedikPlanner = RealTimeRelaxedIKPlanner(pathToRikSrc,infoFileName,execute_timestep=0.01,plan_pose_step=0.0025)
 gripperPlanner = GripperCommandPlanner('gripper_command')
 
 
@@ -80,12 +80,13 @@ class Release(Primitive):
 
 class Move(Primitive):
 
-    def __init__(self, position, orientation):
+    def __init__(self, position, orientation, options, **kwargs):
         # Convert from dictionary to Pose
+        self._options = options
         self._pose = pose_dct_to_msg({'position':position,'orientation':orientation})
 
     def operate(self):
-        plan = relaxedikPlanner.plan_ee_pose(self._pose)
+        plan = relaxedikPlanner.plan_ee_pose(self._pose, **self._options)
         status = relaxedikPlanner.execute_ee_pose(plan)
         return status
 
@@ -108,7 +109,7 @@ class RelaxedIKRealTimeBehaviorPrimitives(AbstractBehaviorPrimitives):
         elif name == PrimitiveEnum.RELEASE.value:
             return Release(dct['effort'])
         elif name == PrimitiveEnum.MOVE.value:
-            return Move(dct['position'],dct['orientation'])
+            return Move(**kwargs)
         elif name == PrimitiveEnum.GET_POSE.value:
             return GetPose()
         elif self.parent != None:
