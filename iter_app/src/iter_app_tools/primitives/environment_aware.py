@@ -168,10 +168,10 @@ class PickAndPlaceStatic(Primitive):
 
     def __init__(self,path_to_object,path_to_destination,object_name,grasp_effort,release_effort,envClient,lookup, **kwargs):
         self._ops = []
-        self._ops = self._ops + [lookup('move')(dct['position'],dct['orientation']) for dct in path_to_object]
+        self._ops = self._ops + [lookup('move')(**dct) for dct in path_to_object]
         self._ops.append(ConnectObjectToRobot(object_name,envClient,lookup))
         self._ops.append(lookup('grasp')(grasp_effort))
-        self._ops = self._ops + [lookup('move')(dct['position'],dct['orientation']) for dct in path_to_destination]
+        self._ops = self._ops + [lookup('move')(**dct) for dct in path_to_destination]
         self._ops.append(DisconnectObjectFromRobot(object_name,envClient,lookup))
         self._ops.append(lookup('release')(release_effort))
 

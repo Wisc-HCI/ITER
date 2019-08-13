@@ -54,7 +54,7 @@ class Release(Primitive):
 
 class Move(Primitive):
 
-    def __init__(self, position, orientation, options, **kwargs):
+    def __init__(self, position, orientation, options={}, **kwargs):
         # Convert from dictionary to Pose
         self._options = options
         if not 'motion_type' in self._options.keys():

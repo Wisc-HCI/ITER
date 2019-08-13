@@ -11,7 +11,7 @@
         "z": 0.3
       }, 
       "options": {
-        "steady_state_threshold": 0.01
+        "steady_state_threshold": 0.1
       }, 
       "name": "move", 
       "orientation": {
@@ -34,22 +34,22 @@
       "name": "logger"
     }, 
     {
-      "effort": 0.4, 
+      "effort": 0.375, 
       "name": "release"
     }, 
     {
       "name": "pick_and_place_static", 
-      "release_effort": 0.4, 
+      "release_effort": 0.375, 
       "object_name": "0", 
       "path_to_destination": [
         {
           "position": {
             "y": 0.15924, 
-            "x": -0.30392, 
-            "z": 0.20082
+            "x": -0.28502, 
+            "z": 0.2
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -61,12 +61,12 @@
         }, 
         {
           "position": {
-            "y": 0.27, 
-            "x": 0.23016, 
+            "y": 0.24, 
+            "x": 0.22516, 
             "z": 0.20562000000000002
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -78,12 +78,12 @@
         }, 
         {
           "position": {
-            "y": 0.27, 
-            "x": 0.23016, 
+            "y": 0.24, 
+            "x": 0.22516, 
             "z": 0.15562
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -99,11 +99,11 @@
         {
           "position": {
             "y": 0.15924, 
-            "x": -0.30392, 
-            "z": 0.20082
+            "x": -0.28502, 
+            "z": 0.2
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -116,11 +116,11 @@
         {
           "position": {
             "y": 0.15924, 
-            "x": -0.30392, 
-            "z": 0.15082
+            "x": -0.28502, 
+            "z": 0.15
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -134,12 +134,12 @@
     }, 
     {
       "position": {
-        "y": 0.27, 
-        "x": 0.23016, 
+        "y": 0.24, 
+        "x": 0.22516, 
         "z": 0.20562000000000002
       }, 
       "options": {
-        "steady_state_threshold": 0.01
+        "steady_state_threshold": 0.1
       }, 
       "name": "move", 
       "orientation": {
@@ -151,17 +151,17 @@
     }, 
     {
       "name": "pick_and_place_static", 
-      "release_effort": 0.4, 
+      "release_effort": 0.375, 
       "object_name": "1", 
       "path_to_destination": [
         {
           "position": {
             "y": 0.22504999999999997, 
-            "x": -0.30242, 
-            "z": 0.20232
+            "x": -0.28682, 
+            "z": 0.20166666666666666
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -173,12 +173,12 @@
         }, 
         {
           "position": {
-            "y": 0.27, 
-            "x": 0.26826, 
+            "y": 0.24, 
+            "x": 0.26326, 
             "z": 0.20562000000000002
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -190,12 +190,12 @@
         }, 
         {
           "position": {
-            "y": 0.27, 
-            "x": 0.26826, 
+            "y": 0.24, 
+            "x": 0.26326, 
             "z": 0.15562
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -211,11 +211,11 @@
         {
           "position": {
             "y": 0.22504999999999997, 
-            "x": -0.30242, 
-            "z": 0.20232
+            "x": -0.28682, 
+            "z": 0.20166666666666666
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -228,11 +228,11 @@
         {
           "position": {
             "y": 0.22504999999999997, 
-            "x": -0.30242, 
-            "z": 0.15232
+            "x": -0.28682, 
+            "z": 0.15166666666666667
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -246,12 +246,12 @@
     }, 
     {
       "position": {
-        "y": 0.27, 
-        "x": 0.26826, 
+        "y": 0.24, 
+        "x": 0.26326, 
         "z": 0.20562000000000002
       }, 
       "options": {
-        "steady_state_threshold": 0.01
+        "steady_state_threshold": 0.1
       }, 
       "name": "move", 
       "orientation": {
@@ -263,17 +263,17 @@
     }, 
     {
       "name": "pick_and_place_static", 
-      "release_effort": 0.4, 
+      "release_effort": 0.375, 
       "object_name": "2", 
       "path_to_destination": [
         {
           "position": {
             "y": 0.15293, 
-            "x": -0.1915, 
-            "z": 0.20121
+            "x": -0.177, 
+            "z": 0.195
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -285,12 +285,12 @@
         }, 
         {
           "position": {
-            "y": 0.23016, 
-            "x": 0.24032, 
+            "y": 0.20016, 
+            "x": 0.23532, 
             "z": 0.22086
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -302,12 +302,12 @@
         }, 
         {
           "position": {
-            "y": 0.23016, 
-            "x": 0.24032, 
+            "y": 0.20016, 
+            "x": 0.23532, 
             "z": 0.17086
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -323,11 +323,11 @@
         {
           "position": {
             "y": 0.15293, 
-            "x": -0.1915, 
-            "z": 0.20121
+            "x": -0.177, 
+            "z": 0.195
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -340,11 +340,11 @@
         {
           "position": {
             "y": 0.15293, 
-            "x": -0.1915, 
-            "z": 0.15121
+            "x": -0.177, 
+            "z": 0.145
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -358,12 +358,12 @@
     }, 
     {
       "position": {
-        "y": 0.23016, 
-        "x": 0.24032, 
+        "y": 0.20016, 
+        "x": 0.23532, 
         "z": 0.22086
       }, 
       "options": {
-        "steady_state_threshold": 0.01
+        "steady_state_threshold": 0.1
       }, 
       "name": "move", 
       "orientation": {
@@ -375,17 +375,17 @@
     }, 
     {
       "name": "pick_and_place_static", 
-      "release_effort": 0.4, 
+      "release_effort": 0.375, 
       "object_name": "3", 
       "path_to_destination": [
         {
           "position": {
             "y": 0.22016333333333332, 
-            "x": -0.19035333333333335, 
-            "z": 0.20265333333333335
+            "x": -0.17618666666666666, 
+            "z": 0.1958333333333333
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -397,12 +397,12 @@
         }, 
         {
           "position": {
-            "y": 0.30984, 
-            "x": 0.24032, 
+            "y": 0.27984, 
+            "x": 0.23532, 
             "z": 0.22086
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -414,12 +414,12 @@
         }, 
         {
           "position": {
-            "y": 0.30984, 
-            "x": 0.24032, 
+            "y": 0.27984, 
+            "x": 0.23532, 
             "z": 0.17086
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -435,11 +435,11 @@
         {
           "position": {
             "y": 0.22016333333333332, 
-            "x": -0.19035333333333335, 
-            "z": 0.20265333333333335
+            "x": -0.17618666666666666, 
+            "z": 0.1958333333333333
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -452,11 +452,11 @@
         {
           "position": {
             "y": 0.22016333333333332, 
-            "x": -0.19035333333333335, 
-            "z": 0.15265333333333334
+            "x": -0.17618666666666666, 
+            "z": 0.14583333333333331
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -470,12 +470,12 @@
     }, 
     {
       "position": {
-        "y": 0.30984, 
-        "x": 0.24032, 
+        "y": 0.27984, 
+        "x": 0.23532, 
         "z": 0.22086
       }, 
       "options": {
-        "steady_state_threshold": 0.01
+        "steady_state_threshold": 0.1
       }, 
       "name": "move", 
       "orientation": {
@@ -487,17 +487,17 @@
     }, 
     {
       "name": "pick_and_place_static", 
-      "release_effort": 0.4, 
+      "release_effort": 0.375, 
       "object_name": "4", 
       "path_to_destination": [
         {
           "position": {
             "y": 0.29086, 
-            "x": -0.30092, 
-            "z": 0.20382
+            "x": -0.28862, 
+            "z": 0.2033333333333333
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -509,12 +509,12 @@
         }, 
         {
           "position": {
-            "y": 0.27, 
-            "x": 0.23016, 
+            "y": 0.24, 
+            "x": 0.22516, 
             "z": 0.23610000000000003
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -526,12 +526,12 @@
         }, 
         {
           "position": {
-            "y": 0.27, 
-            "x": 0.23016, 
+            "y": 0.24, 
+            "x": 0.22516, 
             "z": 0.18610000000000002
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -547,11 +547,11 @@
         {
           "position": {
             "y": 0.29086, 
-            "x": -0.30092, 
-            "z": 0.20382
+            "x": -0.28862, 
+            "z": 0.2033333333333333
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -564,11 +564,11 @@
         {
           "position": {
             "y": 0.29086, 
-            "x": -0.30092, 
-            "z": 0.15382
+            "x": -0.28862, 
+            "z": 0.15333333333333332
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -582,12 +582,12 @@
     }, 
     {
       "position": {
-        "y": 0.27, 
-        "x": 0.23016, 
+        "y": 0.24, 
+        "x": 0.22516, 
         "z": 0.23610000000000003
       }, 
       "options": {
-        "steady_state_threshold": 0.01
+        "steady_state_threshold": 0.1
       }, 
       "name": "move", 
       "orientation": {
@@ -599,17 +599,17 @@
     }, 
     {
       "name": "pick_and_place_static", 
-      "release_effort": 0.4, 
+      "release_effort": 0.375, 
       "object_name": "5", 
       "path_to_destination": [
         {
           "position": {
             "y": 0.35667, 
-            "x": -0.29942, 
-            "z": 0.20532
+            "x": -0.29042, 
+            "z": 0.20500000000000002
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -621,12 +621,12 @@
         }, 
         {
           "position": {
-            "y": 0.27, 
-            "x": 0.26826, 
+            "y": 0.24, 
+            "x": 0.26326, 
             "z": 0.23610000000000003
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -638,12 +638,12 @@
         }, 
         {
           "position": {
-            "y": 0.27, 
-            "x": 0.26826, 
+            "y": 0.24, 
+            "x": 0.26326, 
             "z": 0.18610000000000002
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -659,11 +659,11 @@
         {
           "position": {
             "y": 0.35667, 
-            "x": -0.29942, 
-            "z": 0.20532
+            "x": -0.29042, 
+            "z": 0.20500000000000002
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -676,11 +676,11 @@
         {
           "position": {
             "y": 0.35667, 
-            "x": -0.29942, 
-            "z": 0.15532
+            "x": -0.29042, 
+            "z": 0.155
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -694,12 +694,12 @@
     }, 
     {
       "position": {
-        "y": 0.27, 
-        "x": 0.26826, 
+        "y": 0.24, 
+        "x": 0.26326, 
         "z": 0.23610000000000003
       }, 
       "options": {
-        "steady_state_threshold": 0.01
+        "steady_state_threshold": 0.1
       }, 
       "name": "move", 
       "orientation": {
@@ -711,17 +711,17 @@
     }, 
     {
       "name": "pick_and_place_static", 
-      "release_effort": 0.4, 
+      "release_effort": 0.375, 
       "object_name": "6", 
       "path_to_destination": [
         {
           "position": {
             "y": 0.28739666666666663, 
-            "x": -0.18920666666666666, 
-            "z": 0.2040966666666667
+            "x": -0.17537333333333333, 
+            "z": 0.19666666666666666
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -733,12 +733,12 @@
         }, 
         {
           "position": {
-            "y": 0.272032, 
-            "x": 0.24032, 
+            "y": 0.242032, 
+            "x": 0.23532, 
             "z": 0.25134
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -750,12 +750,12 @@
         }, 
         {
           "position": {
-            "y": 0.272032, 
-            "x": 0.24032, 
+            "y": 0.242032, 
+            "x": 0.23532, 
             "z": 0.20134000000000002
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -771,11 +771,11 @@
         {
           "position": {
             "y": 0.28739666666666663, 
-            "x": -0.18920666666666666, 
-            "z": 0.2040966666666667
+            "x": -0.17537333333333333, 
+            "z": 0.19666666666666666
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -788,11 +788,11 @@
         {
           "position": {
             "y": 0.28739666666666663, 
-            "x": -0.18920666666666666, 
-            "z": 0.1540966666666667
+            "x": -0.17537333333333333, 
+            "z": 0.14666666666666667
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -806,12 +806,12 @@
     }, 
     {
       "position": {
-        "y": 0.272032, 
-        "x": 0.24032, 
+        "y": 0.242032, 
+        "x": 0.23532, 
         "z": 0.25134
       }, 
       "options": {
-        "steady_state_threshold": 0.01
+        "steady_state_threshold": 0.1
       }, 
       "name": "move", 
       "orientation": {
@@ -823,17 +823,17 @@
     }, 
     {
       "name": "pick_and_place_static", 
-      "release_effort": 0.4, 
+      "release_effort": 0.375, 
       "object_name": "7", 
       "path_to_destination": [
         {
           "position": {
             "y": 0.35463, 
-            "x": -0.18806, 
-            "z": 0.20554
+            "x": -0.17456, 
+            "z": 0.1975
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -845,12 +845,12 @@
         }, 
         {
           "position": {
-            "y": 0.24, 
-            "x": 0.23016, 
+            "y": 0.21000000000000002, 
+            "x": 0.22516, 
             "z": 0.25896
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -862,12 +862,12 @@
         }, 
         {
           "position": {
-            "y": 0.24, 
-            "x": 0.23016, 
+            "y": 0.21000000000000002, 
+            "x": 0.22516, 
             "z": 0.20896
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -883,11 +883,11 @@
         {
           "position": {
             "y": 0.35463, 
-            "x": -0.18806, 
-            "z": 0.20554
+            "x": -0.17456, 
+            "z": 0.1975
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -900,11 +900,11 @@
         {
           "position": {
             "y": 0.35463, 
-            "x": -0.18806, 
-            "z": 0.15554
+            "x": -0.17456, 
+            "z": 0.1475
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -918,12 +918,12 @@
     }, 
     {
       "position": {
-        "y": 0.24, 
-        "x": 0.23016, 
+        "y": 0.21000000000000002, 
+        "x": 0.22516, 
         "z": 0.25896
       }, 
       "options": {
-        "steady_state_threshold": 0.01
+        "steady_state_threshold": 0.1
       }, 
       "name": "move", 
       "orientation": {
@@ -935,17 +935,17 @@
     }, 
     {
       "name": "pick_and_place_static", 
-      "release_effort": 0.4, 
+      "release_effort": 0.375, 
       "object_name": "8", 
       "path_to_destination": [
         {
           "position": {
-            "y": 0.21456, 
-            "x": -0.0978, 
-            "z": 0.20148
+            "y": 0.20456, 
+            "x": -0.0938, 
+            "z": 0.195
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -957,12 +957,12 @@
         }, 
         {
           "position": {
-            "y": 0.24, 
-            "x": 0.26826, 
+            "y": 0.21000000000000002, 
+            "x": 0.26326, 
             "z": 0.25896
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -974,12 +974,12 @@
         }, 
         {
           "position": {
-            "y": 0.24, 
-            "x": 0.26826, 
+            "y": 0.21000000000000002, 
+            "x": 0.26326, 
             "z": 0.20896
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -994,12 +994,12 @@
       "path_to_object": [
         {
           "position": {
-            "y": 0.21456, 
-            "x": -0.0978, 
-            "z": 0.20148
+            "y": 0.20456, 
+            "x": -0.0938, 
+            "z": 0.195
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -1011,12 +1011,12 @@
         }, 
         {
           "position": {
-            "y": 0.21456, 
-            "x": -0.0978, 
-            "z": 0.15148
+            "y": 0.20456, 
+            "x": -0.0938, 
+            "z": 0.145
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -1030,12 +1030,12 @@
     }, 
     {
       "position": {
-        "y": 0.24, 
-        "x": 0.26826, 
+        "y": 0.21000000000000002, 
+        "x": 0.26326, 
         "z": 0.25896
       }, 
       "options": {
-        "steady_state_threshold": 0.01
+        "steady_state_threshold": 0.1
       }, 
       "name": "move", 
       "orientation": {
@@ -1047,17 +1047,17 @@
     }, 
     {
       "name": "pick_and_place_static", 
-      "release_effort": 0.4, 
+      "release_effort": 0.375, 
       "object_name": "9", 
       "path_to_destination": [
         {
           "position": {
-            "y": 0.282045, 
-            "x": -0.097735, 
-            "z": 0.20127
+            "y": 0.272545, 
+            "x": -0.09403500000000001, 
+            "z": 0.19624999999999998
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -1069,12 +1069,12 @@
         }, 
         {
           "position": {
-            "y": 0.30000000000000004, 
-            "x": 0.23016, 
+            "y": 0.27, 
+            "x": 0.22516, 
             "z": 0.25896
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -1086,12 +1086,12 @@
         }, 
         {
           "position": {
-            "y": 0.30000000000000004, 
-            "x": 0.23016, 
+            "y": 0.27, 
+            "x": 0.22516, 
             "z": 0.20896
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -1106,12 +1106,12 @@
       "path_to_object": [
         {
           "position": {
-            "y": 0.282045, 
-            "x": -0.097735, 
-            "z": 0.20127
+            "y": 0.272545, 
+            "x": -0.09403500000000001, 
+            "z": 0.19624999999999998
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -1123,12 +1123,12 @@
         }, 
         {
           "position": {
-            "y": 0.282045, 
-            "x": -0.097735, 
-            "z": 0.15127000000000002
+            "y": 0.272545, 
+            "x": -0.09403500000000001, 
+            "z": 0.14625
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -1142,12 +1142,12 @@
     }, 
     {
       "position": {
-        "y": 0.30000000000000004, 
-        "x": 0.23016, 
+        "y": 0.27, 
+        "x": 0.22516, 
         "z": 0.25896
       }, 
       "options": {
-        "steady_state_threshold": 0.01
+        "steady_state_threshold": 0.1
       }, 
       "name": "move", 
       "orientation": {
@@ -1159,17 +1159,17 @@
     }, 
     {
       "name": "pick_and_place_static", 
-      "release_effort": 0.4, 
+      "release_effort": 0.375, 
       "object_name": "10", 
       "path_to_destination": [
         {
           "position": {
-            "y": 0.34953, 
-            "x": -0.09767, 
-            "z": 0.20106000000000002
+            "y": 0.34053, 
+            "x": -0.09427, 
+            "z": 0.1975
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -1181,12 +1181,12 @@
         }, 
         {
           "position": {
-            "y": 0.30000000000000004, 
-            "x": 0.26826, 
+            "y": 0.27, 
+            "x": 0.26326, 
             "z": 0.25896
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -1198,12 +1198,12 @@
         }, 
         {
           "position": {
-            "y": 0.30000000000000004, 
-            "x": 0.26826, 
+            "y": 0.27, 
+            "x": 0.26326, 
             "z": 0.20896
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -1218,12 +1218,12 @@
       "path_to_object": [
         {
           "position": {
-            "y": 0.34953, 
-            "x": -0.09767, 
-            "z": 0.20106000000000002
+            "y": 0.34053, 
+            "x": -0.09427, 
+            "z": 0.1975
           }, 
           "options": {
-            "steady_state_threshold": 0.01
+            "steady_state_threshold": 0.1
           }, 
           "name": "move", 
           "orientation": {
@@ -1235,12 +1235,12 @@
         }, 
         {
           "position": {
-            "y": 0.34953, 
-            "x": -0.09767, 
-            "z": 0.15106
+            "y": 0.34053, 
+            "x": -0.09427, 
+            "z": 0.1475
           }, 
           "options": {
-            "steady_state_threshold": 0.002
+            "steady_state_threshold": 0.001
           }, 
           "name": "move", 
           "orientation": {
@@ -1254,12 +1254,12 @@
     }, 
     {
       "position": {
-        "y": 0.30000000000000004, 
-        "x": 0.26826, 
+        "y": 0.27, 
+        "x": 0.26326, 
         "z": 0.25896
       }, 
       "options": {
-        "steady_state_threshold": 0.01
+        "steady_state_threshold": 0.1
       }, 
       "name": "move", 
       "orientation": {
@@ -1280,7 +1280,7 @@
         "z": 0.3
       }, 
       "options": {
-        "steady_state_threshold": 0.01
+        "steady_state_threshold": 0.1
       }, 
       "name": "move", 
       "orientation": {
@@ -1337,8 +1337,8 @@
       }, 
       "position": {
         "y": 0.15924, 
-        "x": -0.30392, 
-        "z": 0.15082
+        "x": -0.28502, 
+        "z": 0.15
       }, 
       "size": {
         "y": 0.01, 
@@ -1362,8 +1362,8 @@
       }, 
       "position": {
         "y": 0.22504999999999997, 
-        "x": -0.30242, 
-        "z": 0.15232
+        "x": -0.28682, 
+        "z": 0.15166666666666667
       }, 
       "size": {
         "y": 0.01, 
@@ -1387,8 +1387,8 @@
       }, 
       "position": {
         "y": 0.15293, 
-        "x": -0.1915, 
-        "z": 0.15121
+        "x": -0.177, 
+        "z": 0.145
       }, 
       "size": {
         "y": 0.01, 
@@ -1412,8 +1412,8 @@
       }, 
       "position": {
         "y": 0.22016333333333332, 
-        "x": -0.19035333333333335, 
-        "z": 0.15265333333333334
+        "x": -0.17618666666666666, 
+        "z": 0.14583333333333331
       }, 
       "size": {
         "y": 0.01, 
@@ -1437,8 +1437,8 @@
       }, 
       "position": {
         "y": 0.29086, 
-        "x": -0.30092, 
-        "z": 0.15382
+        "x": -0.28862, 
+        "z": 0.15333333333333332
       }, 
       "size": {
         "y": 0.01, 
@@ -1462,8 +1462,8 @@
       }, 
       "position": {
         "y": 0.35667, 
-        "x": -0.29942, 
-        "z": 0.15532
+        "x": -0.29042, 
+        "z": 0.155
       }, 
       "size": {
         "y": 0.01, 
@@ -1487,8 +1487,8 @@
       }, 
       "position": {
         "y": 0.28739666666666663, 
-        "x": -0.18920666666666666, 
-        "z": 0.1540966666666667
+        "x": -0.17537333333333333, 
+        "z": 0.14666666666666667
       }, 
       "size": {
         "y": 0.01, 
@@ -1512,8 +1512,8 @@
       }, 
       "position": {
         "y": 0.35463, 
-        "x": -0.18806, 
-        "z": 0.15554
+        "x": -0.17456, 
+        "z": 0.1475
       }, 
       "size": {
         "y": 0.01, 
@@ -1536,9 +1536,9 @@
         "g": 1
       }, 
       "position": {
-        "y": 0.21456, 
-        "x": -0.0978, 
-        "z": 0.15148
+        "y": 0.20456, 
+        "x": -0.0938, 
+        "z": 0.145
       }, 
       "size": {
         "y": 0.01, 
@@ -1561,9 +1561,9 @@
         "g": 1
       }, 
       "position": {
-        "y": 0.282045, 
-        "x": -0.097735, 
-        "z": 0.15127000000000002
+        "y": 0.272545, 
+        "x": -0.09403500000000001, 
+        "z": 0.14625
       }, 
       "size": {
         "y": 0.01, 
@@ -1586,9 +1586,9 @@
         "g": 1
       }, 
       "position": {
-        "y": 0.34953, 
-        "x": -0.09767, 
-        "z": 0.15106
+        "y": 0.34053, 
+        "x": -0.09427, 
+        "z": 0.1475
       }, 
       "size": {
         "y": 0.01, 
