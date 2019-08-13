@@ -16,7 +16,7 @@ house_1_allocation = {"robot_base":True,"robot_mid_1":True,"robot_mid_2":True,"r
 build_house_2 = False
 house_2_allocation = {"robot_base":False,"robot_mid_1":False,"robot_mid_2":False,"robot_roof":False}
 
-SAFE_HEIGHT_OFFSET = 0.1
+SAFE_HEIGHT_OFFSET = 0.05
 
 BLOCK_SMALL = (0.02032,0.05842,0.01524)
 BLOCK_LARGE = (0.02032,0.10,0.01524)
@@ -30,11 +30,10 @@ HOME_ORIENTATION = copy.deepcopy(DOWN_GX_ORIENTATION)
 WAIT_POSITION = dt.position(0,0.25,0.3)
 WAIT_ORIENTATION = dt.orientation(0,0,0,1)
 
-WORKSPACE_POSITION = dt.position(0.2,0.25,-0.02)
+WORKSPACE_POSITION = dt.position(0.22,0.22,-0.02)
 
 GRASP_EFFORT = 0.59 #0.57
-RELEASE_EFFORT_REGION = 0.25
-RELEASE_EFFORT_WORKSPACE = 0.45
+RELEASE_EFFORT = 0.4
 
 WORKSPACE_GRASP_OFFSET = dt.pose(dt.position(0,0,0.1675),
                                  copy.deepcopy(DOWN_GX_ORIENTATION))
@@ -46,7 +45,7 @@ dynamic_env_objs = []
 def move_home():
     task_list = []
     task_list.append(pm.logger('Moving to Home'))
-    task_list.append(pm.move(HOME_POSITION,HOME_ORIENTATION))
+    task_list.append(pm.move(HOME_POSITION,HOME_ORIENTATION,{"steady_state_threshold":0.01}))
     return task_list
 
 def wait_for_human():
@@ -69,17 +68,17 @@ def pick_and_place_block(queue, target_position, target_orientation):
 
     task_list.append(pm.pick_and_place_static(
         path_to_object=[
-            pm.move(safe_object_position,object_pose['orientation']),
-            pm.move(object_pose['position'],object_pose['orientation'])
+            pm.move(safe_object_position,object_pose['orientation'],{"steady_state_threshold":0.01}),
+            pm.move(object_pose['position'],object_pose['orientation'],{"steady_state_threshold":0.002})
         ],
         path_to_destination=[
-            pm.move(safe_object_position,object_pose['orientation']),
-            pm.move(safe_target_position,target_orientation),
-            pm.move(target_position,target_orientation)
+            pm.move(safe_object_position,object_pose['orientation'],{"steady_state_threshold":0.01}),
+            pm.move(safe_target_position,target_orientation,{"steady_state_threshold":0.01}),
+            pm.move(target_position,target_orientation,{"steady_state_threshold":0.002})
         ],
         object_name='{0}'.format(obj_count),
         grasp_effort=GRASP_EFFORT,
-        release_effort=RELEASE_EFFORT_WORKSPACE))
+        release_effort=RELEASE_EFFORT))
 
     dynamic_env_objs.append(dt.environment_object(
         name='{0}'.format(obj_count),
@@ -88,15 +87,14 @@ def pick_and_place_block(queue, target_position, target_orientation):
         size=dt.size(0.01,0.01,0.01)))
     obj_count += 1
 
-    task_list.append(pm.move(safe_target_position,target_orientation))
-    task_list.append(pm.release(RELEASE_EFFORT_REGION))
+    task_list.append(pm.move(safe_target_position,target_orientation,{"steady_state_threshold":0.01}))
     return task_list
 
 def build_house(workplace_position, large_set, small_set, robot_base=True, robot_mid_1=True, robot_mid_2=True, robot_roof=True):
     task_list = []
 
     task_list.append(pm.logger('Building House Base'))
-    task_list.append(pm.release(RELEASE_EFFORT_REGION))
+    task_list.append(pm.release(RELEASE_EFFORT))
 
     if robot_base:
         position = copy.deepcopy(workplace_position)
@@ -219,7 +217,7 @@ def static_environment():
 
     env_list.append(dt.environment_object(
         name='tabletop',
-        position=dt.position(0,0.35,-0.05),
+        position=dt.position(0,0.251,-0.05),
         orientation=dt.orientation(0,0,0,1),
         size=dt.size(1,0.6,0.015)))
 
@@ -229,20 +227,20 @@ def static_environment():
 if __name__ == "__main__":
 
     large_set = Queue(
-        start_pose=dt.pose(dt.position(-0.216850,0.188210,0.145),DOWN_GX_ORIENTATION),
-        end_pose=dt.pose(dt.position(-0.226880,0.417100,0.155),DOWN_GX_ORIENTATION),
+        start_pose=dt.pose(dt.position(-0.303920,0.159240,0.150820),DOWN_GX_ORIENTATION),
+        end_pose=dt.pose(dt.position(-0.299420,0.356670,0.155320),DOWN_GX_ORIENTATION),
         num_items = 4,
         orientation = DOWN_GX_ORIENTATION)
 
     small_set = QueueSet([
         Queue(
-            start_pose=dt.pose(dt.position(-0.108110,0.181590,0.14),DOWN_GX_ORIENTATION),
-            end_pose=dt.pose(dt.position(-0.119660,0.417100,0.155),DOWN_GX_ORIENTATION),
+            start_pose=dt.pose(dt.position(-0.191500,0.152930,0.151210),DOWN_GX_ORIENTATION),
+            end_pose=dt.pose(dt.position(-0.188060,0.354630,0.155540),DOWN_GX_ORIENTATION),
             num_items = 4,
             orientation = DOWN_GX_ORIENTATION),
         Queue(
-            start_pose=dt.pose(dt.position(-0.032210,0.251590,0.145),DOWN_GX_ORIENTATION),
-            end_pose=dt.pose(dt.position(-0.029660,0.41700,0.155),DOWN_GX_ORIENTATION),
+            start_pose=dt.pose(dt.position(-0.097800,0.214560,0.151480),DOWN_GX_ORIENTATION),
+            end_pose=dt.pose(dt.position(-0.097670,0.349530,0.151060),DOWN_GX_ORIENTATION),
             num_items = 3,
             orientation = DOWN_GX_ORIENTATION)
     ])

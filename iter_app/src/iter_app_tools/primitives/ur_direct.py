@@ -83,7 +83,7 @@ class URDirectBehaviorPrimitives(AbstractBehaviorPrimitives):
         elif name == PrimitiveEnum.RELEASE.value:
             return Release(dct['effort'])
         elif name == PrimitiveEnum.MOVE.value:
-            return Move(**kwargs)
+            return Move(**dct)
         elif name == PrimitiveEnum.GET_POSE.value:
             return GetPose()
         elif self.parent != None:
