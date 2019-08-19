@@ -139,38 +139,38 @@ class Runner:
         # iterate over all primitives
         print 'Running'
         operate_status = True
-        for i in range(0,len(primitives)):
-            print type(primitives[i]).__name__
+        for index in range(0,len(primitives)):
+            print type(primitives[index]).__name__
 
             if self.time_mode == TimeModeEnum.CAPTURE:
 
                 start = time.time()
 
-                if isinstance(ReturnablePrimitive,primitives[i]):
-                    operate_status, result = primitives[i].operate()
+                if isinstance(ReturnablePrimitive,primitives[index]):
+                    operate_status, result = primitives[index].operate()
                 else:
-                    operate_status = primitives[i].operate()
+                    operate_status = primitives[index].operate()
 
                 stop = time.time()
 
-                if type(primitives[i]) is bp.Wait and primitives[i].condition == bp.ConditionEnum.BUTTON.value:
-                    data['task'][i]['rad'] = {
+                if type(primitives[index]) is bp.Wait and primitives[index].condition == bp.ConditionEnum.BUTTON.value:
+                    data['task'][index]['rad'] = {
                         'is_interaction': True,
                         'expected_interaction_time': stop - start
                     }
                 else:
-                    data['task'][i]['rad'] = {
+                    data['task'][index]['rad'] = {
                         'neglect_time': stop - start,
                         'is_interaction': False
                     }
             else:
 
-                if isinstance(primitives[i],ReturnablePrimitive):
-                    operate_status, result = primitives[i].operate()
-                else:
-                    operate_status = primitives[i].operate()
+                self.time_sync_topic.publish(index)
 
-                self.time_sync_topic.publish(i)
+                if isinstance(primitives[index],ReturnablePrimitive):
+                    operate_status, result = primitives[index].operate()
+                else:
+                    operate_status = primitives[index].operate()
 
             if not operate_status:
                 break
