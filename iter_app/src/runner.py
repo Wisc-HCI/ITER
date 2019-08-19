@@ -130,6 +130,8 @@ class Runner:
         primitives = [bp.instantiate_from_dict(obj,button_callback=self._button_callback) for obj in data['task']]
         neglect_time_list = self._generate_neglect_time_list(data)
 
+        rospy.sleep(1)
+
         # provide timing information to timing node
         if self.time_mode == TimeModeEnum.REPLAY:
             self.time_start_topic.publish(json.dumps(neglect_time_list))
