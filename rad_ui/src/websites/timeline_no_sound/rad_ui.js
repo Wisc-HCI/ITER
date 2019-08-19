@@ -146,6 +146,10 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
         this._drawTicks(lastTick.x() + X_STEP,this.ticks.length*TIME_STEP,this.stop_time+dt,y+TICK_Y_OFFSET);
 
         this.stop_time += dt;
+      } else if (activeTile.timeInfo.type == 'interaction' && !interacting) {
+        // adjust tiles
+
+        // update tick marks
       } else if (activeTile.timeInfo.type == 'neglect') {
         if (activeTile.state != 'warning' && activeTile.timeInfo.stop_time - (this.time+dt) < 15) {
           activeTile.state = 'warning';
@@ -180,8 +184,8 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
 SVG.on(document, 'DOMContentLoaded', function() {
   canvas = SVG('drawing');
   canvas.clear();
-  let x = canvas.node.clientWidth
-  let y = canvas.node.clientHeight
+  let x = canvas.node.clientWidth;
+  let y = canvas.node.clientHeight;
 
   timeline = new Timeline(canvas,0,x,x/3,y/2-50,[]);
   playhead = new Playhead(canvas,x/3-10,y/2-120);
@@ -234,27 +238,37 @@ $.getJSON("../rosbridge_properties.json", function(json) {
     messageType: 'iter_app/RADSignal'
   });
 
+  var listenerRadTimeline = new ROSLIB.Topic({
+    ros: ros,
+    name: '/rad/timeline',
+    'messageType': 'std_msgs/String'
+  });
+
   let currentMode = -1;
-  let prevTime = 0;
-  let elapsedTime = 0;
+
   listenerRadSignal.subscribe(function(message) {
-    if(message != undefined) {
+    if (message != undefined) {
 
       if (currentMode != message.mode) {
         currentMode = message.mode;
-        prevTime = 0;
       }
 
-      let time = 0;
-      if (message.mode == 0) {  // neglect time
-        time = message.neglect_time.initial - message.neglect_time.current;
-      } else {                  // interaction time
-        time = message.interaction_time.current;
-      }
+      timeline.update(message.elapsed_time,message.mode != 0);
+    }
+  });
 
-      elapsedTime += time - prevTime;
-      prevTime = time;
-      timeline.update(elapsedTime,message.move != 0);
+  listenerRadTimeline.subscribe(function(message) {
+    if (message != undefined) {
+      times = JSON.parse(message.data);
+
+      currentMode = -1;
+
+      canvas.clear();
+      let x = canvas.node.clientWidth;
+      let y = canvas.node.clientHeight;
+
+      timeline = new Timeline(canvas,0,x,x/3,y/2-50,times);
+      playhead = new Playhead(canvas,x/3-10,y/2-120);
     }
   });
 });

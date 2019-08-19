@@ -143,24 +143,22 @@ class Runner:
             print type(primitives[i]).__name__
 
             if self.time_mode == TimeModeEnum.CAPTURE:
-                if type(primitives[i]) is bp.Wait and primitives[i].condition == bp.ConditionEnum.BUTTON.value:
-                    data['task'][i]['rad'] = {'is_interaction': True}
 
-                    if isinstance(ReturnablePrimitive,primitives[i]):
-                        operate_status, result = primitives[i].operate()
-                    else:
-                        operate_status = primitives[i].operate()
+                start = time.time()
 
+                if isinstance(ReturnablePrimitive,primitives[i]):
+                    operate_status, result = primitives[i].operate()
                 else:
-                    start = time.time()
+                    operate_status = primitives[i].operate()
 
-                    if isinstance(ReturnablePrimitive,primitives[i]):
-                        operate_status, result = primitives[i].operate()
-                    else:
-                        operate_status = primitives[i].operate()
+                stop = time.time()
 
-                    stop = time.time()
-
+                if type(primitives[i]) is bp.Wait and primitives[i].condition == bp.ConditionEnum.BUTTON.value:
+                    data['task'][i]['rad'] = {
+                        'is_interaction': True,
+                        'expected_interaction_time': stop - start
+                    }
+                else:
                     data['task'][i]['rad'] = {
                         'neglect_time': stop - start,
                         'is_interaction': False
@@ -217,13 +215,13 @@ class Runner:
         for obj in task_dict['task']:
             if 'rad' in obj.keys():
                 if 'is_interaction' in obj['rad'] and obj['rad']['is_interaction']: # push time to list
-                    time_list.append({"time": temp_neglect_time})
+                    time_list.append({"time": temp_neglect_time, 'interaction': False})
                     temp_neglect_time = 0
-                    time_list.append({"interaction": True})
+                    time_list.append({"interaction": True, "time": obj['rad']['expected_interaction_time']})
                 elif 'neglect_time' in obj['rad']: # increment by amount
                     temp_neglect_time += obj['rad']['neglect_time']
 
-        time_list.append({"time": temp_neglect_time})
+        time_list.append({"time": temp_neglect_time, 'interaction': False})
 
         return time_list
 

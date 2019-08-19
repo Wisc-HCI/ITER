@@ -201,8 +201,8 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
 SVG.on(document, 'DOMContentLoaded', function() {
   canvas = SVG('drawing');
   canvas.clear();
-  let x = canvas.node.clientWidth
-  let y = canvas.node.clientHeight
+  let x = canvas.node.clientWidth;
+  let y = canvas.node.clientHeight;
 
   timeline = new Timeline(canvas,0,x,x/3,y/2-50,[]);
   playhead = new Playhead(canvas,x/3-10,y/2-120);
@@ -255,11 +255,18 @@ $.getJSON("../rosbridge_properties.json", function(json) {
     messageType: 'iter_app/RADSignal'
   });
 
+  var listenerRadTimeline = new ROSLIB.Topic({
+    ros: ros,
+    name: '/rad/timeline',
+    'messageType': 'std_msgs/String'
+  });
+
   let currentMode = -1;
   let prevTime = 0;
   let elapsedTime = 0;
+
   listenerRadSignal.subscribe(function(message) {
-    if(message != undefined) {
+    if (message != undefined) {
 
       if (currentMode != message.mode) {
         currentMode = message.mode;
@@ -277,6 +284,23 @@ $.getJSON("../rosbridge_properties.json", function(json) {
       elapsedTime += time - prevTime;
       prevTime = time;
       timeline.update(elapsedTime,message.move != 0);
+    }
+  });
+
+  listenerRadTimeline.subscribe(function(message) {
+    if (message != undefined) {
+      let times = JSON.parse(message.data);
+
+      currentMode = -1;
+      elapsedTime = 0;
+      prevTime = 0;
+
+      canvas.clear();
+      let x = canvas.node.clientWidth;
+      let y = canvas.node.clientHeight;
+
+      timeline = new Timeline(canvas,0,x,x/3,y/2-50,times);
+      playhead = new Playhead(canvas,x/3-10,y/2-120);
     }
   });
 });
