@@ -1,8 +1,9 @@
 def pooled():
-  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
-  set_payload(0.9,[0.0,0.0,0.0584])
-  set_gravity([0.0, 0.0, 9.82])
-  set_safety_mode_transition_hardness(1)
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
   set_standard_analog_input_domain(0, 1)
   set_standard_analog_input_domain(1, 1)
   set_tool_analog_input_domain(0, 1)
@@ -10,17 +11,10 @@ def pooled():
   set_analog_outputdomain(0, 0)
   set_analog_outputdomain(1, 0)
   set_input_actions_to_default()
-  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
-  set_tool_output_mode(0)
-  set_tool_digital_output_mode(0, 1)
-  set_tool_digital_output_mode(1, 1)
-  set_tool_voltage(0)
-  global Pallet_2_cnt=1
-  global Pallet_1_cnt=1
-  global Pallet_3_cnt=1
-  global Pallet_3_cnt1=1
-  global Pallet_2_cnt1=1
-  rtde_set_watchdog("speed_slider_mask", 10.0, "ignore")
+  set_safety_mode_transition_hardness(1)
+  set_gravity([0.0, 0.0, 9.82])
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_payload(0.9)
   # begin: URCap Installation Node
   #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
   #   Type: Vacuum
@@ -1713,7 +1707,7 @@ def pooled():
   set_open_norm(0.0, 4)
   set_closed_mm(0.0, 4)
   set_open_mm(50.0, 4)
-  rq_set_gripper_max_cur(600, "1")
+  rq_set_gripper_max_cur(0, "1")
   # end: URCap Installation Node
   global home_p=p[-.122149880499, -.119319658552, .414454461367, 2.256333922147, 2.145949286359, -.048097257405]
   global home_q=[-1.4954140822040003, -0.9909351629069825, -1.3928093910217285, -2.2868172130980433, 1.5698156356811523, -4.587305847798483]

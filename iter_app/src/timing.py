@@ -161,7 +161,6 @@ class TimingServer:
             signal = RADSignal()
 
             # Re-sync
-            print index, self._sync_index
             if index > self._sync_index:
                 # out of sync - ahead of runner
                 while index > self._sync_index and not rospy.is_shutdown():

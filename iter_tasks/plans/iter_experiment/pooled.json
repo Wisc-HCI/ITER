@@ -6,26 +6,30 @@
   "environment": [],
   "task": [
     {
+      "name": "grasp",
+      "effort": 0.41
+    },
+    {
         "name": "wait",
         "condition": "button"
     },
     {
       "name": "publish_string_from_file",
       "topic": "/ur_driver/URScript",
-      "filepath": "../catkin_ws/src/ITER/iter_app/urscript/pooled.script"
+      "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/pooled.script"
     },
     {
       "name": "wait",
       "condition": "time",
-      "value": 60
+      "value": 95
+    },
+    {
+      "name": "logger",
+      "msg": "Done running, restock"
     },
     {
         "name": "wait",
         "condition": "button"
-    },
-    {
-      "name": "grasp",
-      "effort": 0.5
     }
   ]
 }
