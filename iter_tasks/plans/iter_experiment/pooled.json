@@ -1,0 +1,31 @@
+{
+  "title": "Pooled - ITER - Olivia's",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [],
+  "task": [
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "publish_string_from_file",
+      "topic": "/ur_driver/URScript",
+      "filepath": "../catkin_ws/src/ITER/iter_app/urscript/pooled.script"
+    },
+    {
+      "name": "wait",
+      "condition": "time",
+      "value": 60
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "grasp",
+      "effort": 0.5
+    }
+  ]
+}

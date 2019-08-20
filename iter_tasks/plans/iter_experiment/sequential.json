@@ -1,0 +1,59 @@
+{
+  "title": "Sequential - ITER - Olivia's",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [],
+  "task": [
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "publish_string_from_file",
+      "topic": "/ur_driver/URScript",
+      "filepath": "../catkin_ws/src/ITER/iter_app/urscript/sequential_p1.script"
+    },
+    {
+      "name": "wait",
+      "condition": "time",
+      "value": 60
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "publish_string_from_file",
+      "topic": "/ur_driver/URScript",
+      "filepath": "../catkin_ws/src/ITER/iter_app/urscript/sequential_p2.script"
+    },
+    {
+      "name": "wait",
+      "condition": "time",
+      "value": 60
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "publish_string_from_file",
+      "topic": "/ur_driver/URScript",
+      "filepath": "../catkin_ws/src/ITER/iter_app/urscript/sequential_p3.script"
+    },
+    {
+      "name": "wait",
+      "condition": "time",
+      "value": 60
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "grasp",
+      "effort": 0.5
+    }
+  ]
+}

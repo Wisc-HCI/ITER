@@ -94,7 +94,7 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
     for (let t of times) {
       let width = (t.stop_time - t.start_time) * X_STEP / TIME_STEP;
       let x = start_x + t.start_time * X_STEP / TIME_STEP;
-      let color = (t.type == 'interaction') ? '#32C' : '#0D3';
+      let color = (t.type == 'interaction') ? '#ff4444' : '#00C851';
       this.tiles.push(new Tile(canvas, x, y, width, color, t));
     }
   };
@@ -147,13 +147,26 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
 
         this.stop_time += dt;
       } else if (activeTile.timeInfo.type == 'interaction' && !interacting) {
+        let qt = time - activeTile.timeInfo.stop_time - 0.01;
+        let qx = qt * X_STEP / TIME_STEP;
+
         // adjust tiles
+        activeTile.extend(qx,qt);
+        for (let i=this.tileIndex+1; i<this.tiles.length; i++) {
+          this.tiles[i].timeAdjust(qx,qt);
+        }
 
         // update tick marks
+        for (let i=this.ticks.length-1; i>0; i--) {
+          if ((i-1)*TIME_STEP >= this.stop_time) {
+            this.ticks.pop().clear();
+            this.labels.pop().clear();
+          }
+        }
       } else if (activeTile.timeInfo.type == 'neglect') {
         if (activeTile.state != 'warning' && activeTile.timeInfo.stop_time - (this.time+dt) < 15) {
           activeTile.state = 'warning';
-          activeTile.setColor('#D03');
+          activeTile.setColor('#ffbb33');
         }
       }
     }
