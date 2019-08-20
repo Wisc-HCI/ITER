@@ -10,7 +10,7 @@ import iter_tasks_tools.primitives as pm
 from iter_tasks_tools.queue import Queue, QueueSet
 
 
-task_case = "pooled_static"
+task_case = "pooled_rik"
 build_house_1 = True
 house_1_allocation = {"robot_base":True,"robot_mid_1":True,"robot_mid_2":True,"robot_roof":True}
 build_house_2 = False
@@ -39,7 +39,7 @@ WORKSPACE_GRASP_OFFSET = dt.pose(dt.position(0,0,0.1675),
                                  copy.deepcopy(DOWN_GX_ORIENTATION))
 
 INTERMEDIATE_STEADY_STATE = 0.1
-STOP_POINT_STEADY_STATE = 0.001
+STOP_POINT_STEADY_STATE = 0.01
 
 obj_count = 0
 dynamic_env_objs = []

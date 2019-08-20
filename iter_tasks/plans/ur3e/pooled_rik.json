@@ -83,7 +83,7 @@
             "z": 0.15562
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -120,7 +120,7 @@
             "z": 0.1475
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -195,7 +195,7 @@
             "z": 0.15562
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -232,7 +232,7 @@
             "z": 0.14916666666666667
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -307,7 +307,7 @@
             "z": 0.17086
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -344,7 +344,7 @@
             "z": 0.14
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -419,7 +419,7 @@
             "z": 0.17086
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -456,7 +456,7 @@
             "z": 0.14250000000000002
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -531,7 +531,7 @@
             "z": 0.18610000000000002
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -568,7 +568,7 @@
             "z": 0.15083333333333332
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -643,7 +643,7 @@
             "z": 0.18610000000000002
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -680,7 +680,7 @@
             "z": 0.1525
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -755,7 +755,7 @@
             "z": 0.20134000000000002
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -792,7 +792,7 @@
             "z": 0.145
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -867,7 +867,7 @@
             "z": 0.20896
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -904,7 +904,7 @@
             "z": 0.1475
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -979,7 +979,7 @@
             "z": 0.20896
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -1016,7 +1016,7 @@
             "z": 0.14
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -1091,7 +1091,7 @@
             "z": 0.20896
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -1128,7 +1128,7 @@
             "z": 0.14225
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -1203,7 +1203,7 @@
             "z": 0.20896
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {
@@ -1240,7 +1240,7 @@
             "z": 0.1445
           }, 
           "options": {
-            "steady_state_threshold": 0.001
+            "steady_state_threshold": 0.01
           }, 
           "name": "move", 
           "orientation": {

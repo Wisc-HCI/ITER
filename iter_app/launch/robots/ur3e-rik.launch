@@ -55,7 +55,8 @@
     <node unless="$(arg simulated)" name="ur_servoing" pkg="robot_behavior" type="ur_js_servoing.py">
       <param name="joint_state_topic" value="/real_time/joint_states"/>
       <rosparam param="joint_ordering">['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']</rosparam>
-      <param name="timestep" value="0.125"/>
+      <param name="timestep" value="0.12"/>
+      <param name="lookahead" value="0.1"/>
       <param name="gain" value="100"/>
     </node>
     <!---->
@@ -64,7 +65,7 @@
     <node unless="$(arg simulated)" name="ur_vt_servoing" pkg="robot_behavior" type="ur_js_vt_servoing.py" output="screen">
       <param name="joint_state_topic" value="/real_time/joint_states"/>
       <rosparam param="joint_ordering">['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']</rosparam>
-      <rosparam param="time_scalars">[5,5,5,5,5,5]</rosparam>
+      <rosparam param="time_scalars">[100,100,100,100,100,100]</rosparam>
       <param name="gain" value="100"/>
     </node>
     -->

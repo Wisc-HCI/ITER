@@ -58,7 +58,7 @@ class Move(Primitive):
         # Convert from dictionary to Pose
         self._options = options
         if not 'motion_type' in self._options.keys():
-            self.options['motion_type'] = 'joint'
+            self._options['motion_type'] = 'joint'
         self._pose = pose_dct_to_msg({'position':position,'orientation':orientation})
 
     def operate(self):
