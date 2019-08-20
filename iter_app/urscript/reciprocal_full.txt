@@ -20,23 +20,25 @@
    reciprocal_p3_3
      Gripper Activate
      Gripper Move50% (1)
-     MoveJ
-       home
      Roof_A
        MoveJ
+         safe
          ra_b1_wp_3
          ra_b1_at_2
          Gripper Close (1)
          ra_b1_wp_4
+         safe
          h_ra_b1_wp
          h_ra_b1_at
          Gripper Move50% (1)
          h_ra_b1_wp
        MoveJ
+         safe
          ra_b2_wp_3
          ra_b2_at_2
          Gripper Close (1)
          ra_b2_wp_4
+         safe
          h_ra_b2_wp
          h_ra_b2_at
          Gripper Move50% (1)
@@ -46,8 +48,6 @@
    reciprocal_p3_2
      Gripper Activate
      Gripper Move50% (1)
-     MoveJ
-       home
      Mid_2
        MoveJ
          m2_b1_wp_3
@@ -59,12 +59,10 @@
          Gripper Move50% (1)
          h_m2_b1_wp
      MoveJ
-       home
+       safe_end
    reciprocal_p3_1
      Gripper Activate
      Gripper Move50% (1)
-     MoveJ
-       home
      Base
        MoveJ
          b_b1_wp_3
@@ -85,38 +83,38 @@
          Gripper Move50% (1)
          h_b_b2_wp
      MoveJ
-       home
+       safe_end
    reciprocal_p2_3
      Gripper Activate
      Gripper Move50% (1)
-     MoveJ
-       home
      Roof_A
        MoveJ
+         safe
          ra_b1_wp_1
          ra_b1_at_1
          Gripper Close (1)
          ra_b1_wp_2
+         safe
          h_ra_b1_wp
          h_ra_b1_at
          Gripper Move50% (1)
          h_ra_b1_wp
        MoveJ
+         safe
          ra_b2_wp_1
          ra_b2_at_1
          Gripper Close (1)
          ra_b2_wp_2
+         safe
          h_ra_b2_wp
          h_ra_b2_at
          Gripper Move50% (1)
          h_ra_b2_wp
      MoveJ
-       home
+       safe_end
    reciprocal_p2_2
      Gripper Activate
      Gripper Move50% (1)
-     MoveJ
-       home
      Mid_2
        MoveJ
          m2_b1_wp_1
@@ -128,76 +126,80 @@
          Gripper Move50% (1)
          h_m2_b1_wp
      MoveJ
-       home
+       safe_end
    reciprocal_p2_1
      Gripper Activate
      Gripper Move50% (1)
-     MoveJ
-       home
      Base
        MoveJ
+         safe
          b_b1_wp_1
          b_b1_at_1
          Gripper Close (1)
          b_b1_wp_2
+         safe
          h_b_b1_wp
          h_b_b1_at
          Gripper Move50% (1)
          h_b_b1_wp
        MoveJ
+         safe
          b_b2_wp_1
          b_b2_at_1
          Gripper Close (1)
          b_b2_wp_2
+         safe
          h_b_b2_wp
          h_b_b2_at
          Gripper Move50% (1)
          h_b_b2_wp
      MoveJ
-       home
+       safe_end
    reciprocal_p1_3
      Gripper Activate
      Gripper Move50% (1)
-     MoveJ
-       home
      Roof_A
        MoveJ
+         safe
          ra_b1_wp
          ra_b1_at
          Gripper Close (1)
          ra_b1_wp
+         safe
          h_ra_b1_wp
          h_ra_b1_at
          Gripper Move50% (1)
          h_ra_b1_wp
        MoveJ
+         safe
          ra_b2_wp
          ra_b2_at
          Gripper Close (1)
          ra_b2_wp
+         safe
          h_ra_b2_wp
          h_ra_b2_at
          Gripper Move50% (1)
          h_ra_b2_wp
      MoveJ
-       home
+       safe_end
    reciprocal_p1_2
      Gripper Activate
      Gripper Move50% (1)
-     MoveJ
-       home
      Mid_2
        MoveJ
+         safe
          m2_b1_wp
          m2_b1_at
          Gripper Close (1)
          m2_b1_wp
+         safe
          h_m2_b1_wp
          h_m2_b1_at
          Gripper Move50% (1)
          h_m2_b1_wp
      MoveJ
-       home
+       safe_end
    reciprocal_p1_1
      Gripper Activate
      Gripper Move50% (1)
@@ -205,22 +207,26 @@
        home
      Base
        MoveJ
+         safe
          b_b1_wp
          b_b1_at
          Gripper Close (1)
          b_b1_wp
+         safe
          h_b_b1_wp
          h_b_b1_at
          Gripper Move50% (1)
          h_b_b1_wp
        MoveJ
+         safe
          b_b2_wp
          b_b2_at
          Gripper Close (1)
          b_b2_wp
+         safe
          h_b_b2_wp
          h_b_b2_at
          Gripper Move50% (1)
          h_b_b2_wp
      MoveJ
-       home
+       safe_end

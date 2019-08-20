@@ -2,23 +2,25 @@
    Robot Program
      Gripper Activate
      Gripper Move50% (1)
-     MoveJ
-       home
      Roof_A
        MoveJ
+         safe
          ra_b1_wp_3
          ra_b1_at_2
          Gripper Close (1)
          ra_b1_wp_4
+         safe
          h_ra_b1_wp
          h_ra_b1_at
          Gripper Move50% (1)
          h_ra_b1_wp
        MoveJ
+         safe
          ra_b2_wp_3
          ra_b2_at_2
          Gripper Close (1)
          ra_b2_wp_4
+         safe
          h_ra_b2_wp
          h_ra_b2_at
          Gripper Move50% (1)

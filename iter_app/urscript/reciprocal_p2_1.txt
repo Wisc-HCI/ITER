@@ -2,26 +2,28 @@
    Robot Program
      Gripper Activate
      Gripper Move50% (1)
-     MoveJ
-       home
      Base
        MoveJ
+         safe
          b_b1_wp_1
          b_b1_at_1
          Gripper Close (1)
          b_b1_wp_2
+         safe
          h_b_b1_wp
          h_b_b1_at
          Gripper Move50% (1)
          h_b_b1_wp
        MoveJ
+         safe
          b_b2_wp_1
          b_b2_at_1
          Gripper Close (1)
          b_b2_wp_2
+         safe
          h_b_b2_wp
          h_b_b2_at
          Gripper Move50% (1)
          h_b_b2_wp
      MoveJ
-       home
+       safe_end

@@ -6,22 +6,26 @@
        home
      Base
        MoveJ
+         safe
          b_b1_wp
          b_b1_at
          Gripper Close (1)
          b_b1_wp
+         safe
          h_b_b1_wp
          h_b_b1_at
          Gripper Move50% (1)
          h_b_b1_wp
        MoveJ
+         safe
          b_b2_wp
          b_b2_at
          Gripper Close (1)
          b_b2_wp
+         safe
          h_b_b2_wp
          h_b_b2_at
          Gripper Move50% (1)
          h_b_b2_wp
      MoveJ
-       home
+       safe_end

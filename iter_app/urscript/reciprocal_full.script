@@ -1709,8 +1709,8 @@ def reciprocal_full():
   set_open_mm(50.0, 4)
   rq_set_gripper_max_cur(0, "1")
   # end: URCap Installation Node
-  global home_p=p[-.122149880499, -.119319658552, .414454461367, 2.256333922147, 2.145949286359, -.048097257405]
-  global home_q=[-1.4954140822040003, -0.9909351629069825, -1.3928093910217285, -2.2868172130980433, 1.5698156356811523, -4.587305847798483]
+  global safe_p=p[.121882024329, -.222056850994, .236792830837, 2.214551043693, 2.209007056220, -.038585389641]
+  global safe_q=[-0.520663086568014, -1.2550352376750489, -2.153726100921631, -1.296215371494629, 1.5502853393554688, -3.6535099188434046]
   global ra_b1_wp_3_p=p[.164039648459, -.432993488779, .207004990440, 2.231449034023, 2.150916497321, .005888234976]
   global ra_b1_wp_3_q=[-0.9256480375873011, -2.225502153436178, -1.1552491188049316, -1.2890051168254395, 1.5843586921691895, -4.026396576558248]
   global ra_b1_at_2_p=p[.164048859607, -.432987211799, .156003297666, 2.231433145382, 2.150953026843, .005864051261]
@@ -1731,6 +1731,8 @@ def reciprocal_full():
   global h_ra_b2_wp_q=[-2.118251148854391, -1.3295157712749024, -2.278651714324951, -0.7692354482463379, 1.7606511116027832, -3.5962026754962366]
   global h_ra_b2_at_p=p[-.214313904583, -.168312439069, .197792616782, 2.872144793180, -.055892150355, -.060704331291]
   global h_ra_b2_at_q=[-2.0081942717181605, -1.4369047445109864, -2.360541820526123, -0.6504801076701661, 1.6435837745666504, -3.520970169697897]
+  global home_p=p[-.122149880499, -.119319658552, .414454461367, 2.256333922147, 2.145949286359, -.048097257405]
+  global home_q=[-1.4954140822040003, -0.9909351629069825, -1.3928093910217285, -2.2868172130980433, 1.5698156356811523, -4.587305847798483]
   global m2_b1_wp_3_p=p[-.042704697245, -.429628313582, .201673815245, 2.215434322258, 2.177708834449, .017261542855]
   global m2_b1_wp_3_q=[-1.3706086317645472, -2.1039773426451625, -1.3764023780822754, -1.207463101749756, 1.6038203239440918, -4.489721123372213]
   global m2_b1_at_2_p=p[-.042720416710, -.429623434392, .154534319603, 2.215484584853, 2.177650672515, .017305669853]
@@ -1741,6 +1743,8 @@ def reciprocal_full():
   global h_m2_b1_wp_q=[-1.9012969175921839, -1.6449223957457484, -1.8348679542541504, -1.2385848325541993, 1.5657720565795898, -3.452902619038717]
   global h_m2_b1_at_p=p[-.222193529315, -.245343394450, .182320086113, -3.131427513479, .020480037603, .012240299437]
   global h_m2_b1_at_q=[-1.9017170111285608, -1.74133362392568, -1.9860405921936035, -0.9910410207561036, 1.564836025238037, -3.451845947896139]
+  global safe_end_p=p[.121882024329, -.222056850994, .236792830837, 2.214551043693, 2.209007056220, -.038585389641]
+  global safe_end_q=[-0.520663086568014, -1.2550352376750489, -2.153726100921631, -1.296215371494629, 1.5502853393554688, -3.6535099188434046]
   global b_b1_wp_3_p=p[-.030304807371, -.283937777017, .204008258687, -2.216528425233, -2.216551446447, .030244674010]
   global b_b1_wp_3_q=[-1.1993840376483362, -1.4851063054851075, -2.1429600715637207, -1.081810788517334, 1.556018352508545, -4.333504501973287]
   global b_b1_at_2_p=p[-.030308455309, -.283928894351, .154464008312, -2.216488544816, -2.216552879866, .030213614122]
@@ -1858,7 +1862,7 @@ def reciprocal_full():
     gripper_3_used = False
     gripper_4_used = False
     # end: URCap Program Node
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(ra_b1_wp_3_p, qnear=ra_b1_wp_3_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(ra_b1_at_2_p, qnear=ra_b1_at_2_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -1890,6 +1894,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(ra_b1_wp_4_p, qnear=ra_b1_wp_4_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(h_ra_b1_wp_p, qnear=h_ra_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(h_ra_b1_at_p, qnear=h_ra_b1_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -1921,6 +1926,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(h_ra_b1_wp_p, qnear=h_ra_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.045)
     movej(get_inverse_kin(ra_b2_wp_3_p, qnear=ra_b2_wp_3_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(ra_b2_at_2_p, qnear=ra_b2_at_2_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -1952,6 +1958,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(ra_b2_wp_4_p, qnear=ra_b2_wp_4_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.04)
     movej(get_inverse_kin(h_ra_b2_wp_p, qnear=h_ra_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(h_ra_b2_at_p, qnear=h_ra_b2_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2032,7 +2039,6 @@ def reciprocal_full():
     gripper_3_used = False
     gripper_4_used = False
     # end: URCap Program Node
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(m2_b1_wp_3_p, qnear=m2_b1_wp_3_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(m2_b1_at_2_p, qnear=m2_b1_at_2_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2095,7 +2101,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(h_m2_b1_wp_p, qnear=h_m2_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_end_p, qnear=safe_end_q), a=1.3962634015954636, v=1.0471975511965976)
   end
   def reciprocal_p3_1():
     # begin: URCap Program Node
@@ -2144,7 +2150,6 @@ def reciprocal_full():
     gripper_3_used = False
     gripper_4_used = False
     # end: URCap Program Node
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(b_b1_wp_3_p, qnear=b_b1_wp_3_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(b_b1_at_2_p, qnear=b_b1_at_2_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2269,7 +2274,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(h_b_b2_wp_p, qnear=h_b_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_end_p, qnear=safe_end_q), a=1.3962634015954636, v=1.0471975511965976)
   end
   def reciprocal_p2_3():
     # begin: URCap Program Node
@@ -2318,7 +2323,7 @@ def reciprocal_full():
     gripper_3_used = False
     gripper_4_used = False
     # end: URCap Program Node
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(ra_b1_wp_1_p, qnear=ra_b1_wp_1_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(ra_b1_at_1_p, qnear=ra_b1_at_1_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2350,6 +2355,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(ra_b1_wp_2_p, qnear=ra_b1_wp_2_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(h_ra_b1_wp_p, qnear=h_ra_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(h_ra_b1_at_p, qnear=h_ra_b1_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2381,6 +2387,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(h_ra_b1_wp_p, qnear=h_ra_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(ra_b2_wp_1_p, qnear=ra_b2_wp_1_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(ra_b2_at_1_p, qnear=ra_b2_at_1_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2412,6 +2419,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(ra_b2_wp_2_p, qnear=ra_b2_wp_2_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(h_ra_b2_wp_p, qnear=h_ra_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(h_ra_b2_at_p, qnear=h_ra_b2_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2443,7 +2451,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(h_ra_b2_wp_p, qnear=h_ra_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_end_p, qnear=safe_end_q), a=1.3962634015954636, v=1.0471975511965976)
   end
   def reciprocal_p2_2():
     # begin: URCap Program Node
@@ -2492,7 +2500,6 @@ def reciprocal_full():
     gripper_3_used = False
     gripper_4_used = False
     # end: URCap Program Node
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(m2_b1_wp_1_p, qnear=m2_b1_wp_1_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(m2_b1_at_1_p, qnear=m2_b1_at_1_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2555,7 +2562,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(h_m2_b1_wp_p, qnear=h_m2_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_end_p, qnear=safe_end_q), a=1.3962634015954636, v=1.0471975511965976)
   end
   def reciprocal_p2_1():
     # begin: URCap Program Node
@@ -2604,7 +2611,7 @@ def reciprocal_full():
     gripper_3_used = False
     gripper_4_used = False
     # end: URCap Program Node
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(b_b1_wp_1_p, qnear=b_b1_wp_1_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(b_b1_at_1_p, qnear=b_b1_at_1_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2636,6 +2643,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(b_b1_wp_2_p, qnear=b_b1_wp_2_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(h_b_b1_wp_p, qnear=h_b_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(h_b_b1_at_p, qnear=h_b_b1_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2667,6 +2675,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(h_b_b1_wp_p, qnear=h_b_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(b_b2_wp_1_p, qnear=b_b2_wp_1_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(b_b2_at_1_p, qnear=b_b2_at_1_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2698,6 +2707,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(b_b2_wp_2_p, qnear=b_b2_wp_2_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(h_b_b2_wp_p, qnear=h_b_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(h_b_b2_at_p, qnear=h_b_b2_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2729,7 +2739,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(h_b_b2_wp_p, qnear=h_b_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_end_p, qnear=safe_end_q), a=1.3962634015954636, v=1.0471975511965976)
   end
   def reciprocal_p1_3():
     # begin: URCap Program Node
@@ -2778,7 +2788,7 @@ def reciprocal_full():
     gripper_3_used = False
     gripper_4_used = False
     # end: URCap Program Node
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(ra_b1_wp_p, qnear=ra_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(ra_b1_at_p, qnear=ra_b1_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2810,6 +2820,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(ra_b1_wp_p, qnear=ra_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(h_ra_b1_wp_p, qnear=h_ra_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(h_ra_b1_at_p, qnear=h_ra_b1_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2841,6 +2852,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(h_ra_b1_wp_p, qnear=h_ra_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.06)
     movej(get_inverse_kin(ra_b2_wp_p, qnear=ra_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(ra_b2_at_p, qnear=ra_b2_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2872,6 +2884,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(ra_b2_wp_p, qnear=ra_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.06)
     movej(get_inverse_kin(h_ra_b2_wp_p, qnear=h_ra_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(h_ra_b2_at_p, qnear=h_ra_b2_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2903,7 +2916,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(h_ra_b2_wp_p, qnear=h_ra_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_end_p, qnear=safe_end_q), a=1.3962634015954636, v=1.0471975511965976)
   end
   def reciprocal_p1_2():
     # begin: URCap Program Node
@@ -2952,7 +2965,7 @@ def reciprocal_full():
     gripper_3_used = False
     gripper_4_used = False
     # end: URCap Program Node
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(m2_b1_wp_p, qnear=m2_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(m2_b1_at_p, qnear=m2_b1_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -2984,6 +2997,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(m2_b1_wp_p, qnear=m2_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(h_m2_b1_wp_p, qnear=h_m2_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(h_m2_b1_at_p, qnear=h_m2_b1_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -3015,7 +3029,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(h_m2_b1_wp_p, qnear=h_m2_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_end_p, qnear=safe_end_q), a=1.3962634015954636, v=1.0471975511965976)
   end
   def reciprocal_p1_1():
     # begin: URCap Program Node
@@ -3065,6 +3079,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(b_b1_wp_p, qnear=b_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(b_b1_at_p, qnear=b_b1_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -3096,6 +3111,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(b_b1_wp_p, qnear=b_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(h_b_b1_wp_p, qnear=h_b_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(h_b_b1_at_p, qnear=h_b_b1_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -3127,6 +3143,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(h_b_b1_wp_p, qnear=h_b_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(b_b2_wp_p, qnear=b_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(b_b2_at_p, qnear=b_b2_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -3158,6 +3175,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(b_b2_wp_p, qnear=b_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
     movej(get_inverse_kin(h_b_b2_wp_p, qnear=h_b_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
     movej(get_inverse_kin(h_b_b2_at_p, qnear=h_b_b2_at_q), a=1.3962634015954636, v=1.0471975511965976)
     # begin: URCap Program Node
@@ -3189,7 +3207,7 @@ def reciprocal_full():
     gripper_4_used = False
     # end: URCap Program Node
     movej(get_inverse_kin(h_b_b2_wp_p, qnear=h_b_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
-    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(safe_end_p, qnear=safe_end_q), a=1.3962634015954636, v=1.0471975511965976)
   end
   $ 1 "Robot Program"
   $ 2 "Call reciprocal_p1_1"

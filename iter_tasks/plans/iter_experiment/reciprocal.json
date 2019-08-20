@@ -35,7 +35,7 @@
     {
       "name": "wait",
       "condition": "time",
-      "value": 10
+      "value": 7.5
     },
     {
         "name": "wait",
@@ -49,7 +49,7 @@
     {
       "name": "wait",
       "condition": "time",
-      "value": 60
+      "value": 30
     },
     {
         "name": "wait",
@@ -77,7 +77,7 @@
     {
       "name": "wait",
       "condition": "time",
-      "value": 10
+      "value": 7.5
     },
     {
         "name": "wait",
@@ -91,7 +91,7 @@
     {
       "name": "wait",
       "condition": "time",
-      "value": 60
+      "value": 30
     },
     {
         "name": "wait",
@@ -119,7 +119,7 @@
     {
       "name": "wait",
       "condition": "time",
-      "value": 10
+      "value": 7.5
     },
     {
         "name": "wait",
@@ -133,7 +133,7 @@
     {
       "name": "wait",
       "condition": "time",
-      "value": 60
+      "value": 30
     },
     {
       "name": "logger",

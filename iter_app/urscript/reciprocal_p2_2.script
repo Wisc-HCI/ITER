@@ -1711,6 +1711,8 @@ def reciprocal_p2_2():
   # end: URCap Installation Node
   global home_p=p[-.122149880499, -.119319658552, .414454461367, 2.256333922147, 2.145949286359, -.048097257405]
   global home_q=[-1.4954140822040003, -0.9909351629069825, -1.3928093910217285, -2.2868172130980433, 1.5698156356811523, -4.587305847798483]
+  global safe_p=p[.121865635135, -.222064547281, .236803255551, 2.214549778865, 2.208924975880, -.038638260296]
+  global safe_q=[-0.5207112471209925, -1.2549875539592286, -2.153726100921631, -1.296215371494629, 1.5502371788024902, -3.653522316609518]
   global m2_b1_wp_1_p=p[-.030704290267, -.217421861057, .203363367824, -2.239709307061, -2.192232836709, .000292473063]
   global m2_b1_wp_1_q=[-1.0793975035296839, -1.1155556005290528, -2.389589786529541, -1.2133425039104004, 1.5756711959838867, -4.192463699971334]
   global m2_b1_at_1_p=p[-.030715869065, -.217426728628, .151677269830, -2.239718479887, -2.192186777871, .000345007255]
@@ -1775,14 +1777,16 @@ def reciprocal_p2_2():
   movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
   $ 6 "Mid_2"
   $ 7 "MoveJ"
-  $ 8 "m2_b1_wp_1"
+  $ 8 "safe"
+  movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
+  $ 9 "m2_b1_wp_1"
   movej(get_inverse_kin(m2_b1_wp_1_p, qnear=m2_b1_wp_1_q), a=1.3962634015954636, v=1.0471975511965976)
-  $ 9 "m2_b1_at_1"
+  $ 10 "m2_b1_at_1"
   movej(get_inverse_kin(m2_b1_at_1_p, qnear=m2_b1_at_1_q), a=1.3962634015954636, v=1.0471975511965976)
   # begin: URCap Program Node
   #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
   #   Type: Gripper
-  $ 10 "Gripper Close (1)"
+  $ 11 "Gripper Close (1)"
   gripper_1_used = True
   if (connectivity_checked[0] != 1):
     if not(rq_set_sid(9, "1")):
@@ -1808,16 +1812,18 @@ def reciprocal_p2_2():
   gripper_3_used = False
   gripper_4_used = False
   # end: URCap Program Node
-  $ 11 "m2_b1_wp_2"
+  $ 12 "m2_b1_wp_2"
   movej(get_inverse_kin(m2_b1_wp_2_p, qnear=m2_b1_wp_2_q), a=1.3962634015954636, v=1.0471975511965976)
-  $ 12 "h_m2_b1_wp"
+  $ 13 "safe"
+  movej(get_inverse_kin(safe_p, qnear=safe_q), a=1.3962634015954636, v=1.0471975511965976, r=0.075)
+  $ 14 "h_m2_b1_wp"
   movej(get_inverse_kin(h_m2_b1_wp_p, qnear=h_m2_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
-  $ 13 "h_m2_b1_at"
+  $ 15 "h_m2_b1_at"
   movej(get_inverse_kin(h_m2_b1_at_p, qnear=h_m2_b1_at_q), a=1.3962634015954636, v=1.0471975511965976)
   # begin: URCap Program Node
   #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
   #   Type: Gripper
-  $ 14 "Gripper Move50% (1)"
+  $ 16 "Gripper Move50% (1)"
   gripper_1_used = True
   if (connectivity_checked[0] != 1):
     if not(rq_set_sid(9, "1")):
@@ -1843,9 +1849,9 @@ def reciprocal_p2_2():
   gripper_3_used = False
   gripper_4_used = False
   # end: URCap Program Node
-  $ 15 "h_m2_b1_wp"
+  $ 17 "h_m2_b1_wp"
   movej(get_inverse_kin(h_m2_b1_wp_p, qnear=h_m2_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
-  $ 16 "MoveJ"
-  $ 17 "home"
+  $ 18 "MoveJ"
+  $ 19 "home"
   movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
 end

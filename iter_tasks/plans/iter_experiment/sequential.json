@@ -21,7 +21,7 @@
     {
       "name": "wait",
       "condition": "time",
-      "value": 40
+      "value": 35
     },
     {
         "name": "wait",
@@ -35,7 +35,7 @@
     {
       "name": "wait",
       "condition": "time",
-      "value": 40
+      "value": 35
     },
     {
         "name": "wait",
@@ -49,7 +49,7 @@
     {
       "name": "wait",
       "condition": "time",
-      "value": 40
+      "value": 35
     },
     {
       "name": "logger",
