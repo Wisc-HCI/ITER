@@ -1,16 +1,17 @@
 
 // Global Variables
 
-const COLOR_NEGLECT = '#2e7d32';
+const COLOR_NEGLECT = '#4caf50';
 const COLOR_WARNING = '#ffd54f';
 const COLOR_EMERGENCY = '#c62828';
-const COLOR_INTERACTION = '#673ab7';
+const COLOR_INTERACTION = '#aa66cc';
 const COLOR_FINISHED = '#757575';
 
 const NEGLECT_LOWER_BOUND = 15;
 
 var timeline = null;
 var playhead = null;
+var times = null;
 
 //Warning sound = https://freesound.org/people/SamsterBirdies/sounds/467882/
 var AUDIO = new Audio('./samsterbirdies__beep-warning.mp3');
@@ -294,11 +295,15 @@ $.getJSON("../rosbridge_properties.json", function(json) {
 
   listenerRadTimeline.subscribe(function(message) {
     if (message != undefined) {
-      let times = JSON.parse(message.data);
+      times = JSON.parse(message.data).timeline;
+      console.log(times);
 
       currentMode = -1;
 
       canvas.clear();
+
+      console.log(canvas);
+
       let x = canvas.node.clientWidth;
       let y = canvas.node.clientHeight;
 
