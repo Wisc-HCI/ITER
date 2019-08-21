@@ -1,5 +1,11 @@
 
-// Global Variables
+// global Variables
+
+const COLOR_NEGLECT = '#2e7d32';
+const COLOR_WARNING = '#ffd54f';
+const COLOR_EMERGENCY = '#c62828';
+const COLOR_INTERACTION = '#673ab7';
+const COLOR_FINISHED = '#757575';
 
 const NEGLECT_LOWER_BOUND = 15;
 
@@ -47,9 +53,11 @@ function Playhead(canvas, x, y) {
   this.dmove(x,y);
 }
 
-function Tile(canvas, x, y, width, color, timeInfo) {
+function Tile(canvas, x, y, width, timeInfo) {
   this.state = 'okay';
   this.timeInfo = timeInfo;
+
+  let color = (this.timeInfo.type == 'interaction') ? COLOR_INTERACTION : COLOR_NEGLECT;
   this.rectangle = canvas.rect(width,100).radius(5).fill(color);
 
   this.dmove = function(x, y) {
@@ -68,8 +76,18 @@ function Tile(canvas, x, y, width, color, timeInfo) {
     this.timeInfo.stop_time += dt;
   }
 
-  this.setColor = function(color) {
-    this.rectangle.fill(color);
+  this.setWarning  = function() {
+    let gradient = canvas.gradient('linear', function(stop) {
+      stop.at(0, COLOR_WARNING);
+      stop.at(1, COLOR_EMERGENCY);
+    });
+    this.rectangle.fill(gradient);
+    this.state = 'warning';
+  }
+
+  this.setFinished = function() {
+    this.rectangle.fill(COLOR_FINISHED);
+    this.state = 'finished';
   }
 }
 
@@ -94,8 +112,7 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
     for (let t of times) {
       let width = (t.stop_time - t.start_time) * X_STEP / TIME_STEP;
       let x = start_x + t.start_time * X_STEP / TIME_STEP;
-      let color = (t.type == 'interaction') ? '#ff4444' : '#00C851';
-      this.tiles.push(new Tile(canvas, x, y, width, color, t));
+      this.tiles.push(new Tile(canvas, x, y, width, t));
     }
   };
   this._drawTiles(x_playhead,y+TILE_Y_OFFSET);
@@ -165,8 +182,7 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
         }
       } else if (activeTile.timeInfo.type == 'neglect') {
         if (activeTile.state != 'warning' && activeTile.timeInfo.stop_time - (this.time+dt) < 15) {
-          activeTile.state = 'warning';
-          activeTile.setColor('#ffbb33');
+          activeTile.setWarning();
         }
       }
     }
@@ -185,7 +201,7 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
     // update timing and active tile
     this.time = time;
     while (this.tileIndex < this.tiles.length && this.time > this.tiles[this.tileIndex].timeInfo.stop_time) {
-      this.tiles[this.tileIndex].setColor('#555');
+      this.tiles[this.tileIndex].setFinished();
       this.tileIndex++;
     }
   }
@@ -202,26 +218,6 @@ SVG.on(document, 'DOMContentLoaded', function() {
 
   timeline = new Timeline(canvas,0,x,x/3,y/2-50,[]);
   playhead = new Playhead(canvas,x/3-10,y/2-120);
-
-  /*
-  [
-    {
-      start_time: 0,
-      stop_time: 60,
-      type: 'neglect'
-    },
-    {
-      start_time: 61,
-      stop_time: 78,
-      type: 'interaction'
-    },
-    {
-      start_time: 90,
-      stop_time: 120,
-      type: 'neglect'
-    }
-  ]
-  */
 
 });
 
@@ -272,7 +268,7 @@ $.getJSON("../rosbridge_properties.json", function(json) {
 
   listenerRadTimeline.subscribe(function(message) {
     if (message != undefined) {
-      times = JSON.parse(message.data);
+      let times = JSON.parse(message.data);
 
       currentMode = -1;
 
