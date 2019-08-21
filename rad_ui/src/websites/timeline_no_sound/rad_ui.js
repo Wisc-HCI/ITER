@@ -146,6 +146,8 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
   };
   this._drawTicks(x_playhead,0,this.stop_time,y+TICK_Y_OFFSET);
 
+  this.playhead = new Playhead(canvas,x_playhead-10,y-70);
+
   this.update = function(time, interacting) {
     dt = time - this.time
     dx = -dt * X_STEP / TIME_STEP;
@@ -189,6 +191,7 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
     }
 
     // shift everything over
+    // TODO handle playhead movement
     for (let t of this.tiles) {
       t.dmove(dx,0);
     }
@@ -218,8 +221,6 @@ SVG.on(document, 'DOMContentLoaded', function() {
   let y = canvas.node.clientHeight;
 
   timeline = new Timeline(canvas,0,x,x/3,y/2-50,[]);
-  playhead = new Playhead(canvas,x/3-10,y/2-120);
-
 });
 
 $.getJSON("../rosbridge_properties.json", function(json) {
@@ -276,13 +277,10 @@ $.getJSON("../rosbridge_properties.json", function(json) {
 
       canvas.clear();
 
-      console.log(canvas);
-
       let x = canvas.node.clientWidth;
       let y = canvas.node.clientHeight;
 
       timeline = new Timeline(canvas,0,x,x/3,y/2-50,times);
-      playhead = new Playhead(canvas,x/3-10,y/2-120);
     }
   });
 });
