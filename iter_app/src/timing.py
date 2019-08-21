@@ -47,7 +47,7 @@ class TimingServer:
         self.pub_neglect_time = rospy.Publisher('/rad/neglect_time', TimeInterval, queue_size=10)
         self.pub_interaction_time = rospy.Publisher('rad/interaction_time', TimeInterval, queue_size=10)
         self.pub_rad_signal = rospy.Publisher('/rad/signal', RADSignal, queue_size=10)
-        self.pub_timeline = rospy.Publisher('/rad/timeline',String, queue_size=1)
+        self.pub_timeline = rospy.Publisher('/rad/timeline',String, queue_size=1, latch=True)
 
         self._fakeTime = rospy.get_param("~fake_time",False)
         print 'Timing running in', 'fake' if self._fakeTime else 'real', 'time'
