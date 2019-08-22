@@ -47,7 +47,7 @@ class TimingServer:
         self.pub_neglect_time = rospy.Publisher('/rad/neglect_time', TimeInterval, queue_size=10)
         self.pub_interaction_time = rospy.Publisher('rad/interaction_time', TimeInterval, queue_size=10)
         self.pub_rad_signal = rospy.Publisher('/rad/signal', RADSignal, queue_size=10)
-        self.pub_timeline = rospy.Publisher('/rad/timeline',String, queue_size=1)
+        self.pub_timeline = rospy.Publisher('/rad/timeline',String, queue_size=1, latch=True)
 
         self._fakeTime = rospy.get_param("~fake_time",False)
         print 'Timing running in', 'fake' if self._fakeTime else 'real', 'time'
@@ -56,6 +56,8 @@ class TimingServer:
             self._neglect_time_list = self._fake_time_op_list()
         else:
             self._neglect_time_list = []
+
+        self._next_id = 0
         self._run = False
         self._sync_index = 0
         self._elapsed_time = 0
@@ -103,18 +105,20 @@ class TimingServer:
         self.pub_timeline.publish(String(json.dumps(self._timeline_processor())))
 
     def _real_timeline_publisher(self):
+        print 'publishing new timeline'
         self.pub_timeline.publish(String(json.dumps(self._timeline_processor())))
 
     def _timeline_processor(self):
-        retVal = []
+        timeline = []
+        self._next_id += 1
         currentTime = 0
         for obj in self._neglect_time_list:
-            retVal.append({
+            timeline.append({
                 'type': 'interaction' if obj['interaction'] else 'neglect',
                 'start_time': currentTime,
                 'stop_time': currentTime + obj['time']})
             currentTime += obj['time']
-        return retVal
+        return {'timeline':timeline, 'id': self._next_id}
 
     def _fake_time_publisher(self):
 

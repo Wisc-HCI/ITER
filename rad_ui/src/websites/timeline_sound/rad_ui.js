@@ -1,10 +1,17 @@
 
 // Global Variables
 
+const COLOR_NEGLECT = '#4caf50';
+const COLOR_WARNING = '#ffd54f';
+const COLOR_EMERGENCY = '#c62828';
+const COLOR_INTERACTION = '#aa66cc';
+const COLOR_FINISHED = '#757575';
+
 const NEGLECT_LOWER_BOUND = 15;
 
 var timeline = null;
 var playhead = null;
+var times = null;
 
 //Warning sound = https://freesound.org/people/SamsterBirdies/sounds/467882/
 var AUDIO = new Audio('./samsterbirdies__beep-warning.mp3');
@@ -68,9 +75,11 @@ function Playhead(canvas, x, y) {
   this.dmove(x,y);
 }
 
-function Tile(canvas, x, y, width, color, timeInfo) {
+function Tile(canvas, x, y, width, timeInfo) {
   this.state = 'okay';
   this.timeInfo = timeInfo;
+
+  let color = (this.timeInfo.type == 'interaction') ? COLOR_INTERACTION : COLOR_NEGLECT;
   this.rectangle = canvas.rect(width,100).radius(5).fill(color);
 
   this.dmove = function(x, y) {
@@ -89,8 +98,18 @@ function Tile(canvas, x, y, width, color, timeInfo) {
     this.timeInfo.stop_time += dt;
   }
 
-  this.setColor = function(color) {
-    this.rectangle.fill(color);
+  this.setWarning  = function() {
+    let gradient = canvas.gradient('linear', function(stop) {
+      stop.at(0, COLOR_WARNING);
+      stop.at(1, COLOR_EMERGENCY);
+    });
+    this.rectangle.fill(gradient);
+    this.state = 'warning';
+  }
+
+  this.setFinished = function() {
+    this.rectangle.fill(COLOR_FINISHED);
+    this.state = 'finished';
   }
 }
 
@@ -115,8 +134,7 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
     for (let t of times) {
       let width = (t.stop_time - t.start_time) * X_STEP / TIME_STEP;
       let x = start_x + t.start_time * X_STEP / TIME_STEP;
-      let color = (t.type == 'interaction') ? '#32C' : '#0D3';
-      this.tiles.push(new Tile(canvas, x, y, width, color, t));
+      this.tiles.push(new Tile(canvas, x, y, width, t));
     }
   };
   this._drawTiles(x_playhead,y+TILE_Y_OFFSET);
@@ -149,6 +167,8 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
   };
   this._drawTicks(x_playhead,0,this.stop_time,y+TICK_Y_OFFSET);
 
+  this.playhead = new Playhead(canvas,x_playhead-10,y-70);
+
   this.update = function(time, interacting) {
     dt = time - this.time
     dx = -dt * X_STEP / TIME_STEP;
@@ -167,10 +187,26 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
         this._drawTicks(lastTick.x() + X_STEP,this.ticks.length*TIME_STEP,this.stop_time+dt,y+TICK_Y_OFFSET);
 
         this.stop_time += dt;
+      } else if (activeTile.timeInfo.type == 'interaction' && !interacting) {
+        let qt = time - activeTile.timeInfo.stop_time - 0.01;
+        let qx = qt * X_STEP / TIME_STEP;
+
+        // adjust tiles
+        activeTile.extend(qx,qt);
+        for (let i=this.tileIndex+1; i<this.tiles.length; i++) {
+          this.tiles[i].timeAdjust(qx,qt);
+        }
+
+        // update tick marks
+        for (let i=this.ticks.length-1; i>0; i--) {
+          if ((i-1)*TIME_STEP >= this.stop_time) {
+            this.ticks.pop().clear();
+            this.labels.pop().clear();
+          }
+        }
       } else if (activeTile.timeInfo.type == 'neglect') {
         if (activeTile.state != 'warning' && activeTile.timeInfo.stop_time - (this.time+dt) < 15) {
-          activeTile.state = 'warning';
-          activeTile.setColor('#D03');
+          activeTile.setWarning();
         }
       }
     }
@@ -187,9 +223,10 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
     }
 
     // update timing and active tile
+    // TODO handle playhead movement
     this.time = time;
     while (this.tileIndex < this.tiles.length && this.time > this.tiles[this.tileIndex].timeInfo.stop_time) {
-      this.tiles[this.tileIndex].setColor('#555');
+      this.tiles[this.tileIndex].setFinished();
       this.tileIndex++;
     }
   }
@@ -205,28 +242,6 @@ SVG.on(document, 'DOMContentLoaded', function() {
   let y = canvas.node.clientHeight;
 
   timeline = new Timeline(canvas,0,x,x/3,y/2-50,[]);
-  playhead = new Playhead(canvas,x/3-10,y/2-120);
-
-  /*
-  [
-    {
-      start_time: 0,
-      stop_time: 60,
-      type: 'neglect'
-    },
-    {
-      start_time: 61,
-      stop_time: 78,
-      type: 'interaction'
-    },
-    {
-      start_time: 90,
-      stop_time: 120,
-      type: 'neglect'
-    }
-  ]
-  */
-
 });
 
 $.getJSON("../rosbridge_properties.json", function(json) {
@@ -262,8 +277,6 @@ $.getJSON("../rosbridge_properties.json", function(json) {
   });
 
   let currentMode = -1;
-  let prevTime = 0;
-  let elapsedTime = 0;
 
   listenerRadSignal.subscribe(function(message) {
     if (message != undefined) {
@@ -271,36 +284,29 @@ $.getJSON("../rosbridge_properties.json", function(json) {
       if (currentMode != message.mode) {
         currentMode = message.mode;
         modeChanged();
-        prevTime = 0;
       }
 
       if (message.mode == 0) {  // neglect time
-        time = message.neglect_time.initial - message.neglect_time.current;
         warningCheck(message.neglect_time.current);
-      } else {                  // interaction time
-        time = message.interaction_time.current;
       }
 
-      elapsedTime += time - prevTime;
-      prevTime = time;
-      timeline.update(elapsedTime,message.move != 0);
+      timeline.update(message.elapsed_time,message.mode != 0);
     }
   });
 
   listenerRadTimeline.subscribe(function(message) {
     if (message != undefined) {
-      let times = JSON.parse(message.data);
+      times = JSON.parse(message.data).timeline;
+      console.log(times);
 
       currentMode = -1;
-      elapsedTime = 0;
-      prevTime = 0;
 
       canvas.clear();
+
       let x = canvas.node.clientWidth;
       let y = canvas.node.clientHeight;
 
       timeline = new Timeline(canvas,0,x,x/3,y/2-50,times);
-      playhead = new Playhead(canvas,x/3-10,y/2-120);
     }
   });
 });
