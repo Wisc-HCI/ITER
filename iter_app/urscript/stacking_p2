@@ -1,0 +1,42 @@
+ Program
+   Robot Program
+     MoveJ
+       home
+     Stack B
+       MoveJ
+         Waypoint_1
+         Waypoint_6
+         Gripper Close (1)
+         Waypoint_7
+         Waypoint_8
+         Gripper Move50% (1)
+       MoveJ
+         Waypoint_2
+         Waypoint_9
+         Gripper Close (1)
+         Waypoint_10
+         Waypoint_11
+         Gripper Move50% (1)
+       MoveJ
+         Waypoint_3
+         Waypoint_12
+         Gripper Close (1)
+         Waypoint_13
+         Waypoint_14
+         Gripper Move50% (1)
+       MoveJ
+         Waypoint_4
+         Waypoint_15
+         Gripper Close (1)
+         Waypoint_16
+         Waypoint_17
+         Gripper Move50% (1)
+       MoveJ
+         Waypoint_5
+         Waypoint_18
+         Gripper Close (1)
+         Waypoint_19
+         Waypoint_20
+         Gripper Move50% (1)
+     MoveJ
+       home

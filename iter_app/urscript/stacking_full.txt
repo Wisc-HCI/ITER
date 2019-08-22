@@ -1,0 +1,109 @@
+ Program
+   Robot Program
+     Gripper Activate
+     Gripper Move50% (1)
+     Call stacking_p1
+     Popup
+     Call stacking_p2
+   stacking_p2
+     MoveJ
+       home
+     Stack B
+       MoveJ
+         sb_b1_wp
+         sb_b1_at
+         Gripper Close (1)
+         sb_b1_wp
+         w_sa_b1_wp
+         w_sa_b1_at
+         Gripper Move50% (1)
+         w_sa_b1_wp
+       MoveJ
+         sb_b2_wp
+         sb_b2_at
+         Gripper Close (1)
+         sb_b2_wp
+         w_sa_b2_wp
+         w_sa_b2_at
+         Gripper Move50% (1)
+         w_sa_b2_wp
+       MoveJ
+         sb_b3_wp
+         sb_b_at
+         Gripper Close (1)
+         sb_b3_wp
+         w_sa_b3_wp
+         w_sa_b3_at
+         Gripper Move50% (1)
+         w_sa_b3_wp
+       MoveJ
+         sb_b4_wp
+         sb_b4_at
+         Gripper Close (1)
+         sb_b4_wp
+         w_sa_b4_wp
+         w_sa_b4_at
+         Gripper Move50% (1)
+         w_sa_b4_wp
+       MoveJ
+         sb_b5_wp
+         sb_b5_at
+         Gripper Close (1)
+         sb_b5_wp
+         w_sa_b5_wp
+         w_sa_b5_at
+         Gripper Move50% (1)
+         w_sa_b5_wp
+     MoveJ
+       home
+   stacking_p1
+     MoveJ
+       home
+     Stack A
+       MoveJ
+         sa_b1_wp
+         sa_b1_at
+         Gripper Close (1)
+         sa_b1_wp
+         w_sa_b1_wp
+         w_sa_b1_at
+         Gripper Move50% (1)
+         w_sa_b1_wp
+       MoveJ
+         sa_b2_wp
+         sa_b2_at
+         Gripper Close (1)
+         sa_b2_wp
+         w_sa_b2_wp
+         w_sa_b2_at
+         Gripper Move50% (1)
+         w_sa_b2_wp
+       MoveJ
+         sa_b3_wp
+         sa_b3_at
+         Gripper Close (1)
+         sa_b3_wp
+         w_sa_b3_wp
+         w_sa_b3_at
+         Gripper Move50% (1)
+         w_sa_b3_wp
+       MoveJ
+         sa_b4_wp
+         sa_b4_at
+         Gripper Close (1)
+         sa_b4_wp
+         w_sa_b4_wp
+         w_sa_b4_at
+         Gripper Move50% (1)
+         w_sa_b4_wp
+       MoveJ
+         sa_b5_wp
+         sa_b5_at
+         Gripper Close (1)
+         sa_b5_wp
+         w_sa_b5_wp
+         w_sa_b5_at
+         Gripper Move50% (1)
+         w_sa_b5_wp
+     MoveJ
+       home

@@ -176,7 +176,6 @@ class TimingServer:
 
             # run timing for task primitive
             if 'interaction' in t.keys() and t['interaction']:
-                print 'interaction-mode'
                 signal.mode = RADSignal.INTERACTION_MODE
                 self._in_interaction_task = True
 
@@ -211,7 +210,6 @@ class TimingServer:
                 self._interaction_event = False
 
             else:
-                print 'neglect-time'
                 signal.mode = RADSignal.NEGLECT_MODE
 
                 # Run through the prerecorded timing
