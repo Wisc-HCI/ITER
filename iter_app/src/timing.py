@@ -105,7 +105,6 @@ class TimingServer:
         self.pub_timeline.publish(String(json.dumps(self._timeline_processor())))
 
     def _real_timeline_publisher(self):
-        print 'publishing new timeline'
         self.pub_timeline.publish(String(json.dumps(self._timeline_processor())))
 
     def _timeline_processor(self):
@@ -255,8 +254,9 @@ class TimingServer:
             index += 1
 
         # latch a blank timeline
-        self._neglect_time_list = []
-        self._real_timeline_publisher()
+        if len(self._neglect_time_list) != 0:
+            self._neglect_time_list = []
+            self._real_timeline_publisher()
 
     def loop(self):
 
