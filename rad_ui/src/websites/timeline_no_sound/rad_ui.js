@@ -43,73 +43,102 @@ function formatTime(secondsRaw) {
 //==============================================================================
 
 function Playhead(canvas, x, y) {
+  let self = this;
 
-  this.nested = canvas.nested();
-  this.triangleTop = this.nested.polygon('0,0 20,0 10,20').fill('#000');
-  this.triangleBottom = this.nested.polygon('0,140 20,140 10,120').fill('#000');
-  this.line = this.nested.line(10,15,10,125).attr({
+  self.nested = canvas.nested();
+  self.triangleTop = self.nested.polygon('0,0 20,0 10,20').fill('#000');
+  self.triangleBottom = self.nested.polygon('0,140 20,140 10,120').fill('#000');
+  self.line = self.nested.line(10,15,10,125).attr({
     stroke: '#000',
     'stroke-width': 3
   });
-  this.circle = this.nested.circle(75).move(-29,-74).stroke({
+  self.circle = self.nested.circle(75).move(-29,-74).stroke({
     width: 3,
     color: '#000'
   }).fill({
     color: '#000',
     opacity: 0.0
   });
-  this.icon = this.nested.nested().dmove(-16,-60).size(50,50);
+  self.icon = self.nested.nested().dmove(-16,-60).size(50,50);
 
-  this.dmove = function(x, y) {
-    this.nested.dmove(x,y);
+  self.dmove = function(x, y) {
+    self.nested.dmove(x,y);
   };
-  this.dmove(x,y);
+  self.dmove(x,y);
 
-  this.setNeglectIcon = function() {
-    self.icon.clear();
-    self.icon.svg(this._neglectIconString);
+  self.setNeglectIcon = function() {
+    if (self._neglectIconString != null) {
+      self.icon.clear();
+      self.icon.svg(self._neglectIconString);
+    } else {
+      self._asyncSetIcon('_neglectIconString',self.setNeglectIcon);
+    }
   }
 
-  this.setWarningIcon = function() {
-    self.icon.clear();
-    self.icon.svg(this._warningIconString);
+  self.setWarningIcon = function() {
+    if (self._warningIconString != null) {
+      self.icon.clear();
+      self.icon.svg(self._warningIconString);
+    } else {
+      self._asyncSetIcon('_warningIconString',self.setWarningIcon);
+    }
+
   }
 
-  this.setInteractionIcon = function() {
-    self.icon.clear();
-    self.icon.svg(this._interactionIconString);
+  self.setInteractionIcon = function() {
+    if (self._interactionIconString != null) {
+      self.icon.clear();
+      self.icon.svg(self._interactionIconString);
+    } else {
+      self._asyncSetIcon('_interactionIconString',self.setInteractionIcon);
+    }
+
   }
 
-  this.setWaitingIcon = function() {
-    self.icon.clear();
-    self.icon.svg(this._waitingIconString);
+  self.setWaitingIcon = function() {
+    if (self._waitingIconString != null) {
+      self.icon.clear();
+      self.icon.svg(self._waitingIconString);
+    } else {
+      self._asyncSetIcon('_waitingIconString',self.setWaitingIcon);
+    }
   }
 
-  this._getIcon = function(file, attribute) {
-    let self = this;
+  self._getIcon = function(file, attribute) {
     $.get(file, function(contents) {
       let tmp = new XMLSerializer().serializeToString(contents);
       self[attribute] = tmp;
     });
   }
 
-  this._neglectIconString = null;
-  this._warningIconString = null;
-  this._interactionIconString = null;
-  this._waitingIconString = null;
+  self._neglectIconString = null;
+  self._warningIconString = null;
+  self._interactionIconString = null;
+  self._waitingIconString = null;
 
-  this._getIcon('./icons/neglect.svg','_neglectIconString');
-  this._getIcon('./icons/warning.svg','_warningIconString');
-  this._getIcon('./icons/interaction.svg','_interactionIconString');
-  this._getIcon('./icons/waiting.svg','_waitingIconString');
+  self._getIcon('./icons/neglect.svg','_neglectIconString');
+  self._getIcon('./icons/warning.svg','_warningIconString');
+  self._getIcon('./icons/interaction.svg','_interactionIconString');
+  self._getIcon('./icons/waiting.svg','_waitingIconString');
 
-  let self = this;
-  let cancelIntervalID = setInterval(function(){
-    if (self._waitingIconString != null) {
-      clearInterval(cancelIntervalID);
-      self.setWaitingIcon();
+  self._cancelIntervalID = null
+  self._asyncSetIcon = function(iconString, setFunction) {
+
+    if (self._cancelIntervalID != null) {
+      clearInterval(self._cancelIntervalID);
+      self._cancelIntervalID = null;
     }
-  }, 1000);
+
+    let cancel = setInterval(function(){
+      if (self[iconString] != null) {
+        clearInterval(cancel);
+        self._cancelIntervalID = null;
+        setFunction();
+      }
+    }, 100);
+    self._cancelIntervalID = cancel;
+  }
+  self.setWaitingIcon();
 }
 
 function Tile(canvas, x, y, width, timeInfo) {
@@ -136,8 +165,21 @@ function Tile(canvas, x, y, width, timeInfo) {
   }
 
   this.setWarning  = function() {
+    self = this;
     let gradient = canvas.gradient('linear', function(stop) {
+
+      let wp;
+      let w = self.timeInfo.stop_time - self.timeInfo.start_time;
+      if (w == 0) {
+        wp = 0;
+      } else {
+        wp = NEGLECT_LOWER_BOUND / w;
+        if (wp < 0) wp = 0;
+        if (wp > 1) wp = 1;
+      }
+
       stop.at(0, COLOR_WARNING);
+      stop.at(1-wp, COLOR_WARNING);
       stop.at(1, COLOR_EMERGENCY);
     });
     this.rectangle.fill(gradient);
@@ -224,6 +266,7 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
 
   this.playhead = new Playhead(canvas,x_playhead-10,y-70);
   this.updatePlayheadIcon = function() {
+    console.log('Setting icon based on timeline data');
     if (this.tileIndex < this.tiles.length) {
       if (this.tiles[this.tileIndex].timeInfo.type == 'interaction') {
         this.playhead.setInteractionIcon();
@@ -308,7 +351,6 @@ SVG.on(document, 'DOMContentLoaded', function() {
   canvas.clear();
   let x = canvas.node.clientWidth;
   let y = canvas.node.clientHeight;
-
   timeline = new Timeline(canvas,0,x,x/3,y/2-50,[]);
 });
 
@@ -365,7 +407,6 @@ $.getJSON("../rosbridge_properties.json", function(json) {
       canvas.clear();
       let x = canvas.node.clientWidth;
       let y = canvas.node.clientHeight;
-
       timeline = new Timeline(canvas,0,x,x/3,y/2-50,times);
     }
   });

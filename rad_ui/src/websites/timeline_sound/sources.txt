@@ -1,2 +1,6 @@
-icons from https://feathericons.com/
+Icons from:
+https://fontawesome.com/icons/user-friends?style=solid
+https://fontawesome.com/icons/minus?style=solid
+https://fontawesome.com/icons/check?style=solid
+https://fontawesome.com/icons/exclamation?style=solid
 Warning sound from https://freesound.org/people/SamsterBirdies/sounds/467882/
