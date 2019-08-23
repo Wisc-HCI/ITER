@@ -122,6 +122,10 @@ class TimingServer:
 
     def _fake_time_publisher(self):
 
+        if self._publish_timeline:
+            self._publish_timeline = False
+            self._fake_timeline_publisher()
+
         signal = RADSignal()
         signal.elapsed_time = self._elapsed_time
 
@@ -156,6 +160,10 @@ class TimingServer:
 
     def _real_time_publisher(self):
         #TODO use indexing method for task loop. Use this index with the sync index
+
+        if self._publish_timeline:
+            self._publish_timeline = False
+            self._real_timeline_publisher()
 
         timeInterval = TimeInterval()
         interaction_time = 0
@@ -248,19 +256,13 @@ class TimingServer:
             # increment loop counter
             index += 1
 
+        # latch a blank timeline
+        self._neglect_time_list = []
+        self._real_timeline_publisher()
+
     def loop(self):
 
         while not rospy.is_shutdown():
-
-            if self._publish_timeline:
-                self._publish_timeline = False
-
-                if self._fakeTime:
-                    self._fake_timeline_publisher()
-                else:
-                    self._real_timeline_publisher()
-
-
             if self._fakeTime:
                 self._fake_time_publisher()
             elif self._run:

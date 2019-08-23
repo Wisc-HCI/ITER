@@ -13,7 +13,6 @@ var timeline = null;
 var playhead = null;
 var times = null;
 
-//Warning sound = https://freesound.org/people/SamsterBirdies/sounds/467882/
 var AUDIO = new Audio('./samsterbirdies__beep-warning.mp3');
 
 // global functions
