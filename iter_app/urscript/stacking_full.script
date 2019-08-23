@@ -1,0 +1,2457 @@
+def stacking_full():
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_input_actions_to_default()
+  set_gravity([0.0, 0.0, 9.82])
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_payload(0.9)
+  set_safety_mode_transition_hardness(1)
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
+  # begin: URCap Installation Node
+  #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+  #   Type: Vacuum
+  #################################################
+  # Vacuum Grip Check
+  #################################################
+  
+  vacuumGripCheckThread1 = 0
+  vacuumGripCheckThread2 = 0
+  vacuumGripCheckThread3 = 0
+  vacuumGripCheckThread4 = 0
+  vacuumGripCheckThread1Running = False
+  vacuumGripCheckThread2Running = False
+  vacuumGripCheckThread3Running = False
+  vacuumGripCheckThread4Running = False
+  vacuumGripCheckSocketId = "1"
+  vacuumGripCheckThreadStarted = False
+  
+  thread vacuumGripCheck():
+    gripper_socket = vacuumGripCheckSocketId
+    vacuumGripCheckThreadStarted = True
+  
+    while (True):
+      objectDetectedDebounceCtr = 0
+  
+      while (objectDetectedDebounceCtr < 3):
+        if(rq_is_vacuum_obj_detected(gripper_socket="1")):
+          objectDetectedDebounceCtr = objectDetectedDebounceCtr + 1
+        else:
+          objectDetectedDebounceCtr = 0
+        end
+        sleep(0.1)
+      end
+  
+      objectNotDetectedDebounceCtr = 0
+  
+      while objectNotDetectedDebounceCtr < 3:
+        if (not rq_is_vacuum_obj_detected(gripper_socket="1")):
+          objectNotDetectedDebounceCtr = objectNotDetectedDebounceCtr + 1
+        else:
+          objectNotDetectedDebounceCtr = 0
+        end
+        sleep(0.1)
+      end
+  
+      socket_open("127.0.0.1",29999,"dashboardServerSocket")
+      socket_send_line("pause","dashboardServerSocket")
+      socket_send_string("popup Vacuum grip check has detected an object drop.", "dashboardServerSocket")
+      socket_send_byte(10, "dashboardServerSocket")
+      socket_close("dashboardServerSocket")
+    end
+  end
+  
+  def startVacuumGripCheckThread(gripperId="1"):
+    enter_critical
+    vacuumGripCheckSocketId = gripperId
+    threadHandle = run vacuumGripCheck()
+    waitForVacuumGripCheckThreadStarted()
+    exit_critical
+    return threadHandle
+  end
+  
+  def stopVacuumGripCheckThread(threadHandle):
+    kill threadHandle
+  end
+  
+  def waitForVacuumGripCheckThreadStarted():
+    while (not(vacuumGripCheckThreadStarted)):
+      sync()
+    end
+    vacuumGripCheckThreadStarted = False
+  end
+  #################################################
+  # End - Vacuum Grip Check
+  #################################################
+  
+  #################################################
+  # Stops the pump on a distance travelled
+  #################################################
+  global stopPumpDistance = 100
+  global stopPumpSocketId = "0"
+  global stopPumpThreadStarted = [False, False, False, False]
+  global stopPumpThreadHandles = [0, 0, 0, 0]
+  
+  thread stopPumpOnDistanceTravelled():
+    distance = stopPumpDistance
+    socketId = stopPumpSocketId
+    stopPumpThreadStarted[socket_id_index(socketId)] = True
+  
+    measuredDistance = waitForDistanceTravelled(distance)
+  
+    rq_stop(socketId)
+  
+    stopPumpThreadStarted[socket_id_index(socketId)] = False
+  end
+  
+  def waitForDistanceTravelled(distance):
+    startingPose = get_actual_tcp_pose()
+    measuredDistance = 0
+    while (measuredDistance < distance):
+      sleep(0.1)
+      measuredDistance = point_dist(get_actual_tcp_pose(), startingPose)
+    end
+  
+    return measuredDistance
+  end
+  
+  def startStopPumpOnDistanceTravelledThread(distance, gripper_socket="1"):
+    if (stopPumpThreadStarted[socket_id_index(gripper_socket)]):
+      return 0
+    end
+  
+    enter_critical
+    global stopPumpDistance = distance
+    global stopPumpSocketId = gripper_socket
+    stopPumpThreadHandles[socket_id_index(gripper_socket)] = run stopPumpOnDistanceTravelled()
+    waitForStopPumpOnDistanceTravelledThreadStarted(gripper_socket)
+    exit_critical
+    return stopPumpThreadHandles[socket_id_index(gripper_socket)]
+  end
+  
+  def waitForStopPumpOnDistanceTravelledThreadStarted(gripper_socket="1"):
+    while (not(stopPumpThreadStarted[socket_id_index(gripper_socket)])):
+      sync()
+    end
+  end
+  
+  def stopStopPumpOnDistanceTravelledThread(gripper_socket="1"):
+    handle = stopPumpThreadHandles[socket_id_index(gripper_socket)]
+    threadIsRunning = stopPumpThreadStarted[socket_id_index(gripper_socket)]
+    if (threadIsRunning):
+      kill handle
+      clear_socket_buffer(gripper_socket, 0.01)
+      stopPumpThreadHandles[socket_id_index(gripper_socket)] = 0
+    end
+  end
+  #################################################
+  # End - Stops the pump on a distance travelled
+  #################################################
+  
+  #################################################
+  # Vacuum general functions
+  #################################################
+  def rq_wait_for_vacuum_object_detected(gripper_socket="1"):
+      while (not rq_is_vacuum_obj_detected(gripper_socket)):
+          if (rq_is_vacuum_timeout(gripper_socket)):
+              return False
+          end
+      end
+      return True
+  end
+  
+  def rq_wait_for_vacuum_object_secured(gripper_socket="1"):
+      while (not rq_is_vacuum_obj_secured(gripper_socket)):
+          if (rq_is_vacuum_timeout(gripper_socket)):
+              return False
+          end
+      end
+      return True
+  end
+  
+  def rq_wait_for_vacuum_object_not_detected(gripper_socket="1"):
+      while (rq_is_vacuum_obj_detected(gripper_socket)):
+          sleep(0.01)
+          sync()
+      end
+  end
+  
+  def rq_is_vacuum_obj_detected(gripper_socket="1"):
+      gOBJ = rq_get_var(OBJ, 1, gripper_socket)
+  
+      if(is_vacuum_OBJ_object_detected(gOBJ)):
+          rq_obj_detect = 1
+          return True
+      else:
+          rq_obj_detect = 0
+          return False
+      end
+  end
+  
+  def rq_is_vacuum_obj_secured(gripper_socket="1"):
+      gOBJ = rq_get_var(OBJ, 1, gripper_socket)
+      return is_vacuum_OBJ_object_secured(gOBJ)
+  end
+  
+  def rq_is_vacuum_timeout(gripper_socket="1"):
+    return is_FLT(6, rq_get_var(FLT, 2, gripper_socket))
+  end
+  
+  # Returns True if list_of_byte is [1, '1'] or [1, '2']
+  def is_vacuum_OBJ_object_detected(list_of_bytes):
+  
+      # list length is not 1
+      if (list_of_bytes[0] != 1):
+          return False
+      end
+  
+      # byte is '1'?
+      if (list_of_bytes[1] == 49):
+          return True
+      end
+  
+      # byte is '2'?
+      if (list_of_bytes[1] == 50):
+          return True
+      end
+  
+      return False
+  
+  end
+  
+  def is_vacuum_OBJ_object_secured(list_of_bytes):
+  
+      # list length is not 1
+      if (list_of_bytes[0] != 1):
+          return False
+      end
+  
+      # byte is '2'?
+      if (list_of_bytes[1] == 50):
+          return True
+      end
+  
+      return False
+  
+  end
+  
+  def rq_set_pressure_timeout_minimum_vacuum(pressure, timeout, minimum, gripper_socket="1"):
+      enter_critical
+      rq_send_pos_spd_for(pressure, timeout, minimum, gripper_socket)
+      ack = socket_read_byte_list(3, gripper_socket)
+      exit_critical
+  
+      sync()
+  
+      while(is_not_ack(ack)):
+          enter_critical
+          rq_send_pos_spd_for(pressure, timeout, minimum, gripper_socket)
+          ack = socket_read_byte_list(3, gripper_socket)
+          exit_critical
+  
+          sync()
+      end
+  end
+  
+  def is_FLT(fault_number, list_of_bytes):
+      zero_ascii = 48
+      if (list_of_bytes[0] != 2):
+          return False
+      end
+  
+      if (list_of_bytes[1] != zero_ascii):
+          return False
+      end
+  
+      if (list_of_bytes[2] != zero_ascii + fault_number):
+          return False
+      end
+  
+      return True
+  end
+  
+  def is_FLT_vacuum_timeout(list_of_bytes):
+    return is_FLT(6, list_of_bytes)
+  end
+  
+  def is_continuous_grip(maximum_vacuum):
+    return maximum_vacuum == 0
+  end
+  
+  def socket_id_index(socket_id):
+    if (socket_id == "1"):
+      return 0
+    elif (socket_id == "2"):
+      return 1
+    elif (socket_id == "3"):
+      return 2
+    elif (socket_id == "4"):
+      return 3
+    else:
+      return -1
+    end
+  end
+  
+  def rq_vacuum_release(advanced_mode=False, shutoff_distance_cm=5, wait_for_object_released=True, gripper_socket="1"):
+    local shutoff_distance = scale(shutoff_distance_cm, [0, 99], [0.00, 0.99])
+    local pressure = 255
+    local minimum = 0
+    local timeout = 255
+    rq_vacuum_release_raw(advanced_mode, pressure, minimum, timeout, shutoff_distance, wait_for_object_released, gripper_socket)
+  end
+  
+  def rq_vacuum_release_raw(advanced_mode, pressure, minimum, timeout, shutoff_distance, wait_for_object_released, gripper_socket):
+    rq_reset_fault_and_activate(gripper_socket)
+    rq_set_pressure_timeout_minimum_vacuum(pressure, timeout, minimum, gripper_socket)
+  
+    if advanced_mode:
+      rq_set_gripper_mode(1, gripper_socket)
+    else:
+      rq_set_gripper_mode(0, gripper_socket)
+    end
+  
+    rq_set_GTO_and_wait(1, gripper_socket)
+  
+    if wait_for_object_released:
+      rq_wait_for_vacuum_object_not_detected(gripper_socket)
+    end
+  
+    if advanced_mode:
+      startStopPumpOnDistanceTravelledThread(shutoff_distance, gripper_socket)
+    end
+  end
+  
+  def rq_vacuum_grip(advanced_mode=False, maximum_vacuum=60, minimum_vacuum=40, timeout_ms=3000, wait_for_object_detected=True, gripper_socket="1"):
+    local pressure = scale(maximum_vacuum, [0, 100], [100, 0])
+    local minimum = scale(minimum_vacuum, [0, 100], [100, 0])
+    local timeout = scale(timeout_ms, [0, 25500], [0, 255])
+    rq_vacuum_grip_raw(advanced_mode, pressure, minimum, timeout, wait_for_object_detected, gripper_socket)
+  end
+  
+  def rq_vacuum_grip_raw(advanced_mode, pressure, minimum, timeout, wait_for_object_detected, gripper_socket):
+    stopStopPumpOnDistanceTravelledThread(gripper_socket)
+    rq_reset_fault_and_activate(gripper_socket)
+  
+    rq_set_pressure_timeout_minimum_vacuum(pressure, timeout, minimum, gripper_socket)
+  
+    if advanced_mode:
+      rq_set_gripper_mode(1, gripper_socket)
+    else:
+      rq_set_gripper_mode(0, gripper_socket)
+    end
+  
+    rq_set_GTO_and_wait(1, gripper_socket)
+  
+    if wait_for_object_detected:
+      if (advanced_mode and not is_continuous_grip(pressure)):
+        rq_wait_for_vacuum_object_secured(gripper_socket)
+      else:
+        rq_wait_for_vacuum_object_detected(gripper_socket)
+      end
+    end
+  end
+  
+  def rq_reset_fault_and_activate(gripper_socket):
+      gFLT = rq_get_var(FLT, 2, gripper_socket)
+  
+      if (not is_FLT_no_fault(gFLT) or not rq_is_gripper_activated(gripper_socket)):
+          rq_set_GTO_and_wait(0, gripper_socket)
+          rq_set_var(ACT, 1, gripper_socket)
+      end
+  end
+  #################################################
+  # End - Vacuum general functions
+  #################################################
+  vacuumGripCheckWarningTitle = "Vacuum grip check"
+  vacuumGripCheckWarningMessage = "Vacuum gripper object lost"
+  vacuumGripTimeoutTitle = "Vacuum gripper fault"
+  vacuumGripTimeoutMessage = "Grip has timed out"
+  # end: URCap Installation Node
+  # begin: URCap Installation Node
+  #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+  #   Type: Gripper
+  #aliases for the gripper variable names
+  ACT = 1
+  GTO = 2
+  ATR = 3
+  ARD = 4
+  FOR = 5
+  SPE = 6
+  OBJ = 7
+  STA = 8
+  FLT = 9
+  POS = 10
+  PRE = 11
+  LBP = 12
+  LRD = 13
+  LBL = 14
+  LGN = 15
+  MSC = 16
+  MOD = 17
+  
+  gripper_1_connected = False
+  gripper_2_connected = False
+  gripper_3_connected = False
+  gripper_4_connected = False
+  
+  gripper_1_socket_open = False
+  gripper_2_socket_open = False
+  gripper_3_socket_open = False
+  gripper_4_socket_open = False
+  
+  def rq_init_comm_if_connected(gripper_sid=9, gripper_socket="1"):
+      if(not is_gripper_socket_open(gripper_socket)):
+        open_gripper_socket(gripper_socket)
+      end
+  
+      is_gripper_connected = rq_is_gripper_connected(gripper_sid, gripper_socket)
+      if(is_gripper_connected):
+          rq_set_gripper_connected(gripper_socket)
+      end
+  
+      return is_gripper_connected
+  end
+  
+  def open_gripper_socket(gripper_socket):
+    is_open = socket_open("127.0.0.1",63352, gripper_socket)
+    set_gripper_socket_open(gripper_socket, is_open)
+  end
+  
+  def is_gripper_socket_open(gripper_socket):
+    if(gripper_socket == "1"):
+      return gripper_1_socket_open
+    elif(gripper_socket == "2"):
+      return gripper_2_socket_open
+    elif(gripper_socket == "3"):
+      return gripper_3_socket_open
+    elif(gripper_socket == "4"):
+      return gripper_4_socket_open
+    else:
+      return False
+    end
+  end
+  
+  def set_gripper_socket_open(gripper_socket, is_open):
+    if(gripper_socket == "1"):
+      gripper_1_socket_open = is_open
+    elif(gripper_socket == "2"):
+      gripper_2_socket_open = is_open
+    elif(gripper_socket == "3"):
+      gripper_3_socket_open = is_open
+    elif(gripper_socket == "4"):
+      gripper_4_socket_open = is_open
+    else:
+    end
+  end
+  
+  def rq_is_gripper_connected(gripper_sid=9, gripper_socket="1"):
+      socket_set_var("SID", gripper_sid,  gripper_socket)
+      ack = socket_read_byte_list(3, gripper_socket, 0.1)
+      return is_ack(ack)
+  end
+  
+  def rq_set_gripper_connected(gripper_id="1"):
+      if(gripper_id == "1"):
+          gripper_1_connected = True
+      end
+  
+      if (gripper_id == "2"):
+          gripper_2_connected = True
+      end
+  
+      if (gripper_id == "3"):
+          gripper_3_connected = True
+      end
+  
+      if (gripper_id == "4"):
+          gripper_4_connected = True
+      end
+  end
+  
+  def rq_wait_for_gripper_connected():
+      gripper_socket = "gripper_conn_socket"
+      socket_open("127.0.0.1",63352, gripper_socket)
+  
+      retryCtr = 1
+      sid_list = rq_get_sid(gripper_socket)
+      gripper_is_connected = rq_is_any_gripper_connected(sid_list)
+  
+      while(not gripper_is_connected and retryCtr < 2000):
+          retryCtr = retryCtr + 1
+          sid_list = rq_get_sid(gripper_socket)
+          gripper_is_connected = rq_is_any_gripper_connected(sid_list)
+      end
+  
+      socket_close(gripper_socket)
+  end
+  
+  def rq_is_any_gripper_connected(sid_list):
+      is_gripper_1_connected = rq_is_gripper1_in_sid_list(sid_list)
+      is_gripper_2_connected = rq_is_gripper2_in_sid_list(sid_list)
+      is_gripper_3_connected = rq_is_gripper3_in_sid_list(sid_list)
+      is_gripper_4_connected = rq_is_gripper4_in_sid_list(sid_list)
+  
+      if(is_gripper_1_connected or is_gripper_2_connected or is_gripper_3_connected or is_gripper_4_connected):
+          return True
+      else:
+          return False
+      end
+  end
+  
+  def rq_is_gripper_in_sid_list(gripper_sid, sid_list):
+      sid_list_length = sid_list[0]
+      sid_list_empty_length = 2
+  
+      if (sid_list_length <= sid_list_empty_length):
+          return False
+      end
+  
+      sid1 = sid_list[2]
+      sid2 = sid_list[5]
+      sid3 = sid_list[8]
+      sid4 = sid_list[11]
+  
+      if(sid1 == gripper_sid or sid2 == gripper_sid or sid3 == gripper_sid or sid4 == gripper_sid):
+          return True
+      else:
+          return False
+      end
+  end
+  
+  def rq_is_gripper1_in_sid_list(sid_list):
+      gripper_1_sid_ascii = 57
+      return rq_is_gripper_in_sid_list(gripper_1_sid_ascii, sid_list)
+  end
+  
+  def rq_is_gripper2_in_sid_list(sid_list):
+      gripper_2_sid_ascii = 50
+      return rq_is_gripper_in_sid_list(gripper_2_sid_ascii, sid_list)
+  end
+  
+  def rq_is_gripper3_in_sid_list(sid_list):
+      gripper_3_sid_ascii = 51
+      return rq_is_gripper_in_sid_list(gripper_3_sid_ascii, sid_list)
+  end
+  
+  def rq_is_gripper4_in_sid_list(sid_list):
+      gripper_4_sid_ascii = 52
+      return rq_is_gripper_in_sid_list(gripper_4_sid_ascii, sid_list)
+  end
+  
+  def rq_set_sid(gripper_sid=9, gripper_socket="1"):
+      socket_set_var("SID", gripper_sid,  gripper_socket)
+      sync()
+      ack = socket_read_byte_list(3, gripper_socket)
+      return is_ack(ack)
+  end
+  
+  def rq_get_sid(gripper_socket="1"):
+      socket_send_string("GET SID", gripper_socket)
+      sync()
+      sid_list = socket_read_byte_list(17, gripper_socket)
+      sync()
+      return sid_list
+  end
+  
+  def rq_activate(gripper_socket="1"):
+      rq_gripper_act = 0
+  
+      if (not rq_is_gripper_activated(gripper_socket)):
+         rq_reset(gripper_socket)
+  
+         while(socket_get_var("ACT",gripper_socket) == 1):
+            sleep(0.1)
+            rq_reset(gripper_socket)
+         end
+      end
+  
+      rq_set_var(ACT,1, gripper_socket)
+  end
+  
+  def rq_activate_and_wait(gripper_socket="1"):
+      rq_activate(gripper_socket)
+      sleep(1.0)
+  
+      while(not rq_is_gripper_activated(gripper_socket)):
+          # wait for activation completed
+      end
+      sleep(0.5)
+  end
+  
+  def rq_activate_all_grippers(reset=False):
+      if(gripper_1_connected):
+          rq_reset_and_activate("1", reset)
+      end
+  
+      if(gripper_2_connected):
+          rq_reset_and_activate("2", reset)
+      end
+  
+      if(gripper_3_connected):
+          rq_reset_and_activate("3", reset)
+      end
+  
+      if(gripper_4_connected):
+          rq_reset_and_activate("4", reset)
+      end
+  
+      sleep(0.2)
+  end
+  
+  def rq_reset_and_activate(gripper_socket="1", reset=False):
+      if(reset):
+          rq_reset(gripper_socket)
+          sleep(0.5)
+          rq_activate_and_wait(gripper_socket)
+      elif(not rq_is_gripper_activated(gripper_socket)):
+          rq_activate_and_wait(gripper_socket)
+      end
+  end
+  
+  def rq_scan_block():
+      gripper_socket = "scn_block_socket"
+      socket_open("127.0.0.1", 63352, gripper_socket)
+      socket_set_var("SCN_BLOCK", 1, gripper_socket)
+      sync()
+      ack_test = socket_read_byte_list(3, gripper_socket)
+  
+      retry_counter = 0
+  
+      while(not is_ack(ack_test) and retry_counter < 5):
+          socket_set_var("SCN_BLOCK", 1, gripper_socket)
+          sync()
+          ack_test = socket_read_byte_list(3, gripper_socket)
+          retry_counter = retry_counter + 1
+      end
+  
+      socket_close("scn_block_socket")
+  end
+  
+  def rq_reset(gripper_socket="1"):
+      rq_gripper_act = 0
+      rq_obj_detect = 0
+      rq_mov_complete = 0
+  
+      rq_set_var(ACT,0, gripper_socket)
+      rq_set_var(ATR,0, gripper_socket)
+  end
+  
+  def rq_auto_release_open_and_wait(gripper_socket="1"):
+      rq_set_var(ARD,0, gripper_socket)
+      rq_set_var(ACT,1, gripper_socket)
+      rq_set_var(ATR,0, gripper_socket)
+      sleep(0.1)
+      rq_set_var(ATR,1, gripper_socket)
+  
+      rq_wait_autorelease_completed(gripper_socket)
+  end
+  
+  def rq_auto_release_close_and_wait(gripper_socket="1"):
+      rq_set_var(ARD,1, gripper_socket)
+      rq_set_var(ACT,1, gripper_socket)
+      rq_set_var(ATR,0, gripper_socket)
+      sleep(0.1)
+      rq_set_var(ATR,1, gripper_socket)
+  
+      rq_wait_autorelease_completed(gripper_socket)
+  end
+  
+  def rq_wait_autorelease_completed(gripper_socket="1"):
+      retryCounter = 1
+      gFLT = rq_get_var(FLT, 2, gripper_socket)
+  
+      while(not is_FLT_autorelease_in_progress(gFLT) and retryCounter <= 20):
+          retryCounter = retryCounter + 1
+          gFLT = rq_get_var(FLT, 2, gripper_socket)
+          sleep(0.1)
+      end
+  
+      retryCounter = 1
+      gFLT = rq_get_var(FLT, 2, gripper_socket)
+  
+      while(not is_FLT_autorelease_completed(gFLT) and retryCounter <= 100):
+          retryCounter = retryCounter + 1
+          gFLT = rq_get_var(FLT, 2, gripper_socket)
+          sleep(0.1)
+      end
+  end
+  
+  def rq_set_force(force, gripper_socket="1"):
+      force = floor(scale(force, [0, 255], [0.0, 255.0]))
+      rq_set_var(FOR, force, gripper_socket)
+  end
+  
+  def rq_set_speed(speed, gripper_socket="1"):
+      speed = floor(scale(speed, [0, 255], [0.0, 255.0]))
+      rq_set_var(SPE, speed, gripper_socket)
+  end
+  
+  def rq_open(gripper_socket="1"):
+      rq_move(0, gripper_socket)
+  end
+  
+  def rq_close(gripper_socket="1"):
+      rq_move(255, gripper_socket)
+  end
+  
+  def rq_open_and_wait(gripper_socket="1"):
+      rq_move_and_wait(0, gripper_socket)
+  end
+  
+  def rq_close_and_wait(gripper_socket="1"):
+      rq_move_and_wait(255, gripper_socket)
+  end
+  
+  def rq_move(pos, gripper_socket="1"):
+      rq_mov_complete = 0
+      rq_obj_detect = 0
+  
+      rq_set_pos(pos, gripper_socket)
+      rq_go_to(gripper_socket)
+  end
+  
+  def rq_move_and_wait(pos, gripper_socket="1"):
+      rq_move(pos, gripper_socket)
+  
+      while (not rq_is_motion_complete(gripper_socket)):
+          # wait for motion completed
+          sleep(0.01)
+          sync()
+      end
+  
+      # following code used for compatibility with previous versions
+      rq_is_object_detected(gripper_socket)
+  
+      if (rq_obj_detect != 1):
+          rq_mov_complete = 1
+      end
+  end
+  
+  def rq_wait_for_pos_request(pos, gripper_socket="1"):
+      gPRE = rq_get_var(PRE, 3, gripper_socket)
+      pre = (gPRE[1] - 48)*100 + (gPRE[2] -48)*10 + gPRE[3] - 48
+  
+      while (pre != pos):
+          rq_set_var(POS, pos, gripper_socket)
+          gPRE = rq_get_var(PRE, 3, gripper_socket)
+          pre = (gPRE[1] - 48)*100 + (gPRE[2] -48)*10 + gPRE[3] - 48
+          sync()
+      end
+  end
+  
+  def rq_wait_for_pos(pos, gripper_socket="1"):
+      rq_wait_for_pos_request(pos, gripper_socket)
+  
+      # Wait for the gripper motion to complete
+      while (not rq_is_motion_complete(gripper_socket)):
+          # wait for motion completed
+          sleep(0.01)
+          sync()
+          rq_go_to(gripper_socket)
+      end
+  
+      # following code used for compatibility with previous versions
+      rq_is_object_detected(gripper_socket)
+  
+      if (rq_obj_detect != 1):
+          rq_mov_complete = 1
+      end
+  end
+  
+  def rq_wait(gripper_socket="1"):
+      # Wait for the gripper motion to complete
+      while (not rq_is_motion_complete(gripper_socket)):
+          # wait for motion completed
+          sleep(0.01)
+          sync()
+      end
+  
+      # following code used for compatibility with previous versions
+      rq_is_object_detected(gripper_socket)
+  
+      if (rq_obj_detect != 1):
+          rq_mov_complete = 1
+      end
+  end
+  
+  def rq_wait_for_object_detected(gripper_socket="1"):
+      # Wait the object detection
+      while (not rq_is_object_detected(gripper_socket)):
+          # wait for motion completed
+          sleep(0.01)
+          sync()
+      end
+  end
+  
+  # set the position
+  def rq_set_pos(pos, gripper_socket="1"):
+      pos = floor(scale(pos, [0, 255], [0.0, 255.0]))
+      rq_set_var(POS, pos, gripper_socket)
+      rq_wait_for_pos_request(pos, gripper_socket)
+  end
+  
+  # set the position, speed and force
+  def rq_set_pos_spd_for(pos, speed, force, gripper_socket="1"):
+      enter_critical
+      rq_send_pos_spd_for(pos, speed, force, gripper_socket)
+      ack = socket_read_byte_list(3, gripper_socket)
+      exit_critical
+  
+      sync()
+  
+      while(is_not_ack(ack)):
+          enter_critical
+          rq_send_pos_spd_for(pos, speed, force, gripper_socket)
+          ack = socket_read_byte_list(3, gripper_socket)
+          exit_critical
+  
+          sync()
+      end
+  
+      rq_wait_for_pos_request(pos, gripper_socket)
+  end
+  
+  def rq_set_gripper_max_current_mA(current_mA, gripper_socket="1"):
+      current = floor(current_mA / 10)
+      rq_set_var(MSC, current, gripper_socket)
+      sleep(1.5)
+  end
+  
+  def rq_set_gripper_mode(mode, gripper_socket="1"):
+      rq_set_var(MOD, mode, gripper_socket)
+  end
+  
+  def rq_set_gripper_max_cur(current_mA, gripper_socket="1"):
+      rq_set_gripper_max_current_mA(current_mA, gripper_socket)
+  end
+  
+  def rq_get_gripper_max_current_mA(gripper_socket="1"):
+      socket_send_string("GET MSC",gripper_socket)
+      sync()
+      var_value = socket_read_byte_list(3, gripper_socket)
+  
+      current = rq_list_of_bytes_to_value(var_value)
+  
+      if(current == -1):
+          current_mA = current
+      else:
+          current_mA = current * 10
+      end
+  
+      return current_mA
+  end
+  
+  def rq_get_gripper_max_cur(gripper_socket="1"):
+      return rq_get_gripper_max_current_mA(gripper_socket)
+  end
+  
+  def rq_list_of_bytes_to_value(list_of_bytes):
+      value = -1
+  
+      # response list length
+      if (list_of_bytes[0] == 1):
+          value = list_of_bytes[1] - 48
+      elif (list_of_bytes[0] == 2):
+          value = (list_of_bytes[1] - 48) * 10 + (list_of_bytes[2] - 48)
+      elif (list_of_bytes[0] == 3):
+          value = (list_of_bytes[1] - 48) * 100 + (list_of_bytes[2] - 48) * 10 + (list_of_bytes[3] - 48)
+      end
+  
+      return value
+  end
+  
+  # send the position, speed and force
+  def rq_send_pos_spd_for(pos, speed, force, gripper_socket="1"):
+      pos = floor(scale(pos, [0, 255], [0.0, 255.0]))
+      speed = floor(scale(speed, [0, 255], [0.0, 255.0]))
+      force = floor(scale(force, [0, 255], [0.0, 255.0]))
+  
+      socket_send_string("SET POS", gripper_socket)
+      socket_send_byte(32, gripper_socket)
+      socket_send_string(pos, gripper_socket)
+      socket_send_byte(32, gripper_socket)
+      socket_send_string("SPE", gripper_socket)
+      socket_send_byte(32, gripper_socket)
+      socket_send_string(speed, gripper_socket)
+      socket_send_byte(32, gripper_socket)
+      socket_send_string("FOR", gripper_socket)
+      socket_send_byte(32, gripper_socket)
+      socket_send_string(force, gripper_socket)
+      socket_send_byte(10, gripper_socket)
+  end
+  
+  def rq_is_motion_complete(gripper_socket="1"):
+      rq_mov_complete = 0
+  
+      gOBJ = rq_get_var(OBJ, 1, gripper_socket)
+      sleep(0.01)
+  
+      if (is_OBJ_gripper_at_position(gOBJ)):
+          rq_mov_complete = 1
+          return True
+      end
+  
+      if (is_OBJ_object_detected(gOBJ)):
+          rq_mov_complete = 1
+          return True
+      end
+  
+      return False
+  
+  end
+  
+  def rq_is_gripper_activated(gripper_socket="1"):
+      gSTA = rq_get_var(STA, 1, gripper_socket)
+  
+      if(is_STA_gripper_activated(gSTA)):
+          rq_gripper_act = 1
+          return True
+      else:
+          rq_gripper_act = 0
+          return False
+      end
+  end
+  
+  def rq_is_object_detected(gripper_socket="1"):
+      gOBJ = rq_get_var(OBJ, 1, gripper_socket)
+  
+      if(is_OBJ_object_detected(gOBJ)):
+          rq_obj_detect = 1
+          return True
+      else:
+          rq_obj_detect = 0
+          return False
+      end
+  end
+  
+  def rq_current_pos(gripper_socket="1"):
+      enter_critical
+      rq_pos = socket_get_var("POS",gripper_socket)
+      exit_critical
+      sync()
+      return rq_pos
+  end
+  
+  def rq_motor_current(gripper_socket="1"):
+      enter_critical
+      rq_current = socket_get_var("COU",gripper_socket)
+      exit_critical
+      sync()
+      return rq_current * 10
+  end
+  
+  def rq_print_connected_grippers():
+      if(gripper_1_connected):
+          textmsg("Gripper 1 : ", "connected and socket open.")
+      end
+  
+      if (gripper_2_connected):
+          textmsg("Gripper 2 : ", "connected and socket open.")
+      end
+  
+      if (gripper_3_connected):
+          textmsg("Gripper 3 : ", "connected and socket open.")
+      end
+  
+      if (gripper_4_connected):
+          textmsg("Gripper 4 : ", "connected and socket open.")
+      end
+  end
+  
+  def rq_print_gripper_fault_code(gripper_socket="1"):
+      gFLT = rq_get_var(FLT, 2, gripper_socket)
+  
+      if(is_FLT_no_fault(gFLT)):
+          textmsg("Gripper Fault : ", "No Fault (0x00)")
+      elif (is_FLT_action_delayed(gFLT)):
+          textmsg("Gripper Fault : ", "Priority Fault: Action delayed, initialization must be completed prior to action (0x05)")
+      elif (is_FLT_not_activated(gFLT)):
+          textmsg("Gripper Fault : ", "Priority Fault: The activation must be set prior to action (0x07)")
+      elif (is_FLT_autorelease_in_progress(gFLT)):
+          textmsg("Gripper Fault : ", "Minor Fault: Automatic release in progress (0x0B)")
+      elif (is_FLT_overcurrent(gFLT)):
+          textmsg("Gripper Fault : ", "Minor Fault: Overcurrent protection triggered (0x0E)")
+      elif (is_FLT_autorelease_completed(gFLT)):
+          textmsg("Gripper Fault : ", "Major Fault: Automatic release completed (0x0F)")
+      else:
+          textmsg("Gripper Fault : ", "Unknown Fault")
+      end
+  end
+  
+  def rq_print_gripper_num_cycles(gripper_socket="1"):
+      socket_send_string("GET NCY",gripper_socket)
+      sync()
+      string_from_server = socket_read_string(gripper_socket)
+      sync()
+  
+      if(string_from_server == "0"):
+          textmsg("Gripper Cycle Number : ", "Number of cycles is unreachable.")
+      else:
+          textmsg("Gripper Cycle Number : ", string_from_server)
+      end
+  end
+  
+  def rq_print_gripper_driver_state(gripper_socket="1"):
+      socket_send_string("GET DST",gripper_socket)
+      sync()
+      string_from_server = socket_read_string(gripper_socket)
+      sync()
+  
+      if(string_from_server == "0"):
+          textmsg("Gripper Driver State : ", "RQ_STATE_INIT")
+      elif(string_from_server == "1"):
+          textmsg("Gripper Driver State : ", "RQ_STATE_LISTEN")
+      elif(string_from_server == "2"):
+          textmsg("Gripper Driver State : ", "RQ_STATE_READ_INFO")
+      elif(string_from_server == "3"):
+          textmsg("Gripper Driver State : ", "RQ_STATE_ACTIVATION")
+      else:
+          textmsg("Gripper Driver State : ", "RQ_STATE_RUN")
+      end
+  end
+  
+  def rq_print_gripper_serial_number(gripper_socket="1"):
+      socket_send_string("GET SNU",gripper_socket)
+      sync()
+      string_from_server = socket_read_string(gripper_socket)
+      sync()
+      textmsg("Gripper Serial Number : ", string_from_server)
+  end
+  
+  def rq_print_gripper_firmware_version(gripper_socket="1"):
+      socket_send_string("GET FWV",gripper_socket)
+      sync()
+      string_from_server = socket_read_string(gripper_socket)
+      sync()
+      textmsg("Gripper Firmware Version : ", string_from_server)
+  end
+  
+  def rq_print_gripper_driver_version(gripper_socket="1"):
+      socket_send_string("GET VER",gripper_socket)
+      sync()
+      string_from_server = socket_read_string(gripper_socket)
+      sync()
+      textmsg("Gripper Driver Version : ", string_from_server)
+  end
+  
+  def rq_print_gripper_probleme_connection(gripper_socket="1"):
+      socket_send_string("GET PCO",gripper_socket)
+      sync()
+      string_from_server = socket_read_string(gripper_socket)
+      sync()
+      if (string_from_server == "0"):
+          textmsg("Gripper Connection State : ", "No connection problem detected")
+      else:
+          textmsg("Gripper Connection State : ", "Connection problem detected")
+      end
+  end
+  
+  # Returns True if list_of_bytes is [3, 'a', 'c', 'k']
+  def is_ack(list_of_bytes):
+  
+      # list length is not 3
+      if (list_of_bytes[0] != 3):
+          return False
+      end
+  
+      # first byte not is 'a'?
+      if (list_of_bytes[1] != 97):
+          return False
+      end
+  
+      # first byte not is 'c'?
+      if (list_of_bytes[2] != 99):
+          return False
+      end
+  
+      # first byte not is 'k'?
+      if (list_of_bytes[3] != 107):
+          return False
+      end
+  
+      return True
+  end
+  
+  # Returns True if list_of_bytes is not [3, 'a', 'c', 'k']
+  def is_not_ack(list_of_bytes):
+      if (is_ack(list_of_bytes)):
+          return False
+      else:
+          return True
+      end
+  end
+  
+  def is_STA_gripper_activated (list_of_bytes):
+  
+      # list length is not 1
+      if (list_of_bytes[0] != 1):
+          return False
+      end
+  
+      # byte is '3'?
+      if (list_of_bytes[1] == 51):
+          return True
+      end
+  
+      return False
+  end
+  
+  # Returns True if list_of_byte is [1, '1'] or [1, '2']
+  # Used to test OBJ = 0x1 or OBJ = 0x2
+  def is_OBJ_object_detected (list_of_bytes):
+  
+      # list length is not 1
+      if (list_of_bytes[0] != 1):
+          return False
+      end
+  
+      # byte is '2'?
+      if (list_of_bytes[1] == 50):
+          return True
+      end
+  
+      # byte is '1'?
+      if (list_of_bytes[1]  == 49):
+          return True
+      end
+  
+      return False
+  
+  end
+  
+  # Returns True if list_of_byte is [1, '3']
+  # Used to test OBJ = 0x3
+  def is_OBJ_gripper_at_position (list_of_bytes):
+  
+      # list length is not 1
+      if (list_of_bytes[0] != 1):
+          return False
+      end
+  
+      # byte is '3'?
+      if (list_of_bytes[1] == 51):
+          return True
+      end
+  
+      return False
+  end
+  
+  def is_not_OBJ_gripper_at_position (list_of_bytes):
+  
+      if (is_OBJ_gripper_at_position(list_of_bytes)):
+          return False
+      else:
+          return True
+      end
+  end
+  
+  #### GTO Section ####
+  def rq_stop(gripper_socket="1"):
+      rq_set_var(GTO, 0, gripper_socket)
+  end
+  
+  def rq_set_GTO_and_wait(value, gripper_socket="1"):
+      rq_set_var(GTO ,value, gripper_socket)
+      while(not is_GTO(value, rq_get_var(GTO, 1, gripper_socket))):
+        sync()
+      end
+  end
+  
+  def rq_go_to(gripper_socket="1"):
+      rq_set_var(GTO, 1, gripper_socket)
+  end
+  
+  
+  def is_GTO(goto_value, list_of_bytes):
+      zero_ascii = 48
+      if (list_of_bytes[0] != 1):
+          return False
+      end
+  
+      if (list_of_bytes[1] == zero_ascii + goto_value):
+          return True
+      else:
+          return False
+      end
+  end
+  #### GTO Section ####
+  
+  def is_FLT_no_fault(list_of_bytes):
+  
+      # list length is not 2
+      if (list_of_bytes[0] != 2):
+          return False
+      end
+  
+      # first byte is '0'?
+      if (list_of_bytes[1] != 48):
+          return False
+      end
+  
+      # second byte is '0'?
+      if (list_of_bytes[2] != 48):
+          return False
+      end
+  
+      return True
+  
+  end
+  
+  def is_FLT_action_delayed(list_of_bytes):
+  
+      # list length is not 2
+      if (list_of_bytes[0] != 2):
+          return False
+      end
+  
+      # first byte is '0'?
+      if (list_of_bytes[1] != 48):
+          return False
+      end
+  
+      # second byte is '5'?
+      if (list_of_bytes[2] != 53):
+          return False
+      end
+  
+      return True
+  end
+  
+  def is_FLT_not_activated(list_of_bytes):
+  
+      # list length is not 2
+      if (list_of_bytes[0] != 2):
+          return False
+      end
+  
+      # first byte is '0'?
+      if (list_of_bytes[1] != 48):
+          return False
+      end
+  
+      # second byte is '7'?
+      if (list_of_bytes[2] != 55):
+          return False
+      end
+  
+      return True
+  end
+  
+  def is_FLT_autorelease_in_progress(list_of_bytes):
+  
+      # list length is not 2
+      if (list_of_bytes[0] != 2):
+          return False
+      end
+  
+      # first byte is '1'?
+      if (list_of_bytes[1] != 49):
+          return False
+      end
+  
+      # second byte is '1'?
+      if (list_of_bytes[2] != 49):
+          return False
+      end
+  
+      return True
+  
+  end
+  
+  def is_FLT_overcurrent(list_of_bytes):
+  
+      # list length is not 2
+      if (list_of_bytes[0] != 2):
+          return False
+      end
+  
+      # first byte is '1'?
+      if (list_of_bytes[1] != 49):
+          return False
+      end
+  
+      # second byte is '4'?
+      if (list_of_bytes[2] != 52):
+          return False
+      end
+  
+      return True
+  
+  end
+  
+  def is_FLT_autorelease_completed(list_of_bytes):
+  
+      # list length is not 2
+      if (list_of_bytes[0] != 2):
+          return False
+      end
+  
+      # first byte is '1'?
+      if (list_of_bytes[1] != 49):
+          return False
+      end
+  
+      # second byte is '5'?
+      if (list_of_bytes[2] != 53):
+          return False
+      end
+  
+      return True
+  
+  end
+  
+  def rq_set_var(var_name, var_value, gripper_socket="1"):
+  
+      var_name_string = ""
+  
+      if (var_name == ACT):
+          var_name_string = "ACT"
+      elif (var_name == GTO):
+          var_name_string = "GTO"
+      elif (var_name == ATR):
+          var_name_string = "ATR"
+      elif (var_name == ARD):
+          var_name_string = "ARD"
+      elif (var_name == FOR):
+          var_name_string = "FOR"
+      elif (var_name == SPE):
+          var_name_string = "SPE"
+      elif (var_name == POS):
+          var_name_string = "POS"
+      elif (var_name == LBP):
+          var_name_string = "LBP"
+      elif (var_name == LRD):
+          var_name_string = "LRD"
+      elif (var_name == LBL):
+          var_name_string = "LBL"
+      elif (var_name == LGN):
+          var_name_string = "LGN"
+      elif (var_name == MSC):
+          var_name_string = "MSC"
+      elif (var_name == MOD):
+          var_name_string = "MOD"
+      end
+  
+      enter_critical
+      socket_set_var(var_name_string, var_value, gripper_socket)
+      ack = socket_read_byte_list(3, gripper_socket)
+      exit_critical
+  
+      sync()
+  
+      while(is_not_ack(ack)):
+          enter_critical
+          socket_set_var(var_name_string , var_value, gripper_socket)
+          sync()
+          ack = socket_read_byte_list(3, gripper_socket)
+          exit_critical
+  
+          sync()
+      end
+  end
+  
+  
+  def rq_get_var(var_name, nbr_bytes, gripper_socket="1"):
+      enter_critical
+  
+      if (var_name == FLT):
+          socket_send_string("GET FLT", gripper_socket)
+      elif (var_name == OBJ):
+          socket_send_string("GET OBJ", gripper_socket)
+      elif (var_name == STA):
+          socket_send_string("GET STA", gripper_socket)
+      elif (var_name == PRE):
+          socket_send_string("GET PRE", gripper_socket)
+      elif (var_name == GTO):
+          socket_send_string("GET GTO", gripper_socket)
+      else:
+      end
+  
+      var_value = socket_read_byte_list(nbr_bytes, gripper_socket)
+  
+      exit_critical
+  
+      sync()
+  
+      return var_value
+  end
+  
+  def rq_is_object_validated(gripper_selected, gripper_socket="1"):
+      if(gripper_selected):
+          if(rq_is_object_detected(gripper_socket)):
+              return True
+          else:
+              return False
+          end
+      else:
+          return True
+      end
+  end
+  
+  ############################################
+  # normalized functions (maps 0-100 to 0-255)
+  ############################################
+  def rq_set_force_norm(force_norm, gripper_socket="1"):
+      force_gripper = norm_to_gripper(force_norm)
+      rq_set_force(force_gripper, gripper_socket)
+  end
+  
+  def rq_set_speed_norm(speed_norm, gripper_socket="1"):
+      speed_gripper = norm_to_gripper(speed_norm)
+      rq_set_speed(speed_gripper, gripper_socket)
+  end
+  
+  def rq_move_norm(pos_norm, gripper_socket="1"):
+      pos_gripper = norm_to_gripper(pos_norm)
+      rq_move(pos_gripper, gripper_socket)
+  end
+  
+  def rq_move_and_wait_norm(pos_norm, gripper_socket="1"):
+      pos_gripper = norm_to_gripper(pos_norm)
+      rq_move_and_wait(pos_gripper, gripper_socket)
+  end
+  
+  def rq_set_pos_norm(pos_norm, gripper_socket="1"):
+      pos_gripper = norm_to_gripper(pos_norm)
+      rq_set_pos(pos_gripper, gripper_socket)
+  end
+  
+  def rq_current_pos_norm(gripper_socket="1"):
+      pos_gripper = rq_current_pos(gripper_socket)
+      pos_norm = gripper_to_norm(pos_gripper)
+      return pos_norm
+  end
+  
+  def gripper_to_norm(value_gripper):
+      value_norm = (value_gripper / 255) * 100
+      return floor(value_norm)
+  end
+  
+  def norm_to_gripper(value_norm):
+      value_gripper = (value_norm / 100) * 255
+      return ceil(value_gripper)
+  end
+  
+  def rq_get_position():
+      return rq_current_pos_norm()
+  end
+  
+  def rq_gripper_led_on(gripper_socket="1"):
+      rq_set_var(LBP,0, gripper_socket)
+  end
+  
+  def rq_gripper_led_off(gripper_socket="1"):
+      rq_set_var(LBP,1, gripper_socket)
+      rq_set_var(LRD,0, gripper_socket)
+      rq_set_var(LBL,0, gripper_socket)
+      rq_set_var(LGN,0, gripper_socket)
+  end
+  
+  def rq_gripper_led_force_red(gripper_socket="1"):
+      rq_set_var(LBP,1, gripper_socket)
+      rq_set_var(LRD,1, gripper_socket)
+      rq_set_var(LBL,0, gripper_socket)
+      rq_set_var(LGN,0, gripper_socket)
+  end
+  
+  def rq_gripper_led_force_blue(gripper_socket="1"):
+      rq_set_var(LBP,1, gripper_socket)
+      rq_set_var(LRD,0, gripper_socket)
+      rq_set_var(LBL,1, gripper_socket)
+      rq_set_var(LGN,0, gripper_socket)
+  end
+  
+  def rq_gripper_led_force_green(gripper_socket="1"):
+      rq_set_var(LBP,1, gripper_socket)
+      rq_set_var(LRD,0, gripper_socket)
+      rq_set_var(LBL,0, gripper_socket)
+      rq_set_var(LGN,1, gripper_socket)
+  end
+  
+  def rq_gripper_led_force_purple(gripper_socket="1"):
+      rq_set_var(LBP,1, gripper_socket)
+      rq_set_var(LRD,1, gripper_socket)
+      rq_set_var(LBL,1, gripper_socket)
+      rq_set_var(LGN,0, gripper_socket)
+  end
+  
+  ############################################
+  # mm/inches functions
+  ############################################
+  gripper_closed_norm = [100, 100, 100, 100]
+  gripper_open_norm = [0, 0, 0, 0]
+  gripper_closed_mm = [0, 0, 0, 0]
+  gripper_open_mm = [50, 50, 50, 50]
+  
+  def rq_current_pos_mm(gripper_socket=1):
+      pos_gripper = rq_current_pos(gripper_socket)
+      pos_mm = gripper_to_mm(pos_gripper, gripper_socket)
+      return round_value_2_dec(pos_mm)
+  end
+  
+  def rq_current_pos_inches(gripper_socket=1):
+      pos_gripper = rq_current_pos(gripper_socket)
+      pos_mm = gripper_to_mm(pos_gripper, gripper_socket)
+      pos_in = pos_mm / 25.4
+      return round_value_2_dec(pos_in)
+  end
+  
+  def rq_move_mm(pos_mm, gripper_socket=1):
+      pos_gripper = mm_to_gripper(pos_mm, gripper_socket)
+      rq_move(pos_gripper, gripper_socket)
+  end
+  
+  def rq_move_and_wait_mm(pos_mm, gripper_socket=1):
+      pos_gripper = mm_to_gripper(pos_mm, gripper_socket)
+      rq_move_and_wait(pos_gripper, gripper_socket)
+  end
+  
+  def rq_move_inches(pos_in, gripper_socket=1):
+      pos_mm = pos_in * 25.4
+      rq_move_mm(pos_mm, gripper_socket)
+  end
+  
+  def rq_move_and_wait_inches(pos_in, gripper_socket=1):
+      pos_mm = pos_in * 25.4
+      rq_move_and_wait_mm(pos_mm, gripper_socket)
+  end
+  
+  def get_closed_norm(gripper_socket):
+      return gripper_closed_norm[gripper_socket - 1]
+  end
+  
+  def get_open_norm(gripper_socket):
+      return gripper_open_norm[gripper_socket - 1]
+  end
+  
+  def get_closed_mm(gripper_socket):
+      return gripper_closed_mm[gripper_socket - 1]
+  end
+  
+  def get_open_mm(gripper_socket):
+      return gripper_open_mm[gripper_socket - 1]
+  end
+  
+  def set_closed_norm(closed_norm, gripper_socket):
+      gripper_closed_norm[gripper_socket - 1] = closed_norm
+  end
+  
+  def set_open_norm(open_norm, gripper_socket):
+      gripper_open_norm[gripper_socket - 1] = open_norm
+  end
+  
+  def set_closed_mm(closed_mm, gripper_socket):
+      gripper_closed_mm[gripper_socket - 1] = closed_mm
+  end
+  
+  def set_open_mm(open_mm, gripper_socket):
+      gripper_open_mm[gripper_socket - 1] = open_mm
+  end
+  
+  def gripper_to_mm(value_gripper, gripper_socket):
+      closed_norm = get_closed_norm(gripper_socket)
+      open_norm = get_open_norm(gripper_socket)
+      closed_mm = get_closed_mm(gripper_socket)
+      open_mm = get_open_mm(gripper_socket)
+  
+      value_norm = (value_gripper / 255) * 100
+  
+      slope = (closed_mm - open_mm) / (closed_norm - open_norm)
+      value_mm = slope * (value_norm - closed_norm) + closed_mm
+  
+      if (value_mm > open_mm):
+          value_mm_limited = open_mm
+      elif (value_mm < closed_mm):
+          value_mm_limited = closed_mm
+      else:
+          value_mm_limited = value_mm
+      end
+  
+      return value_mm_limited
+  end
+  
+  def mm_to_gripper(value_mm, gripper_socket):
+      closed_norm = get_closed_norm(gripper_socket)
+      open_norm = get_open_norm(gripper_socket)
+      closed_mm = get_closed_mm(gripper_socket)
+      open_mm = get_open_mm(gripper_socket)
+  
+      slope = (closed_norm - open_norm) / (closed_mm - open_mm)
+      value_norm = (value_mm - closed_mm) * slope + closed_norm
+  
+      value_gripper = value_norm * 255 / 100
+  
+      if (value_gripper > 255):
+          value_gripper_limited = 255
+      elif (value_gripper < 0):
+          value_gripper_limited = 0
+      else:
+          value_gripper_limited = round_value(value_gripper)
+      end
+  
+      return value_gripper_limited
+  end
+  
+  def round_value(value):
+      value_mod = value % 1
+  
+      if(value_mod < 0.5):
+          return floor(value)
+      else:
+          return ceil(value)
+      end
+  end
+  
+  def round_value_2_dec(value):
+      value_x_100 = value * 100
+      value_x_100_rounded = round_value(value_x_100)
+      return value_x_100_rounded / 100
+  end
+  
+  def clear_socket_buffer(gripper_socket="1", read_timeout = 0.1):
+    byte_in_buffer = socket_read_byte_list(1, gripper_socket, read_timeout)
+  
+    while(byte_in_buffer[0] >= 1):
+        byte_in_buffer = socket_read_byte_list(1, gripper_socket, read_timeout)
+    end
+  end
+  
+  def scale(value, rawRange, scaledRange):
+      def computeSlope(inputRange, outputRange):
+          outputRangeDelta = outputRange[1] - outputRange[0]
+          inputRangeDelta = inputRange[1] - inputRange[0]
+  
+          if (inputRangeDelta == 0):
+              return 0
+          else:
+              return outputRangeDelta / inputRangeDelta
+          end
+      end
+  
+      def computeIntercept(slope, inputRange, outputRange):
+          return outputRange[0] - (slope * inputRange[0])
+      end
+  
+      def clipScaledValue(outputScaledValue, outputRange):
+          if (outputRange[0] < outputRange[1]):
+              return clipWhenLowerLimitIsLessThanHigher(outputScaledValue, outputRange)
+          else:
+              return clipWhenLowerLimitIsGreaterThanHigherLimit(outputScaledValue, outputRange)
+          end
+      end
+  
+      def clipWhenLowerLimitIsGreaterThanHigherLimit(outputScaledValue, outputRange):
+          if (outputScaledValue < outputRange[1]):
+              return outputRange[1]
+          elif (outputScaledValue > outputRange[0]):
+              return outputRange[0]
+          else:
+              return outputScaledValue
+          end
+      end
+  
+      def clipWhenLowerLimitIsLessThanHigher(outputScaledValue, outputRange):
+          if (outputScaledValue < outputRange[0]):
+              return outputRange[0]
+          elif (outputScaledValue > outputRange[1]):
+              return outputRange[1]
+          else:
+              return outputScaledValue
+          end
+      end
+  
+      slope = computeSlope(rawRange, scaledRange)
+      intercept = computeIntercept(slope, rawRange, scaledRange)
+      scaledValue = slope * value + intercept
+      return clipScaledValue(scaledValue, scaledRange)
+  end
+  
+  def limit(value, range):
+      return scale(value, range, range)
+  end
+  
+  
+  rq_obj_detect = 0
+  set_tool_voltage(24)
+  set_tool_communication(True, 115200, 0, 1, 1.5, 3.5)
+  rq_wait_for_gripper_connected()
+  rq_init_comm_if_connected(9, "1")
+  rq_init_comm_if_connected(2, "2")
+  rq_init_comm_if_connected(3, "3")
+  rq_init_comm_if_connected(4, "4")
+  rq_print_connected_grippers()
+  connectivity_checked = [-1,-1,-1,-1]
+  status_checked = [-1,-1,-1,-1]
+  current_speed = [-1,-1,-1,-1]
+  current_force = [-1,-1,-1,-1]
+  set_closed_norm(100.0, 1)
+  set_open_norm(0.0, 1)
+  set_closed_mm(0.0, 1)
+  set_open_mm(50.0, 1)
+  set_closed_norm(100.0, 2)
+  set_open_norm(0.0, 2)
+  set_closed_mm(0.0, 2)
+  set_open_mm(50.0, 2)
+  set_closed_norm(100.0, 3)
+  set_open_norm(0.0, 3)
+  set_closed_mm(0.0, 3)
+  set_open_mm(50.0, 3)
+  set_closed_norm(100.0, 4)
+  set_open_norm(0.0, 4)
+  set_closed_mm(0.0, 4)
+  set_open_mm(50.0, 4)
+  rq_set_gripper_max_cur(0, "1")
+  # end: URCap Installation Node
+  global home_p=p[-.122938355833, -.120382619586, .410034154454, 2.273061990182, 2.165774844484, -.026407690262]
+  global home_q=[-1.498901669179098, -0.9977024358562012, -1.4041342735290527, -2.2973386249937953, 1.5646319389343262, -4.592611138020651]
+  global sb_b1_wp_p=p[.284371794098, -.299807832178, .219893520906, 2.236865024801, 2.135971212757, .012201382274]
+  global sb_b1_wp_q=[-0.4904692808734339, -1.9930716953673304, -1.4695477485656738, -1.199991063480713, 1.5677876472473145, -3.58083421388735]
+  global sb_b1_at_p=p[.284367153008, -.299815116956, .150377746662, 2.236840256318, 2.135856096132, .012254426232]
+  global sb_b1_at_q=[-0.49089763197025604, -2.1204443388525593, -1.631646409475941, -0.9104270634275302, 1.566693422498278, -3.5796876728243365]
+  global w_sa_b1_wp_p=p[-.258270691278, -.240499009173, .209476475499, 3.115105084240, -.082549853241, .020410408456]
+  global w_sa_b1_wp_q=[-2.022179905568258, -1.7738839588561, -1.8109354972839355, -1.108630971317627, 1.598097324371338, -3.533125702534811]
+  global w_sa_b1_at_p=p[-.258276273070, -.240491392226, .150030833660, 3.115106514635, -.082674837718, .020458862515]
+  global w_sa_b1_at_q=[-2.0225632826434534, -1.9144398174681605, -1.9529471397399902, -0.8260601323894043, 1.5967535972595215, -3.532020394002096]
+  global sb_b2_wp_p=p[.283794351845, -.372291902464, .220027520890, 2.214204447907, 2.201254286835, .017280132287]
+  global sb_b2_wp_q=[-0.6391852537738245, -2.2445513210692347, -1.051424503326416, -1.3945186895183106, 1.583662509918213, -3.771708313618795]
+  global sb_b2_at_p=p[.283771474784, -.372319060959, .152182545359, 2.214194266947, 2.201163625281, .017265503962]
+  global sb_b2_at_q=[-0.6397250334369105, -2.330515523950094, -1.230689525604248, -1.1292107862285157, 1.5831103324890137, -3.7705801169024866]
+  global w_sa_b2_wp_p=p[-.227789730585, -.247903183682, .201300165945, -3.111585115276, .104609752960, -.051206283577]
+  global w_sa_b2_wp_q=[-1.925622288380758, -1.732915540734762, -1.8801169395446777, -1.1348913472941895, 1.598433017730713, -3.422926727925436]
+  global w_sa_b2_at_p=p[-.227812177792, -.247878581693, .150535198657, -3.111499368403, .104811909178, -.051237538577]
+  global w_sa_b2_at_q=[-1.9260419050799769, -1.857652326623434, -2.0047202110290527, -0.885613278751709, 1.5972332954406738, -3.421906296406881]
+  global sb_b3_wp_p=p[.169247364854, -.363593314824, .211490096266, 2.190908691531, 2.202427539995, .003706714112]
+  global sb_b3_wp_q=[-0.8065179030047815, -1.9593283138670863, -1.555314540863037, -1.1616628927043458, 1.578707218170166, -3.9475982824908655]
+  global sb_b_at_p=p[.169246056910, -.363592214599, .148111305666, 2.190946160502, 2.202435634092, .003709327242]
+  global sb_b_at_q=[-0.8068727969675553, -2.08517189015973, -1.6981209324375044, -0.8930438925288193, 1.5776056598650527, -3.9465597286803433]
+  global w_sa_b3_wp_p=p[-.238980264201, -.211657134097, .229947598810, -2.229369943781, -2.183768409878, .016309093324]
+  global w_sa_b3_wp_q=[-1.991631333027975, -1.5922595463194789, -1.906846523284912, -1.2102173131755372, 1.5532598495483398, -5.106208626423971]
+  global w_sa_b3_at_p=p[-.238979421053, -.211665037744, .165423964069, -2.229375882616, -2.183752793711, .016453943406]
+  global w_sa_b3_at_q=[-1.992110554371969, -1.736891885797018, -2.094653606414795, -0.8777282995036622, 1.5517363548278809, -5.104810063038961]
+  global sb_b4_wp_p=p[.172768737598, -.436751484199, .216833575768, 2.246085533107, 2.174816940196, -.004437507428]
+  global sb_b4_wp_q=[-0.9128792921649378, -2.2552620373167933, -1.0458245277404785, -1.3948429387858887, 1.5744471549987793, -4.019156281148092]
+  global sb_b4_at_p=p[.172746177535, -.436762597808, .149006233313, 2.246147002480, 2.174778872384, -.004431053337]
+  global sb_b4_at_q=[-0.9133897430813258, -2.3427271721719474, -1.2216957558299493, -1.1315251442518246, 1.573920529059275, -4.018009433833225]
+  global w_sa_b4_wp_p=p[-.245189382956, -.250465265871, .220693315488, 2.249851227617, 2.188576744778, -.004221744923]
+  global w_sa_b4_wp_q=[-1.9672911802874964, -1.7449633083739222, -1.782799243927002, -1.1799143117717286, 1.5775790214538574, -5.075026337300436]
+  global w_sa_b4_at_p=p[-.245196958634, -.250443813288, .165925817325, 2.249950161431, 2.188507278357, -.004086118289]
+  global w_sa_b4_at_q=[-1.9677231947528284, -1.8598391018309535, -1.9288725852966309, -0.919053391819336, 1.576474666595459, -5.073948685322897]
+  global sb_b5_wp_p=p[.087609606890, -.220378127277, .210476571855, 2.211875602622, 2.192601610338, .026641847117]
+  global sb_b5_wp_q=[-0.6208708922015589, -1.2091100972941895, -2.3216843605041504, -1.1508773130229493, 1.589698314666748, -3.7460716406451624]
+  global sb_b5_at_p=p[.087586721565, -.220373086175, .149892081176, 2.212007587140, 2.192545894035, .026637860250]
+  global sb_b5_at_q=[-0.6215652498481816, -1.4208173091501255, -2.5298641159187434, -0.7310282512557471, 1.5873691885830432, -3.7443671606608633]
+  global w_sa_b5_wp_p=p[-.247392523901, -.283333634663, .227843720002, 2.249543788153, 2.140240128419, -.012653181265]
+  global w_sa_b5_wp_q=[-1.9442923704730433, -1.8405186138548792, -1.6342711448669434, -1.2134626668742676, 1.6055245399475098, -5.03001577058901]
+  global w_sa_b5_at_p=p[-.247398816973, -.283318706173, .164004494922, 2.249618869919, 2.140215962598, -.012611058955]
+  global w_sa_b5_at_q=[-1.9447482267962855, -1.961236139337057, -1.8007464408874512, -0.9262779516032715, 1.604372501373291, -5.02884275117983]
+  global sa_b1_wp_p=p[.292403993194, -.167974514522, .213104989913, 2.272390683354, 2.112475142259, -.026487077800]
+  global sa_b1_wp_q=[-0.11594850221742803, -1.6929556332030238, -1.8900847434997559, -1.1099966329387208, 1.5377163887023926, -3.1781852881061]
+  global sa_b1_at_p=p[.292399971502, -.167966683060, .150757528497, 2.272390469464, 2.112525218807, -.026491792104]
+  global sa_b1_at_q=[-0.11631995836366826, -1.8480049572386683, -2.0465760231018066, -0.7985323232463379, 1.5361695289611816, -3.177020851765768]
+  global sa_b2_wp_p=p[.291520656536, -.235360454225, .216434057650, -2.213603860903, -2.208261860442, .007745464203]
+  global sa_b2_wp_q=[-0.3263466993915003, -1.8557545147337855, -1.6542010307312012, -1.216815785770752, 1.5780587196350098, -3.459817711506979]
+  global sa_b2_at_p=p[.291521514913, -.235352154379, .150683108360, -2.213568284350, -2.208254589261, .007833768262]
+  global sa_b2_at_q=[-0.3267300764666956, -1.9897448025145472, -1.8144783973693848, -0.9225996297648926, 1.5768227577209473, -3.4586170355426233]
+  global sa_b3_wp_p=p[.176000489828, -.158299163921, .202973325587, -2.139517455903, 2.242795255871, -.074282181663]
+  global sa_b3_wp_q=[-0.1558917204486292, -1.2124088567546387, -2.373589038848877, -1.062225655918457, 1.5805068016052246, -0.10061771074403936]
+  global sa_b3_at_p=p[.175992698820, -.158290863360, .148448089790, -2.139630252176, 2.242830140633, -.074138058346]
+  global sa_b3_at_q=[-0.156381909047262, -1.4246347707561036, -2.5574088096618652, -0.6663168233684083, 1.5780830383300781, -0.09913427034486944]
+  global sa_b4_wp_p=p[.182288784673, -.223442505724, .214982343518, 2.244370665909, 2.171097706701, -.078467974563]
+  global sa_b4_wp_q=[-0.40187007585634404, -1.4701402944377442, -2.097311496734619, -1.1472223562053223, 1.5233845710754395, -3.503144089375631]
+  global sa_b4_at_p=p[.182287386319, -.223437082301, .150398746920, 2.244398048636, 2.171121948206, -.078444160213]
+  global sa_b4_at_q=[-0.40237218538393194, -1.6560188732542933, -2.2846264839172363, -0.7741382879069825, 1.5214414596557617, -3.501666847859518]
+  global sa_b5_wp_p=p[.178545900366, -.297407130896, .219750417052, -2.221270259109, -2.216110569340, .009273374346]
+  global sa_b5_wp_q=[-0.6457780043231409, -1.7321273289122523, -1.7994894981384277, -1.1843598645976563, 1.5707635879516602, -3.7787779013263147]
+  global sa_b5_at_p=p[.178516802415, -.297407264285, .148097537034, -2.221254295822, -2.216064269800, .009370294089]
+  global sa_b5_at_q=[-0.6462815443622034, -1.8962084255614222, -1.9801459312438965, -0.8396848005107422, 1.569119930267334, -3.777457062398092]
+  def stacking_p2():
+    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sb_b1_wp_p, qnear=sb_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sb_b1_at_p, qnear=sb_b1_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(255, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(sb_b1_wp_p, qnear=sb_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b1_wp_p, qnear=w_sa_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b1_at_p, qnear=w_sa_b1_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(128, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(w_sa_b1_wp_p, qnear=w_sa_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sb_b2_wp_p, qnear=sb_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sb_b2_at_p, qnear=sb_b2_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(255, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(sb_b2_wp_p, qnear=sb_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b2_wp_p, qnear=w_sa_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b2_at_p, qnear=w_sa_b2_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(128, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(w_sa_b2_wp_p, qnear=w_sa_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sb_b3_wp_p, qnear=sb_b3_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sb_b_at_p, qnear=sb_b_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(255, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(sb_b3_wp_p, qnear=sb_b3_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b3_wp_p, qnear=w_sa_b3_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b3_at_p, qnear=w_sa_b3_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(128, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(w_sa_b3_wp_p, qnear=w_sa_b3_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sb_b4_wp_p, qnear=sb_b4_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sb_b4_at_p, qnear=sb_b4_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(255, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(sb_b4_wp_p, qnear=sb_b4_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b4_wp_p, qnear=w_sa_b4_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b4_at_p, qnear=w_sa_b4_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(128, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(w_sa_b4_wp_p, qnear=w_sa_b4_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sb_b5_wp_p, qnear=sb_b5_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sb_b5_at_p, qnear=sb_b5_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(255, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(sb_b5_wp_p, qnear=sb_b5_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b5_wp_p, qnear=w_sa_b5_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b5_at_p, qnear=w_sa_b5_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(128, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(w_sa_b5_wp_p, qnear=w_sa_b5_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+  end
+  def stacking_p1():
+    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sa_b1_wp_p, qnear=sa_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sa_b1_at_p, qnear=sa_b1_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(255, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(sa_b1_wp_p, qnear=sa_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b1_wp_p, qnear=w_sa_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b1_at_p, qnear=w_sa_b1_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(128, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(w_sa_b1_wp_p, qnear=w_sa_b1_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sa_b2_wp_p, qnear=sa_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sa_b2_at_p, qnear=sa_b2_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(255, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(sa_b2_wp_p, qnear=sa_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b2_wp_p, qnear=w_sa_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b2_at_p, qnear=w_sa_b2_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(128, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(w_sa_b2_wp_p, qnear=w_sa_b2_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sa_b3_wp_p, qnear=sa_b3_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sa_b3_at_p, qnear=sa_b3_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(255, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(sa_b3_wp_p, qnear=sa_b3_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b3_wp_p, qnear=w_sa_b3_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b3_at_p, qnear=w_sa_b3_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(128, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(w_sa_b3_wp_p, qnear=w_sa_b3_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sa_b4_wp_p, qnear=sa_b4_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sa_b4_at_p, qnear=sa_b4_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(255, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(sa_b4_wp_p, qnear=sa_b4_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b4_wp_p, qnear=w_sa_b4_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b4_at_p, qnear=w_sa_b4_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(128, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(w_sa_b4_wp_p, qnear=w_sa_b4_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sa_b5_wp_p, qnear=sa_b5_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(sa_b5_at_p, qnear=sa_b5_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(255, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(sa_b5_wp_p, qnear=sa_b5_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b5_wp_p, qnear=w_sa_b5_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(w_sa_b5_at_p, qnear=w_sa_b5_at_q), a=1.3962634015954636, v=1.0471975511965976)
+    # begin: URCap Program Node
+    #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+    #   Type: Gripper
+    gripper_1_used = True
+    if (connectivity_checked[0] != 1):
+      if not(rq_set_sid(9, "1")):
+        popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+      end
+      connectivity_checked[0] = 1
+    end
+    if (status_checked[0] != 1):
+      if not(rq_is_gripper_activated("1")):
+        popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+      end
+      status_checked[0] = 1
+    end
+    rq_set_pos_spd_for(128, 255, 255, "1")
+    rq_go_to("1")
+    rq_wait("1")
+    gripper_1_selected = True
+    gripper_2_selected = False
+    gripper_3_selected = False
+    gripper_4_selected = False
+    gripper_1_used = False
+    gripper_2_used = False
+    gripper_3_used = False
+    gripper_4_used = False
+    # end: URCap Program Node
+    movej(get_inverse_kin(w_sa_b5_wp_p, qnear=w_sa_b5_wp_q), a=1.3962634015954636, v=1.0471975511965976)
+    movej(get_inverse_kin(home_p, qnear=home_q), a=1.3962634015954636, v=1.0471975511965976)
+  end
+  $ 1 "Robot Program"
+  # begin: URCap Program Node
+  #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+  #   Type: Gripper Activate
+  $ 2 "Gripper Activate"
+  
+  rq_init_comm_if_connected(9, "1")
+  rq_init_comm_if_connected(2, "2")
+  rq_init_comm_if_connected(3, "3")
+  rq_init_comm_if_connected(4, "4")
+  
+  reset_and_activate = False
+  
+  rq_activate_all_grippers(False)
+  
+  clear_socket_buffer("1")
+  clear_socket_buffer("2")
+  clear_socket_buffer("3")
+  clear_socket_buffer("4")
+  # end: URCap Program Node
+  # begin: URCap Program Node
+  #   Source: Robotiq_Grippers, 1.6.0.4, Robotiq Inc.
+  #   Type: Gripper
+  $ 3 "Gripper Move50% (1)"
+  gripper_1_used = True
+  if (connectivity_checked[0] != 1):
+    if not(rq_set_sid(9, "1")):
+      popup("Gripper 1 must be connected to run this program.", "No connection", False, True, True)
+    end
+    connectivity_checked[0] = 1
+  end
+  if (status_checked[0] != 1):
+    if not(rq_is_gripper_activated("1")):
+      popup("Gripper 1 is not activated. Go to Installation tab > Gripper to activate it and run the program again.", "Not activated", False, True, True)
+    end
+    status_checked[0] = 1
+  end
+  rq_set_pos_spd_for(128, 255, 255, "1")
+  rq_go_to("1")
+  rq_wait("1")
+  gripper_1_selected = True
+  gripper_2_selected = False
+  gripper_3_selected = False
+  gripper_4_selected = False
+  gripper_1_used = False
+  gripper_2_used = False
+  gripper_3_used = False
+  gripper_4_used = False
+  # end: URCap Program Node
+  $ 4 "Call stacking_p1"
+  stacking_p1()
+  $ 5 "Popup"
+  popup("interaction", "Message", False, False, blocking=True)
+  $ 6 "Call stacking_p2"
+  stacking_p2()
+end

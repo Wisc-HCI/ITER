@@ -126,7 +126,6 @@ class PublishStringFromFile(Primitive):
         if not topic in publishers.keys():
             publishers[self._topic] = rospy.Publisher(topic,String,queue_size=1)
 
-        print os.getcwd()
         path = os.path.join(os.getcwd(),filepath)
         fin = open(path,'r')
         _str = fin.read().encode('utf-8')
