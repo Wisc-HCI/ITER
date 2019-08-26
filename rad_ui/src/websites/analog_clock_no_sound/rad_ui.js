@@ -8,19 +8,7 @@ var NEGLECT_LOWER_BOUND = 15;
 
 // define update functions
 
-function updateColor(seconds) {
 
-  var scale;
-  if (seconds <= NEGLECT_LOWER_BOUND) {
-    scale = RED;
-  } else {
-    scale = GREEN;
-  }
-  var color = 'hsl(' + Math.round(scale) + ', 75%, 50%)';
-
-  $('#dot-0').css('background-color',color);
-
-}
 
 // Setup ROS Subscribers
 $.getJSON("../rosbridge_properties.json", function(json) {

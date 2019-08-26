@@ -3,11 +3,13 @@
 // global Variables
 //==============================================================================
 
-const COLOR_NEGLECT = '#4caf50';
-const COLOR_WARNING = '#ffd54f';
-const COLOR_EMERGENCY = '#c62828';
-const COLOR_INTERACTION = '#563D7C';
-const COLOR_FINISHED = '#757575';
+const COLOR_BLACK = '#000';
+const COLOR_GREEN = '#4caf50';
+const COLOR_BLUE = '#0097a7';
+const COLOR_YELLOW = '#ffd54f';
+const COLOR_RED = '#c62828';
+const COLOR_PURPLE = '#563D7C';
+const COLOR_DARK_GRAY = '#757575';
 
 const NEGLECT_LOWER_BOUND = 15;
 
@@ -46,17 +48,17 @@ function Playhead(canvas, x, y) {
   let self = this;
 
   self.nested = canvas.nested();
-  self.triangleTop = self.nested.polygon('0,0 20,0 10,20').fill('#000');
-  self.triangleBottom = self.nested.polygon('0,140 20,140 10,120').fill('#000');
+  self.triangleTop = self.nested.polygon('0,0 20,0 10,20').fill(COLOR_BLACK);
+  self.triangleBottom = self.nested.polygon('0,140 20,140 10,120').fill(COLOR_BLACK);
   self.line = self.nested.line(10,15,10,125).attr({
-    stroke: '#000',
+    stroke: COLOR_BLACK,
     'stroke-width': 3
   });
   self.circle = self.nested.circle(75).move(-29,-74).stroke({
     width: 3,
-    color: '#000'
+    color: COLOR_BLACK
   }).fill({
-    color: '#000',
+    color: COLOR_BLACK,
     opacity: 0.0
   });
   self.icon = self.nested.nested().dmove(-16,-60).size(50,50);
@@ -70,6 +72,10 @@ function Playhead(canvas, x, y) {
     if (self._neglectIconString != null) {
       self.icon.clear();
       self.icon.svg(self._neglectIconString);
+      self.circle.fill({
+        color: COLOR_GREEN,
+        opacity: 1.0
+      });
     } else {
       self._asyncSetIcon('_neglectIconString',self.setNeglectIcon);
     }
@@ -79,6 +85,10 @@ function Playhead(canvas, x, y) {
     if (self._warningIconString != null) {
       self.icon.clear();
       self.icon.svg(self._warningIconString);
+      self.circle.fill({
+        color: COLOR_YELLOW,
+        opacity: 1.0
+      });
     } else {
       self._asyncSetIcon('_warningIconString',self.setWarningIcon);
     }
@@ -89,6 +99,10 @@ function Playhead(canvas, x, y) {
     if (self._interactionIconString != null) {
       self.icon.clear();
       self.icon.svg(self._interactionIconString);
+      self.circle.fill({
+        color: COLOR_RED,
+        opacity: 1.0
+      });
     } else {
       self._asyncSetIcon('_interactionIconString',self.setInteractionIcon);
     }
@@ -99,6 +113,10 @@ function Playhead(canvas, x, y) {
     if (self._waitingIconString != null) {
       self.icon.clear();
       self.icon.svg(self._waitingIconString);
+      self.circle.fill({
+        color: COLOR_BLACK,
+        opacity: 0.0
+      });
     } else {
       self._asyncSetIcon('_waitingIconString',self.setWaitingIcon);
     }
@@ -149,7 +167,7 @@ function Tile(canvas, x, y, width, timeInfo) {
   this.state = 'okay';
   this.timeInfo = timeInfo;
 
-  let color = (this.timeInfo.type == 'interaction') ? COLOR_INTERACTION : COLOR_NEGLECT;
+  let color = (this.timeInfo.type == 'interaction') ? COLOR_PURPLE : COLOR_BLUE;
   this.rectangle = canvas.rect(width,100).radius(5).fill(color);
 
   this.dmove = function(x, y) {
@@ -168,30 +186,8 @@ function Tile(canvas, x, y, width, timeInfo) {
     this.timeInfo.stop_time += dt;
   }
 
-  this.setWarning  = function() {
-    self = this;
-    let gradient = canvas.gradient('linear', function(stop) {
-
-      let wp;
-      let w = self.timeInfo.stop_time - self.timeInfo.start_time;
-      if (w == 0) {
-        wp = 0;
-      } else {
-        wp = NEGLECT_LOWER_BOUND / w;
-        if (wp < 0) wp = 0;
-        if (wp > 1) wp = 1;
-      }
-
-      stop.at(0, COLOR_WARNING);
-      stop.at(1-wp, COLOR_WARNING);
-      stop.at(1, COLOR_EMERGENCY);
-    });
-    this.rectangle.fill(gradient);
-    this.state = 'warning';
-  }
-
   this.setFinished = function() {
-    this.rectangle.fill(COLOR_FINISHED);
+    this.rectangle.fill(COLOR_DARK_GRAY);
     this.state = 'finished';
   }
 }
@@ -199,22 +195,24 @@ function Tile(canvas, x, y, width, timeInfo) {
 function Tick(canvas,x,y,major=false,time=0,label=true) {
 
   this._x = x;
+  this.lastColor = COLOR_BLACK;
+  this.lastStrokeWidth = 0.25
 
   this.nested = canvas.nested();
   if (major) {
     this.line = this.nested.line(x,y,x,y+20).attr({
-      stroke: '#000',
+      stroke: COLOR_BLACK,
       'stroke-width': 2
     });
   } else {
     this.line = this.nested.line(x,y,x,y+10).attr({
-      stroke: '#000',
+      stroke: COLOR_BLACK,
       'stroke-width': 1
     });
   }
 
   if (label) {
-    this.label = this.nested.text(formatTime(time)).move(x-20,y+35);
+    this.label = this.nested.text(formatTime(time)).move(x-20,y+35).attr({'stroke-width': 0.25});
   }
 
   this.x = function() {
@@ -233,9 +231,13 @@ function Tick(canvas,x,y,major=false,time=0,label=true) {
     this.nested.clear();
   }
 
-  this.setColor = function(color) {
-    this.line.stroke(color);
-    this.label.stroke(color);
+  this.setColor = function(color, strokeWidth=0.25) {
+    if (this.lastColor != color || this.lastStrokeWidth != strokeWidth) {
+      this.lastColor = color;
+      this.lastStrokeWidth = strokeWidth;
+      this.line.stroke(color);
+      this.label.stroke(color).attr({'stroke-width': strokeWidth});
+    }
   }
 }
 
@@ -306,26 +308,18 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
         this.stop_time += dt;
 
         // update tick marks
-        let prevLastIndex = this.ticks.length-1;
-        let lastTick = this.ticks[prevLastIndex];
+        let lastTick = this.ticks[this.ticks.length-1];
         this._drawTicks(lastTick.x() + X_STEP,this.ticks.length*TIME_STEP,this.stop_time+dt,y+TICK_Y_OFFSET);
-        for (let i=prevLastIndex; i<this.ticks.length; i++) {
-          if (i*TIME_STEP >= this.original_stop_time) {
-            this.ticks[i].setColor(COLOR_EMERGENCY);
+        for (let i=0; i<this.ticks.length; i++) {
+          if (i*TIME_STEP >= this.original_stop_time && this.stop_time >= this.original_stop_time) {
+            this.ticks[i].setColor(COLOR_RED,1);
+          } else if (i*TIME_STEP <= this.stop_time) {
+            this.ticks[i].setColor(COLOR_BLACK);
           }
         }
 
         // recenter timeline
-        let x_timeline_end = this.length();
-        let x_timeline_start = this.start();
-        let x_timeline_center = (x_timeline_end - x_timeline_start) / 2 + x_timeline_start;
-
-        if (x_timeline_start > x_start) {
-          let dx = Math.max(x_start - x_timeline_start, x_center - x_timeline_center);
-          if (dx < 2) { // less than threshold then adjust
-            timeline.move(dx,dx);
-          }
-        }
+        this.recenter();
 
       } else if (activeTile.timeInfo.type == 'interaction' && !interacting) {
         let qt = time - activeTile.timeInfo.stop_time - 0.01;
@@ -340,14 +334,22 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
 
         // update tick marks
         for (let i=0; i<this.ticks.length; i++) {
-          if (i*TIME_STEP <= this.original_stop_time && i*TIME_STEP >= this.stop_time) {
-            this.ticks[i].setColor(COLOR_NEGLECT);
+          if (i*TIME_STEP >= this.stop_time) {
+            if (i*TIME_STEP <= this.original_stop_time) {
+              this.ticks[i].setColor(COLOR_GREEN,1);
+            } else if ((i-1)*TIME_STEP >= this.stop_time) {
+              this.ticks[i].clear();
+              this.ticks.splice(i,1);
+              i--; // step index back
+            }
           }
         }
 
+        // recenter timeline
+        this.recenter();
+
       } else if (activeTile.timeInfo.type == 'neglect') {
-        if (activeTile.state != 'warning' && activeTile.timeInfo.stop_time - (this.time+dt) < 15) {
-          activeTile.setWarning();
+        if (activeTile.state != 'warning' && activeTile.timeInfo.stop_time - (this.time+dt) < NEGLECT_LOWER_BOUND) {
           this.playhead.setWarningIcon();
         }
       }
@@ -401,12 +403,25 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
     }
   }
 
-  this.original_stop_time = this.length() / X_STEP * TIME_STEP;
-  for (let i=0; i<this.ticks.length; i++) {
-    if (i*TIME_STEP <= this.original_stop_time && i*TIME_STEP >= this.stop_time) {
-      this.ticks[i].setColor(COLOR_NEGLECT);
+  if (this.ticks.length > 0) {
+    this.original_stop_time = (this.ticks.length-1) * TIME_STEP;
+  } else {
+    this.original_stop_time = 0;
+  }
+
+  this.recenter = function() {
+    let x_timeline_end = this.length();
+    let x_timeline_start = this.start();
+    let x_timeline_center = (x_timeline_end - x_timeline_start) / 2 + x_timeline_start;
+
+    if (x_timeline_start > x_start) {
+      let dx = Math.max(x_start - x_timeline_start, x_center - x_timeline_center);
+      if (dx < -2 || dx > 2) { // past threshold then adjust
+        timeline.move(dx,dx);
+      }
     }
   }
+
 }
 
 //==============================================================================
@@ -473,9 +488,9 @@ $.getJSON("../rosbridge_properties.json", function(json) {
 
       // draw timeline
       canvas.clear();
-      let x_window = canvas.node.clientWidth - 10;
+      let x_window = canvas.node.clientWidth - 50;
       let y = canvas.node.clientHeight;
-      timeline = new Timeline(canvas,10,x_window,0,y/2-50,times);
+      timeline = new Timeline(canvas,50,x_window,50,y/2-50,times);
 
       // recenter timeline
       let x_timeline = timeline.length();
