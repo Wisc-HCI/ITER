@@ -7,7 +7,7 @@ const COLOR_BLACK = '#000';
 const COLOR_GREEN = '#4caf50';
 const COLOR_BLUE = '#0097a7';
 const COLOR_YELLOW = '#ffd54f';
-const COLOR_RED = '#c62828';
+const COLOR_RED = '#ef5350';
 const COLOR_PURPLE = '#563D7C';
 const COLOR_DARK_GRAY = '#757575';
 
