@@ -24,5 +24,5 @@ fout = open(sys.argv[1],'w')
 json.dump({
     'host': get_ip(),
     'port': sys.argv[2]
-},fout)
+},fout, indent=2)
 fout.close()
