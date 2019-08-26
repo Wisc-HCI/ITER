@@ -34,7 +34,7 @@ from std_msgs.msg import String, Int32, Bool
 
 class TimingServer:
 
-    SIGNAL_PUBLISH_TIME_STEP = 0.01
+    SIGNAL_PUBLISH_TIME_STEP = 0.1
     FAKE_TIME_INITIAL = 60
 
     def __init__(self):
@@ -175,7 +175,7 @@ class TimingServer:
             if index > self._sync_index:
                 # out of sync - ahead of runner
                 while index > self._sync_index and not rospy.is_shutdown():
-                    rospy.sleep(0.01)
+                    rospy.sleep(self.SIGNAL_PUBLISH_TIME_STEP)
             elif index < self._sync_index:
                 # out of sync - behind runner
                 index = self._sync_index
