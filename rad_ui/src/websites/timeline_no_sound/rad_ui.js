@@ -6,7 +6,7 @@
 const COLOR_NEGLECT = '#4caf50';
 const COLOR_WARNING = '#ffd54f';
 const COLOR_EMERGENCY = '#c62828';
-const COLOR_INTERACTION = '#aa66cc';
+const COLOR_INTERACTION = '#563D7C';
 const COLOR_FINISHED = '#757575';
 
 const NEGLECT_LOWER_BOUND = 15;
@@ -139,6 +139,10 @@ function Playhead(canvas, x, y) {
     self._cancelIntervalID = cancel;
   }
   self.setWaitingIcon();
+
+  self.x = function() {
+    return self.nested.x();
+  }
 }
 
 function Tile(canvas, x, y, width, timeInfo) {
@@ -228,9 +232,15 @@ function Tick(canvas,x,y,major=false,time=0,label=true) {
     this.label = null;
     this.nested.clear();
   }
+
+  this.setColor = function(color) {
+    this.line.stroke(color);
+    this.label.stroke(color);
+  }
 }
 
 function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
+  let x_center = (x_end - x_start) / 2 + x_start;
 
   const TIME_STEP = 15;
   const X_STEP = 50;
@@ -293,11 +303,30 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
           this.tiles[i].timeAdjust(-dx,dt);
         }
 
-        // update tick marks
-        lastTick = this.ticks[this.ticks.length-1];
-        this._drawTicks(lastTick.x() + X_STEP,this.ticks.length*TIME_STEP,this.stop_time+dt,y+TICK_Y_OFFSET);
-
         this.stop_time += dt;
+
+        // update tick marks
+        let prevLastIndex = this.ticks.length-1;
+        let lastTick = this.ticks[prevLastIndex];
+        this._drawTicks(lastTick.x() + X_STEP,this.ticks.length*TIME_STEP,this.stop_time+dt,y+TICK_Y_OFFSET);
+        for (let i=prevLastIndex; i<this.ticks.length; i++) {
+          if (i*TIME_STEP >= this.original_stop_time) {
+            this.ticks[i].setColor(COLOR_EMERGENCY);
+          }
+        }
+
+        // recenter timeline
+        let x_timeline_end = this.length();
+        let x_timeline_start = this.start();
+        let x_timeline_center = (x_timeline_end - x_timeline_start) / 2 + x_timeline_start;
+
+        if (x_timeline_start > x_start) {
+          let dx = Math.max(x_start - x_timeline_start, x_center - x_timeline_center);
+          if (dx < 2) { // less than threshold then adjust
+            timeline.move(dx,dx);
+          }
+        }
+
       } else if (activeTile.timeInfo.type == 'interaction' && !interacting) {
         let qt = time - activeTile.timeInfo.stop_time - 0.01;
         let qx = qt * X_STEP / TIME_STEP;
@@ -307,6 +336,15 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
         for (let i=this.tileIndex+1; i<this.tiles.length; i++) {
           this.tiles[i].timeAdjust(qx,qt);
         }
+        this.stop_time += qt;
+
+        // update tick marks
+        for (let i=0; i<this.ticks.length; i++) {
+          if (i*TIME_STEP <= this.original_stop_time && i*TIME_STEP >= this.stop_time) {
+            this.ticks[i].setColor(COLOR_NEGLECT);
+          }
+        }
+
       } else if (activeTile.timeInfo.type == 'neglect') {
         if (activeTile.state != 'warning' && activeTile.timeInfo.stop_time - (this.time+dt) < 15) {
           activeTile.setWarning();
@@ -315,9 +353,14 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
       }
     }
 
-    // shift everything
-    // TODO shift playhead
-    this.move(dx,0);
+    // shift playhead and/or timeline
+    if (this.playhead.x() < x_center) {     // move playhead
+      this.move(0,-dx);
+    } else if (this.length() < x_end) {     // move playhead
+      this.move(0,-dx);
+    } else {                                // move timeline
+      this.move(dx,0);
+    }
 
     // update timing and active tile
     this.time = time;
@@ -340,6 +383,30 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
     this.playhead.dmove(playhead_dx,0);
   }
 
+  this.length = function() {
+    if (this.ticks.length > 0) {
+      let lastTick = this.ticks[this.ticks.length-1];
+      return lastTick.x();
+    } else {
+      return x_start;
+    }
+  }
+
+  this.start = function() {
+    if (this.ticks.length > 0) {
+      let firstTick = this.ticks[0];
+      return firstTick.x();
+    } else {
+      return x_start;
+    }
+  }
+
+  this.original_stop_time = this.length() / X_STEP * TIME_STEP;
+  for (let i=0; i<this.ticks.length; i++) {
+    if (i*TIME_STEP <= this.original_stop_time && i*TIME_STEP >= this.stop_time) {
+      this.ticks[i].setColor(COLOR_NEGLECT);
+    }
+  }
 }
 
 //==============================================================================
@@ -351,7 +418,7 @@ SVG.on(document, 'DOMContentLoaded', function() {
   canvas.clear();
   let x = canvas.node.clientWidth;
   let y = canvas.node.clientHeight;
-  timeline = new Timeline(canvas,0,x,x/3,y/2-50,[]);
+  timeline = new Timeline(canvas,0,x,x/2,y/2-50,[]);
 });
 
 $.getJSON("../rosbridge_properties.json", function(json) {
@@ -404,10 +471,18 @@ $.getJSON("../rosbridge_properties.json", function(json) {
       times = JSON.parse(message.data).timeline;
       currentMode = -1;
 
+      // draw timeline
       canvas.clear();
-      let x = canvas.node.clientWidth;
+      let x_window = canvas.node.clientWidth - 10;
       let y = canvas.node.clientHeight;
-      timeline = new Timeline(canvas,0,x,x/3,y/2-50,times);
+      timeline = new Timeline(canvas,10,x_window,0,y/2-50,times);
+
+      // recenter timeline
+      let x_timeline = timeline.length();
+      if (x_timeline < x_window) {
+        let dx = (x_window - x_timeline)/2;
+        timeline.move(dx,dx);
+      }
     }
   });
 });
