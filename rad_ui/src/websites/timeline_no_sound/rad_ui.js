@@ -429,10 +429,12 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
 //==============================================================================
 
 SVG.on(document, 'DOMContentLoaded', function() {
-  canvas = SVG('drawing');
+  let canvas = SVG('drawing');
   canvas.clear();
+
   let x = canvas.node.clientWidth;
   let y = canvas.node.clientHeight;
+  canvas.viewbox(0,0,x,y); // can adjust size with this
   timeline = new Timeline(canvas,0,x,x/2,y/2-50,[]);
 });
 
@@ -490,6 +492,7 @@ $.getJSON("../rosbridge_properties.json", function(json) {
       canvas.clear();
       let x_window = canvas.node.clientWidth - 50;
       let y = canvas.node.clientHeight;
+      canvas.viewbox(0,0,x,y); // can adjust size with this
       timeline = new Timeline(canvas,50,x_window,50,y/2-50,times);
 
       // recenter timeline
