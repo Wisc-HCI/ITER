@@ -1,1 +1,35 @@
-TODO
+{
+  "title": "Mansion - ITER - Curt's",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [],
+  "task": [
+    {
+      "name": "grasp",
+      "effort": 0.41
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "publish_string_from_file",
+      "topic": "/ur_driver/URScript",
+      "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/mansion.script"
+    },
+    {
+      "name": "wait",
+      "condition": "time",
+      "value": 125
+    },
+    {
+      "name": "logger",
+      "msg": "Done running, restock"
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    }
+  ]
+}
