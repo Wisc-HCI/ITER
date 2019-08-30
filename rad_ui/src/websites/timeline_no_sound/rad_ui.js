@@ -13,6 +13,7 @@ const COLOR_DARK_GRAY = '#757575';
 
 const NEGLECT_LOWER_BOUND = 15;
 
+var canvas = null;
 var timeline = null;
 var times = null;
 
@@ -429,7 +430,7 @@ function Timeline(canvas, x_start, x_end, x_playhead, y, times) {
 //==============================================================================
 
 SVG.on(document, 'DOMContentLoaded', function() {
-  let canvas = SVG('drawing');
+  canvas = SVG('drawing');
   canvas.clear();
 
   let x = canvas.node.clientWidth;
@@ -492,7 +493,7 @@ $.getJSON("../rosbridge_properties.json", function(json) {
       canvas.clear();
       let x_window = canvas.node.clientWidth - 50;
       let y = canvas.node.clientHeight;
-      canvas.viewbox(0,0,x,y); // can adjust size with this
+      canvas.viewbox(0,0,x_window,y); // can adjust size with this
       timeline = new Timeline(canvas,50,x_window,50,y/2-50,times);
 
       // recenter timeline
