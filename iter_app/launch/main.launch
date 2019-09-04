@@ -54,6 +54,9 @@
       <param name="mode" value="marker"/>
       <param name="calibrate_ar_tag_id" value="4"/>
     </node>
+    <node pkg="iter_app" type="time_logger.py" name="time_logger" output="screen">
+      <param name="filepath" value="$(find iter_app)/time_logs"/>
+    </node>
     <node pkg="iter_app" type="timing.py" name="timing" output="screen"/>
     <node pkg="iter_app" type="runner.py" name="runner" output="screen"/>
 
