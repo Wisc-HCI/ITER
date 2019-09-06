@@ -134,7 +134,7 @@ class Runner:
 
         # provide timing information to timing node
         if self.time_mode == TimeModeEnum.REPLAY:
-            self.time_start_topic.publish(json.dumps(neglect_time_list))
+            self.time_start_topic.publish(json.dumps(String(neglect_time_list)))
 
         # iterate over all primitives
         print 'Running'
@@ -165,7 +165,7 @@ class Runner:
                     }
             else:
 
-                self.time_sync_topic.publish(index)
+                self.time_sync_topic.publish(Int32(index))
 
                 if isinstance(primitives[index],ReturnablePrimitive):
                     operate_status, result = primitives[index].operate()
@@ -177,7 +177,7 @@ class Runner:
 
         # stop timing
         if self.time_mode == TimeModeEnum.REPLAY:
-            self.time_stop_topic.publish(True)
+            self.time_stop_topic.publish(Bool(True))
 
         # clear environment resources
         responseMsg = ''
