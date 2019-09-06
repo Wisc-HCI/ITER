@@ -146,14 +146,14 @@ class Runner:
 
                 start = time.time()
 
-                if isinstance(ReturnablePrimitive,primitives[index]):
+                if isinstance(primitives[index],ReturnablePrimitive):
                     operate_status, result = primitives[index].operate()
                 else:
                     operate_status = primitives[index].operate()
 
                 stop = time.time()
 
-                if type(primitives[index]) is bp.Wait and primitives[index].condition == bp.ConditionEnum.BUTTON.value:
+                if type(primitives[index]) is bp.lookup('wait') and primitives[index].condition == 'button':
                     data['task'][index]['rad'] = {
                         'is_interaction': True,
                         'expected_interaction_time': stop - start

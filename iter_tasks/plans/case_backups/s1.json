@@ -1,0 +1,91 @@
+{
+  "title": "Mansion  with Interaction - ITER - Curt's",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [],
+  "task": [
+    {
+      "name": "grasp",
+      "effort": 0.41
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "publish_string_from_file",
+      "topic": "/ur_driver/URScript",
+      "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/base_a.script"
+    },
+    {
+      "name": "wait",
+      "condition": "time",
+      "value": 32
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "publish_string_from_file",
+      "topic": "/ur_driver/URScript",
+      "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/base_b.script"
+    },
+    {
+      "name": "wait",
+      "condition": "time",
+      "value": 29
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "publish_string_from_file",
+      "topic": "/ur_driver/URScript",
+      "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/interconnect.script"
+    },
+    {
+      "name": "wait",
+      "condition": "time",
+      "value": 36
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "publish_string_from_file",
+      "topic": "/ur_driver/URScript",
+      "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/roof_a.script"
+    },
+    {
+      "name": "wait",
+      "condition": "time",
+      "value": 24
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "publish_string_from_file",
+      "topic": "/ur_driver/URScript",
+      "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/roof_b.script"
+    },
+    {
+      "name": "wait",
+      "condition": "time",
+      "value": 22
+    },
+    {
+      "name": "logger",
+      "msg": "Done running, restock"
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    }
+  ]
+}

@@ -77,6 +77,7 @@ def load_task(task_file_name):
             try:
                 rxMsg = json.loads(response.recorded_task)
                 json.dump(rxMsg,f,indent=4)
+                print 'File saved'
             except:
                 print '[-] Error formatting new JSON'
             f.close()
