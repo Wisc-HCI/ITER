@@ -24,7 +24,7 @@ class TimeLogger:
 
     def spin(self):
         file = open(self._path + '/{}.json'.format(time.time()), 'w')
-        
+
         try:
             while not rospy.is_shutdown():
                 rospy.sleep(0.1)
@@ -41,7 +41,7 @@ class TimeLogger:
         self._data['{}'.format(time.time())] = {'event': 'stop'}
 
     def _sync_timing(self, msg):
-        self._data['{}'.format(time.time())] = {'event': 'sync', 'index', msg.data}
+        self._data['{}'.format(time.time())] = {'event': 'sync', 'index': msg.data}
 
     def _interaction_event_trigger(self, msg):
         self._data['{}'.format(time.time())] = {'event': 'interaction'}
