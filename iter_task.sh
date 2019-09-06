@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 cd ~/Workspaces/iter_ws
-source ./deve/setup.bash
+pwd
+source ./devel/setup.bash
 
 cd ./src/ITER/iter_tasks
 
