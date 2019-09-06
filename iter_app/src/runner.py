@@ -135,14 +135,15 @@ class Runner:
         # provide timing information to timing node
         if self.time_mode == TimeModeEnum.REPLAY:
             timeline = json.dumps(neglect_time_list)
-            print '\n\n', timeline, '\n\n'
-            self.time_start_topic.publish(timeline)
+            self.time_start_topic.publish(String(timeline))
 
         # iterate over all primitives
         print 'Running'
         operate_status = True
         for index in range(0,len(primitives)):
             print type(primitives[index]).__name__
+
+            self._button_state = False # ignore any button press that happened in the interim
 
             if self.time_mode == TimeModeEnum.CAPTURE:
 
@@ -167,7 +168,7 @@ class Runner:
                     }
             else:
 
-                self.time_sync_topic.publish(index)
+                self.time_sync_topic.publish(Int32(index))
 
                 if isinstance(primitives[index],ReturnablePrimitive):
                     operate_status, result = primitives[index].operate()
@@ -179,7 +180,7 @@ class Runner:
 
         # stop timing
         if self.time_mode == TimeModeEnum.REPLAY:
-            self.time_stop_topic.publish(True)
+            self.time_stop_topic.publish(Bool(True))
 
         # clear environment resources
         responseMsg = ''
@@ -244,6 +245,7 @@ class Runner:
 
     def _btn_topic_cb(self, message):
         if message.data:
+            print '\n\n\n BUTTON PRESSED! \n\n\n'
             self._button_state = True
 
 
