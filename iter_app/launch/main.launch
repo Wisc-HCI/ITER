@@ -42,8 +42,8 @@
     </include>
 
     <!-- Start button node -->
-    <node if="$(arg use_fake_btn)" name="button" pkg="pop_button" type="fake_button_node.py" output="screen"/>
-    <node unless="$(arg use_fake_btn)" name="button" pkg="pop_button" type="pop_button_node.py"/>
+    <node if="$(arg use_fake_btn)" name="button" pkg="pop_button" type="fake_button_node.py" output="log"/>
+    <node unless="$(arg use_fake_btn)" name="button" pkg="pop_button" type="pop_button_node.py"  output="log"/>
 
 <!--=========================================================================-->
 <!--  APPLICATION                                                            -->

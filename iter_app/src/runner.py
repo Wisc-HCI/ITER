@@ -127,7 +127,11 @@ class Runner:
                 return TaskResponse(False,'{}','Failed to load environment')
 
         print 'Instantiating'
-        primitives = [bp.instantiate_from_dict(obj,button_callback=self._button_callback) for obj in data['task']]
+        primitives = []
+        for obj in data['task']:
+            primitives.append({
+                'action': bp.instantiate_from_dict(obj,button_callback=self._button_callback),
+                'is_interaction': 'rad' in obj and obj['rad']['is_interaction']})
         neglect_time_list = self._generate_neglect_time_list(data)
 
         rospy.sleep(1)
@@ -140,8 +144,10 @@ class Runner:
         # iterate over all primitives
         print 'Running'
         operate_status = True
+        was_interaction = None
+        interactionCount = 0
         for index in range(0,len(primitives)):
-            print type(primitives[index]).__name__
+            print type(primitives[index]['action']).__name__
 
             self._button_state = False # ignore any button press that happened in the interim
 
@@ -149,14 +155,14 @@ class Runner:
 
                 start = time.time()
 
-                if isinstance(primitives[index],ReturnablePrimitive):
-                    operate_status, result = primitives[index].operate()
+                if isinstance(primitives[index]['action'],ReturnablePrimitive):
+                    operate_status, result = primitives[index]['action'].operate()
                 else:
-                    operate_status = primitives[index].operate()
+                    operate_status = primitives[index]['action'].operate()
 
                 stop = time.time()
 
-                if type(primitives[index]) is bp.lookup('wait') and primitives[index].condition == 'button':
+                if type(primitives[index]['action']) is bp.lookup('wait') and primitives[index]['action'].condition == 'button':
                     data['task'][index]['rad'] = {
                         'is_interaction': True,
                         'expected_interaction_time': stop - start
@@ -168,12 +174,15 @@ class Runner:
                     }
             else:
 
-                self.time_sync_topic.publish(Int32(index))
+                if was_interaction != primitives[index]['is_interaction']:
+                    self.time_sync_topic.publish(Int32(interactionCount))
+                    interactionCount += 1
+                    was_interaction = primitives[index]['is_interaction']
 
-                if isinstance(primitives[index],ReturnablePrimitive):
-                    operate_status, result = primitives[index].operate()
+                if isinstance(primitives[index]['action'],ReturnablePrimitive):
+                    operate_status, result = primitives[index]['action'].operate()
                 else:
-                    operate_status = primitives[index].operate()
+                    operate_status = primitives[index]['action'].operate()
 
             if not operate_status:
                 break
@@ -245,7 +254,6 @@ class Runner:
 
     def _btn_topic_cb(self, message):
         if message.data:
-            print '\n\n\n BUTTON PRESSED! \n\n\n'
             self._button_state = True
 
 
