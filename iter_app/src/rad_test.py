@@ -62,6 +62,23 @@ class RadTest:
             }
         ]
 
+    def _real_timeline(self):
+        return [
+            {"interaction": False, "time": 3.53587007522583},
+            {"interaction": True, "time": 9.120495080947876},
+            {"interaction": False, "time": 32.13577580451965},
+            {"interaction": True, "time": 5.36214804649353},
+            {"interaction": False, "time": 29.145864009857178},
+            {"interaction": True, "time": 6.254796981811523},
+            {"interaction": False, "time": 36.13834881782532},
+            {"interaction": True, "time": 6.5639989376068115},
+            {"interaction": False, "time": 24.183977127075195},
+            {"interaction": True, "time": 5.721496105194092},
+            {"interaction": False, "time": 22.11617398262024},
+            {"interaction": True, "time": 11.411334991455078},
+            {"interaction": False, "time": 0}
+        ]
+
     def loop(self):
 
         while not rospy.is_shutdown():
@@ -71,6 +88,8 @@ class RadTest:
             timeline = rospy.get_param('~timeline_slct','short')
             if timeline == 'long':
                 data = self._large_timeline()
+            elif timeline == 'real':
+                data = self._real_timeline()
             else:
                 data = self._small_timeline()
 

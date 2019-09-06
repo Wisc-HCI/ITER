@@ -134,7 +134,9 @@ class Runner:
 
         # provide timing information to timing node
         if self.time_mode == TimeModeEnum.REPLAY:
-            self.time_start_topic.publish(json.dumps(neglect_time_list))
+            timeline = json.dumps(neglect_time_list)
+            print '\n\n', timeline, '\n\n'
+            self.time_start_topic.publish(timeline)
 
         # iterate over all primitives
         print 'Running'
