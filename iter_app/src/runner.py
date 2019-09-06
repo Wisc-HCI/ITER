@@ -142,6 +142,8 @@ class Runner:
         for index in range(0,len(primitives)):
             print type(primitives[index]).__name__
 
+            self._button_state = False # ignore any button press that happened in the interim 
+
             if self.time_mode == TimeModeEnum.CAPTURE:
 
                 start = time.time()
@@ -242,6 +244,7 @@ class Runner:
 
     def _btn_topic_cb(self, message):
         if message.data:
+            print '\n\n\n BUTTON PRESSED! \n\n\n'
             self._button_state = True
 
 
