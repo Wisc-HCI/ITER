@@ -189,6 +189,7 @@ class Runner:
 
         # stop timing
         if self.time_mode == TimeModeEnum.REPLAY:
+            rospy.sleep(0.25)
             self.time_stop_topic.publish(Bool(True))
 
         # clear environment resources

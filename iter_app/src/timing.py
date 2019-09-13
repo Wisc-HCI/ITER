@@ -101,10 +101,7 @@ class TimingServer:
             }
         ]
 
-    def _fake_timeline_publisher(self):
-        self.pub_timeline.publish(String(json.dumps(self._timeline_processor())))
-
-    def _real_timeline_publisher(self):
+    def _timeline_publisher(self):
         self.pub_timeline.publish(String(json.dumps(self._timeline_processor())))
 
     def _timeline_processor(self):
@@ -123,7 +120,7 @@ class TimingServer:
 
         if self._publish_timeline:
             self._publish_timeline = False
-            self._fake_timeline_publisher()
+            self._timeline_publisher()
 
         signal = RADSignal()
         signal.elapsed_time = self._elapsed_time
@@ -162,13 +159,13 @@ class TimingServer:
 
         if self._publish_timeline:
             self._publish_timeline = False
-            self._real_timeline_publisher()
+            self._timeline_publisher()
 
         timeInterval = TimeInterval()
         interaction_time = 0
 
         index = 0
-        while index < len(self._neglect_time_list) and not rospy.is_shutdown():
+        while index < len(self._neglect_time_list) and not rospy.is_shutdown() and self._run:
             signal = RADSignal()
 
             # Re-sync
@@ -253,10 +250,13 @@ class TimingServer:
             # increment loop counter
             index += 1
 
+            print '\n\n\n\n', index, '\n\n\n\n'
+
         # latch a blank timeline
         if len(self._neglect_time_list) != 0:
+            print '\n\n Displaying blank timeline\n\n'
             self._neglect_time_list = []
-            self._real_timeline_publisher()
+            self._timeline_publisher()
 
     def loop(self):
 
@@ -265,6 +265,9 @@ class TimingServer:
                 self._fake_time_publisher()
             elif self._run:
                 self._real_time_publisher()
+            elif len(self._neglect_time_list) != 0:
+                self._neglect_time_list = []
+                self._timeline_publisher()
 
 
 if __name__ == '__main__':
