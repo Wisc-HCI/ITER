@@ -8,7 +8,8 @@
     <arg name="robot"/>
     <arg name="use_cli" default="false"/>
     <arg name="simulated" default="true"/>
-    <arg name="use_fake_btn" default="true" />
+    <arg name="use_fake_btn" default="true"/>
+    <arg name="use_real_btn" default="true"/>
 
     <!-- Relaxed-IK / MoveIt arguements -->
     <arg name="planner" default="rik_python"/>
@@ -43,7 +44,7 @@
 
     <!-- Start button node -->
     <node if="$(arg use_fake_btn)" name="button" pkg="pop_button" type="fake_button_node.py" output="log"/>
-    <node unless="$(arg use_fake_btn)" name="button" pkg="pop_button" type="pop_button_node.py"  output="log"/>
+    <node if="$(arg use_real_btn)" name="button" pkg="pop_button" type="pop_button_node.py"  output="log"/>
 
 <!--=========================================================================-->
 <!--  APPLICATION                                                            -->
