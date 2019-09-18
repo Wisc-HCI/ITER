@@ -250,11 +250,8 @@ class TimingServer:
             # increment loop counter
             index += 1
 
-            print '\n\n\n\n', index, '\n\n\n\n'
-
         # latch a blank timeline
         if len(self._neglect_time_list) != 0:
-            print '\n\n Displaying blank timeline\n\n'
             self._neglect_time_list = []
             self._timeline_publisher()
 
@@ -265,10 +262,7 @@ class TimingServer:
                 self._fake_time_publisher()
             elif self._run:
                 self._real_time_publisher()
-            elif len(self._neglect_time_list) != 0:
-                self._neglect_time_list = []
-                self._timeline_publisher()
-
+                
 
 if __name__ == '__main__':
     rospy.init_node('timing_node')
