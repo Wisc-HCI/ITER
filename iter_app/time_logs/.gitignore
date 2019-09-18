@@ -1,0 +1,5 @@
+# Ignore practically everything
+*
+
+!.gitignore
+!empty.json

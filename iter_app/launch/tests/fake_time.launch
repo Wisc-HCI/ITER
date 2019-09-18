@@ -16,4 +16,8 @@
     <arg name="rosbridge_port" value="9090"/>
   </include>
 
+  <node pkg="iter_app" type="time_logger.py" name="time_logger" output="screen">
+    <param name="filepath" value="$(find iter_app)/time_logs"/>
+  </node>
+
 </launch>
