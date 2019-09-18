@@ -7,6 +7,7 @@ TODO documentation
 import time
 import json
 import rospy
+import random
 
 from std_msgs.msg import String, Int32, Bool
 
@@ -27,7 +28,7 @@ class TimeLogger:
 
     def _save_cb(self, msg):
         file = open(self._path + '/{}_{}.json'.format(msg.data,time.time()),'w')
-        json.dump(self._data,file)
+        json.dump(self._data, file, sort_keys=True, indent=4)
         self._data = {}
         file.close()
 
@@ -40,12 +41,15 @@ class TimeLogger:
         except:
             pass
 
-        json.dump(self._running_data,file)
+        json.dump(self._running_data, file, sort_keys=True, indent=4)
         file.close()
 
     def _start_timing(self, msg):
         key = '{}'.format(time.time())
         value = {'event': 'start', 'timeline': json.loads(msg.data)}
+
+        while key in self._running_data.keys():
+            key += '{}'.format(random.randrange(0,100,1))
 
         self._data[key] = value
         self._running_data[key] = value
@@ -54,6 +58,9 @@ class TimeLogger:
         key = '{}'.format(time.time())
         value = {'event': 'stop'}
 
+        while key in self._running_data.keys():
+            key += '{}'.format(random.randrange(0,100,1))
+
         self._data[key] = value
         self._running_data[key] = value
 
@@ -61,12 +68,18 @@ class TimeLogger:
         key = '{}'.format(time.time())
         value = {'event': 'sync', 'index': msg.data}
 
+        while key in self._running_data.keys():
+            key += '{}'.format(random.randrange(0,100,1))
+
         self._data[key] = value
         self._running_data[key] = value
 
     def _interaction_event_trigger(self, msg):
         key = '{}'.format(time.time())
         value = {'event': 'interaction'}
+
+        while key in self._running_data.keys():
+            key += '{}'.format(random.randrange(0,9,1))
 
         self._data[key] = value
         self._running_data[key] = value
