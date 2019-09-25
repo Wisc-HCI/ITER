@@ -2,7 +2,7 @@
 
 // define constants
 
-var NEGLECT_LOWER_BOUND = 15;
+var NEGLECT_LOWER_BOUND = 5;
 
 var AUDIO = new Audio('./samsterbirdies__beep-warning.mp3');
 

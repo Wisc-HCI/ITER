@@ -11,7 +11,7 @@ const COLOR_RED = '#ef5350';
 const COLOR_PURPLE = '#563D7C';
 const COLOR_DARK_GRAY = '#757575';
 
-const NEGLECT_LOWER_BOUND = 15;
+const NEGLECT_LOWER_BOUND = 5;
 
 var canvas = null;
 var timeline = null;
