@@ -58,7 +58,7 @@
             },
             "condition": "time",
             "name": "wait",
-            "value": 29
+            "value": 27.5
         },
         {
             "rad": {
@@ -84,7 +84,7 @@
             },
             "condition": "time",
             "name": "wait",
-            "value": 36
+            "value": 34.5
         },
         {
             "rad": {
@@ -131,7 +131,7 @@
         },
         {
             "rad": {
-                "neglect_time": 20.5,
+                "neglect_time": 22,
                 "is_interaction": false
             },
             "condition": "time",
