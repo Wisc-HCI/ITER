@@ -26,6 +26,20 @@
     {
         "name": "wait",
         "condition": "button"
+    },
+    {
+      "name": "publish_string_from_file",
+      "topic": "/ur_driver/URScript",
+      "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/reciprocal_p1_2.script"
+    },
+    {
+      "name": "wait",
+      "condition": "time",
+      "value": 7.5
+    },
+    {
+        "name": "wait",
+        "condition": "button"
     }
   ]
 }
