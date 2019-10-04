@@ -31,10 +31,11 @@ def logger(msg):
     return {'name': 'logger',
             'msg':msg}
 
-def move(position, orientation):
+def move(position, orientation, options={}):
     return {'name': 'move',
             'position': position,
-            'orientation': orientation}
+            'orientation': orientation,
+            'options': options}
 
 def pick_and_place_static(path_to_object, path_to_destination, object_name, grasp_effort, release_effort):
     return {'name':'pick_and_place_static',

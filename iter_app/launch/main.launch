@@ -8,16 +8,12 @@
     <arg name="robot"/>
     <arg name="use_cli" default="false"/>
     <arg name="simulated" default="true"/>
-    <arg name="use_fake_btn" default="true" />
-
-    <!-- Vision arguements -->
-    <arg name="use_real_cam" default="false" />
-    <arg name="video_src" default="/dev/video0" />
+    <arg name="use_fake_btn" default="true"/>
+    <arg name="use_real_btn" default="true"/>
 
     <!-- Relaxed-IK / MoveIt arguements -->
-    <arg name="use_rik" default="true" />
-    <arg name="use_rik_julia" default="false"/>
-    <arg name="use_rik_static" default="false"/>
+    <arg name="planner" default="rik_python"/>
+    <arg name="use_static" default="false"/>
     <arg name="use_collision" default="false" />
 
     <!-- RAD UI arguements -->
@@ -31,7 +27,7 @@
 <!--=========================================================================-->
 
     <!-- Global ROS Parameters -->
-    <rosparam param="use_rik" subst_value="true">$(arg use_rik)</rosparam>
+    <rosparam param="planner" subst_value="true">$(arg planner)</rosparam>
     <rosparam param="use_collision" subst_value="true">$(arg use_collision)</rosparam>
 
 <!--=========================================================================-->
@@ -42,21 +38,13 @@
     <include file="$(find iter_app)/launch/robot.launch">
       <arg name="robot" value="$(arg robot)"/>
       <arg name="simulated" value="$(arg simulated)"/>
-      <arg name="use_rik" value="$(arg use_rik)"/>
-      <arg name="use_rik_julia" value="$(arg use_rik_julia)"/>
-      <arg name="use_rik_static" value="$(arg use_rik_static)"/>
-    </include>
-
-    <!-- Include Vision System -->
-    <include file="$(find iter_vision)/launch/main.launch">
-      <arg name="video_src" value="$(arg video_src)"/>
-      <arg name="use_real_cam" value="$(arg use_real_cam)"/>
-      <arg name="flag_image_view_2d_points" value="true" />
+      <arg name="planner" value="$(arg planner)"/>
+      <arg name="use_static" value="$(arg use_static)"/>
     </include>
 
     <!-- Start button node -->
-    <node if="$(arg use_fake_btn)" name="button" pkg="pop_button" type="fake_button_node.py" output="screen"/>
-    <node unless="$(arg use_fake_btn)" name="button" pkg="pop_button" type="pop_button_node.py"/>
+    <node if="$(arg use_fake_btn)" name="button_fake" pkg="pop_button" type="fake_button_node.py" output="log"/>
+    <node if="$(arg use_real_btn)" name="button_real" pkg="pop_button" type="pop_button_node.py"  output="log"/>
 
 <!--=========================================================================-->
 <!--  APPLICATION                                                            -->
@@ -66,6 +54,9 @@
     <node pkg="iter_app" type="environment.py" name="environment" output="screen">
       <param name="mode" value="marker"/>
       <param name="calibrate_ar_tag_id" value="4"/>
+    </node>
+    <node pkg="iter_app" type="time_logger.py" name="time_logger" output="screen">
+      <param name="filepath" value="$(find iter_app)/time_logs"/>
     </node>
     <node pkg="iter_app" type="timing.py" name="timing" output="screen"/>
     <node pkg="iter_app" type="runner.py" name="runner" output="screen"/>

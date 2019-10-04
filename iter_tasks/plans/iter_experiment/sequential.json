@@ -1,0 +1,63 @@
+{
+  "title": "Sequential - ITER - Olivia's",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [],
+  "task": [
+    {
+      "name": "grasp",
+      "effort": 0.4
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "publish_string_from_file",
+      "topic": "/ur_driver/URScript",
+      "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/sequential_p1.script"
+    },
+    {
+      "name": "wait",
+      "condition": "time",
+      "value": 35
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "publish_string_from_file",
+      "topic": "/ur_driver/URScript",
+      "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/sequential_p2.script"
+    },
+    {
+      "name": "wait",
+      "condition": "time",
+      "value": 35
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "publish_string_from_file",
+      "topic": "/ur_driver/URScript",
+      "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/sequential_p3.script"
+    },
+    {
+      "name": "wait",
+      "condition": "time",
+      "value": 35
+    },
+    {
+      "name": "logger",
+      "msg": "Done running, restock"
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    }
+  ]
+}

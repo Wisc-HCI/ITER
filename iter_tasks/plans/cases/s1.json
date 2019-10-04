@@ -1,0 +1,163 @@
+{
+    "task": [
+        {
+            "rad": {
+                "neglect_time": 3.53587007522583,
+                "is_interaction": false
+            },
+            "effort": 0.41,
+            "name": "grasp"
+        },
+        {
+            "rad": {
+                "expected_interaction_time": 9.120495080947876,
+                "is_interaction": true
+            },
+            "name": "wait",
+            "condition": "button"
+        },
+        {
+            "topic": "/ur_driver/URScript",
+            "rad": {
+                "neglect_time": 0.12864089012145996,
+                "is_interaction": false
+            },
+            "name": "publish_string_from_file",
+            "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/base_a.script"
+        },
+        {
+            "rad": {
+                "neglect_time": 32.5,
+                "is_interaction": false
+            },
+            "condition": "time",
+            "name": "wait",
+            "value": 32.5
+        },
+        {
+            "rad": {
+                "expected_interaction_time": 5.36214804649353,
+                "is_interaction": true
+            },
+            "name": "wait",
+            "condition": "button"
+        },
+        {
+            "topic": "/ur_driver/URScript",
+            "rad": {
+                "neglect_time": 0.1452479362487793,
+                "is_interaction": false
+            },
+            "name": "publish_string_from_file",
+            "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/base_b.script"
+        },
+        {
+            "rad": {
+                "neglect_time": 27.5,
+                "is_interaction": false
+            },
+            "condition": "time",
+            "name": "wait",
+            "value": 27.5
+        },
+        {
+            "rad": {
+                "expected_interaction_time": 6.254796981811523,
+                "is_interaction": true
+            },
+            "name": "wait",
+            "condition": "button"
+        },
+        {
+            "topic": "/ur_driver/URScript",
+            "rad": {
+                "neglect_time": 0.13480591773986816,
+                "is_interaction": false
+            },
+            "name": "publish_string_from_file",
+            "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/interconnect.script"
+        },
+        {
+            "rad": {
+                "neglect_time": 34.5,
+                "is_interaction": false
+            },
+            "condition": "time",
+            "name": "wait",
+            "value": 34.5
+        },
+        {
+            "rad": {
+                "expected_interaction_time": 6.5639989376068115,
+                "is_interaction": true
+            },
+            "name": "wait",
+            "condition": "button"
+        },
+        {
+            "topic": "/ur_driver/URScript",
+            "rad": {
+                "neglect_time": 0.17394113540649414,
+                "is_interaction": false
+            },
+            "name": "publish_string_from_file",
+            "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/roof_a.script"
+        },
+        {
+            "rad": {
+                "neglect_time": 24.0100359916687,
+                "is_interaction": false
+            },
+            "condition": "time",
+            "name": "wait",
+            "value": 24
+        },
+        {
+            "rad": {
+                "expected_interaction_time": 5.721496105194092,
+                "is_interaction": true
+            },
+            "name": "wait",
+            "condition": "button"
+        },
+        {
+            "topic": "/ur_driver/URScript",
+            "rad": {
+                "neglect_time": 0.11211299896240234,
+                "is_interaction": false
+            },
+            "name": "publish_string_from_file",
+            "filepath": "../Workspaces/iter_ws/src/ITER/iter_app/urscript/roof_b.script"
+        },
+        {
+            "rad": {
+                "neglect_time": 22,
+                "is_interaction": false
+            },
+            "condition": "time",
+            "name": "wait",
+            "value": 22
+        },
+        {
+            "msg": "Done running, restock",
+            "rad": {
+                "neglect_time": 0.0003418922424316406,
+                "is_interaction": false
+            },
+            "name": "logger"
+        },
+        {
+            "rad": {
+                "expected_interaction_time": 11.411334991455078,
+                "is_interaction": true
+            },
+            "name": "wait",
+            "condition": "button"
+        }
+    ],
+    "title": "Mansion  with Interaction - ITER - Curt's",
+    "author": "Curt Henrichs",
+    "environment": [],
+    "frame_id": "base_link",
+    "version": "0.0.1"
+}

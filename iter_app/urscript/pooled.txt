@@ -1,0 +1,113 @@
+ Program
+   Robot Program
+     Gripper Activate
+     Gripper Move50% (1)
+     MoveJ
+       home
+     Base
+       MoveJ
+         b_b1_wp
+         b_b1_at
+         Gripper Close (1)
+         b_b1_wp
+         h_b_b1_wp
+         h_b_b1_at
+         Gripper Move50% (1)
+         h_b_b1_wp
+       MoveJ
+         b_b2_wp
+         b_b2_at
+         Gripper Close (1)
+         b_b2_wp
+         h_b_b2_wp
+         h_b_b2_at
+         Gripper Move50% (1)
+         h_b_b2_wp
+     Mid_1
+       MoveJ
+         m1_b1_wp
+         m1_b1_at
+         Gripper Close (1)
+         m1_b1_wp
+         h_m1_b1_wp
+         h_m1_b1_at
+         Gripper Move50% (1)
+         h_m1_b1_wp
+       MoveJ
+         m1_b2_wp
+         m1_b2_at
+         Gripper Close (1)
+         m1_b2_wp
+         h_m1_b2_wp
+         h_m1_b2_at
+         Gripper Move50% (1)
+         h_m1_b2_wp
+     Mid_2
+       MoveJ
+         m2_b1_wp
+         m2_b1_at
+         Gripper Close (1)
+         m2_b1_wp
+         h_m2_b1_wp
+         h_m2_b1_at
+         Gripper Move50% (1)
+         h_m2_b1_wp
+       MoveJ
+         m2_b2_wp
+         m2_b2_at
+         Gripper Close (1)
+         m2_b2_wp
+         h_m2_b2_wp
+         h_m2_b2_at
+         Gripper Move50% (1)
+         h_m2_b2_wp
+     Roof_Support
+       MoveJ
+         rs_b1_wp
+         rs_b1_at
+         Gripper Close (1)
+         rs_b1_wp
+         h_rs_b1_wp
+         h_rs_b1_at
+         Gripper Move50% (1)
+         h_rs_b1_wp
+     Roof_A
+       MoveJ
+         ra_b1_wp
+         ra_b1_at
+         Gripper Close (1)
+         ra_b1_wp
+         h_ra_b1_wp
+         h_ra_b1_at
+         Gripper Move50% (1)
+         h_ra_b1_wp
+       MoveJ
+         ra_b2_wp
+         ra_b2_at
+         Gripper Close (1)
+         ra_b2_wp
+         h_ra_b2_wp
+         h_ra_b2_at
+         Gripper Move50% (1)
+         h_ra_b2_wp
+     Roof_B
+       MoveJ
+         rb_b1_wp
+         rb_b1_at
+         Gripper Close (1)
+         rb_b1_wp
+         h_rb_b1_wp
+         h_rb_b1_at
+         Gripper Move50% (1)
+         h_rb_b1_wp
+       MoveJ
+         rb_b2_wp
+         rb_b2_at
+         Gripper Close (1)
+         rb_b2_wp
+         h_rb_b2_wp
+         h_rb_b2_at
+         Gripper Move50% (1)
+         h_rb_b2_wp
+     MoveJ
+       home

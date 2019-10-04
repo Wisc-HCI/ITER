@@ -1,14 +1,17 @@
-html, body {
-  background-color: #F1F1F1;
-  margin:0;
-  padding:0;
-  overflow:hidden
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-#drawing {
-  position:fixed;
-  top:0;
-  left:0;
-  height:100%;
-  width:100%
+html, body {
+  background-color: #F1F1F1;
+}
+
+svg {
+  position: fixed  !important;
+  top: 0 !important;
+  left: 0 !important;
+  height: 100% !important;
+  width: 100% !important;
 }

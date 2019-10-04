@@ -1,12 +1,23 @@
 <launch>
 
+  <arg name="use_fake" default="false"/>
+  <arg name="timeline_slct" default="short"/>
+
   <node pkg="iter_app" type="timing.py" name="timing" output="screen">
-    <param name="fake_time" value="true" />
+    <param name="fake_time" value="$(arg use_fake)" />
+  </node>
+
+  <node unless="$(arg use_fake)" pkg="iter_app" type="rad_test.py" name="rad_test" output="screen">
+    <param name="timeline_slct" value="$(arg timeline_slct)"/>
   </node>
 
   <include file="$(find rad_ui)/launch/main.launch">
     <arg name="rosbridge_host" value="localhost"/>
     <arg name="rosbridge_port" value="9090"/>
   </include>
+
+  <node pkg="iter_app" type="time_logger.py" name="time_logger" output="screen">
+    <param name="filepath" value="$(find iter_app)/time_logs"/>
+  </node>
 
 </launch>

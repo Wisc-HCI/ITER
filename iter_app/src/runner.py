@@ -61,18 +61,23 @@ envClient = EnvironmentClient()
 
 from iter_app_tools.primitives.default import DefaultBehaviorPrimitives
 
-use_rik = rospy.get_param('use_rik',False)
-use_static = rospy.get_param('use_rik_static',False)
-if use_rik:
+planner = rospy.get_param('planner','moveit')
+use_static = rospy.get_param('use_static',False)
+if planner == 'rik_python' or planner == 'rik_julia':
     if use_static:
         from iter_app_tools.primitives.relaxedik_static import RelaxedIKStaticBehaviorPrimitives as PhysicalBehaviorPrimitives
         from iter_app_tools.primitives.relaxedik_static import initialize_robot
     else:
         from iter_app_tools.primitives.relaxedik_realtime import RelaxedIKRealTimeBehaviorPrimitives as PhysicalBehaviorPrimitives
         from iter_app_tools.primitives.relaxedik_realtime import initialize_robot
-else:
+elif planner == 'ur':
+    from iter_app_tools.primitives.ur_direct import URDirectBehaviorPrimitives as PhysicalBehaviorPrimitives
+    from iter_app_tools.primitives.ur_direct import initialize_robot
+elif planner == 'moveit':
     from iter_app_tools.primitives.moveit import MoveItBehaviorPrimitives as PhysicalBehaviorPrimitives
     from iter_app_tools.primitives.moveit import initialize_robot
+else:
+    raise Exception('Invalid planner selected')
 
 from iter_app_tools.primitives.general_movement import GeneralMovementBehaviorPrimitives
 from iter_app_tools.primitives.environment_aware import EnvironmentAwareBehaviorPrimitives
@@ -122,57 +127,70 @@ class Runner:
                 return TaskResponse(False,'{}','Failed to load environment')
 
         print 'Instantiating'
-        primitives = [bp.instantiate_from_dict(obj,button_callback=self._button_callback) for obj in data['task']]
+        primitives = []
+        for obj in data['task']:
+            primitives.append({
+                'action': bp.instantiate_from_dict(obj,button_callback=self._button_callback),
+                'is_interaction': 'rad' in obj and obj['rad']['is_interaction']})
         neglect_time_list = self._generate_neglect_time_list(data)
+
+        rospy.sleep(1)
 
         # provide timing information to timing node
         if self.time_mode == TimeModeEnum.REPLAY:
-            self.time_start_topic.publish(json.dumps(neglect_time_list))
+            timeline = json.dumps(neglect_time_list)
+            self.time_start_topic.publish(String(timeline))
 
         # iterate over all primitives
         print 'Running'
         operate_status = True
-        for i in range(0,len(primitives)):
-            print type(primitives[i]).__name__
+        was_interaction = None
+        interactionCount = 0
+        for index in range(0,len(primitives)):
+            print type(primitives[index]['action']).__name__
+
+            self._button_state = False # ignore any button press that happened in the interim
 
             if self.time_mode == TimeModeEnum.CAPTURE:
-                if type(primitives[i]) is bp.Wait and primitives[i].condition == bp.ConditionEnum.BUTTON.value:
-                    data['task'][i]['rad'] = {'is_interaction': True}
 
-                    if isinstance(ReturnablePrimitive,primitives[i]):
-                        operate_status, result = primitives[i].operate()
-                    else:
-                        operate_status = primitives[i].operate()
+                start = time.time()
 
+                if isinstance(primitives[index]['action'],ReturnablePrimitive):
+                    operate_status, result = primitives[index]['action'].operate()
                 else:
-                    start = time.time()
+                    operate_status = primitives[index]['action'].operate()
 
-                    if isinstance(ReturnablePrimitive,primitives[i]):
-                        operate_status, result = primitives[i].operate()
-                    else:
-                        operate_status = primitives[i].operate()
+                stop = time.time()
 
-                    stop = time.time()
-
-                    data['task'][i]['rad'] = {
+                if type(primitives[index]['action']) is bp.lookup('wait') and primitives[index]['action'].condition == 'button':
+                    data['task'][index]['rad'] = {
+                        'is_interaction': True,
+                        'expected_interaction_time': stop - start
+                    }
+                else:
+                    data['task'][index]['rad'] = {
                         'neglect_time': stop - start,
                         'is_interaction': False
                     }
             else:
 
-                if isinstance(primitives[i],ReturnablePrimitive):
-                    operate_status, result = primitives[i].operate()
-                else:
-                    operate_status = primitives[i].operate()
+                if was_interaction != primitives[index]['is_interaction']:
+                    self.time_sync_topic.publish(Int32(interactionCount))
+                    interactionCount += 1
+                    was_interaction = primitives[index]['is_interaction']
 
-                self.time_sync_topic.publish(i)
+                if isinstance(primitives[index]['action'],ReturnablePrimitive):
+                    operate_status, result = primitives[index]['action'].operate()
+                else:
+                    operate_status = primitives[index]['action'].operate()
 
             if not operate_status:
                 break
 
         # stop timing
         if self.time_mode == TimeModeEnum.REPLAY:
-            self.time_stop_topic.publish(True)
+            rospy.sleep(0.25)
+            self.time_stop_topic.publish(Bool(True))
 
         # clear environment resources
         responseMsg = ''
@@ -210,13 +228,13 @@ class Runner:
         for obj in task_dict['task']:
             if 'rad' in obj.keys():
                 if 'is_interaction' in obj['rad'] and obj['rad']['is_interaction']: # push time to list
-                    time_list.append({"time": temp_neglect_time})
+                    time_list.append({"time": temp_neglect_time, 'interaction': False})
                     temp_neglect_time = 0
-                    time_list.append({"interaction": True})
+                    time_list.append({"interaction": True, "time": obj['rad']['expected_interaction_time']})
                 elif 'neglect_time' in obj['rad']: # increment by amount
                     temp_neglect_time += obj['rad']['neglect_time']
 
-        time_list.append({"time": temp_neglect_time})
+        time_list.append({"time": temp_neglect_time, 'interaction': False})
 
         return time_list
 

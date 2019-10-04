@@ -1,0 +1,116 @@
+ Program
+   Robot Program
+     Gripper Activate
+     Gripper Move50% (1)
+     MoveJ
+       home
+     Stack A
+       MoveJ
+         sa_b1_wp
+         sa_b1_at
+         Gripper Close (1)
+         sa_b1_wp
+         w_sa_b1_wp
+         w_sa_b1_at
+         Gripper Move50% (1)
+         w_sa_b1_wp
+       MoveJ
+         sa_b2_wp
+         sa_b2_at
+         Gripper Close (1)
+         sa_b2_wp
+         w_sa_b2_wp
+         w_sa_b2_at
+         Gripper Move50% (1)
+         w_sa_b2_wp
+       MoveJ
+         sa_b3_wp
+         sa_b3_at
+         Gripper Close (1)
+         sa_b3_wp
+         w_sa_b3_wp
+         w_sa_b3_at
+         Gripper Move50% (1)
+         w_sa_b3_wp
+       MoveJ
+         sa_b4_wp
+         sa_b4_at
+         Gripper Close (1)
+         sa_b4_wp
+         w_sa_b4_wp
+         w_sa_b4_at
+         Gripper Move50% (1)
+         w_sa_b4_wp
+       MoveJ
+         sa_b5_wp
+         sa_b5_at
+         Gripper Close (1)
+         sa_b5_wp
+         w_sa_b5_wp
+         w_sa_b5_at
+         Gripper Move50% (1)
+         w_sa_b5_wp
+     Stack B
+       MoveJ
+         Waypoint_1
+         Waypoint_6
+         Gripper Close (1)
+         Waypoint_7
+         Waypoint_8
+         Gripper Move50% (1)
+       MoveJ
+         Waypoint_2
+         Waypoint_9
+         Gripper Close (1)
+         Waypoint_10
+         Waypoint_11
+         Gripper Move50% (1)
+       MoveJ
+         Waypoint_3
+         Waypoint_12
+         Gripper Close (1)
+         Waypoint_13
+         Waypoint_14
+         Gripper Move50% (1)
+       MoveJ
+         Waypoint_4
+         Waypoint_15
+         Gripper Close (1)
+         Waypoint_16
+         Waypoint_17
+         Gripper Move50% (1)
+       MoveJ
+         Waypoint_5
+         Waypoint_18
+         Gripper Close (1)
+         Waypoint_19
+         Waypoint_20
+         Gripper Move50% (1)
+     Stack C
+       MoveJ
+         Waypoint_21
+         Waypoint_26
+         Waypoint_27
+         Waypoint_28
+       MoveJ
+         Waypoint_22
+         Waypoint_29
+         Waypoint_30
+         Waypoint_31
+       MoveJ
+         Waypoint_23
+         Waypoint_32
+         Waypoint_33
+         Waypoint_34
+       MoveJ
+         Waypoint_24
+         Waypoint_35
+         Waypoint_36
+         Waypoint_37
+       MoveJ
+         Waypoint_25
+         Waypoint_38
+         Waypoint_39
+         Waypoint_40
+     MoveJ
+       home

@@ -4,21 +4,20 @@
 <launch>
 
   <arg name="simulated" default='true'/>
-  <arg name="use_rik" default='true' />
-  <arg name="use_rik_julia" default="false"/>
-  <arg name="use_rik_static" default="false"/>
+  <arg name="planner" default="rik_python"/>
+  <arg name="use_static" default="false"/>
 
   <!-- If using Relaxed-IK -->
-  <group if="$(eval arg('use_rik') == true)">
+  <group if="$(eval arg('planner') == 'rik_python' or arg('planner') == 'rik_julia')">
     <include file="$(find iter_app)/launch/robots/mico-robotiq85-rik.launch">
       <arg name="simulated" value="$(arg simulated)"/>
-      <arg name="use_rik_julia" value="$(arg use_rik_julia)"/>
-      <arg name="use_rik_static" value="$(arg use_rik_static)"/>
+      <arg name="planner" value="$(arg planner)"/>
+      <arg name="use_static" value="$(arg use_static)"/>
     </include>
   </group>
 
   <!-- Else, use moveit-->
-  <group if="$(eval arg('use_rik') == false)">
+  <group if="$(eval arg('planner') == 'moveit')">
     <include file="$(find iter_app)/launch/robots/mico-robotiq85-moveit.launch">
       <arg name="simulated" value="$(arg simulated)"/>
     </include>

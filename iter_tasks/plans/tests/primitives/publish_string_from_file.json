@@ -1,0 +1,14 @@
+{
+  "title": "publish",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [],
+  "task": [
+    {
+      "name": "publish_string_from_file",
+      "topic": "/ur_driver/URScript",
+      "filepath": "../catkin_ws/src/ITER/iter_app/urscript/test.script"
+    }
+  ]
+}

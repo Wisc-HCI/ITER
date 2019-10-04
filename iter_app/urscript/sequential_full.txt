@@ -1,0 +1,142 @@
+ Program
+   Robot Program
+     Call sequential_p1
+     Popup
+     Call sequential_p2
+     Popup
+     Call sequential_p3
+   sequential_p3
+     Gripper Activate
+     Gripper Move50% (1)
+     MoveJ
+       home
+     Base
+       MoveJ
+         b_b1_wp_3
+         b_b1_at_2
+         Gripper Close (1)
+         b_b1_wp_4
+         h_b_b1_wp
+         h_b_b1_at
+         Gripper Move50% (1)
+         h_b_b1_wp
+       MoveJ
+         b_b2_wp_3
+         b_b2_at_2
+         Gripper Close (1)
+         b_b2_wp_4
+         h_b_b2_wp
+         h_b_b2_at
+         Gripper Move50% (1)
+         h_b_b2_wp
+     Mid_1
+       MoveJ
+         m1_b1_wp_3
+         m1_b1_at_2
+         Gripper Close (1)
+         m1_b1_wp_4
+         h_m1_b1_wp
+         h_m1_b1_at
+         Gripper Move50% (1)
+         h_m1_b1_wp
+       MoveJ
+         m1_b2_wp_3
+         m1_b2_at_2
+         Gripper Close (1)
+         m1_b2_wp_4
+         h_m1_b2_wp
+         h_m1_b2_at
+         Gripper Move50% (1)
+         h_m1_b2_wp
+     MoveJ
+       home
+   sequential_p2
+     Gripper Activate
+     Gripper Move50% (1)
+     MoveJ
+       home
+     Base
+       MoveJ
+         b_b1_wp_1
+         b_b1_at_1
+         Gripper Close (1)
+         b_b1_wp_2
+         h_b_b1_wp
+         h_b_b1_at
+         Gripper Move50% (1)
+         h_b_b1_wp
+       MoveJ
+         b_b2_wp_1
+         b_b2_at_1
+         Gripper Close (1)
+         b_b2_wp_2
+         h_b_b2_wp
+         h_b_b2_at
+         Gripper Move50% (1)
+         h_b_b2_wp
+     Mid_1
+       MoveJ
+         m1_b1_wp_1
+         m1_b1_at_1
+         Gripper Close (1)
+         m1_b1_wp_2
+         h_m1_b1_wp
+         h_m1_b1_at
+         Gripper Move50% (1)
+         h_m1_b1_wp
+       MoveJ
+         m1_b2_wp_1
+         m1_b2_at_1
+         Gripper Close (1)
+         m1_b2_wp_2
+         h_m1_b2_wp
+         h_m1_b2_at
+         Gripper Move50% (1)
+         h_m1_b2_wp
+     MoveJ
+       home
+   sequential_p1
+     Gripper Activate
+     Gripper Move50% (1)
+     MoveJ
+       home
+     Base
+       MoveJ
+         b_b1_wp
+         b_b1_at
+         Gripper Close (1)
+         b_b1_wp
+         h_b_b1_wp
+         h_b_b1_at
+         Gripper Move50% (1)
+         h_b_b1_wp
+       MoveJ
+         b_b2_wp
+         b_b2_at
+         Gripper Close (1)
+         b_b2_wp
+         h_b_b2_wp
+         h_b_b2_at
+         Gripper Move50% (1)
+         h_b_b2_wp
+     Mid_1
+       MoveJ
+         m1_b1_wp
+         m1_b1_at
+         Gripper Close (1)
+         m1_b1_wp
+         h_m1_b1_wp
+         h_m1_b1_at
+         Gripper Move50% (1)
+         h_m1_b1_wp
+       MoveJ
+         m1_b2_wp
+         m1_b2_at
+         Gripper Close (1)
+         m1_b2_wp
+         h_m1_b2_wp
+         h_m1_b2_at
+         Gripper Move50% (1)
+         h_m1_b2_wp
+     MoveJ
+       home

@@ -1,26 +1,35 @@
 
-// define constants
+//==============================================================================
+// global Variables
+//==============================================================================
 
 var GREEN = 127;
 var RED = 0;
 
 var NEGLECT_LOWER_BOUND = 15;
 
-// define update functions
+//==============================================================================
+// global functions
+//==============================================================================
 
-function updateColor(seconds) {
+//==============================================================================
+// Object Constructors
+//==============================================================================
 
-  var scale;
-  if (seconds <= NEGLECT_LOWER_BOUND) {
-    scale = RED;
-  } else {
-    scale = GREEN;
+function Ring(canvas, totalTime) {
+
+  this.drawRing = function() {
+
   }
-  var color = 'hsl(' + Math.round(scale) + ', 75%, 50%)';
+  this.drawRing();
 
-  $('#dot-0').css('background-color',color);
+  this.set
 
 }
+
+//==============================================================================
+// Events
+//==============================================================================
 
 // Setup ROS Subscribers
 $.getJSON("../rosbridge_properties.json", function(json) {
@@ -52,8 +61,7 @@ $.getJSON("../rosbridge_properties.json", function(json) {
     if(message != undefined) {
 
       if (message.mode == 0) { // neglect time
-        interval = message.neglect_time;
-        updateColor(interval.current);
+
       }
 
     }

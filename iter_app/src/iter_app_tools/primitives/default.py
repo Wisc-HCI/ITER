@@ -5,20 +5,28 @@
             "Provides print functionality while debugging plan"
 '''
 
+import os
 import time
+import rospy
+import importlib
 
 from enum import Enum
+from std_msgs.msg import String
 from iter_app_tools.primitives.abstract import Primitive, ReturnablePrimitive, AbstractBehaviorPrimitives
-
 
 class PrimitiveEnum(Enum):
     WAIT = 'wait'
     LOGGER = 'logger'
     PROMPT = 'prompt'
+    PUBLISH = 'publish'
+    PUBLISH_STRING_FROM_FILE = 'publish_string_from_file'
 
 class ButtonConditionEnum(Enum):
     TIME = 'time'
     BUTTON = 'button'
+
+
+publishers = {}
 
 
 class Wait(Primitive):
@@ -94,6 +102,41 @@ class Prompt(ReturnablePrimitive):
         except:
             return False, ''
 
+class Publish(Primitive):
+
+    def __init__(self, topic, message_module, message_type, message_params, **kwargs):
+        # Note: this does not work for all message types (specifically nested messages)
+        module = importlib.import_module('{}.msg'.format(message_module))
+        assert hasattr(module, message_type), "class {} is not in {}".format(message_type, message_module)
+        message = getattr(module,message_type)
+        self._msg = message(**message_params)
+
+        self._topic = topic
+        if not topic in publishers.keys():
+            publishers[self._topic] = rospy.Publisher(topic,message,queue_size=1)
+
+    def operate(self):
+        publishers[self._topic].publish(self._msg)
+        return True
+
+class PublishStringFromFile(Primitive):
+
+    def __init__(self, topic, filepath, **kwargs):
+        self._topic = topic
+        if not topic in publishers.keys():
+            publishers[self._topic] = rospy.Publisher(topic,String,queue_size=1)
+
+        path = os.path.join(os.getcwd(),filepath)
+        fin = open(path,'r')
+        _str = fin.read().encode('utf-8')
+        self._msg = String(_str)
+        fin.close()
+
+    def operate(self):
+        print self._msg
+        publishers[self._topic].publish(self._msg)
+        return True
+
 
 class DefaultBehaviorPrimitives(AbstractBehaviorPrimitives):
 
@@ -108,6 +151,10 @@ class DefaultBehaviorPrimitives(AbstractBehaviorPrimitives):
             return DebugLogger(dct['msg'])
         elif name == PrimitiveEnum.PROMPT.value:
             return Prompt(dct['msg'])
+        elif name == PrimitiveEnum.PUBLISH.value:
+            return Publish(**dct)
+        elif name == PrimitiveEnum.PUBLISH_STRING_FROM_FILE.value:
+            return PublishStringFromFile(**dct)
         elif self.parent != None:
             if not 'button_callback' in kwargs.keys():
                 kwargs['button_callback'] = button_callback
@@ -122,6 +169,10 @@ class DefaultBehaviorPrimitives(AbstractBehaviorPrimitives):
             return DebugLogger
         elif primitive_type == PrimitiveEnum.PROMPT.value:
             return Prompt
+        elif primitive_type == PrimitiveEnum.PUBLISH.value:
+            return Publish
+        elif primitive_type == PrimitiveEnum.PUBLISH_STRING_FROM_FILE.value:
+            return PublishStringFromFile
         elif self.parent != None:
             return self.parent.lookup(primitive_type)
         else:
