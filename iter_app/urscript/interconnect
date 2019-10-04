@@ -1,0 +1,45 @@
+ Program
+   Robot Program
+     Gripper Activate
+     Gripper Move50% (1)
+     MoveJ
+       inter_wp_1
+     Interconnect
+       MoveJ
+         i_b1_wp
+         i_b1_at
+         Gripper Close (1)
+         i_b1_wp
+         h_i_b1_wp
+         h_i_b1_at
+         Gripper Move50% (1)
+         h_i_b1_wp
+       MoveJ
+         i_b2_wp
+         i_b2_at
+         Gripper Close (1)
+         i_b2_wp
+         h_i_b2_wp
+         h_i_b2_at
+         Gripper Move50% (1)
+         h_i_b2_wp
+       MoveJ
+         i_b3_wp
+         i_b3_at
+         Gripper Close (1)
+         i_b3_wp
+         h_i_b3_wp
+         b_i_b3_at
+         Gripper Move50% (1)
+         h_i_b3_wp
+       MoveJ
+         i_b4_wp
+         i_b4_at
+         Gripper Close (1)
+         i_b4_wp
+         h_i_b4_wp
+         h_i_b4_at
+         Gripper Move50% (1)
+         h_i_b4_wp
+     MoveJ
+       inter_wp_2

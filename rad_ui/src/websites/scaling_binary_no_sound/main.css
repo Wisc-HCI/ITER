@@ -1,0 +1,106 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background-color: #F1F1F1;
+  height: 100%;
+  width: 100%;
+}
+
+.outer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.container {
+  padding: 15px 25px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: calc(50% - 22.5em);
+  top: calc(50% - 22.5em);
+}
+
+.dot {
+  height: 45em;
+  width: 45em;
+  background-color: rgba(0,0,0,0);
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 2%;
+  margin-right: 2%;
+  top: calc(50% - 22.5em);
+  left: calc(50% - 22.5em);
+}
+
+.outline {
+  box-shadow: 0 0 0 3pt black;
+}
+
+.background {
+  background-color: rgba(128,128,128,255);
+}
+
+#container-bg {
+  left: calc(50% - 22.5em);
+  top: calc(50% - 22.5em);
+}
+
+#container-1 {
+  left: calc(50% - 22.5em);
+  top: calc(50% - 22.5em);
+}
+
+#container-2 {
+  left: calc(50% - 16.875em);
+  top: calc(50% - 16.875em);
+}
+
+#container-3 {
+  left: calc(50% - 11.25em);
+  top: calc(50% - 11.25em);
+}
+
+#container-4 {
+  left: calc(50% - 5.625em);
+  top: calc(50% - 5.625em);
+}
+
+#dot-bg {
+  height: 45em;
+  width: 45em;
+  top: calc(50% - 22.5em);
+  left: calc(50% - 22.5em);
+}
+
+#dot-1 {
+  height: 45em;
+  width: 45em;
+  top: calc(50% - 22.5em);
+  left: calc(50% - 22.5em);
+}
+
+#dot-2 {
+  height: 33.75em;
+  width: 33.75em;
+  left: calc(50% - 16.875em);
+  top: calc(50% - 16.875em);
+}
+
+#dot-3 {
+  height: 22.5em;
+  width: 22.5em;
+  left: calc(50% - 11.25em);
+  top: calc(50% - 11.25em);
+}
+
+#dot-4 {
+  height: 11.25em;
+  width: 11.25em;
+  left: calc(50% - 5.625em);
+  top: calc(50% - 5.625em);
+}

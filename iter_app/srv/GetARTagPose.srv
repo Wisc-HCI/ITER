@@ -1,0 +1,7 @@
+string tag_id
+string frame_id
+geometry_msgs/Pose offset
+
+---
+bool status
+geometry_msgs/Pose pose

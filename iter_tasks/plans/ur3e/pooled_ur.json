@@ -1,0 +1,1677 @@
+{
+  "task": [
+    {
+      "msg": "Moving to Home", 
+      "name": "logger"
+    }, 
+    {
+      "position": {
+        "y": 0.25, 
+        "x": 0, 
+        "z": 0.3
+      }, 
+      "options": {
+        "acceleration": 1.5, 
+        "velocity": 1.5
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "msg": "Waiting for Human", 
+      "name": "logger"
+    }, 
+    {
+      "name": "wait", 
+      "condition": "button"
+    }, 
+    {
+      "msg": "Building House Base", 
+      "name": "logger"
+    }, 
+    {
+      "effort": 0.375, 
+      "name": "release"
+    }, 
+    {
+      "name": "pick_and_place_static", 
+      "release_effort": 0.375, 
+      "object_name": "0", 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.15924, 
+            "x": -0.30392, 
+            "z": 0.20081
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.24, 
+            "x": 0.22516, 
+            "z": 0.20562000000000002
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.24, 
+            "x": 0.22516, 
+            "z": 0.15562
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ], 
+      "grasp_effort": 0.59, 
+      "path_to_object": [
+        {
+          "position": {
+            "y": 0.15924, 
+            "x": -0.30392, 
+            "z": 0.20081
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.15924, 
+            "x": -0.30392, 
+            "z": 0.15081
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ]
+    }, 
+    {
+      "position": {
+        "y": 0.24, 
+        "x": 0.22516, 
+        "z": 0.20562000000000002
+      }, 
+      "options": {
+        "acceleration": 1.5, 
+        "velocity": 1.5
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0, 
+        "x": -1, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "name": "pick_and_place_static", 
+      "release_effort": 0.375, 
+      "object_name": "1", 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.22504999999999997, 
+            "x": -0.30242, 
+            "z": 0.20232333333333336
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.24, 
+            "x": 0.26326, 
+            "z": 0.20562000000000002
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.24, 
+            "x": 0.26326, 
+            "z": 0.15562
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ], 
+      "grasp_effort": 0.59, 
+      "path_to_object": [
+        {
+          "position": {
+            "y": 0.22504999999999997, 
+            "x": -0.30242, 
+            "z": 0.20232333333333336
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.22504999999999997, 
+            "x": -0.30242, 
+            "z": 0.15232333333333334
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ]
+    }, 
+    {
+      "position": {
+        "y": 0.24, 
+        "x": 0.26326, 
+        "z": 0.20562000000000002
+      }, 
+      "options": {
+        "acceleration": 1.5, 
+        "velocity": 1.5
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0, 
+        "x": -1, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "name": "pick_and_place_static", 
+      "release_effort": 0.375, 
+      "object_name": "2", 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.15293, 
+            "x": -0.18149, 
+            "z": 0.2012
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.20016, 
+            "x": 0.23532, 
+            "z": 0.22086
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.20016, 
+            "x": 0.23532, 
+            "z": 0.17086
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ], 
+      "grasp_effort": 0.59, 
+      "path_to_object": [
+        {
+          "position": {
+            "y": 0.15293, 
+            "x": -0.18149, 
+            "z": 0.2012
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.15293, 
+            "x": -0.18149, 
+            "z": 0.1512
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ]
+    }, 
+    {
+      "position": {
+        "y": 0.20016, 
+        "x": 0.23532, 
+        "z": 0.22086
+      }, 
+      "options": {
+        "acceleration": 1.5, 
+        "velocity": 1.5
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "name": "pick_and_place_static", 
+      "release_effort": 0.375, 
+      "object_name": "3", 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.22056333333333333, 
+            "x": -0.18347666666666668, 
+            "z": 0.20257333333333333
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.27984, 
+            "x": 0.23532, 
+            "z": 0.22086
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.27984, 
+            "x": 0.23532, 
+            "z": 0.17086
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ], 
+      "grasp_effort": 0.59, 
+      "path_to_object": [
+        {
+          "position": {
+            "y": 0.22056333333333333, 
+            "x": -0.18347666666666668, 
+            "z": 0.20257333333333333
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.22056333333333333, 
+            "x": -0.18347666666666668, 
+            "z": 0.15257333333333334
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ]
+    }, 
+    {
+      "position": {
+        "y": 0.27984, 
+        "x": 0.23532, 
+        "z": 0.22086
+      }, 
+      "options": {
+        "acceleration": 1.5, 
+        "velocity": 1.5
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "name": "pick_and_place_static", 
+      "release_effort": 0.375, 
+      "object_name": "4", 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.29086, 
+            "x": -0.30092, 
+            "z": 0.20383666666666667
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.24, 
+            "x": 0.22516, 
+            "z": 0.23610000000000003
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.24, 
+            "x": 0.22516, 
+            "z": 0.18610000000000002
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ], 
+      "grasp_effort": 0.59, 
+      "path_to_object": [
+        {
+          "position": {
+            "y": 0.29086, 
+            "x": -0.30092, 
+            "z": 0.20383666666666667
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.29086, 
+            "x": -0.30092, 
+            "z": 0.15383666666666665
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ]
+    }, 
+    {
+      "position": {
+        "y": 0.24, 
+        "x": 0.22516, 
+        "z": 0.23610000000000003
+      }, 
+      "options": {
+        "acceleration": 1.5, 
+        "velocity": 1.5
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0, 
+        "x": -1, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "name": "pick_and_place_static", 
+      "release_effort": 0.375, 
+      "object_name": "5", 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.35667, 
+            "x": -0.29942, 
+            "z": 0.20534999999999998
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.24, 
+            "x": 0.26326, 
+            "z": 0.23610000000000003
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.24, 
+            "x": 0.26326, 
+            "z": 0.18610000000000002
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ], 
+      "grasp_effort": 0.59, 
+      "path_to_object": [
+        {
+          "position": {
+            "y": 0.35667, 
+            "x": -0.29942, 
+            "z": 0.20534999999999998
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.35667, 
+            "x": -0.29942, 
+            "z": 0.15535
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ]
+    }, 
+    {
+      "position": {
+        "y": 0.24, 
+        "x": 0.26326, 
+        "z": 0.23610000000000003
+      }, 
+      "options": {
+        "acceleration": 1.5, 
+        "velocity": 1.5
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0, 
+        "x": -1, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "name": "pick_and_place_static", 
+      "release_effort": 0.375, 
+      "object_name": "6", 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.28819666666666666, 
+            "x": -0.18546333333333334, 
+            "z": 0.20394666666666666
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.242032, 
+            "x": 0.23532, 
+            "z": 0.25134
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.242032, 
+            "x": 0.23532, 
+            "z": 0.20134000000000002
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ], 
+      "grasp_effort": 0.59, 
+      "path_to_object": [
+        {
+          "position": {
+            "y": 0.28819666666666666, 
+            "x": -0.18546333333333334, 
+            "z": 0.20394666666666666
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.28819666666666666, 
+            "x": -0.18546333333333334, 
+            "z": 0.15394666666666668
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ]
+    }, 
+    {
+      "position": {
+        "y": 0.242032, 
+        "x": 0.23532, 
+        "z": 0.25134
+      }, 
+      "options": {
+        "acceleration": 1.5, 
+        "velocity": 1.5
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "name": "pick_and_place_static", 
+      "release_effort": 0.375, 
+      "object_name": "7", 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.35583, 
+            "x": -0.18745, 
+            "z": 0.20532
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.21000000000000002, 
+            "x": 0.22516, 
+            "z": 0.25896
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.21000000000000002, 
+            "x": 0.22516, 
+            "z": 0.20896
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ], 
+      "grasp_effort": 0.59, 
+      "path_to_object": [
+        {
+          "position": {
+            "y": 0.35583, 
+            "x": -0.18745, 
+            "z": 0.20532
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.35583, 
+            "x": -0.18745, 
+            "z": 0.15532
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ]
+    }, 
+    {
+      "position": {
+        "y": 0.21000000000000002, 
+        "x": 0.22516, 
+        "z": 0.25896
+      }, 
+      "options": {
+        "acceleration": 1.5, 
+        "velocity": 1.5
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0, 
+        "x": -1, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "name": "pick_and_place_static", 
+      "release_effort": 0.375, 
+      "object_name": "8", 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.21456, 
+            "x": -0.09779, 
+            "z": 0.20149
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.21000000000000002, 
+            "x": 0.26326, 
+            "z": 0.25896
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.21000000000000002, 
+            "x": 0.26326, 
+            "z": 0.20896
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ], 
+      "grasp_effort": 0.59, 
+      "path_to_object": [
+        {
+          "position": {
+            "y": 0.21456, 
+            "x": -0.09779, 
+            "z": 0.20149
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.21456, 
+            "x": -0.09779, 
+            "z": 0.15149
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ]
+    }, 
+    {
+      "position": {
+        "y": 0.21000000000000002, 
+        "x": 0.26326, 
+        "z": 0.25896
+      }, 
+      "options": {
+        "acceleration": 1.5, 
+        "velocity": 1.5
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0, 
+        "x": -1, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "name": "pick_and_place_static", 
+      "release_effort": 0.375, 
+      "object_name": "9", 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.282045, 
+            "x": -0.09773000000000001, 
+            "z": 0.20127499999999998
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.27, 
+            "x": 0.22516, 
+            "z": 0.25896
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.27, 
+            "x": 0.22516, 
+            "z": 0.20896
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ], 
+      "grasp_effort": 0.59, 
+      "path_to_object": [
+        {
+          "position": {
+            "y": 0.282045, 
+            "x": -0.09773000000000001, 
+            "z": 0.20127499999999998
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.282045, 
+            "x": -0.09773000000000001, 
+            "z": 0.151275
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ]
+    }, 
+    {
+      "position": {
+        "y": 0.27, 
+        "x": 0.22516, 
+        "z": 0.25896
+      }, 
+      "options": {
+        "acceleration": 1.5, 
+        "velocity": 1.5
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0, 
+        "x": -1, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "name": "pick_and_place_static", 
+      "release_effort": 0.375, 
+      "object_name": "10", 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.34953, 
+            "x": -0.09767, 
+            "z": 0.20106000000000002
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.27, 
+            "x": 0.26326, 
+            "z": 0.25896
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.27, 
+            "x": 0.26326, 
+            "z": 0.20896
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0, 
+            "x": -1, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ], 
+      "grasp_effort": 0.59, 
+      "path_to_object": [
+        {
+          "position": {
+            "y": 0.34953, 
+            "x": -0.09767, 
+            "z": 0.20106000000000002
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.34953, 
+            "x": -0.09767, 
+            "z": 0.15106
+          }, 
+          "options": {
+            "acceleration": 1.5, 
+            "velocity": 1.5
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": -0.707, 
+            "x": 0.707, 
+            "z": 0, 
+            "w": 0
+          }
+        }
+      ]
+    }, 
+    {
+      "position": {
+        "y": 0.27, 
+        "x": 0.26326, 
+        "z": 0.25896
+      }, 
+      "options": {
+        "acceleration": 1.5, 
+        "velocity": 1.5
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0, 
+        "x": -1, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "msg": "Moving to Home", 
+      "name": "logger"
+    }, 
+    {
+      "position": {
+        "y": 0.25, 
+        "x": 0, 
+        "z": 0.3
+      }, 
+      "options": {
+        "acceleration": 1.5, 
+        "velocity": 1.5
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "msg": "Waiting for Human", 
+      "name": "logger"
+    }, 
+    {
+      "name": "wait", 
+      "condition": "button"
+    }
+  ], 
+  "description": "Build house task", 
+  "author": "Curt Henrichs", 
+  "title": "UR3e House Full Task - Static", 
+  "environment": [
+    {
+      "color": {
+        "a": 1, 
+        "r": 0, 
+        "b": 0, 
+        "g": 1
+      }, 
+      "position": {
+        "y": 0.251, 
+        "x": 0, 
+        "z": -0.05
+      }, 
+      "size": {
+        "y": 0.6, 
+        "x": 1, 
+        "z": 0.015
+      }, 
+      "name": "tabletop", 
+      "orientation": {
+        "y": 0, 
+        "x": 0, 
+        "z": 0, 
+        "w": 1
+      }
+    }, 
+    {
+      "color": {
+        "a": 1, 
+        "r": 0, 
+        "b": 0, 
+        "g": 1
+      }, 
+      "position": {
+        "y": 0.15924, 
+        "x": -0.30392, 
+        "z": 0.15081
+      }, 
+      "size": {
+        "y": 0.01, 
+        "x": 0.01, 
+        "z": 0.01
+      }, 
+      "name": "0", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "color": {
+        "a": 1, 
+        "r": 0, 
+        "b": 0, 
+        "g": 1
+      }, 
+      "position": {
+        "y": 0.22504999999999997, 
+        "x": -0.30242, 
+        "z": 0.15232333333333334
+      }, 
+      "size": {
+        "y": 0.01, 
+        "x": 0.01, 
+        "z": 0.01
+      }, 
+      "name": "1", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "color": {
+        "a": 1, 
+        "r": 0, 
+        "b": 0, 
+        "g": 1
+      }, 
+      "position": {
+        "y": 0.15293, 
+        "x": -0.18149, 
+        "z": 0.1512
+      }, 
+      "size": {
+        "y": 0.01, 
+        "x": 0.01, 
+        "z": 0.01
+      }, 
+      "name": "2", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "color": {
+        "a": 1, 
+        "r": 0, 
+        "b": 0, 
+        "g": 1
+      }, 
+      "position": {
+        "y": 0.22056333333333333, 
+        "x": -0.18347666666666668, 
+        "z": 0.15257333333333334
+      }, 
+      "size": {
+        "y": 0.01, 
+        "x": 0.01, 
+        "z": 0.01
+      }, 
+      "name": "3", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "color": {
+        "a": 1, 
+        "r": 0, 
+        "b": 0, 
+        "g": 1
+      }, 
+      "position": {
+        "y": 0.29086, 
+        "x": -0.30092, 
+        "z": 0.15383666666666665
+      }, 
+      "size": {
+        "y": 0.01, 
+        "x": 0.01, 
+        "z": 0.01
+      }, 
+      "name": "4", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "color": {
+        "a": 1, 
+        "r": 0, 
+        "b": 0, 
+        "g": 1
+      }, 
+      "position": {
+        "y": 0.35667, 
+        "x": -0.29942, 
+        "z": 0.15535
+      }, 
+      "size": {
+        "y": 0.01, 
+        "x": 0.01, 
+        "z": 0.01
+      }, 
+      "name": "5", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "color": {
+        "a": 1, 
+        "r": 0, 
+        "b": 0, 
+        "g": 1
+      }, 
+      "position": {
+        "y": 0.28819666666666666, 
+        "x": -0.18546333333333334, 
+        "z": 0.15394666666666668
+      }, 
+      "size": {
+        "y": 0.01, 
+        "x": 0.01, 
+        "z": 0.01
+      }, 
+      "name": "6", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "color": {
+        "a": 1, 
+        "r": 0, 
+        "b": 0, 
+        "g": 1
+      }, 
+      "position": {
+        "y": 0.35583, 
+        "x": -0.18745, 
+        "z": 0.15532
+      }, 
+      "size": {
+        "y": 0.01, 
+        "x": 0.01, 
+        "z": 0.01
+      }, 
+      "name": "7", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "color": {
+        "a": 1, 
+        "r": 0, 
+        "b": 0, 
+        "g": 1
+      }, 
+      "position": {
+        "y": 0.21456, 
+        "x": -0.09779, 
+        "z": 0.15149
+      }, 
+      "size": {
+        "y": 0.01, 
+        "x": 0.01, 
+        "z": 0.01
+      }, 
+      "name": "8", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "color": {
+        "a": 1, 
+        "r": 0, 
+        "b": 0, 
+        "g": 1
+      }, 
+      "position": {
+        "y": 0.282045, 
+        "x": -0.09773000000000001, 
+        "z": 0.151275
+      }, 
+      "size": {
+        "y": 0.01, 
+        "x": 0.01, 
+        "z": 0.01
+      }, 
+      "name": "9", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }, 
+    {
+      "color": {
+        "a": 1, 
+        "r": 0, 
+        "b": 0, 
+        "g": 1
+      }, 
+      "position": {
+        "y": 0.34953, 
+        "x": -0.09767, 
+        "z": 0.15106
+      }, 
+      "size": {
+        "y": 0.01, 
+        "x": 0.01, 
+        "z": 0.01
+      }, 
+      "name": "10", 
+      "orientation": {
+        "y": -0.707, 
+        "x": 0.707, 
+        "z": 0, 
+        "w": 0
+      }
+    }
+  ], 
+  "frame_id": "base_link", 
+  "version": "0.0.1"
+}

@@ -1,0 +1,26 @@
+<!-- https://github.com/Kinovarobotics/kinova-ros/wiki/MoveIt -->
+<!-- m1n6s200 -->
+
+<launch>
+
+  <arg name="simulated" default='true'/>
+  <arg name="planner" default="rik_python"/>
+  <arg name="use_static" default="false"/>
+
+  <!-- If using Relaxed-IK -->
+  <group if="$(eval arg('planner') == 'rik_python' or arg('planner') == 'rik_julia')">
+    <include file="$(find iter_app)/launch/robots/mico-2-rik.launch">
+      <arg name="simulated" value="$(arg simulated)"/>
+      <arg name="planner" value="$(arg planner)"/>
+      <arg name="use_static" value="$(arg use_static)"/>
+    </include>
+  </group>
+
+  <!-- Else, use moveit-->
+  <group if="$(eval arg('planner') == 'moveit')">
+    <include file="$(find iter_app)/launch/robots/mico-2-moveit.launch">
+      <arg name="simulated" value="$(arg simulated)"/>
+    </include>
+  </group>
+
+</launch>

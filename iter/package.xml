@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package>
+  <name>iter</name>
+  <version>1.0.0</version>
+  <description>ITER Metapackage</description>
+  <author>Wisc-HCI</author>
+  <maintainer email="todo@todo.todo"></maintainer>
+  <license>MIT</license>
+
+  <url type="repository">todo</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <run_depend>iter_app</run_depend>
+  <run_depend>iter_tasks</run_depend>
+  <run_depend>iter_vision</run_depend>
+  <run_depend>ar_track_alvar</run_depend>
+
+  <export>
+    <metapackage/>
+  </export>
+</package>

@@ -1,0 +1,8 @@
+string type
+string frame_id
+bool disable_calibrated_offset
+---
+geometry_msgs/Pose pose
+string task_id
+string vision_id
+bool status

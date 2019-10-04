@@ -1,0 +1,570 @@
+{
+  "task": [
+    {
+      "msg": "Moving to Home", 
+      "name": "logger"
+    }, 
+    {
+      "position": {
+        "y": 0.35, 
+        "x": 0, 
+        "z": 0.2
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0, 
+        "x": 0.707, 
+        "z": -0.707, 
+        "w": 0
+      }
+    }, 
+    {
+      "msg": "Waiting for Human", 
+      "name": "logger"
+    }, 
+    {
+      "name": "wait", 
+      "condition": "button"
+    }, 
+    {
+      "msg": "Building House", 
+      "name": "logger"
+    }, 
+    {
+      "effort": 0.35, 
+      "name": "release"
+    }, 
+    {
+      "name": "pick_and_place_vision", 
+      "object_type": "large", 
+      "path_to_region": [
+        {
+          "position": {
+            "y": 0.5, 
+            "x": 0, 
+            "z": 0.2
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }
+      ], 
+      "release_effort": 0.57, 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.5, 
+            "x": 0, 
+            "z": 0.2
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.425, 
+            "x": 0.11016000000000001, 
+            "z": 0.39812000000000003
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.425, 
+            "x": 0.11016000000000001, 
+            "z": -0.0018800000000000205
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }
+      ], 
+      "grasp_effort": 0.66, 
+      "grasp_offset": {
+        "position": {
+          "y": 0, 
+          "x": 0, 
+          "z": 0.16
+        }, 
+        "orientation": {
+          "y": 0, 
+          "x": 0.707, 
+          "z": -0.707, 
+          "w": 0
+        }
+      }
+    }, 
+    {
+      "name": "pick_and_place_vision", 
+      "object_type": "large", 
+      "path_to_region": [
+        {
+          "position": {
+            "y": 0.5, 
+            "x": 0, 
+            "z": 0.2
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }
+      ], 
+      "release_effort": 0.57, 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.5, 
+            "x": 0, 
+            "z": 0.2
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.425, 
+            "x": 0.14826, 
+            "z": 0.39812000000000003
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.425, 
+            "x": 0.14826, 
+            "z": -0.0018800000000000205
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }
+      ], 
+      "grasp_effort": 0.66, 
+      "grasp_offset": {
+        "position": {
+          "y": 0, 
+          "x": 0, 
+          "z": 0.16
+        }, 
+        "orientation": {
+          "y": 0, 
+          "x": 0.707, 
+          "z": -0.707, 
+          "w": 0
+        }
+      }
+    }, 
+    {
+      "name": "pick_and_place_vision", 
+      "object_type": "small", 
+      "path_to_region": [
+        {
+          "position": {
+            "y": 0.5, 
+            "x": 0, 
+            "z": 0.2
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }
+      ], 
+      "release_effort": 0.57, 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.5, 
+            "x": 0, 
+            "z": 0.2
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.38516, 
+            "x": 0.12032000000000001, 
+            "z": 0.41336
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.38516, 
+            "x": 0.12032000000000001, 
+            "z": 0.013359999999999983
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }
+      ], 
+      "grasp_effort": 0.66, 
+      "grasp_offset": {
+        "position": {
+          "y": 0, 
+          "x": 0, 
+          "z": 0.16
+        }, 
+        "orientation": {
+          "y": 0, 
+          "x": 0.707, 
+          "z": -0.707, 
+          "w": 0
+        }
+      }
+    }, 
+    {
+      "name": "pick_and_place_vision", 
+      "object_type": "small", 
+      "path_to_region": [
+        {
+          "position": {
+            "y": 0.5, 
+            "x": 0, 
+            "z": 0.2
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }
+      ], 
+      "release_effort": 0.57, 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.5, 
+            "x": 0, 
+            "z": 0.2
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.46484000000000003, 
+            "x": 0.12032000000000001, 
+            "z": 0.41336
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.46484000000000003, 
+            "x": 0.12032000000000001, 
+            "z": 0.013359999999999983
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }
+      ], 
+      "grasp_effort": 0.66, 
+      "grasp_offset": {
+        "position": {
+          "y": 0, 
+          "x": 0, 
+          "z": 0.16
+        }, 
+        "orientation": {
+          "y": 0, 
+          "x": 0.707, 
+          "z": -0.707, 
+          "w": 0
+        }
+      }
+    }, 
+    {
+      "name": "pick_and_place_vision", 
+      "object_type": "large", 
+      "path_to_region": [
+        {
+          "position": {
+            "y": 0.5, 
+            "x": 0, 
+            "z": 0.2
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }
+      ], 
+      "release_effort": 0.57, 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.5, 
+            "x": 0, 
+            "z": 0.2
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.425, 
+            "x": 0.11016000000000001, 
+            "z": 0.4286
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.425, 
+            "x": 0.11016000000000001, 
+            "z": 0.028599999999999987
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }
+      ], 
+      "grasp_effort": 0.66, 
+      "grasp_offset": {
+        "position": {
+          "y": 0, 
+          "x": 0, 
+          "z": 0.16
+        }, 
+        "orientation": {
+          "y": 0, 
+          "x": 0.707, 
+          "z": -0.707, 
+          "w": 0
+        }
+      }
+    }, 
+    {
+      "name": "pick_and_place_vision", 
+      "object_type": "large", 
+      "path_to_region": [
+        {
+          "position": {
+            "y": 0.5, 
+            "x": 0, 
+            "z": 0.2
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }
+      ], 
+      "release_effort": 0.57, 
+      "path_to_destination": [
+        {
+          "position": {
+            "y": 0.5, 
+            "x": 0, 
+            "z": 0.2
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.425, 
+            "x": 0.14826, 
+            "z": 0.4286
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }, 
+        {
+          "position": {
+            "y": 0.425, 
+            "x": 0.14826, 
+            "z": 0.028599999999999987
+          }, 
+          "name": "move", 
+          "orientation": {
+            "y": 0.5, 
+            "x": 0.5, 
+            "z": -0.5, 
+            "w": 0.5
+          }
+        }
+      ], 
+      "grasp_effort": 0.66, 
+      "grasp_offset": {
+        "position": {
+          "y": 0, 
+          "x": 0, 
+          "z": 0.16
+        }, 
+        "orientation": {
+          "y": 0, 
+          "x": 0.707, 
+          "z": -0.707, 
+          "w": 0
+        }
+      }
+    }, 
+    {
+      "msg": "Moving to Home", 
+      "name": "logger"
+    }, 
+    {
+      "position": {
+        "y": 0.35, 
+        "x": 0, 
+        "z": 0.2
+      }, 
+      "name": "move", 
+      "orientation": {
+        "y": 0, 
+        "x": 0.707, 
+        "z": -0.707, 
+        "w": 0
+      }
+    }, 
+    {
+      "msg": "Waiting for Human", 
+      "name": "logger"
+    }, 
+    {
+      "name": "wait", 
+      "condition": "button"
+    }
+  ], 
+  "description": "Simple vision task to prove out vision pipeline", 
+  "author": "Curt Henrichs", 
+  "title": "UR5 Simple Vision Pick-And-Place Task", 
+  "environment": [
+    {
+      "color": {
+        "a": 1, 
+        "r": 0, 
+        "b": 0, 
+        "g": 1
+      }, 
+      "position": {
+        "y": 0.5, 
+        "x": 0, 
+        "z": -0.19
+      }, 
+      "size": {
+        "y": 0.6, 
+        "x": 1, 
+        "z": 0.015
+      }, 
+      "name": "tabletop", 
+      "orientation": {
+        "y": 0, 
+        "x": 0, 
+        "z": 0, 
+        "w": 1
+      }
+    }
+  ], 
+  "frame_id": "base_link", 
+  "version": "0.0.1"
+}

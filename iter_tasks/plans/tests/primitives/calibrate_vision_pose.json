@@ -1,0 +1,45 @@
+{
+  "title": "calibrate-vision-pose-test",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [],
+  "task": [
+    {
+      "name": "calibrate_vision_pose",
+      "step": 0.005,
+      "object_type": "2",
+      "vision_params": {
+        "min_hue": 0,
+        "max_hue": 180
+      },
+      "grasp_offset": {
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0.145
+        },
+        "orientation": {
+          "x": 0.707,
+          "y": 0,
+          "z": -0.707,
+          "w": 0
+        }
+      },
+      "safe_height": 0.1,
+      "home_pose": {
+        "position": {
+          "x": 0,
+          "y": 0.25,
+          "z": 0.3
+        },
+        "orientation": {
+          "x": 0.707,
+          "y": 0,
+          "z": -0.707,
+          "w": 0
+        }
+      }
+    }
+  ]
+}

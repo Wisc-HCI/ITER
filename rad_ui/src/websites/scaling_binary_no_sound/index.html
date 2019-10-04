@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet", type="text/css", href="../node_modules/bootstrap/dist/css/bootstrap.min.css"></link>
+    <link rel="stylesheet", type="text/css", href="main.css"></link>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../node_modules/roslib/build/roslib.min.js"></script>
+    <script src="rad_ui.js"></script>
+  </head>
+  <body>
+
+    <div class="outer">
+
+      <div class="container" id="container-bg" style="z-index: 0;">
+        <span class="dot background" id="dot-bg"></span>
+      </div>
+
+      <!-- Progress -->
+      <div class="container" id="container-0" style="z-index: 1;">
+        <span class="dot" id="dot-0"></span>
+      </div>
+
+      <!-- Outlines for grounding -->
+      <div class="container" id="container-1" style="z-index: 2;">
+        <span class="dot outline" id="dot-1"></span>
+      </div>
+      <div class="container" id="container-2" style="z-index: 3;">
+        <span class="dot outline" id="dot-2"></span>
+      </div>
+      <div class="container" id="container-3" style="z-index: 4;">
+        <span class="dot outline" id="dot-3"></span>
+      </div>
+      <div class="container" id="container-4" style="z-index: 5;">
+        <span class="dot outline" id="dot-4"></span>
+      </div>
+
+
+    </div>
+  </body>
+</html>

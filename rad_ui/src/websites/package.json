@@ -1,0 +1,23 @@
+{
+  "name": "rad_ui",
+  "version": "1.0.0",
+  "description": "Display RAD signal generated from issuer",
+  "main": "",
+  "scripts": {
+    "start": "http-server ."
+  },
+  "author": "UW Madison HCI Lab, Curt Henrichs - cdhenrichs@wisc.edu",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "http-server": "^0.11.1",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.15.0",
+    "roslib": "^0.20.0",
+    "svg.js": "^2.7.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Wisc-HCI/ITER.git"
+  }
+}

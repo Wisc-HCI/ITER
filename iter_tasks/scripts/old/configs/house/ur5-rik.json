@@ -1,0 +1,82 @@
+{
+  "safe_height": 0.4,
+  "grasp_offset": 0.16,
+  "grasp_effort": 0.66,
+  "release_effort_queue": 0.30,
+  "release_effort_workspace": 0.59,
+  "num_iterations": 1,
+  "block_spacing": 0.04,
+  "workspace_position": {
+      "x": 0.1,
+      "y": 0.375,
+      "z": -0.17
+  },
+  "home_position": {
+    "x": 0.0,
+    "y": 0.35,
+    "z": 0.2
+  },
+  "down_gy_orientation": {
+    "x": 0.5,
+    "y": 0.5,
+    "z": -0.5,
+    "w": 0.5
+  },
+  "down_gx_orientation": {
+    "x": 0.707,
+    "y": 0,
+    "z": -0.707,
+    "w": 0
+  },
+  "queues": [
+    {
+      "name": "queue_small_1",
+      "position": {
+        "x":-0.25,
+        "y":0.31,
+        "z": -0.1725
+      },
+      "mode": "y"
+    },
+    {
+      "name": "queue_small_2",
+      "position": {
+        "x":-0.18,
+        "y":0.31,
+        "z": -0.1725
+      },
+      "mode": "y"
+    },
+    {
+      "name": "queue_large_1",
+      "position": {
+        "x":-0.375,
+        "y":0.31,
+        "z": -0.169
+      },
+      "mode": "y"
+    },
+    {
+      "name": "queue_large_2",
+      "position": {
+        "x":-0.5,
+        "y":0.31,
+        "z": -0.169
+      },
+      "mode": "y"
+    }
+  ],
+  "table": {
+    "position": {
+        "y": 0.5,
+        "x": 0,
+        "z": -0.19
+    },
+    "size": {
+        "y": 0.6,
+        "x": 1.0,
+        "z": 0.015
+    }
+  },
+  "workspace_env": []
+}

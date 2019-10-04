@@ -1,0 +1,27 @@
+{
+  "title": "Move robot to home position",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [],
+  "task": [
+    {
+      "name": "move",
+      "position": {
+        "x": 0,
+        "y": 0.25,
+        "z": 0.3
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0.707,
+        "z": -0.707,
+        "w": 0
+      }
+    },
+    {
+      "effort": 0.25,
+      "name": "release"
+    }
+  ]
+}

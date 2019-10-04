@@ -1,0 +1,36 @@
+<launch>
+
+  <arg name="simulated" default='true'/>
+
+  <!-- If simulated, we do not have a robot connected -->
+  <group if="$(eval arg('simulated') == true)">
+    <param name="robot_connected" value="false" />
+
+    <!-- Launch Moveit -->
+    <include file="$(find m1n6s_robotiq85_moveit_config)/launch/m1n6s_robotiq85_virtual_robot_demo.launch"></include>
+  </group>
+
+  <!-- Else, we launch physical robot -->
+  <group if="$(eval arg('simulated') == false)">
+    <param name="robot_connected" value="true" />
+
+    <!-- Launch robot driver -->
+    <include file="$(find kinova_bringup)/launch/kinova_robot.launch">
+      <arg name="kinova_robotType" value="m1n6s200"/>
+      <arg name="use_urdf" value="true" />
+    </include>
+
+    <!-- Launch gripper driver -->
+    <include file="$(find robot_bringup)/robotiq/robotiq_85.launch">
+      <arg name="dual_gripper" value="false"/>
+      <arg name="comport" value="/dev/ttyUSB0"/>
+      <arg name="baud" value="115200"/>
+      <arg name="run_test" value="false"/>
+    </include>
+
+    <!-- Launch Moveit -->
+    <include file="$(find m1n6s_robotiq85_moveit_config)/launch/m1n6s_robotiq85_demo.launch"></include>
+
+  </group>
+
+</launch>

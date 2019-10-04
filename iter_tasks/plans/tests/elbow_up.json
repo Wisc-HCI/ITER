@@ -1,0 +1,83 @@
+{
+  "title": "elbow-up-test",
+  "author": "Curt Henrichs",
+  "version": "0.0.1",
+  "frame_id": "base_link",
+  "environment": [
+    {
+      "name": "test",
+      "position": {
+        "y": 0.5614399999999999,
+        "x": -0.15078999999999998,
+        "z": -0.14363
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      },
+      "size": {
+        "y": 0.1,
+        "x": 0.1,
+        "z": 0.1
+      }
+    }
+  ],
+  "task": [
+    {
+      "name": "move",
+      "position": {
+        "y": 0.5,
+        "x": -0.15,
+        "z": 0
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0,
+        "w": 1
+      }
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "move",
+      "position": {
+        "y": 0.56,
+        "x": -0.15,
+        "z": -0.15
+      },
+      "orientation": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": -0.5,
+        "w": 0.5
+      }
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    },
+    {
+      "name": "move",
+      "position": {
+        "y": 0.56,
+        "x": -0.15,
+        "z": 0.1
+      },
+      "orientation": {
+        "y": 0,
+        "x": 0.7071067811865475,
+        "z": -0.7071067811865475,
+        "w": 0
+      }
+    },
+    {
+        "name": "wait",
+        "condition": "button"
+    }
+  ]
+}

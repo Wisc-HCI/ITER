@@ -1,0 +1,76 @@
+<launch>
+  <param name="robot_type" value="m1n6s200" />
+
+  <arg name="simulated" default='true'/>
+  <arg name="planner" default="rik_python"/>
+  <arg name="use_static" default="false"/>
+
+  <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find robot_descriptions)/urdf/kinova/relaxed_ik_m1n6s_robotiq85.xacro'" />
+
+  <!-- If simulated, we do not have a robot connected -->
+  <group if="$(eval arg('simulated') == true)">
+    <param name="robot_connected" value="false" />
+
+    <node name="virtual_robot_controller" pkg="robot_behavior" type="virtual_robot_controller.py">
+      <param name="~gripper_joint" value="robotiq_85_left_knuckle_joint" />
+    </node>
+
+    <!-- We do not have a robot connected, so publish fake joint states -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+      <param name="/use_gui" value="false"/>
+      <rosparam param="/source_list">[/virtual_controller/joint_states]</rosparam>
+      <param name="zeros/m1n6s200_joint_2" value="3.1415"/>
+      <param name="zeros/m1n6s200_joint_3" value="3.1415"/>
+    </node>
+  </group>
+
+
+  <!-- Else, we launch physical robot -->
+  <group if="$(eval arg('simulated') == false)">
+    <param name="robot_connected" value="true" />
+
+    <!-- Launch robot driver -->
+    <include file="$(find kinova_bringup)/launch/kinova_robot.launch">
+      <arg name="kinova_robotType" value="m1n6s200"/>
+    </include>
+
+    <!-- Run joint trajectory action server, which receives planned motion goal under "follow_joint_trajectory", and publish ROS standard trajectory via topic "command". Then for specified robot, the trajectory will be interpreted to their own joint trajectory controller -->
+    <node name="m1n6s200_joint_trajectory_action_server" pkg="kinova_driver" type="joint_trajectory_action_server" output="screen" respawn="false" args="m1n6s200"/>
+
+    <!-- Launch gripper driver -->
+    <include file="$(find robot_bringup)/robotiq/robotiq_85.launch">
+      <arg name="dual_gripper" value="false"/>
+      <arg name="comport" value="/dev/ttyUSB0"/>
+      <arg name="baud" value="115200"/>
+      <arg name="run_test" value="false"/>
+    </include>
+
+    <!-- Run gripper command action server, which receives planned motion goal under "gripper_command". After receiving the command from Moveit Rviz Plugin, this node act as an actionlib client and send the goal to the finger position action server from kinova_driver.  -->
+    <node name="gripper_action_server" pkg="robotiq_85_driver" type="gripper_action_server.py" output="screen" respawn="false"/>
+  </group>
+
+  <!-- Given the published joint states, publish tf for the robot links -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true" output="screen" />
+
+  <!-- Setup robot configuration for Relaxed Ik -->
+  <param name="use_static" value="$(arg use_static)"/>
+  <param name="path_to_relaxed_ik_src" value="$(find relaxed_ik)/src"/>
+  <param name="info_file_name" value="info_mico.yaml"/>
+
+  <group unless="$(arg use_static)">
+    <include file="$(find relaxed_ik)/launch/load_info_file.launch">
+      <arg name="info_file_name" value="info_mico.yaml"/>
+    </include>
+    <include file="$(find timed_roslaunch)/launch/timed_roslaunch.launch">
+      <arg name="time" value="1"/>
+      <arg name="pkg" value="relaxed_ik"/>
+      <arg if="$(eval arg('planner') == 'rik_julia')" name="file" value="relaxed_ik_julia.launch"/>
+      <arg if="$(eval arg('planner') == 'rik_python')" name="file" value="relaxed_ik_python.launch"/>
+    </include>
+  </group>
+
+  <!-- RVIZ -->
+  <node type="rviz" name="rviz" pkg="rviz" args="-d $(find iter_app)/rviz/rik-robot-tf.rviz"/>
+
+</launch>

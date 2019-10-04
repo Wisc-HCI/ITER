@@ -1,0 +1,18 @@
+ Program
+   Robot Program
+     Gripper Activate
+     Gripper Move50% (1)
+     Mid_2
+       MoveJ
+         safe
+         m2_b1_wp
+         m2_b1_at
+         Gripper Close (1)
+         m2_b1_wp
+         safe
+         h_m2_b1_wp
+         h_m2_b1_at
+         Gripper Move50% (1)
+         h_m2_b1_wp
+     MoveJ
+       safe_end
