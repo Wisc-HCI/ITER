@@ -1,18 +1,17 @@
 # Interdependence Task Experiment Runner - RAD UI
 
 ## Overview
-Present RAD (Robot Attention Demand) signal as progress bar and remaining
-neglect time as timer. Color switches between green to red to signal immediacy
-of robots need.
+Present RAD (Robot Attention Demand) signal as scrolling dynamic timeline and remaining
+neglect time as count-down timer with warning period. Warning color switches between green to yellow to signal immediacy of robots need and from yellow to red too signal robot entered interaction waiting time.
 
-UI connects with ROS backend on topics `/rad/signal`.
+Checkout main [README](../README.md) for full details.
 
 ## Contact
 Curt Henrichs (cdhenrichs@wisc.edu)
 
 ## Requirements
-Install packages using npm. Run `npm install` inside the UI project directory.
-This will install the necessary frontend libraries and a static file server.
+Install packages using npm. Run `npm install` inside the websites subdirectory.
+This will install the necessary front-end libraries and a static file server.
 
 ## Run
 
@@ -20,24 +19,18 @@ First confirm backend is running, UI will attempt to connect with backend on pag
 
 Run static file server using `npm start`. Navigate browser to `http://localhost:8080/`.
 
-#TODO
- - scaling binary
- - rolling timeline
+## Interfaces
 
+### For Experiment
+- digital clock with warning
+- rolling timeline
+- blank
 
-## Notes
-https://www.npmjs.com/package/timeline
-https://www.npmjs.com/package/jquery.animatetimeline
-https://www.npmjs.com/package/scenejs
-https://www.npmjs.com/package/clustered-vis-timeline
-https://www.npmjs.com/package/vanilla-timeline
-https://www.npmjs.com/package/timeline-js
+### Others Developed (various states of completion)
+- digital and analog clock
+- binary and scaling binary signal
+- progress bar
 
-
-https://www.npmjs.com/package/preact-timeline
-
-
-https://www.npmjs.com/package/nervo   +   https://nervo-js.org/
 
 
 

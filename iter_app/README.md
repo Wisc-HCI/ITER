@@ -2,7 +2,9 @@
 
 ##  Overview
 Application provides platform to run interdependence experiments on physical
-and virtual robots.
+and virtual robots. This system will aggregate robot control, RAD timing, task runner server, button interface when started. Must be used in conjunction with task runner clients from [iter_tasks](../iter_tasks/README.md).
+
+Checkout main [README](../README.md) for full details.
 
 ## Contact
 Curt Henrichs (cdhenrichs@wisc.edu)
