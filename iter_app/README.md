@@ -13,7 +13,7 @@ Curt Henrichs (cdhenrichs@wisc.edu)
 Enter following into terminal to run ITER application
 
 ```
-roslaunch iter_app main.launch robot:=ur5 simulated:=true
+roslaunch iter_app main.launch robot:=ur3e simulated:=true planner:=ur
 ```
 
 ## Robots
@@ -22,3 +22,8 @@ roslaunch iter_app main.launch robot:=ur5 simulated:=true
   - mico-2
   - mico-3
   - mico-robotiq85
+
+## Planners
+  - ur (ur3e and ur5 only)
+  - rik
+  - moveit

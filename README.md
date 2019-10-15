@@ -47,12 +47,11 @@ Additionally, requires packages:
 - (optional) [uwgraphics/relaxed_ik](https://github.com/uwgraphics/relaxed_ik)
   - Note if using Relaxed-IK, then you may ignore MoveIt setup
   - [Wisc-HCI/robot_behavior](https://github.com/Wisc-HCI/robot_behavior)
-- [MoriKen254/timed_roslaunch](https://github.com/MoriKen254/timed_roslaunch)
 - [MoveIt](moveit.ros.org)
   - `sudo apt-get install ros-kinetic-moveit`
 
 Other Requirements:
-- (for RAD UI) install npm and run `npm install` inside rad_ui/src/websites subdirectory
+- (for RAD UI) install npm and run `npm install` inside `rad_ui/src/websites` subdirectory
   - note cannot use nodejs as name must be node!
 
 ## Run

@@ -4,7 +4,7 @@
 Present RAD (Robot Attention Demand) signal as scrolling dynamic timeline and remaining
 neglect time as count-down timer with warning period. Warning color switches between green to yellow to signal immediacy of robots need and from yellow to red too signal robot entered interaction waiting time.
 
-Checkout main [README](../README.md) for full details.
+Checkout main [README](../README.md) for full details of system.
 
 ## Contact
 Curt Henrichs (cdhenrichs@wisc.edu)
