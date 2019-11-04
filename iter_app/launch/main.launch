@@ -43,8 +43,8 @@
     </include>
 
     <!-- Start button node -->
-    <node if="$(arg use_fake_btn)" name="button_fake" pkg="pop_button" type="fake_button_node.py" output="log"/>
-    <node if="$(arg use_real_btn)" name="button_real" pkg="pop_button" type="pop_button_node.py"  output="log"/>
+    <node if="$(arg use_fake_btn)" name="button_fake" pkg="ros_pop_button" type="fake_button_node.py" output="log"/>
+    <node if="$(arg use_real_btn)" name="button_real" pkg="ros_pop_button" type="pop_button_node.py"  output="log"/>
 
 <!--=========================================================================-->
 <!--  APPLICATION                                                            -->
