@@ -41,14 +41,14 @@ Additionally, requires packages:
 - [RobotWebTools/rosbridge_suite](https://github.com/RobotWebTools/rosbridge_suite)
   - Installing through package manager functioned incorrectly for me using Kinetic on Ubuntu 16.04
   - [GT-RAIL/rosauth](https://github.com/GT-RAIL/rosauth)
-    - First try the package manager `sudo apt install ros-kinetic-rosauth`
+    - First try the package manager `sudo apt install ros-<version>-rosauth`
 - [Wisc-HCI/robot_configurations](https://github.com/Wisc-HCI/robot_configurations)
   - Install for UR or Kinova as needed. Install the necessary dependencies listed
 - (optional) [uwgraphics/relaxed_ik](https://github.com/uwgraphics/relaxed_ik)
   - Note if using Relaxed-IK, then you may ignore MoveIt setup
   - [Wisc-HCI/robot_behavior](https://github.com/Wisc-HCI/robot_behavior)
 - [MoveIt](moveit.ros.org)
-  - `sudo apt-get install ros-kinetic-moveit`
+  - `sudo apt-get install ros-<version>-moveit`
 
 Other Requirements:
 - (for RAD UI) install npm and run `npm install` inside `rad_ui/src/websites` subdirectory
