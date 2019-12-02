@@ -1,15 +1,6 @@
 
 import rospy
 
-from iter_vision.msg import BlockPose3D, BlockPose3DArray
-from iter_vision.srv import ColorSelect, ColorSelectRequest, ColorSelectResponse
-from ar_track_alvar_msgs.msg import AlvarMarker, AlvarMarkerArray
-
-
-BLOCK_UNKNOWN = BlockPose3D.UNKNOWN
-BLOCK_SMALL = BlockPose3D.SMALL
-BLOCK_LARGE = BlockPose3D.LARGE
-
 
 ar_tags = {}
 blocks = {}
@@ -53,11 +44,6 @@ def _bk3_cb(message):
     for b in message.blocks:
         blocks[str(b.id)] = (b.pose,b.type)
 
-
-ar3_sub = rospy.Subscriber("/ar_pose_marker", AlvarMarkerArray, _ar3_cb, queue_size=5)
-pose_pub = rospy.Subscriber("/block_pose/pose_3d", BlockPose3DArray, _bk3_cb, queue_size=5)
-
-color_slct_srv = rospy.ServiceProxy("/block_vision/color_select",ColorSelect)
 def set_vision_params(params):
 
     if 'default' in params and params['default']:
