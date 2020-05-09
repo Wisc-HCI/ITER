@@ -1,0 +1,270 @@
+---
+title: "Final"
+author: "Curt Henrichs"
+date: "4/20/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+# Questionnaire
+
+```{r}
+library(lmSupport)
+library(lme4)
+```
+
+```{r}
+ite_data_uist = read.csv('./uist_scale2_composite.csv', na.strings = 'NA', header = TRUE)
+mmi_uist = read.csv("./mmi_composite.csv", header = TRUE, na.strings = c('NA', '', ' '))
+
+ite_data_uist$mmi = mmi_uist$MMI
+
+ite_data_uist$mmiC = ite_data_uist$mmi - mean(ite_data_uist$mmi, na.rm=TRUE)
+
+ite_data_uist$conC = varRecode(ite_data_uist$condition, c(1,2,3), c(-0.5, 0, .5))
+
+ite_data_uist$c1 = varRecode(ite_data_uist$condition, c(1,2,3), c(0, 1, 0))
+ite_data_uist$c2 = varRecode(ite_data_uist$condition, c(1,2,3), c(0, 0, 1))
+ite_data_uist$c3 = varRecode(ite_data_uist$condition, c(1,2,3), c(1, 0, 0))
+
+#m1 = lmer(norm_dist ~ conditionC * taskC + (taskC|X), data = d1_norm_dtw_long, 
+#         verbose = T, control=lmerControl(check.nobs.vs.nRE="ignore"))
+
+
+durations = read.csv('./participant_durations.csv', na.strings = 'NA', header = TRUE)
+
+durations<-durations[!(durations$PID==3),]
+
+rad = read.csv('./participant_rad_table.csv', na.strings = 'NA', header = TRUE)
+
+rad<-rad[!(rad$PID==3),]
+
+
+ite_data_uist<-cbind(ite_data_uist,durations,rad)
+
+ite_data_uist$PID <- NULL
+ite_data_uist$Trial <- NULL
+ite_data_uist$PID <- NULL
+ite_data_uist$Trial <- NULL
+
+head(ite_data_uist)
+
+
+```
+
+## Task Load
+
+```{r}
+taskLoad_m1 = lmer(taskLoad ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(taskLoad_m1)
+```
+
+```{r}
+varDescribeBy(ite_data_uist$taskLoad, ite_data_uist$condition)
+```
+
+```{r}
+TukeyHSD(aov(taskLoad ~ as.factor(condition), ite_data_uist))
+```
+
+```{r}
+taskLoad_contrast_m1 = lmer(taskLoad ~ c1 + c2 + (1 + c1 +c2|ppID), data = ite_data_uist, verbose = T, control=lmerControl(check.nobs.vs.nRE="ignore"))
+modelSummary(taskLoad_contrast_m1)
+```
+
+```{r}
+taskLoad_contrast_m1 = lmer(taskLoad ~ c1 + c3 + (1 + c1 + c3|ppID), data = ite_data_uist, verbose = T, control=lmerControl(check.nobs.vs.nRE="ignore"))
+modelSummary(taskLoad_contrast_m1)
+```
+
+## Usability
+
+```{r}
+usability_m1 = lmer(usability ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(usability_m1)
+```
+
+```{r}
+varDescribeBy(ite_data_uist$usability, ite_data_uist$condition)
+```
+
+```{r}
+TukeyHSD(aov(usability ~ as.factor(condition), ite_data_uist))
+```
+
+```{r}
+usability_contrast_m1 = lmer(usability ~ c1 + c3 + (1 + c1 + c3|ppID), data = ite_data_uist, verbose = T, control=lmerControl(check.nobs.vs.nRE="ignore"))
+modelSummary(usability_contrast_m1)
+```
+
+```{r}
+usability_contrast_m1 = lmer(usability ~ c2 + c3 + (1 + c2 + c3|ppID), data = ite_data_uist, verbose = T, control=lmerControl(check.nobs.vs.nRE="ignore"))
+modelSummary(usability_contrast_m1)
+```
+
+
+## Direction of Attention (Distraction)
+
+```{r}
+distraction_m1 = lmer(distraction ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(distraction_m1)
+```
+
+```{r}
+varDescribeBy(ite_data_uist$distraction, ite_data_uist$condition)
+```
+
+```{r}
+TukeyHSD(aov(distraction ~ as.factor(condition), ite_data_uist))
+```
+
+```{r}
+distraction_contrast_m1 = lmer(distraction ~ c1 + c3 + (1 + c1 + c3|ppID), data = ite_data_uist, verbose = T, control=lmerControl(check.nobs.vs.nRE="ignore"))
+modelSummary(distraction_contrast_m1)
+```
+
+```{r}
+distraction_contrast_m1 = lmer(distraction ~ c2 + c3 + (1 + c2 + c3|ppID), data = ite_data_uist, verbose = T, control=lmerControl(check.nobs.vs.nRE="ignore"))
+modelSummary(distraction_contrast_m1)
+```
+
+## Awareness
+
+```{r}
+awareness_m1 = lmer(awareness ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(awareness_m1)
+```
+
+```{r}
+varDescribeBy(ite_data_uist$awareness, ite_data_uist$condition)
+```
+
+# Time
+
+## Task Time
+
+```{r}
+cor.test(x=ite_data_uist$Time, y=ite_data_uist$mmiC, use = "complete.obs")
+```
+
+```{r}
+time_m1 = lmer(Time ~ conC + mmiC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(time_m1)
+```
+
+```{r}
+time_m1 = lm(Time ~ mmiC, data = ite_data_uist)
+
+modelSummary(time_m1)
+```
+
+```{r}
+varDescribeBy(ite_data_uist$Time, ite_data_uist$condition)
+```
+
+## Interaction Time
+
+```{r}
+
+totalInteract_ml = lmer(totalInteract ~ conC + mmiC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(totalInteract_ml)
+
+```
+
+```{r}
+cor.test(x=ite_data_uist$totalInteract, y=ite_data_uist$mmiC, use = "complete.obs")
+```
+
+```{r}
+varDescribeBy(ite_data_uist$totalInteract, ite_data_uist$condition)
+```
+
+
+# RAD
+
+## Total RAD
+
+```{r}
+cor.test(x=ite_data_uist$Total, y=ite_data_uist$mmiC, use = "complete.obs")
+```
+
+```{r}
+
+radTotal_ml = lmer(Total ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radTotal_ml)
+```
+
+```{r}
+varDescribeBy(ite_data_uist$Total, ite_data_uist$condition)
+```
+
+```{r}
+
+radTotal_ml = lmer(Total ~ conC + mmiC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radTotal_ml)
+```
+
+```{r}
+
+radTotal_ml = lm(Total ~ mmiC, data = ite_data_uist)
+
+modelSummary(radTotal_ml)
+```
+
+## Step RAD
+
+```{r}
+
+radStep1_ml = lm(Step.1 ~ mmiC, data = ite_data_uist)
+
+modelSummary(radStep1_ml)
+
+```
+```{r}
+
+radStep2_ml = lm(Step.2 ~ mmiC, data = ite_data_uist)
+
+modelSummary(radStep2_ml)
+
+```
+
+```{r}
+
+radStep3_ml = lm(Step.3 ~ mmiC, data = ite_data_uist)
+
+modelSummary(radStep3_ml)
+
+```
+
+```{r}
+
+radStep4_ml = lm(Step.4 ~ mmiC, data = ite_data_uist)
+
+modelSummary(radStep4_ml)
+
+```
+
+```{r}
+
+radStep5_ml = lm(Step.5 ~ mmiC, data = ite_data_uist)
+
+modelSummary(radStep5_ml)
+
+```
+
+```{r}
+
+radStep6_ml = lm(Step.6 ~ mmiC, data = ite_data_uist)
+
+modelSummary(radStep6_ml)
+
+```

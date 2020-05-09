@@ -1,0 +1,244 @@
+---
+title: "UIST"
+author: "Olivia Zhao"
+output:
+  pdf_document: default
+  html_notebook: default
+  html_document:
+    df_print: paged
+  word_document: default
+---
+
+# Compute Scales
+
+```{r}
+
+
+ite_data_uist = read.csv("./ITE_full.csv", 
+                         header = TRUE,
+                         na.strings = c('NA', '', ' '))
+#ite_data_uist = ite_data_uist[-1,]
+
+library(lmSupport)
+varDescribe(ite_data_uist)
+
+```
+
+
+```{r}
+
+ite_data_uist$taskLoad_1 = varScore(ite_data_uist,
+                                  Forward = c('Q18_1','Q18_2', 'Q18_3', 'Q18_4', 'Q18_5', 'Q18_6'),
+                                  Range = c(1, 7)) 
+
+
+ite_data_uist$usability_1 = varScore(ite_data_uist,
+                                     Forward = c('Q19_1', 'Q19_3', 'Q19_5', 'Q19_7', 'Q19_9'),
+                                     Reverse = c('Q19_2', 'Q19_4', 'Q19_6', 'Q19_8', 'Q19_10'),
+                                     Range = c(1, 7)
+                                     )
+
+
+ite_data_uist$distraction_1 = varScore(ite_data_uist,
+                                     Forward = c('Q20_1','Q20_2'),
+                                  Range = c(1, 5))
+
+ite_data_uist$awareness_1 = (ite_data_uist$Q36_1 + ite_data_uist$Q37_1 + ite_data_uist$Q38_1) - (ite_data_uist$Q21_1 + ite_data_uist$Q22_1 + ite_data_uist$Q31_1) + (ite_data_uist$Q32_1 + ite_data_uist$Q33_1 + ite_data_uist$Q34_1 + ite_data_uist$Q35_1)
+
+
+ite_data_uist$taskLoad_2 = varScore(ite_data_uist,
+                                  Forward = c('Q40_1','Q40_2', 'Q40_3', 'Q40_4', 'Q40_5', 'Q40_6'),
+                                  Range = c(1, 7)) 
+
+
+ite_data_uist$usability_2 = varScore(ite_data_uist,
+                                     Forward = c('Q41_1', 'Q41_3', 'Q41_5', 'Q41_7', 'Q41_9'),
+                                     Reverse = c('Q41_2', 'Q41_4', 'Q41_6', 'Q41_8', 'Q41_10'),
+                                     Range = c(1, 7)
+                                     )
+
+ite_data_uist$distraction_2 = varScore(ite_data_uist,
+                                     Forward = c('Q42_1','Q42_2'),
+                                  Range = c(1, 5))
+
+
+ite_data_uist$awareness_2 = (ite_data_uist$Q50_1 + ite_data_uist$Q51_1 + ite_data_uist$Q52_1) - (ite_data_uist$Q43_1 + ite_data_uist$Q44_1 + ite_data_uist$Q45_1) + (ite_data_uist$Q46_1 + ite_data_uist$Q47_1 + ite_data_uist$Q48_1 + ite_data_uist$Q49_1)
+
+
+ite_data_uist$taskLoad_3 = varScore(ite_data_uist,
+                                  Forward = c('Q54_1','Q54_2', 'Q54_3', 'Q54_4', 'Q54_5', 'Q54_6'),
+                                  Range = c(1, 7)) 
+
+
+ite_data_uist$usability_3 = varScore(ite_data_uist,
+                                     Forward = c('Q55_1', 'Q55_3', 'Q55_5', 'Q55_7', 'Q55_9'),
+                                     Reverse = c('Q55_2', 'Q55_4', 'Q55_6', 'Q55_8', 'Q55_10'),
+                                     Range = c(1, 7)
+                                     )
+
+ite_data_uist$distraction_3 = varScore(ite_data_uist,
+                                     Forward = c('Q56_1','Q56_2'),
+                                  Range = c(1, 5))
+
+
+ite_data_uist$awareness_3 = (ite_data_uist$Q64_1 + ite_data_uist$Q65_1 + ite_data_uist$Q66_1) - (ite_data_uist$Q57_1 + ite_data_uist$Q58_1 + ite_data_uist$Q59_1) + (ite_data_uist$Q60_1 + ite_data_uist$Q61_1 + ite_data_uist$Q62_1 + ite_data_uist$Q63_1)
+
+
+mmi_uist = read.csv("./mmi.csv", header = TRUE, na.strings = c('NA', '', ' '))
+
+
+ite_data_uist$mmi = mmi_uist
+
+write.csv(ite_data_uist, './uist_scale2.csv')
+
+
+```
+
+# Signifigance tests
+
+```{r}
+ite_data_uist = read.csv('./uist_scale2_composite.csv', na.strings = 'NA', header = TRUE)
+mmi_uist = read.csv("./mmi_composite.csv", header = TRUE, na.strings = c('NA', '', ' '))
+
+ite_data_uist$mmi = mmi_uist$MMI
+
+library(lme4)
+
+ite_data_uist$conC = varRecode(ite_data_uist$condition, c(1,2,3), c(-0.5, 0, .5))
+
+#m1 = lmer(norm_dist ~ conditionC * taskC + (taskC|X), data = d1_norm_dtw_long, 
+#         verbose = T, control=lmerControl(check.nobs.vs.nRE="ignore"))
+
+head(ite_data_uist)
+
+```
+
+
+
+```{r}
+taskLoad_m1 = lmer(taskLoad ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(taskLoad_m1)
+
+```
+
+```{r}
+taskLoad_m1 = lmer(taskLoad ~ conC * mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(taskLoad_m1)
+```
+
+```{r}
+taskLoad_m1 = lmer(taskLoad ~ conC + mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(taskLoad_m1)
+```
+
+```{r}
+varDescribeBy(ite_data_uist$taskLoad, ite_data_uist$condition)
+```
+
+```{r}
+TukeyHSD(aov(taskLoad ~ as.factor(condition), ite_data_uist))
+```
+
+
+```{r}
+usability_m1 = lmer(usability ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(usability_m1)
+```
+
+```{r}
+usability_m1 = lmer(usability ~ conC * mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(usability_m1)
+```
+
+
+```{r}
+usability_m1 = lmer(usability ~ conC + mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(usability_m1)
+```
+
+
+```{r}
+varDescribeBy(ite_data_uist$usability, ite_data_uist$condition)
+```
+
+```{r}
+TukeyHSD(aov(usability ~ as.factor(condition), ite_data_uist))
+```
+
+
+```{r}
+distraction_m1 = lmer(distraction ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(distraction_m1)
+```
+
+```{r}
+distraction_m1 = lmer(distraction ~ conC * mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(distraction_m1)
+```
+
+```{r}
+distraction_m1 = lmer(distraction ~ conC + mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(distraction_m1)
+```
+
+```{r}
+varDescribeBy(ite_data_uist$distraction, ite_data_uist$condition)
+```
+
+```{r}
+TukeyHSD(aov(distraction ~ as.factor(condition), ite_data_uist))
+```
+
+
+```{r}
+awareness_m1 = lmer(awareness ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(awareness_m1)
+```
+
+```{r}
+awareness_m1 = lmer(awareness ~ conC * mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(awareness_m1)
+```
+
+```{r}
+awareness_m1 = lmer(awareness ~ conC + mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(awareness_m1)
+```
+
+```{r}
+TukeyHSD(aov(awareness  ~ as.factor(condition), ite_data_uist))
+```
+
+```{r}
+time_m1 = lmer(Time ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(time_m1)
+```
+
+```{r}
+time_m1 = lmer(Time ~ conC * mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(time_m1)
+```
+
+```{r}
+time_m1 = lmer(Time ~ conC + mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(time_m1)
+```
+
+```{r}
+TukeyHSD(aov(Time  ~ as.factor(condition), ite_data_uist))
+```
