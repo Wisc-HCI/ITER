@@ -1,0 +1,409 @@
+---
+title: "RAD"
+author: "Curt Henrichs"
+date: "4/19/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+ite_data_uist = read.csv('./uist_scale2_composite.csv', na.strings = 'NA', header = TRUE)
+
+mmi_uist = read.csv("./mmi_composite.csv", header = TRUE, na.strings = c('NA', '', ' '))
+
+ite_data_uist$mmi = mmi_uist$MMI
+
+durations = read.csv('./participant_durations.csv', na.strings = 'NA', header = TRUE)
+
+durations<-durations[!(durations$PID==3),]
+
+rad = read.csv('./participant_rad_table.csv', na.strings = 'NA', header = TRUE)
+
+rad<-rad[!(rad$PID==3),]
+
+
+ite_data_uist<-cbind(ite_data_uist,durations,rad)
+
+library(lmSupport)
+library(lme4)
+
+ite_data_uist$conC = varRecode(ite_data_uist$condition, c(1,2,3), c(-0.5, 0, .5))
+
+ite_data_uist$PID <- NULL
+ite_data_uist$Trial <- NULL
+ite_data_uist$PID <- NULL
+ite_data_uist$Trial <- NULL
+
+ite_data_uist$mmiC = ite_data_uist$mmi - mean(ite_data_uist$mmi)
+
+head(ite_data_uist)
+
+```
+
+# Total RAD
+
+```{r}
+
+radTotal_ml = lmer(Total ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radTotal_ml)
+
+```
+
+
+```{r}
+
+radTotal_ml = lm(Total ~ mmi, data = ite_data_uist)
+
+modelSummary(radTotal_ml)
+
+cor.test(x=ite_data_uist$Total, y=ite_data_uist$mmi, use = "complete.obs")
+
+```
+
+
+```{r}
+
+radTotal_ml = lmer(Total ~ conC * mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radTotal_ml)
+
+```
+
+```{r}
+
+radTotal_ml = lmer(Total ~ conC + mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radTotal_ml)
+
+```
+
+
+```{r}
+varDescribeBy(ite_data_uist$Total, ite_data_uist$condition)
+
+TukeyHSD(aov(Total ~ as.factor(condition), ite_data_uist))
+```
+
+# Skip First RAD
+
+```{r}
+
+radSkipFirst_ml = lmer(skipFirst ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radSkipFirst_ml)
+
+```
+
+```{r}
+
+radSkipFirst_ml = lmer(skipFirst ~ conC * mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radSkipFirst_ml)
+
+```
+
+```{r}
+
+radSkipFirst_ml = lmer(skipFirst ~ conC + mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radSkipFirst_ml)
+
+```
+
+
+```{r}
+varDescribeBy(ite_data_uist$skipFirst, ite_data_uist$condition)
+
+TukeyHSD(aov(skipFirst ~ as.factor(condition), ite_data_uist))
+```
+
+
+
+# Step RAD
+
+```{r}
+
+radStep1_ml = lmer(Step.1 ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep1_ml)
+
+```
+
+```{r}
+
+radStep1_ml = lmer(Step.1 ~ conC * mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep1_ml)
+
+```
+
+```{r}
+
+radStep1_ml = lmer(Step.1 ~ conC + mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep1_ml)
+
+```
+
+```{r}
+varDescribeBy(ite_data_uist$Step.1, ite_data_uist$condition)
+
+TukeyHSD(aov(Step.1 ~ as.factor(condition), ite_data_uist))
+```
+
+
+
+
+```{r}
+
+radStep2_ml = lmer(Step.2 ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep2_ml)
+
+```
+
+```{r}
+
+radStep2_ml = lmer(Step.2 ~ conC * mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep2_ml)
+
+```
+
+```{r}
+
+radStep2_ml = lmer(Step.2 ~ conC + mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep2_ml)
+
+```
+
+```{r}
+varDescribeBy(ite_data_uist$Step.2, ite_data_uist$condition)
+
+TukeyHSD(aov(Step.2 ~ as.factor(condition), ite_data_uist))
+```
+
+
+
+```{r}
+
+radStep3_ml = lmer(Step.3 ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep3_ml)
+
+```
+
+```{r}
+
+radStep3_ml = lmer(Step.3 ~ conC * mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep3_ml)
+
+```
+
+```{r}
+
+radStep3_ml = lmer(Step.3 ~ conC + mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep3_ml)
+
+```
+
+```{r}
+varDescribeBy(ite_data_uist$Step.3, ite_data_uist$condition)
+
+TukeyHSD(aov(Step.3 ~ as.factor(condition), ite_data_uist))
+```
+
+
+
+
+```{r}
+
+radStep4_ml = lmer(Step.4 ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep4_ml)
+
+```
+
+```{r}
+
+radStep4_ml = lmer(Step.4 ~ conC * mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep4_ml)
+
+```
+
+```{r}
+
+radStep4_ml = lmer(Step.4 ~ conC + mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep4_ml)
+
+```
+
+```{r}
+varDescribeBy(ite_data_uist$Step.4, ite_data_uist$condition)
+
+TukeyHSD(aov(Step.4 ~ as.factor(condition), ite_data_uist))
+```
+
+
+
+```{r}
+
+radStep5_ml = lmer(Step.5 ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep5_ml)
+
+```
+
+```{r}
+
+radStep5_ml = lmer(Step.5 ~ conC * mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep5_ml)
+
+```
+
+```{r}
+
+radStep5_ml = lmer(Step.5 ~ conC + mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep5_ml)
+
+```
+
+```{r}
+varDescribeBy(ite_data_uist$Step.5, ite_data_uist$condition)
+
+TukeyHSD(aov(Step.5 ~ as.factor(condition), ite_data_uist))
+```
+
+
+```{r}
+
+radStep6_ml = lmer(Step.6 ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep6_ml)
+
+```
+
+```{r}
+
+radStep6_ml = lmer(Step.6 ~ conC * mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep6_ml)
+
+```
+
+```{r}
+
+radStep6_ml = lmer(Step.6 ~ conC + mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(radStep6_ml)
+
+```
+
+```{r}
+varDescribeBy(ite_data_uist$Step.6, ite_data_uist$condition)
+
+TukeyHSD(aov(Step.6 ~ as.factor(condition), ite_data_uist))
+```
+
+
+
+# Total interaction time hypothesis test
+
+```{r}
+
+totalInteract_ml = lmer(totalInteract ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(totalInteract_ml)
+
+```
+
+
+```{r}
+model <- '
+  # intercept and slope with fixed coefficients
+    i =~ 1*Step.1 + 1*Step.2 + 1*Step.3 + 1*Step.4 + 1*Step.5 + 1*Step.6
+    s =~ 0*Step.1 + Step.2 + Step.3 + Step.4 + Step.5 + Step.6
+  # regressions
+    i ~ conC + mmi
+    s ~ conC + mmi
+  # time-varying covariates
+'
+
+fit <- growth(model, data = ite_data_uist)
+summary(fit)
+```
+
+
+```{r}
+
+totalInteract_ml = lmer(totalInteract ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(totalInteract_ml)
+
+<!-- ``` -->
+
+```{r}
+
+totalInteract_ml = lmer(totalInteract ~ conC * mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(totalInteract_ml)
+
+```
+
+```{r}
+
+totalInteract_ml = lmer(totalInteract ~ conC + mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(totalInteract_ml)
+
+```
+
+```{r}
+varDescribeBy(ite_data_uist$totalInteract, ite_data_uist$condition)
+
+TukeyHSD(aov(totalInteract ~ as.factor(condition), ite_data_uist))
+```
+
+
+# Skip First interaction time hypothesis test
+
+```{r}
+
+skipFirstInteract_ml = lmer(skipFirstInteract ~ conC + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(skipFirstInteract_ml)
+
+```
+
+```{r}
+
+skipFirstInteract_ml = lmer(skipFirstInteract ~ conC * mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(skipFirstInteract_ml)
+
+```
+
+```{r}
+
+skipFirstInteract_ml = lmer(skipFirstInteract ~ conC + mmi + (1 + conC|ppID), data = ite_data_uist)
+
+modelSummary(skipFirstInteract_ml)
+
+```
+
+```{r}
+varDescribeBy(ite_data_uist$skipFirstInteract, ite_data_uist$condition)
+
+TukeyHSD(aov(skipFirstInteract ~ as.factor(condition), ite_data_uist))
+```
+
+
