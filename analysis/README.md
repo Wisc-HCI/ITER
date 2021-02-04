@@ -12,7 +12,7 @@ Curt Henrichs (cdhenrichs@wisc.edu)
 ## Requirements
 Install jupyter notebook and R studio. I recommend setting everything up with anaconda.
 
-Also run the experiment, making sure to collect the interaction logs from the RAD system.
+Also when running the experiment, making sure to collect the interaction logs from the RAD system.
 
 ## Credit
 Using [Wisc-HCI/PaperVisualizations](https://github.com/Wisc-HCI/PaperVisualizations) for plotting results.
