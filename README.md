@@ -20,6 +20,19 @@ Specifically, looking to pooled, sequential, and reciprocal interdependence.
 The goal is to observe how the different levels of interdependence affect participant's
 perceptions of the task as they collaborate with the robot.
 
+## Publications
+[Task Interdpendence in Human-Robot Teaming](https://ieeexplore.ieee.org/document/9223555)
+```bibtex
+@inproceedings{zhao2020task,
+  title={Task Interdependence in Human-Robot Teaming},
+  author={Zhao, Fangyun and Henrichs, Curt and Mutlu, Bilge},
+  booktitle={2020 29th IEEE International Conference on Robot and Human Interactive Communication (RO-MAN)},
+  pages={1143--1149},
+  year={2020},
+  organization={IEEE}
+}
+```
+
 ## Packages
 The following packages are provided:
 - [iter](./README.md)
