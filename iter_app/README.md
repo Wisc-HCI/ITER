@@ -16,14 +16,14 @@ Enter following into terminal to run ITER application
 roslaunch iter_app main.launch robot:=ur3e simulated:=true planner:=ur
 ```
 
-## Robots
+### Robots
   - Universal Robots UR3e (ur3e)
   - Universal Robots UR5 (ur5)
   - Kinova Mico + 2 Finger Gripper (mico-2)
   - Kinova Mico + 3 Finger Gripper (mico-3)
   - Kinova Mico + Robotiq85 (mico-robotiq85)
 
-## Planners
+### Planners
   - ur (ur3e and ur5 only)
   - rik
   - moveit

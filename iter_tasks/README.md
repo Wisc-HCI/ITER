@@ -19,46 +19,143 @@ In this task the robot and human are both responsible for constructing three sma
 Secondary task assigned to human for RAD experiment. In this task the human participant is asked to sort multiple items from a large unsorted bin into separate smaller bins labeled by object class. The items are: cardboard, plastic pipes, plastic bags, wooden blocks, wooden cylinders. The task is considered complete once all items are properly placed within their containers.
 
 ## Task Structure
-The following are task primitive json structures as an example of the format need to control the ITER application.
+The following are task primitive JSON structures as an example of the format needed to control the ITER application.
 
 ```
-grasp: {
-	effort: <number>
+{
+	"title": <string>
+	"author": <string>
+	"frame_id": <string>
+	"version": <string>
+  "task": [...<primitives>...]
+	"environment": [...<environment-objects>...]
 }
+```
 
-release: {
-	effort: <number>,
-	'rad': {
-		'neglect_time': <number>
-		'is_interaction': <boolean>
+The codebase provides code to generate these JSON structures already as `iter_tasks_tools`.
+
+### Primitives
+
+*Publish String From File* exposes a string topic to the runner. Used to invoke
+URScripts. By default this primitive is a neglect action.
+
+```
+{
+	"name": "publish_string_from_file",
+	"topic": "/ur_driver/URScript",
+	"filepath": <string - filepath to ur script>
+},
+```
+
+*Grasp* provides a means to command the gripper. Effort actually just maps to
+position. Primitive is by default a neglect action.
+
+```
+{
+	"name": "grasp",
+	"effort": <number>
+},
+```
+
+*Release* is an alias of *Grasp*.
+
+```
+{
+	"name": "release"
+	"effort": <number>
+}
+```
+
+*Move* provides end-effector control of the robot. Primitive is by default a neglect action.
+
+```
+{
+	"name": "move"
+	"position": {
+		"x": <number>
+		"y": <number>
+		"z": <number>
+	}
+	"orientation": {
+		"x": <number>
+		"y": <number>
+		"z": <number>
+		"w": <number>
 	}
 }
+```
 
-move: {
-	position: {
-		x: <number>,
-		y: <number>,
-		z: <number>
-	},
-	orientation: {
-		x: <number>,
-		y: <number>,
-		z: <number>
-	},
-	'rad': {
-		'neglect_time': <number>
-		'is_interaction': <boolean>
+*Wait* delays process either via time or user input. If time then defaults to a neglect action. If button then defaults to interaction action.
+
+```
+{
+	"name": "wait"
+	"condition": <string>->['time','button']
+	"timeout": <number> //optionally
+	"value": <number> //if time
+}
+```
+
+*Logger* provides some debugging support by printing message to the console.
+
+```
+{
+	"name": "logger"
+	"msg": <string>
+}
+```
+
+*Connect Object* used to link environment objects to the robot end-effector. Should be called before grasping. Note: this is experimental.
+
+```
+{
+	"name": "connect_object"
+	"object_name": <string>
+}
+```
+
+*Disconnect Object* used to remove link on environment objects with robot end-effector. Should be called after releasing. Note: this is experimental.
+
+```
+{
+	"name": "disconnect_object"
+	"object_name": <string>
+}
+```
+
+### RAD Attribute
+During a task record session, the following RAD attribute is appended to each primitive. You can also add this manually on specification (particularly for publish_string_from_file).
+
+```
+"rad": {
+		"neglect_time": <number> // if not interaction
+		"expected_interaction_time": <number> //if is interaction
+		"is_interaction": <bool>
+}
+```
+
+### Environment Objects
+Static objects can be pre-defined in the space. These will create collision objects within moveit.
+
+```
+{
+	"representation": <string: "box">
+	"name": <string>
+	"size": {
+		"x": <number>
+		"y": <number>
+		"z": <number>
+	}
+	"position": {
+		"x": <number>
+		"y": <number>
+		"z": <number>
+	}
+	"orientation": {
+		"x": <number>
+		"y": <number>
+		"z": <number>
+		"w": <number>
 	}
 }
-
-wait : {
-	condition: <string>->['time','button']
-
-	//optionally
-	timeout: <number>
-
-	//if time
-	value: <number>
-}
-
 ```

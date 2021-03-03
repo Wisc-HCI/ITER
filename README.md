@@ -48,24 +48,35 @@ The following packages are provided:
 Curt Henrichs (cdhenrichs@wisc.edu)
 
 ## Requirements:
-ITER packages must be installed in your catkin workspace.
+ITER packages must be installed in your catkin workspace. ITER was developed under ROS Kinetic.
 
-Additionally, requires packages:
+Required ROS Packages:
 - [RobotWebTools/rosbridge_suite](https://github.com/RobotWebTools/rosbridge_suite)
   - Installing through package manager functioned incorrectly for me using Kinetic on Ubuntu 16.04
   - [GT-RAIL/rosauth](https://github.com/GT-RAIL/rosauth)
-    - First try the package manager `sudo apt install ros-<version>-rosauth`
+    - First try the package manager `sudo apt install ros-kinetic-rosauth`
 - [Wisc-HCI/robot_configurations](https://github.com/Wisc-HCI/robot_configurations)
-  - Install for UR or Kinova as needed. Install the necessary dependencies listed
-- (optional) [uwgraphics/relaxed_ik](https://github.com/uwgraphics/relaxed_ik)
+  - Install for Universal Robotics or Kinova as needed.
+    - [Wisc-HCI/robotiq_85_gripper](https://github.com/Wisc-HCI/robotiq_85_gripper)
+    - [Kinovarobotics/kinova-ros](https://github.com/Kinovarobotics/kinova-ros)
+    - [dniewinski/ur_modern_driver](https://github.com/dniewinski/ur_modern_driver)
+    - [industrial_core](https://wiki.ros.org/industrial_core) via `apt install ros-<VERSION>-industrial-core`
+    - [ros-industrial/universal_robot](https://github.com/ros-industrial/universal_robot)
+- [uwgraphics/relaxed_ik](https://github.com/uwgraphics/relaxed_ik)
   - Note if using Relaxed-IK, then you may ignore MoveIt setup
   - [Wisc-HCI/robot_behavior](https://github.com/Wisc-HCI/robot_behavior)
 - [MoveIt](moveit.ros.org)
-  - `sudo apt-get install ros-<version>-moveit`
+  - `sudo apt-get install ros-kinetic-moveit`
+- [Wisc-HCI/ros_pop_button](https://github.com/Wisc-HCI/ros_pop_button)
+- [timed_roslaunch](http://wiki.ros.org/timed_roslaunch)
+
 
 Other Requirements:
-- (for RAD UI) install npm and run `npm install` inside `rad_ui/src/websites` subdirectory
-  - note cannot use nodejs as name must be node!
+- (For RAD UI) install npm and run `npm install` inside `rad_ui/src/websites` subdirectory
+  - Note cannot use `nodejs`, scripts expect the name to be `node`!
+
+Experimental / Optional Packages:
+- [Wisc-HCI/magnetic_block_detection](https://github.com/Wisc-HCI/magnetic_block_detection)
 
 ## Run
 Enter following into terminal to run ITER application in simulation
