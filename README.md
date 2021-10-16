@@ -22,6 +22,9 @@ perceptions of the task as they collaborate with the robot.
 
 ## Publications
 [Task Interdpendence in Human-Robot Teaming](https://ieeexplore.ieee.org/document/9223555)
+
+> Human-robot teaming is becoming increasingly common within manufacturing processes. A key aspect practitioners need to decide on when developing effective processes is the level of task interdependence between human and robot team members. Task interdependence refers to the extent to which one’s behavior affects the performance of others in a team. In this work, we examine the effects of three levels of task interdependence—pooled, sequential, reciprocalin human-robot teaming on human worker’s mental states, task performance, and perceptions of the robot. Participants worked with the robot in an assembly task while their heart rate variability was being recorded. Results suggested human workers in the reciprocal interdependence level experienced less stress and perceived the robot more as a collaborator than other two levels. Task interdependence did not affect perceived safety. Our ﬁndings highlight the importance of considering task structure in human-robot teaming and inform future research on and industry practices for human-robot task allocation.
+
 ```bibtex
 @inproceedings{zhao2020task,
   title={Task Interdependence in Human-Robot Teaming},
@@ -34,6 +37,9 @@ perceptions of the task as they collaborate with the robot.
 ```
 
 [Designing Interface Aids to Assist Collaborative Robot Operators in Attention Management]()
+
+> As collaborative robots become increasingly widespread in manufacturing settings, there is a greater need for tools and interfaces to support operators who integrate, supervise, and troubleshoot these systems. In this paper, we present an application of the Robot Attention Demand (RAD) metric for use in the design of user interfaces to support operators in collaborative manufacturing scenarios. Building on prior work that introduced RAD, we designed and implemented prototype timeline and countdown-timer interfaces to be used within a collaborative assembly-inspection task where an operator is also responsible for a separate sorting task. We performed a user evaluation to investigate the effects of displaying predictive RAD information on operator performance and perceptions of the task. Our results show lower perceived task load and increased usability scores compared to baseline condition without an interface. These findings suggest that predictive RAD should be used by designers and engineers developing operator interfaces for collaborative robot applications in manufacturing.
+
 ```bibtex
 @inproceedings{henrichs2021designing,
   title={Designing Interface Aids to Assist Collaborative Robot Operators in Attention Management},
