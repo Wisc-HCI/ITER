@@ -33,6 +33,18 @@ perceptions of the task as they collaborate with the robot.
 }
 ```
 
+[Designing Interface Aids to Assist Collaborative Robot Operators in Attention Management]()
+```bibtex
+@inproceedings{henrichs2021designing,
+  title={Designing Interface Aids to Assist Collaborative Robot Operators in Attention Management},
+  author={Henrichs, Curt and Zhao, Fangyun and Mutlu, Bilge},
+  booktitle={2021 30th IEEE International Conference on Robot \& Human Interactive Communication (RO-MAN)},
+  pages={264--271},
+  year={2021},
+  organization={IEEE}
+}
+```
+
 ## Packages
 The following packages are provided:
 - [iter](./README.md)
