@@ -36,7 +36,7 @@ perceptions of the task as they collaborate with the robot.
 }
 ```
 
-[Designing Interface Aids to Assist Collaborative Robot Operators in Attention Management]()
+[Designing Interface Aids to Assist Collaborative Robot Operators in Attention Management](https://ieeexplore.ieee.org/document/9515519)
 
 > As collaborative robots become increasingly widespread in manufacturing settings, there is a greater need for tools and interfaces to support operators who integrate, supervise, and troubleshoot these systems. In this paper, we present an application of the Robot Attention Demand (RAD) metric for use in the design of user interfaces to support operators in collaborative manufacturing scenarios. Building on prior work that introduced RAD, we designed and implemented prototype timeline and countdown-timer interfaces to be used within a collaborative assembly-inspection task where an operator is also responsible for a separate sorting task. We performed a user evaluation to investigate the effects of displaying predictive RAD information on operator performance and perceptions of the task. Our results show lower perceived task load and increased usability scores compared to baseline condition without an interface. These findings suggest that predictive RAD should be used by designers and engineers developing operator interfaces for collaborative robot applications in manufacturing.
 
