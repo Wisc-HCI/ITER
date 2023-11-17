@@ -1,5 +1,10 @@
 # Interdependence Task Experiment Runner
 
+## Archival Notice
+This project has been moved to archive status given ROS 1 nearing EOL and
+no active plan to update to ROS 2. Code & artifacts provided "as is" for
+reference.
+
 ##  Overview
 Interdependence Task Experiment Runner (ITER) implements two tasks regarding
 human-robot interdependence in a collaborative manufacturing setting. Both of
